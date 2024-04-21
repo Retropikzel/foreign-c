@@ -1,0 +1,7 @@
+((packager . "retropikzel")
+ (name . "pffi")
+ (version . "v0.1.0")
+ (type . "library")
+ (description . "Portable Foreign Function Interface for R7RS schemes")
+ (license . "LGPL")
+ (dependencies ()))
