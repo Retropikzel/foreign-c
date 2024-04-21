@@ -14,34 +14,21 @@
           pffi-type-sizes
           pffi-size-of
           pffi-pointer-allocate
+          pffi-pointer-null
           pffi-string->pointer
           pffi-pointer->string
+          pffi-pointer->bytevector
           pffi-pointer-free
           pffi-pointer?
           pffi-pointer-null?
-          pffi-pointer-address-get
           pffi-shared-object-load
           pffi-shared-object-auto-load
           pffi-pointer-set!
           pffi-pointer-get
-          pffi-struct-make
-          pffi-struct-get
-          pffi-struct-set!
-          pffi-struct-pointer-get
-          pffi-struct-member-types-get
-          pffi-struct-pretty-print)
+          pffi-pointer-deref)
   (begin
 
     (define library-version "v0.1.0")
-
-    (define-record-type pffi-struct
-      (make-pffi-struct member-types member-names struct-alignment struct-pointer size)
-      pffi-struct?
-      (member-types pffi-struct-member-types-get)
-      (member-names pffi-struct-member-names-get)
-      (struct-alignment pffi-struct-alignment-get)
-      (struct-pointer pffi-struct-pointer-get)
-      (size pffi-struct-size-get))
 
     (define pffi-types
       '(int8
@@ -154,16 +141,10 @@
       (lambda (object)
         (cond-expand (sagittarius (pointer? object)))))
 
-    (define pffi->native
-      (lambda (value)
-        (cond ((pffi-pointer? value) value)
-              ((pffi-struct? value) (pffi-struct-pointer-get value))
-              (else value))))
-
     (define pffi-call
       (lambda (shared-object name type arguments)
         (let ((types (map pffi-type->native-type (map car arguments)))
-              (vals (map pffi->native (map cdr arguments))))
+              (vals (map cdr arguments)))
           (cond-expand
             (sagittarius
               (apply (make-c-function shared-object
@@ -171,50 +152,52 @@
                                       name
                                       types) vals))))))
 
-    (define pffi-type-sizes
-      (map
-        (lambda (type)
-          (cond
-            ((eq? type 'int8) (cond-expand (sagittarius size-of-int8_t)))
-            ((eq? type 'uint8)  (cond-expand (sagittarius size-of-uint8_t)))
-            ((eq? type 'int16)  (cond-expand (sagittarius size-of-int16_t)))
-            ((eq? type 'uint16)  (cond-expand (sagittarius size-of-uint16_t)))
-            ((eq? type 'int32)  (cond-expand (sagittarius size-of-int32_t)))
-            ((eq? type 'uint32)  (cond-expand (sagittarius size-of-uint32_t)))
-            ((eq? type 'int64)  (cond-expand (sagittarius size-of-int64_t)))
-            ((eq? type 'uint64)  (cond-expand (sagittarius size-of-uint64_t)))
-            ((eq? type 'intptr)  (cond-expand (sagittarius size-of-intptr_t)))
-            ((eq? type 'uintptr)  (cond-expand (sagittarius size-of-uintptr_t)))
-            ((eq? type 'char)  (cond-expand (sagittarius size-of-char)))
-            ((eq? type 'unsigned-char)  (cond-expand (sagittarius size-of-char)))
-            ((eq? type 'short)  (cond-expand (sagittarius size-of-short)))
-            ((eq? type 'unsigned-short)  (cond-expand (sagittarius size-of-unsigned-short)))
-            ((eq? type 'int)  (cond-expand (sagittarius size-of-int)))
-            ((eq? type 'unsigned-int)  (cond-expand (sagittarius size-of-unsigned-int)))
-            ((eq? type 'long)  (cond-expand (sagittarius size-of-long)))
-            ((eq? type 'unsigned-long)  (cond-expand (sagittarius size-of-unsigned-long)))
-            ((eq? type 'float)  (cond-expand (sagittarius size-of-float)))
-            ((eq? type 'double)  (cond-expand (sagittarius size-of-double)))
-            ((eq? type 'pointer)  (cond-expand (sagittarius size-of-void*)))))
-        pffi-types))
-
     (define pffi-size-of
       (lambda (type)
-        (let ((size (cdr (assoc type pffi-type-sizes))))
-          size)))
+        (cond ((eq? type 'int8) (cond-expand (sagittarius size-of-int8_t)))
+              ((eq? type 'uint8)  (cond-expand (sagittarius size-of-uint8_t)))
+              ((eq? type 'int16)  (cond-expand (sagittarius size-of-int16_t)))
+              ((eq? type 'uint16)  (cond-expand (sagittarius size-of-uint16_t)))
+              ((eq? type 'int32)  (cond-expand (sagittarius size-of-int32_t)))
+              ((eq? type 'uint32)  (cond-expand (sagittarius size-of-uint32_t)))
+              ((eq? type 'int64)  (cond-expand (sagittarius size-of-int64_t)))
+              ((eq? type 'uint64)  (cond-expand (sagittarius size-of-uint64_t)))
+              ((eq? type 'intptr)  (cond-expand (sagittarius size-of-intptr_t)))
+              ((eq? type 'uintptr)  (cond-expand (sagittarius size-of-uintptr_t)))
+              ((eq? type 'char)  (cond-expand (sagittarius size-of-char)))
+              ((eq? type 'unsigned-char)  (cond-expand (sagittarius size-of-char)))
+              ((eq? type 'short)  (cond-expand (sagittarius size-of-short)))
+              ((eq? type 'unsigned-short)  (cond-expand (sagittarius size-of-unsigned-short)))
+              ((eq? type 'int)  (cond-expand (sagittarius size-of-int)))
+              ((eq? type 'unsigned-int)  (cond-expand (sagittarius size-of-unsigned-int)))
+              ((eq? type 'long)  (cond-expand (sagittarius size-of-long)))
+              ((eq? type 'unsigned-long)  (cond-expand (sagittarius size-of-unsigned-long)))
+              ((eq? type 'float)  (cond-expand (sagittarius size-of-float)))
+              ((eq? type 'double)  (cond-expand (sagittarius size-of-double)))
+              ((eq? type 'pointer)  (cond-expand (sagittarius size-of-void*)))
+              (else (error "Can not get size of unknown type" type)))))
 
     (define pffi-pointer-allocate
       (lambda (size)
         (cond-expand
           (sagittarius (allocate-pointer size)))))
 
+    (define pffi-pointer-null
+      (lambda ()
+        (cond-expand
+          (sagittarius (integer->pointer 0)))))
+
     (define pffi-string->pointer
       (lambda (string-content)
-        (cond-expand (sagittarius (bytevector->pointer (string->utf8 string-content))))))
+        (cond-expand (sagittarius (bytevector->pointer (string->utf8 (string-copy string-content)))))))
 
     (define pffi-pointer->string
       (lambda (pointer)
-        (cond-expand (sagittarius (utf8->string (pointer->bytevector pointer))))))
+        (cond-expand (sagittarius (pointer->string pointer)))))
+
+    (define pffi-pointer->bytevector
+      (lambda (pointer size)
+        (cond-expand (sagittarius (pointer->bytevector pointer size)))))
 
     (define pffi-shared-object-load
       (lambda (path)
@@ -268,10 +251,10 @@
         (cond-expand (sagittarius (null-pointer? pointer)))))
 
     (define pffi-pointer-set!
-      (lambda (pointer type value offset)
+      (lambda (pointer type offset value)
         (cond-expand
           (sagittarius
-            (let ((p (integer->pointer (pffi-pointer-address-get pointer))))
+            (let ((p pointer))
               (cond ((equal? type 'int8) (pointer-set-c-int8_t! p offset value))
                     ((equal? type 'uint8) (pointer-set-c-uint8_t! p offset value))
                     ((equal? type 'int16) (pointer-set-c-int16_t! p offset value))
@@ -297,7 +280,7 @@
       (lambda (pointer type offset)
         (cond-expand
           (sagittarius
-            (let ((p (integer->pointer (pffi-pointer-address-get pointer)))
+            (let ((p pointer)
                   (native-type (pffi-type->native-type type)))
               (cond ((equal? native-type 'int8_t) (pointer-ref-c-int8_t p offset))
                     ((equal? native-type 'uint8_t) (pointer-ref-c-uint8_t p offset))
@@ -320,97 +303,6 @@
                     ((equal? native-type 'double) (pointer-ref-c-double p offset))
                     ((equal? native-type 'void*) (pointer-ref-c-void* p offset))))))))
 
-    (define largest-type-size
-      (lambda (types)
-        (let ((largest 0))
-          (for-each
-            (lambda (type)
-              (if (> (pffi-size-of type) largest)
-                (set! largest (pffi-size-of type))))
-            types)
-          largest)))
-
-    (define figure-out-alignment
-      (lambda (member-types)
-        (largest-type-size member-types)))
-
-    (define struct-members-size
-      (lambda (members)
-        (apply + (map pffi-size-of members))))
-
-    (define pffi-struct-make
-      (lambda (member-types member-names member-values)
-        (let* ((offset 0)
-               (alignment (figure-out-alignment member-types))
-               (size (* alignment (length member-types)))
-               (struct-pointer (pffi-pointer-allocate size)))
-          (for-each
-            (lambda (type name value)
-              (pffi-pointer-set! struct-pointer type value offset)
-              (set! offset (+ offset alignment)))
-            member-types
-            member-names
-            member-values)
-          (make-pffi-struct member-types member-names alignment struct-pointer size))))
-
-    (define get-item-index
-      (lambda (item items)
-        (- (length (member item (reverse items))) 1)))
-
-    (define get-member-type
-      (lambda (member-name member-names member-types)
-        (list-ref member-types (get-item-index member-name member-names))))
-
-    (define pffi-struct-get
-      (lambda (pffi-struct member-name)
-        (letrec* ((member-names (pffi-struct-member-names-get pffi-struct))
-                  (member-types (pffi-struct-member-types-get pffi-struct))
-                  (alignment (pffi-struct-alignment-get pffi-struct))
-                  (member-type (get-member-type member-name member-names member-types))
-                  (member-offset (* alignment (get-item-index member-name member-names))))
-          (pffi-pointer-get (pffi-struct-pointer-get pffi-struct)
-                            member-type
-                            member-offset))))
-
-    (define pffi-struct-set!
-      (lambda (pffi-struct member-name value)
-        (letrec*
-          ((member-names (pffi-struct-member-names-get pffi-struct))
-           (member-types (pffi-struct-member-types-get pffi-struct))
-           (member-type (get-member-type member-name member-names member-types))
-           (alignment (pffi-struct-alignment-get pffi-struct))
-           (member-offset (* alignment (get-item-index member-name member-names))))
-          (pffi-pointer-set! (pffi-struct-pointer-get pffi-struct)
-                             member-type
-                             value
-                             member-offset))))
-
-    (define pffi-struct-pretty-print
-      (lambda (pffi-struct)
-        (display "Member types: ")
-        (display (pffi-struct-member-types-get pffi-struct))
-        (newline)
-        (display "Member names: ")
-        (display (pffi-struct-member-names-get pffi-struct))
-        (newline)
-        (display "Alignment: ")
-        (display (pffi-struct-alignment-get pffi-struct))
-        (newline)
-        (display "Pointer: ")
-        (display (pffi-struct-pointer-get pffi-struct))
-        (newline)
-        (display "Size: ")
-        (display (pffi-struct-size-get pffi-struct))
-        (newline)
-        (display "Values: ")
-        (newline)
-        (for-each
-          (lambda (member-name)
-            (display "  ")
-            (display member-name)
-            (display ": ")
-            (display (pffi-struct-get pffi-struct member-name))
-            (newline))
-          (pffi-struct-member-names-get pffi-struct))))
-
-    ))
+    (define pffi-pointer-deref
+      (lambda (pointer offset)
+        (cond-expand (sagittarius (deref pointer offset)))))))
