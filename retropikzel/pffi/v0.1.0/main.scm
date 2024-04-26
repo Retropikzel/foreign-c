@@ -243,7 +243,7 @@
             shared-object))))
 
     (define pffi-pointer-free
-      (lambda (pffi)
+      (lambda (pointer)
         (cond-expand (sagittarius (c-free pointer)))))
 
     (define pffi-pointer-null?
