@@ -7,7 +7,14 @@
               (scheme file)
               (scheme process-context)
               (sagittarius ffi)
-              (sagittarius)))
+              (sagittarius))
+      (guile (import (scheme base)
+                     (scheme write)
+                     (scheme file)
+                     (scheme process-context)
+                     (sagittarius ffi)
+                     (system foreign)
+                     (system foreign-library))))
     (else (error "Implementation not supported by r7rs-pffi")))
   (export pffi-call
           pffi-types
@@ -70,10 +77,6 @@
           (for-each splitter str-l)
           res)))
 
-    (define pffi-pointer-adress-get
-      (lambda (pointer)
-        (cond-expand (sagittarius (address pointer)))))
-
     (define auto-load-paths
       (append
         (cond-expand
@@ -101,7 +104,11 @@
 
 
 
-    (define platform-file-extension (cond-expand (windows ".dll") (else ".so")))
+    (define platform-file-extension
+      (cond-expand
+        (guile "")
+        (windows ".dll")
+        (else ".so")))
 
     (define memorysession #f)
     (define linker #f)
@@ -135,11 +142,37 @@
                   ((equal? type 'double) 'double)
                   ((equal? type 'pointer) 'void*)
                   ((equal? type 'void) 'void)
-                  (else (error "pffi-type->native-type -- No such pffi type" type)))))))
+                  (else (error "pffi-type->native-type -- No such pffi type" type))))
+          (guile
+            (cond ((equal? type 'int8) 'int8)
+                  ((equal? type 'uint8) 'uint8)
+                  ((equal? type 'int16) 'int16)
+                  ((equal? type 'uint16) 'uint16)
+                  ((equal? type 'int32) 'int32)
+                  ((equal? type 'uint32) 'uint32)
+                  ((equal? type 'int64) 'int64)
+                  ((equal? type 'uint64) 'uint64)
+                  ((equal? type 'intptr) 'intptr)
+                  ((equal? type 'uintptr) 'uintptr)
+                  ((equal? type 'char) 'char)
+                  ((equal? type 'unsigned-char) 'char)
+                  ((equal? type 'short) 'short)
+                  ((equal? type 'unsigned-short) 'unsigned-short)
+                  ((equal? type 'int) 'int)
+                  ((equal? type 'unsigned-int) 'unsigned-int)
+                  ((equal? type 'long) 'long)
+                  ((equal? type 'unsigned-long) 'unsigned-long)
+                  ((equal? type 'float) 'float)
+                  ((equal? type 'double) 'double)
+                  ((equal? type 'pointer) '*)
+                  ((equal? type 'void) 'void)
+                  (else (error "pffi-type->native-type -- No such pffi type" type))))
+          )))
 
     (define pffi-pointer?
       (lambda (object)
-        (cond-expand (sagittarius (pointer? object)))))
+        (cond-expand (sagittarius (pointer? object))
+                     (guile (pointer? object)))))
 
     (define pffi-call
       (lambda (shared-object name type arguments)
@@ -150,7 +183,16 @@
               (apply (make-c-function shared-object
                                       (pffi-type->native-type type)
                                       name
-                                      types) vals))))))
+                                      types) vals))
+            (guile
+              (foreign-library-function shared-object
+                                        name
+                                        type
+                                        types)
+
+
+              )
+            ))))
 
     (define pffi-size-of
       (lambda (type)

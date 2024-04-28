@@ -1,7 +1,7 @@
 (import (scheme base)
         (scheme write)
         (scheme read)
-        (retropikzel pffi v0-1-0 main))
+        (retropikzel pffi v0.1.0 main))
 
 
 (define sdl2 (pffi-shared-object-auto-load "SDL2" (list)))
