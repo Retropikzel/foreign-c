@@ -204,11 +204,13 @@
         (cond-expand (sagittarius (open-shared-library path)))))
 
     (define pffi-shared-object-auto-load
-      (lambda (object-name . additional-paths)
+      (lambda (object-name additional-paths)
         (let* ((paths (append auto-load-paths additional-paths))
                (shared-object #f))
           (for-each
             (lambda (path)
+              (write path)
+              (newline)
               (if (not shared-object)
                 (let ((object-path (string-append path
                                                   "/"
@@ -239,7 +241,7 @@
                      (set! shared-object (pffi-shared-object-load object-version-lib-path)))))))
             paths)
           (if (not shared-object)
-            (error (string-append "Could not load shared object: " object-name))
+            (error "Could not load shared object" object-name)
             shared-object))))
 
     (define pffi-pointer-free
