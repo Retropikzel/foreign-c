@@ -1,20 +1,21 @@
 (define-library
   (retropikzel pffi v0.1.0 main)
   (cond-expand
+    (guile
+      (import (scheme base)
+              (scheme write)
+              (scheme file)
+              (scheme process-context)
+              (rnrs bytevectors)
+              (system foreign)
+              (system foreign-library)))
     (sagittarius
       (import (scheme base)
               (scheme write)
               (scheme file)
               (scheme process-context)
               (sagittarius ffi)
-              (sagittarius))
-      (guile (import (scheme base)
-                     (scheme write)
-                     (scheme file)
-                     (scheme process-context)
-                     (sagittarius ffi)
-                     (system foreign)
-                     (system foreign-library))))
+              (sagittarius)))
     (else (error "Implementation not supported by r7rs-pffi")))
   (export pffi-call
           pffi-types
@@ -144,28 +145,30 @@
                   ((equal? type 'void) 'void)
                   (else (error "pffi-type->native-type -- No such pffi type" type))))
           (guile
-            (cond ((equal? type 'int8) 'int8)
-                  ((equal? type 'uint8) 'uint8)
-                  ((equal? type 'int16) 'int16)
-                  ((equal? type 'uint16) 'uint16)
-                  ((equal? type 'int32) 'int32)
-                  ((equal? type 'uint32) 'uint32)
-                  ((equal? type 'int64) 'int64)
-                  ((equal? type 'uint64) 'uint64)
-                  ((equal? type 'intptr) 'intptr)
-                  ((equal? type 'uintptr) 'uintptr)
-                  ((equal? type 'char) 'char)
-                  ((equal? type 'unsigned-char) 'char)
-                  ((equal? type 'short) 'short)
-                  ((equal? type 'unsigned-short) 'unsigned-short)
-                  ((equal? type 'int) 'int)
-                  ((equal? type 'unsigned-int) 'unsigned-int)
-                  ((equal? type 'long) 'long)
-                  ((equal? type 'unsigned-long) 'unsigned-long)
-                  ((equal? type 'float) 'float)
-                  ((equal? type 'double) 'double)
+            (cond ((equal? type 'int8) int8)
+                  ((equal? type 'uint8) uint8)
+                  ((equal? type 'int16) int16)
+                  ((equal? type 'uint16) uint16)
+                  ((equal? type 'int32) int32)
+                  ((equal? type 'uint32) uint32)
+                  ((equal? type 'int64) int64)
+                  ((equal? type 'uint64) uint64)
+                  ;((equal? type 'intptr) intptr)
+                  ;((equal? type 'uintptr) uintptr)
+                  ;((equal? type 'char) char)
+                  ((equal? type 'char) int)
+                  ;((equal? type 'unsigned-char) char)
+                  ((equal? type 'unsigned-char) int)
+                  ((equal? type 'short) short)
+                  ((equal? type 'unsigned-short) unsigned-short)
+                  ((equal? type 'int) int)
+                  ((equal? type 'unsigned-int) unsigned-int)
+                  ((equal? type 'long) long)
+                  ((equal? type 'unsigned-long) unsigned-long)
+                  ((equal? type 'float) float)
+                  ((equal? type 'double) double)
                   ((equal? type 'pointer) '*)
-                  ((equal? type 'void) 'void)
+                  ((equal? type 'void) void)
                   (else (error "pffi-type->native-type -- No such pffi type" type))))
           )))
 
@@ -183,67 +186,75 @@
               (apply (make-c-function shared-object
                                       (pffi-type->native-type type)
                                       name
-                                      types) vals))
+                                      types)
+                     vals))
             (guile
-              (foreign-library-function shared-object
-                                        name
-                                        type
-                                        types)
-
-
-              )
-            ))))
+              (apply
+                (foreign-library-function shared-object
+                                          (symbol->string name)
+                                          #:return-type (pffi-type->native-type type)
+                                          #:arg-types types)
+                vals))))))
 
     (define pffi-size-of
       (lambda (type)
-        (cond ((eq? type 'int8) (cond-expand (sagittarius size-of-int8_t)))
-              ((eq? type 'uint8)  (cond-expand (sagittarius size-of-uint8_t)))
-              ((eq? type 'int16)  (cond-expand (sagittarius size-of-int16_t)))
-              ((eq? type 'uint16)  (cond-expand (sagittarius size-of-uint16_t)))
-              ((eq? type 'int32)  (cond-expand (sagittarius size-of-int32_t)))
-              ((eq? type 'uint32)  (cond-expand (sagittarius size-of-uint32_t)))
-              ((eq? type 'int64)  (cond-expand (sagittarius size-of-int64_t)))
-              ((eq? type 'uint64)  (cond-expand (sagittarius size-of-uint64_t)))
-              ((eq? type 'intptr)  (cond-expand (sagittarius size-of-intptr_t)))
-              ((eq? type 'uintptr)  (cond-expand (sagittarius size-of-uintptr_t)))
-              ((eq? type 'char)  (cond-expand (sagittarius size-of-char)))
-              ((eq? type 'unsigned-char)  (cond-expand (sagittarius size-of-char)))
-              ((eq? type 'short)  (cond-expand (sagittarius size-of-short)))
-              ((eq? type 'unsigned-short)  (cond-expand (sagittarius size-of-unsigned-short)))
-              ((eq? type 'int)  (cond-expand (sagittarius size-of-int)))
-              ((eq? type 'unsigned-int)  (cond-expand (sagittarius size-of-unsigned-int)))
-              ((eq? type 'long)  (cond-expand (sagittarius size-of-long)))
-              ((eq? type 'unsigned-long)  (cond-expand (sagittarius size-of-unsigned-long)))
-              ((eq? type 'float)  (cond-expand (sagittarius size-of-float)))
-              ((eq? type 'double)  (cond-expand (sagittarius size-of-double)))
-              ((eq? type 'pointer)  (cond-expand (sagittarius size-of-void*)))
-              (else (error "Can not get size of unknown type" type)))))
+        (cond-expand
+          (guile (sizeof (pffi-type->native-type type)))
+          (sagittarius
+            (cond ((eq? type 'int8) (cond-expand (sagittarius size-of-int8_t)))
+                  ((eq? type 'uint8)  (cond-expand (sagittarius size-of-uint8_t)))
+                  ((eq? type 'int16)  (cond-expand (sagittarius size-of-int16_t)))
+                  ((eq? type 'uint16)  (cond-expand (sagittarius size-of-uint16_t)))
+                  ((eq? type 'int32)  (cond-expand (sagittarius size-of-int32_t)))
+                  ((eq? type 'uint32)  (cond-expand (sagittarius size-of-uint32_t)))
+                  ((eq? type 'int64)  (cond-expand (sagittarius size-of-int64_t)))
+                  ((eq? type 'uint64)  (cond-expand (sagittarius size-of-uint64_t)))
+                  ((eq? type 'intptr)  (cond-expand (sagittarius size-of-intptr_t)))
+                  ((eq? type 'uintptr)  (cond-expand (sagittarius size-of-uintptr_t)))
+                  ((eq? type 'char)  (cond-expand (sagittarius size-of-char)))
+                  ((eq? type 'unsigned-char)  (cond-expand (sagittarius size-of-char)))
+                  ((eq? type 'short)  (cond-expand (sagittarius size-of-short)))
+                  ((eq? type 'unsigned-short)  (cond-expand (sagittarius size-of-unsigned-short)))
+                  ((eq? type 'int)  (cond-expand (sagittarius size-of-int)))
+                  ((eq? type 'unsigned-int)  (cond-expand (sagittarius size-of-unsigned-int)))
+                  ((eq? type 'long)  (cond-expand (sagittarius size-of-long)))
+                  ((eq? type 'unsigned-long)  (cond-expand (sagittarius size-of-unsigned-long)))
+                  ((eq? type 'float)  (cond-expand (sagittarius size-of-float)))
+                  ((eq? type 'double)  (cond-expand (sagittarius size-of-double)))
+                  ((eq? type 'pointer)  (cond-expand (sagittarius size-of-void*)))
+                  (else (error "Can not get size of unknown type" type)))))))
 
     (define pffi-pointer-allocate
       (lambda (size)
         (cond-expand
-          (sagittarius (allocate-pointer size)))))
+          (sagittarius (allocate-pointer size))
+          (guile (bytevector->pointer (make-bytevector size 0))))))
 
     (define pffi-pointer-null
       (lambda ()
         (cond-expand
-          (sagittarius (integer->pointer 0)))))
+          (sagittarius (integer->pointer 0))
+          (guile (make-pointer 0)))))
 
     (define pffi-string->pointer
       (lambda (string-content)
-        (cond-expand (sagittarius (bytevector->pointer (string->utf8 (string-copy string-content)))))))
+        (cond-expand (sagittarius (bytevector->pointer (string->utf8 (string-copy string-content))))
+                     (guile (string->pointer string-content)))))
 
     (define pffi-pointer->string
       (lambda (pointer)
-        (cond-expand (sagittarius (pointer->string pointer)))))
+        (cond-expand (sagittarius (pointer->string pointer))
+                     (guile (pointer->string pointer)))))
 
     (define pffi-pointer->bytevector
       (lambda (pointer size)
-        (cond-expand (sagittarius (pointer->bytevector pointer size)))))
+        (cond-expand (sagittarius (pointer->bytevector pointer size))
+                     (guile (pointer->bytevector pointer size)))))
 
     (define pffi-shared-object-load
       (lambda (path)
-        (cond-expand (sagittarius (open-shared-library path)))))
+        (cond-expand (sagittarius (open-shared-library path))
+                     (guile (load-foreign-library path #:lazy? #f)))))
 
     (define pffi-shared-object-auto-load
       (lambda (object-name additional-paths)
@@ -251,27 +262,29 @@
                (shared-object #f))
           (for-each
             (lambda (path)
-              (write path)
-              (newline)
               (if (not shared-object)
-                (let ((object-path (string-append path
-                                                  "/"
-                                                  object-name
-                                                  (cond-expand (windows ".dll") (else ".so"))))
-                      (object-version-path (string-append path
-                                                          "/"
-                                                          object-name
-                                                          (cond-expand (windows ".dll") (else ".so.0"))))
-                      (object-lib-path (string-append path
-                                                      "/"
-                                                      (cond-expand (windows "") (else "lib"))
-                                                      object-name
-                                                      (cond-expand (windows ".dll") (else ".so"))))
-                      (object-version-lib-path (string-append path
-                                                              "/"
-                                                              (cond-expand (windows "") (else "lib"))
-                                                              object-name
-                                                              (cond-expand (windows ".dll") (else ".so.0")))))
+                (let ((object-path
+                        (string-append path
+                                       "/"
+                                       object-name
+                                       (cond-expand (windows ".dll") (else ".so"))))
+                      (object-version-path
+                        (string-append path
+                                       "/"
+                                       object-name
+                                       (cond-expand (windows ".dll") (else ".so.0"))))
+                      (object-lib-path
+                        (string-append path
+                                       "/"
+                                       (cond-expand (windows "") (else "lib"))
+                                       object-name
+                                       (cond-expand (windows ".dll") (else ".so"))))
+                      (object-version-lib-path
+                        (string-append path
+                                       "/"
+                                       (cond-expand (windows "") (else "lib"))
+                                       object-name
+                                       (cond-expand (windows ".dll") (else ".so.0")))))
                   (cond
                     ((file-exists? object-path)
                      (set! shared-object (pffi-shared-object-load object-path)))
@@ -288,11 +301,13 @@
 
     (define pffi-pointer-free
       (lambda (pointer)
-        (cond-expand (sagittarius (c-free pointer)))))
+        (cond-expand (sagittarius (c-free pointer))
+                     (guile #t))))
 
     (define pffi-pointer-null?
       (lambda (pointer)
-        (cond-expand (sagittarius (null-pointer? pointer)))))
+        (cond-expand (sagittarius (null-pointer? pointer))
+                     (guile (null-pointer? pointer)))))
 
     (define pffi-pointer-set!
       (lambda (pointer type offset value)
@@ -318,7 +333,31 @@
                     ((equal? type 'unsigned-long) (pointer-set-c-unsigned-long! p offset value))
                     ((equal? type 'float) (pointer-set-c-float! p offset value))
                     ((equal? type 'double) (pointer-set-c-double! p offset value))
-                    ((equal? type 'void) (pointer-set-c-void*! p offset value))))))))
+                    ((equal? type 'void) (pointer-set-c-void*! p offset value)))))
+          (guile (let ((p (pointer->bytevector pointer (+ offset 100)))
+                  (native-type (pffi-type->native-type type)))
+             (cond ((equal? native-type int8) (bytevector-s8-set! p offset value))
+                    ((equal? native-type uint8) (bytevector-u8-set! p offset value))
+                    ((equal? native-type int16) (bytevector-s16-set! p offset value (native-endianness)))
+                    ((equal? native-type uint16) (bytevector-u16-set! p offset value (native-endianness)))
+                    ((equal? native-type int32) (bytevector-s32-set! p offset value (native-endianness)))
+                    ((equal? native-type uint32) (bytevector-u32-set! p offset value (native-endianness)))
+                    ((equal? native-type int64) (bytevector-s64-set! p offset value (native-endianness)))
+                    ((equal? native-type uint64) (bytevector-u64-set! p offset value (native-endianness)))
+                    ;((equal? native-type 'intptr_t) (pointer-ref-c-intptr_t p offset))
+                    ;((equal? native-type 'uintptr_t) (pointer-ref-c-uintptr_t p offset))
+                    ((equal? native-type char) (string-set! (pointer->string pointer) offset value))
+                    ;((equal? native-type 'short) (pointer-set-c-short p offset value))
+                    ;((equal? native-type 'unsigned-short) (pointer-ref-c-unsigned-short p offset))
+                    ((equal? native-type int) (bytevector-sint-set! p offset value (native-endianness) (pffi-size-of type)))
+                    ((equal? native-type unsigned-int) (bytevector-uint-set! p offset value (native-endianness) (pffi-size-of type)))
+                    ;((equal? native-type 'long) (pointer-ref-c-long p offset))
+                    ;((equal? native-type 'unsigned-long) (pointer-ref-c-unsigned-long p offset))
+                    ;((equal? native-type 'float) (pointer-ref-c-float p offset))
+                    ;((equal? native-type 'double) (pointer-ref-c-double p offset))
+                    ;((equal? native-type '*) (pointer-ref-c-void* p offset))
+
+                    ))))))
 
     (define pffi-pointer-get
       (lambda (pointer type offset)
@@ -345,8 +384,34 @@
                     ((equal? native-type 'unsigned-long) (pointer-ref-c-unsigned-long p offset))
                     ((equal? native-type 'float) (pointer-ref-c-float p offset))
                     ((equal? native-type 'double) (pointer-ref-c-double p offset))
-                    ((equal? native-type 'void*) (pointer-ref-c-void* p offset))))))))
+                    ((equal? native-type 'void*) (pointer-ref-c-void* p offset)))))
+          (guile
+            (let ((p (pointer->bytevector pointer (+ offset 100)))
+                  (native-type (pffi-type->native-type type)))
+             (cond ((equal? native-type int8) (bytevector-s8-ref p offset))
+                    ((equal? native-type uint8) (bytevector-u8-ref p offset))
+                    ((equal? native-type int16) (bytevector-s16-ref p offset (native-endianness)))
+                    ((equal? native-type uint16) (bytevector-u16-ref p offset (native-endianness)))
+                    ((equal? native-type int32) (bytevector-s32-ref p offset (native-endianness)))
+                    ((equal? native-type uint32) (bytevector-u32-ref p offset (native-endianness)))
+                    ((equal? native-type int64) (bytevector-s64-ref p offset (native-endianness)))
+                    ((equal? native-type uint64) (bytevector-u64-ref p offset (native-endianness)))
+                    ;((equal? native-type 'intptr_t) (pointer-ref-c-intptr_t p offset))
+                    ;((equal? native-type 'uintptr_t) (pointer-ref-c-uintptr_t p offset))
+                    ((equal? native-type char) (string-ref (pointer->string pointer) offset))
+                    ;((equal? native-type 'short) (pointer-set-c-short p offset value))
+                    ;((equal? native-type 'unsigned-short) (pointer-ref-c-unsigned-short p offset))
+                    ((equal? native-type int) (bytevector-sint-ref p offset (native-endianness) (pffi-size-of type)))
+                    ((equal? native-type unsigned-int) (bytevector-uint-ref p offset (native-endianness) (pffi-size-of type)))
+                    ;((equal? native-type 'long) (pointer-ref-c-long p offset))
+                    ;((equal? native-type 'unsigned-long) (pointer-ref-c-unsigned-long p offset))
+                    ;((equal? native-type 'float) (pointer-ref-c-float p offset))
+                    ;((equal? native-type 'double) (pointer-ref-c-double p offset))
+                    ;((equal? native-type '*) (pointer-ref-c-void* p offset))
+
+                    ))))))
 
     (define pffi-pointer-deref
-      (lambda (pointer offset)
-        (cond-expand (sagittarius (deref pointer offset)))))))
+      (lambda (pointer)
+        (cond-expand (sagittarius (deref pointer 0))
+                     (guile (dereference-pointer pointer)))))))
