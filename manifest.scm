@@ -4,6 +4,7 @@
 
 (specifications->manifest
   (list "guile"
+        "racket-minimal"
         "sdl2"
         "sdl2-image"
         "sdl2-ttf"

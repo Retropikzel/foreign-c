@@ -1,3 +1,4 @@
+#lang r7rs
 (define-library
   (retropikzel pffi v0.1.0 main)
   (cond-expand
