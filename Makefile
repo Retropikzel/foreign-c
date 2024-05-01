@@ -1,6 +1,11 @@
 VERSION=v0.1.0
 RACKETEXE=${HOME}/.wine/drive_c/Program Files/Racket/racket.exe
 
+documentation:
+	schubert document
+	VERSION=${VERSION} bash doc/generate.sh > documentation.md
+
+
 test-sagittatius-sdl2:
 	sash -r7 -L . test/sdl2.scm
 
