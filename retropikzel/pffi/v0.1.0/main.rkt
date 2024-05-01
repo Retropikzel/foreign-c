@@ -25,7 +25,9 @@
               (only (racket base)
                     system-type)
               (compatibility mlist)
-              (ffi unsafe)))
+              (ffi unsafe))
+      (stklos )
+      )
     (else (error "Implementation not supported by r7rs-pffi")))
   (export pffi-call
           pffi-types
@@ -50,14 +52,12 @@
     (define platform-file-extension
       (cond-expand
         (racket (if (equal? (system-type 'os) 'windows) ".dll" ".so"))
-        (guile "")
         (windows ".dll")
         (else ".so")))
 
     (define platform-version-file-extension
       (cond-expand
         (racket (if (equal? (system-type 'os) 'windows) ".dll" ".so.0"))
-        (guile "")
         (windows ".dll")
         (else ".so.0")))
 
@@ -243,10 +243,39 @@
 
     (define pffi-pointer?
       (lambda (object)
-        (cond-expand (sagittarius (pointer? object))
-                     (guile (pointer? object))
-                     (racket (cpointer? object)))))
+        (cond-expand
+          (sagittarius (pointer? object))
+          (guile (pointer? object))
+          (racket (cpointer? object)))))
 
+    ;> ### pffi-call
+    ;>
+    ;> Arguments:
+    ;>
+    ;> - shared-object (object)
+    ;>   - Shared object returned by pffi-shared-object-load or pffi-shared-object-auto-load
+    ;> - name (symbol)
+    ;>   - Name of the C function you want to call
+    ;> - type (symbol)
+    ;>   - Return type of the C function you want to call
+    ;> - arguments (list (cons type value)...)
+    ;>   - Arguments you want to pass to the C function as pairs of type and value
+    ;>
+    ;> Example:
+    ;>
+    ;> (define sdl2* (pffi-shared-object-auto-load "SDL2" (list))
+    ;>
+    ;> (pffi-call sdl2* 'SDL_Init 'int '((int . 32)))
+    ;>
+    ;> (define window* (pffi-call sdl2*
+    ;>                           'SDL_CreateWindow
+    ;>                           'pointer
+    ;>                           (list (cons 'pointer (pffi-string->pointer "Hello"))
+    ;>                                 (cons 'int 1)
+    ;>                                 (cons 'int 1)
+    ;>                                 (cons 'int 400)
+    ;>                                 (cons 'int 400)
+    ;>                                 (cons 'int 4))
     (define pffi-call
       (lambda (shared-object name type arguments)
         (let ((types (map pffi-type->native-type (map car arguments)))
@@ -276,27 +305,27 @@
       (lambda (type)
         (cond-expand
           (sagittarius
-            (cond ((eq? type 'int8) (cond-expand (sagittarius size-of-int8_t)))
-                  ((eq? type 'uint8)  (cond-expand (sagittarius size-of-uint8_t)))
-                  ((eq? type 'int16)  (cond-expand (sagittarius size-of-int16_t)))
-                  ((eq? type 'uint16)  (cond-expand (sagittarius size-of-uint16_t)))
-                  ((eq? type 'int32)  (cond-expand (sagittarius size-of-int32_t)))
-                  ((eq? type 'uint32)  (cond-expand (sagittarius size-of-uint32_t)))
-                  ((eq? type 'int64)  (cond-expand (sagittarius size-of-int64_t)))
-                  ((eq? type 'uint64)  (cond-expand (sagittarius size-of-uint64_t)))
-                  ((eq? type 'intptr)  (cond-expand (sagittarius size-of-intptr_t)))
-                  ((eq? type 'uintptr)  (cond-expand (sagittarius size-of-uintptr_t)))
-                  ((eq? type 'char)  (cond-expand (sagittarius size-of-char)))
-                  ((eq? type 'unsigned-char)  (cond-expand (sagittarius size-of-char)))
-                  ((eq? type 'short)  (cond-expand (sagittarius size-of-short)))
-                  ((eq? type 'unsigned-short)  (cond-expand (sagittarius size-of-unsigned-short)))
-                  ((eq? type 'int)  (cond-expand (sagittarius size-of-int)))
-                  ((eq? type 'unsigned-int)  (cond-expand (sagittarius size-of-unsigned-int)))
-                  ((eq? type 'long)  (cond-expand (sagittarius size-of-long)))
-                  ((eq? type 'unsigned-long)  (cond-expand (sagittarius size-of-unsigned-long)))
-                  ((eq? type 'float)  (cond-expand (sagittarius size-of-float)))
-                  ((eq? type 'double)  (cond-expand (sagittarius size-of-double)))
-                  ((eq? type 'pointer)  (cond-expand (sagittarius size-of-void*)))
+            (cond ((eq? type 'int8) size-of-int8_t)
+                  ((eq? type 'uint8) size-of-uint8_t)
+                  ((eq? type 'int16) size-of-int16_t)
+                  ((eq? type 'uint16) size-of-uint16_t)
+                  ((eq? type 'int32) size-of-int32_t)
+                  ((eq? type 'uint32) size-of-uint32_t)
+                  ((eq? type 'int64) size-of-int64_t)
+                  ((eq? type 'uint64) size-of-uint64_t)
+                  ((eq? type 'intptr) size-of-intptr_t)
+                  ((eq? type 'uintptr) size-of-uintptr_t)
+                  ((eq? type 'char) size-of-char)
+                  ((eq? type 'unsigned-char) size-of-char)
+                  ((eq? type 'short) size-of-short)
+                  ((eq? type 'unsigned-short) size-of-unsigned-short)
+                  ((eq? type 'int) size-of-int)
+                  ((eq? type 'unsigned-int) size-of-unsigned-int)
+                  ((eq? type 'long) size-of-long)
+                  ((eq? type 'unsigned-long) size-of-unsigned-long)
+                  ((eq? type 'float) size-of-float)
+                  ((eq? type 'double) size-of-double)
+                  ((eq? type 'pointer) size-of-void*)
                   (else (error "Can not get size of unknown type" type))))
           (guile (sizeof (pffi-type->native-type type)))
           (racket (ctype-sizeof (pffi-type->native-type type))))))
@@ -432,7 +461,7 @@
                          ((equal? native-type uint64) (bytevector-u64-set! p offset value (native-endianness)))
                          ;((equal? native-type 'intptr_t) (pointer-ref-c-intptr_t p offset))
                          ;((equal? native-type 'uintptr_t) (pointer-ref-c-uintptr_t p offset))
-                         ((equal? native-type char) (string-set! (pointer->string pointer) offset value))
+                         ;((equal? native-type char) (string-set! (pointer->string pointer) offset value))
                          ;((equal? native-type 'short) (pointer-set-c-short p offset value))
                          ;((equal? native-type 'unsigned-short) (pointer-ref-c-unsigned-short p offset))
                          ((equal? native-type int) (bytevector-sint-set! p offset value (native-endianness) (pffi-size-of type)))
@@ -484,7 +513,7 @@
                     ((equal? native-type uint64) (bytevector-u64-ref p offset (native-endianness)))
                     ;((equal? native-type 'intptr_t) (pointer-ref-c-intptr_t p offset))
                     ;((equal? native-type 'uintptr_t) (pointer-ref-c-uintptr_t p offset))
-                    ((equal? native-type char) (string-ref (pointer->string pointer) offset))
+                    ;((equal? native-type char) (string-ref (pointer->string pointer) offset))
                     ;((equal? native-type 'short) (pointer-set-c-short p offset value))
                     ;((equal? native-type 'unsigned-short) (pointer-ref-c-unsigned-short p offset))
                     ((equal? native-type int) (bytevector-sint-ref p offset (native-endianness) (pffi-size-of type)))

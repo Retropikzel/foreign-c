@@ -25,6 +25,12 @@
                     system-type)
               (compatibility mlist)
               (ffi unsafe)))
+    (stklos
+      (import (scheme base)
+              (scheme write)
+              (scheme file)
+              (scheme process-context)
+              (stklos)))
     (else (error "Implementation not supported by r7rs-pffi")))
   (export pffi-call
           pffi-types
@@ -49,14 +55,12 @@
     (define platform-file-extension
       (cond-expand
         (racket (if (equal? (system-type 'os) 'windows) ".dll" ".so"))
-        (guile "")
         (windows ".dll")
         (else ".so")))
 
     (define platform-version-file-extension
       (cond-expand
         (racket (if (equal? (system-type 'os) 'windows) ".dll" ".so.0"))
-        (guile "")
         (windows ".dll")
         (else ".so.0")))
 
@@ -109,26 +113,6 @@
     (define auto-load-paths
       (append
         (cond-expand
-          (racket (if (equal? (system-type 'os) 'windows)
-                    (append
-                      (if (get-environment-variable "SYSTEM")
-                        (list (get-environment-variable "SYSTEM"))
-                        (list))
-                      (if (get-environment-variable "WINDIR")
-                        (list (get-environment-variable "WINDIR"))
-                        (list))
-                      (list ".")
-                      (string-split (get-environment-variable "PATH") #\;))
-                    (append
-                      (list (if (get-environment-variable "GUIX_ENVIRONMENT")
-                              (string-append (get-environment-variable "GUIX_ENVIRONMENT") "/lib")
-                              ""))
-                      (if (get-environment-variable "LD_LOAD_PATH")
-                        (list) ;(string-split (get-environment-variable "LD_LOAD_PATH") #\:)
-                        (list))
-                      (list "/lib/x86_64-linux-gnu"
-                            "/usr/lib/x86_64-linux-gnu"
-                            "/usr/local/lib"))))
           (windows
             (append
               (if (get-environment-variable "SYSTEM")
@@ -186,6 +170,7 @@
                   ((equal? type 'float) 'float)
                   ((equal? type 'double) 'double)
                   ((equal? type 'pointer) 'void*)
+                  ((equal? type 'string) 'void*)
                   ((equal? type 'void) 'void)
                   (else (error "pffi-type->native-type -- No such pffi type" type))))
           (guile
@@ -212,6 +197,7 @@
                   ((equal? type 'float) float)
                   ((equal? type 'double) double)
                   ((equal? type 'pointer) '*)
+                  ((equal? type 'string) '*)
                   ((equal? type 'void) void)
                   (else (error "pffi-type->native-type -- No such pffi type" type))))
           (racket
@@ -237,14 +223,40 @@
                   ((equal? type 'float) _float)
                   ((equal? type 'double) _double)
                   ((equal? type 'pointer) _pointer)
+                  ((equal? type 'string) _pointer)
                   ((equal? type 'void) _void)
+                  (else (error "pffi-type->native-type -- No such pffi type" type))))
+          (sktlos
+            (cond ((equal? type 'int8) :int)
+                  ((equal? type 'uint8) :uint)
+                  ((equal? type 'int16) :int)
+                  ((equal? type 'uint16) :uint)
+                  ((equal? type 'int32) :int)
+                  ((equal? type 'uint32) :uint)
+                  ((equal? type 'int64) :int)
+                  ((equal? type 'uint64) :uint)
+                  ((equal? type 'char) :char)
+                  ((equal? type 'unsigned-char) :uchar)
+                  ((equal? type 'short) :short)
+                  ((equal? type 'unsigned-short) :ushort)
+                  ((equal? type 'int) :int)
+                  ((equal? type 'unsigned-int) :uint)
+                  ((equal? type 'long) :long)
+                  ((equal? type 'unsigned-long) :ulong)
+                  ((equal? type 'float) :float)
+                  ((equal? type 'double) :double)
+                  ((equal? type 'pointer) :pointer)
+                  ((equal? type 'string) :string)
+                  ((equal? type 'void) :void)
                   (else (error "pffi-type->native-type -- No such pffi type" type)))))))
 
     (define pffi-pointer?
       (lambda (object)
-        (cond-expand (sagittarius (pointer? object))
-                     (guile (pointer? object))
-                     (racket (cpointer? object)))))
+        (cond-expand
+          (sagittarius (pointer? object))
+          (guile (pointer? object))
+          (racket (cpointer? object))
+          (stklos (cpointer? object)))))
 
     ;> ### pffi-call
     ;>
@@ -277,7 +289,8 @@
     (define pffi-call
       (lambda (shared-object name type arguments)
         (let ((types (map pffi-type->native-type (map car arguments)))
-              (vals (map cdr arguments)))
+              (vals (map cdr arguments))
+              (native-type (pffi-type->native-type type)))
           (cond-expand
             (sagittarius
               (apply (make-c-function shared-object
@@ -297,74 +310,89 @@
                                   shared-object
                                   (_cprocedure (mlist->list types)
                                                (pffi-type->native-type type)))
-                     vals))))))
+                     vals))
+            (stklos
+              (stklos (apply (make-external-function
+                               (symbol->string name)
+                               types
+                               native-type
+                               shared-object)
+                             vals)))))))
 
     (define pffi-size-of
       (lambda (type)
         (cond-expand
           (sagittarius
-            (cond ((eq? type 'int8) (cond-expand (sagittarius size-of-int8_t)))
-                  ((eq? type 'uint8)  (cond-expand (sagittarius size-of-uint8_t)))
-                  ((eq? type 'int16)  (cond-expand (sagittarius size-of-int16_t)))
-                  ((eq? type 'uint16)  (cond-expand (sagittarius size-of-uint16_t)))
-                  ((eq? type 'int32)  (cond-expand (sagittarius size-of-int32_t)))
-                  ((eq? type 'uint32)  (cond-expand (sagittarius size-of-uint32_t)))
-                  ((eq? type 'int64)  (cond-expand (sagittarius size-of-int64_t)))
-                  ((eq? type 'uint64)  (cond-expand (sagittarius size-of-uint64_t)))
-                  ((eq? type 'intptr)  (cond-expand (sagittarius size-of-intptr_t)))
-                  ((eq? type 'uintptr)  (cond-expand (sagittarius size-of-uintptr_t)))
-                  ((eq? type 'char)  (cond-expand (sagittarius size-of-char)))
-                  ((eq? type 'unsigned-char)  (cond-expand (sagittarius size-of-char)))
-                  ((eq? type 'short)  (cond-expand (sagittarius size-of-short)))
-                  ((eq? type 'unsigned-short)  (cond-expand (sagittarius size-of-unsigned-short)))
-                  ((eq? type 'int)  (cond-expand (sagittarius size-of-int)))
-                  ((eq? type 'unsigned-int)  (cond-expand (sagittarius size-of-unsigned-int)))
-                  ((eq? type 'long)  (cond-expand (sagittarius size-of-long)))
-                  ((eq? type 'unsigned-long)  (cond-expand (sagittarius size-of-unsigned-long)))
-                  ((eq? type 'float)  (cond-expand (sagittarius size-of-float)))
-                  ((eq? type 'double)  (cond-expand (sagittarius size-of-double)))
-                  ((eq? type 'pointer)  (cond-expand (sagittarius size-of-void*)))
+            (cond ((eq? type 'int8) size-of-int8_t)
+                  ((eq? type 'uint8) size-of-uint8_t)
+                  ((eq? type 'int16) size-of-int16_t)
+                  ((eq? type 'uint16) size-of-uint16_t)
+                  ((eq? type 'int32) size-of-int32_t)
+                  ((eq? type 'uint32) size-of-uint32_t)
+                  ((eq? type 'int64) size-of-int64_t)
+                  ((eq? type 'uint64) size-of-uint64_t)
+                  ((eq? type 'intptr) size-of-intptr_t)
+                  ((eq? type 'uintptr) size-of-uintptr_t)
+                  ((eq? type 'char) size-of-char)
+                  ((eq? type 'unsigned-char) size-of-char)
+                  ((eq? type 'short) size-of-short)
+                  ((eq? type 'unsigned-short) size-of-unsigned-short)
+                  ((eq? type 'int) size-of-int)
+                  ((eq? type 'unsigned-int) size-of-unsigned-int)
+                  ((eq? type 'long) size-of-long)
+                  ((eq? type 'unsigned-long) size-of-unsigned-long)
+                  ((eq? type 'float) size-of-float)
+                  ((eq? type 'double) size-of-double)
+                  ((eq? type 'pointer) size-of-void*)
                   (else (error "Can not get size of unknown type" type))))
           (guile (sizeof (pffi-type->native-type type)))
-          (racket (ctype-sizeof (pffi-type->native-type type))))))
+          (racket (ctype-sizeof (pffi-type->native-type type)))
+          (stklos 4) ; FIX
+          )))
 
     (define pffi-pointer-allocate
       (lambda (size)
         (cond-expand
           (sagittarius (allocate-pointer size))
           (guile (bytevector->pointer (make-bytevector size 0)))
-          (racket (malloc size)))))
+          (racket (malloc size))
+          (stklos (allocate-bytes size)))))
 
     (define pffi-pointer-null
       (lambda ()
         (cond-expand
           (sagittarius (integer->pointer 0))
           (guile (make-pointer 0))
-          (racket #f))))
+          (racket #f)
+          (stklos (let ((p (allocate-bytes 0))) (cpointer-data-set! p 0) p)))))
 
     (define pffi-string->pointer
       (lambda (string-content)
         (cond-expand (sagittarius (bytevector->pointer (string->utf8 (string-copy string-content))))
                      (guile (string->pointer string-content))
-                     (racket (cast string-content _string _pointer)))))
+                     (racket (cast string-content _string _pointer))
+                     (stklos string-content))))
 
     (define pffi-pointer->string
       (lambda (pointer)
         (cond-expand (sagittarius (pointer->string pointer))
                      (guile (pointer->string pointer))
-                     (racket (cast pointer _pointer _string)))))
+                     (racket (cast pointer _pointer _string))
+                     (cpointer->string pointer))))
 
     (define pffi-pointer->bytevector
       (lambda (pointer size)
         (cond-expand (sagittarius (pointer->bytevector pointer size))
                      (guile (pointer->bytevector pointer size))
-                     (racket (cast pointer _pointer _bytes)))))
+                     (racket (cast pointer _pointer _bytes))
+                     (stklos (error "STKlos does not support pffi-pointer->bytevector")))))
 
     (define pffi-shared-object-load
       (lambda (path)
         (cond-expand (sagittarius (open-shared-library path))
                      (guile (load-foreign-library path #:lazy? #f))
-                     (racket (ffi-lib path)))))
+                     (racket (ffi-lib path))
+                     (stklos path))))
 
     (define pffi-shared-object-auto-load
       (lambda (object-name additional-paths)
@@ -413,14 +441,16 @@
       (lambda (pointer)
         (cond-expand (sagittarius (c-free pointer))
                      (guile #t)
-                     (racket (free pointer)))))
+                     (racket (free pointer))
+                     (stklos (free-bytes pointer)))))
 
     (define pffi-pointer-null?
       (lambda (pointer)
         (cond-expand (sagittarius (null-pointer? pointer))
                      (guile (null-pointer? pointer))
-                     (racket (not pointer) ; #f is the null pointer on racket
-                             ))))
+                     ; #f is the null pointer on racket
+                     (racket (not pointer))
+                     (stklos (cpointer-null? pointer)))))
 
     (define pffi-pointer-set!
       (lambda (pointer type offset value)
@@ -459,7 +489,7 @@
                          ((equal? native-type uint64) (bytevector-u64-set! p offset value (native-endianness)))
                          ;((equal? native-type 'intptr_t) (pointer-ref-c-intptr_t p offset))
                          ;((equal? native-type 'uintptr_t) (pointer-ref-c-uintptr_t p offset))
-                         ((equal? native-type char) (string-set! (pointer->string pointer) offset value))
+                         ;((equal? native-type char) (string-set! (pointer->string pointer) offset value))
                          ;((equal? native-type 'short) (pointer-set-c-short p offset value))
                          ;((equal? native-type 'unsigned-short) (pointer-ref-c-unsigned-short p offset))
                          ((equal? native-type int) (bytevector-sint-set! p offset value (native-endianness) (pffi-size-of type)))
@@ -470,7 +500,9 @@
                          ;((equal? native-type 'double) (pointer-ref-c-double p offset))
                          ;((equal? native-type '*) (pointer-ref-c-void* p offset))
                          )))
-          (racket (ptr-set! pointer type offset value)))))
+          (racket (ptr-set! pointer type offset value))
+          (stklos ())
+          )))
 
     (define pffi-pointer-get
       (lambda (pointer type offset)
@@ -511,7 +543,7 @@
                     ((equal? native-type uint64) (bytevector-u64-ref p offset (native-endianness)))
                     ;((equal? native-type 'intptr_t) (pointer-ref-c-intptr_t p offset))
                     ;((equal? native-type 'uintptr_t) (pointer-ref-c-uintptr_t p offset))
-                    ((equal? native-type char) (string-ref (pointer->string pointer) offset))
+                    ;((equal? native-type char) (string-ref (pointer->string pointer) offset))
                     ;((equal? native-type 'short) (pointer-set-c-short p offset value))
                     ;((equal? native-type 'unsigned-short) (pointer-ref-c-unsigned-short p offset))
                     ((equal? native-type int) (bytevector-sint-ref p offset (native-endianness) (pffi-size-of type)))
