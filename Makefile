@@ -38,5 +38,29 @@ test-racket-sdl2: build-rkt
 test-stklos-hello:
 	stklos -A . test/hello.scm
 
-test-racket-sdl2:
-	stklos -A . test/sdl2.scm
+test-kawa-size-of-int:
+	java \
+		--add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED \
+		--add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED \
+		--add-exports java.base/jdk.internal.foreign=ALL-UNNAMED \
+		--enable-native-access=ALL-UNNAMED \
+		--enable-preview \
+		-jar kawa.jar \
+		--r7rs \
+		--full-tailcalls \
+		-Dkawa.import.path=".." \
+		test/size-of-int.scm
+
+test-kawa-sdl2:
+	java \
+		--add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED \
+		--add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED \
+		--add-exports java.base/jdk.internal.foreign=ALL-UNNAMED \
+		--enable-native-access=ALL-UNNAMED \
+		--enable-preview \
+		-jar kawa.jar \
+		--r7rs \
+		--full-tailcalls \
+		-Dkawa.import.path=".." \
+		test/sdl2.scm
+

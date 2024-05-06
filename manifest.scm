@@ -5,7 +5,9 @@
 (specifications->manifest
   (list "guile"
         "racket-minimal"
+        "openjdk"
         "sdl2"
         "sdl2-image"
         "sdl2-ttf"
-        "sdl2-mixer"))
+        "sdl2-mixer"
+        "zig"))
