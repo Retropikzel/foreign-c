@@ -5,6 +5,42 @@ documentation:
 	schubert document
 	VERSION=${VERSION} bash doc/generate.sh > documentation.md
 
+test-size-of:
+	@echo "Sagittarius"
+	sash -r7 -L . test/size-of.scm
+	@echo "Guile"
+	guile --r7rs -L . test/size-of.scm
+	#@echo "Racket"
+	#racket -I r7rs test/size-of.scm
+	#@echo "STKlos"
+	#stklos -A . test/hello.scm
+	@echo "Kawa"
+	java \
+		--add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED \
+		--add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED \
+		--add-exports java.base/jdk.internal.foreign=ALL-UNNAMED \
+		--enable-native-access=ALL-UNNAMED \
+		--enable-preview \
+		-jar kawa.jar \
+		--r7rs \
+		--full-tailcalls \
+		-Dkawa.import.path=".." \
+		test/size-of.scm
+
+test-pointer-set-get:
+	sash -r7 -L . test/pointer-set-get.scm
+	java \
+		--add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED \
+		--add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED \
+		--add-exports java.base/jdk.internal.foreign=ALL-UNNAMED \
+		--enable-native-access=ALL-UNNAMED \
+		--enable-preview \
+		-jar kawa.jar \
+		--r7rs \
+		--full-tailcalls \
+		-Dkawa.import.path=".." \
+		test/pointer-set-get.scm
+
 test-sagittatius-sdl2:
 	sash -r7 -L . test/sdl2.scm
 
@@ -38,7 +74,8 @@ test-racket-sdl2: build-rkt
 test-stklos-hello:
 	stklos -A . test/hello.scm
 
-test-kawa-size-of-int:
+
+test-kawa-string-to-pointer-to-string:
 	java \
 		--add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED \
 		--add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED \
@@ -49,7 +86,7 @@ test-kawa-size-of-int:
 		--r7rs \
 		--full-tailcalls \
 		-Dkawa.import.path=".." \
-		test/size-of-int.scm
+		test/string-to-pointer-to-string.scm
 
 test-kawa-sdl2:
 	java \

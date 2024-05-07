@@ -64,8 +64,6 @@
       (stklos #t)
       (kawa
         (define arena (invoke-static java.lang.foreign.Arena 'global))
-        (define linker #f)
-        (define lookup #f)
         (define value->object
           (lambda (value type)
             (cond ((equal? type 'byte)
@@ -187,12 +185,9 @@
                   ((equal? type 'uint32) uint32)
                   ((equal? type 'int64) int64)
                   ((equal? type 'uint64) uint64)
-                  ;((equal? type 'intptr) intptr)
-                  ;((equal? type 'uintptr) uintptr)
                   ;((equal? type 'char) char)
                   ((equal? type 'char) int)
-                  ;((equal? type 'unsigned-char) char)
-                  ;((equal? type 'unsigned-char) int)
+                  ((equal? type 'unsigned-char) int)
                   ((equal? type 'short) short)
                   ((equal? type 'unsigned-short) unsigned-short)
                   ((equal? type 'int) int)
@@ -214,8 +209,6 @@
                   ((equal? type 'uint32) _uint32)
                   ((equal? type 'int64) _int64)
                   ((equal? type 'uint64) _uint64)
-                  ;((equal? type 'intptr) intptr)
-                  ;((equal? type 'uintptr) uintptr)
                   ;((equal? type 'char) _int32)
                   ((equal? type 'char) _int)
                   ((equal? type 'unsigned-char) _int)
@@ -255,27 +248,37 @@
                   ((equal? type 'void) :void)
                   (else (error "pffi-type->native-type -- No such pffi type" type))))
           (kawa
-            (cond ((equal? type 'int8) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-                  ((equal? type 'uint8) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-                  ((equal? type 'int16) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-                  ((equal? type 'uint16) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-                  ((equal? type 'int32) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-                  ((equal? type 'uint32) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-                  ((equal? type 'int64) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-                  ((equal? type 'uint64) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-                  ((equal? type 'char) (static-field java.lang.foreign.ValueLayout 'JAVA_CHAR))
-                  ((equal? type 'unsigned-char) (static-field java.lang.foreign.ValueLayout 'JAVA_CHAR))
-                  ((equal? type 'short) (static-field java.lang.foreign.ValueLayout 'JAVA_SHORT))
-                  ((equal? type 'unsigned-short) (static-field java.lang.foreign.ValueLayout 'JAVA_SHORT))
-                  ((equal? type 'int) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-                  ((equal? type 'unsigned-int) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-                  ((equal? type 'long) (static-field java.lang.foreign.ValueLayout 'JAVA_LONG))
-                  ((equal? type 'unsigned-long) (static-field java.lang.foreign.ValueLayout 'JAVA_LONG))
-                  ((equal? type 'float) (static-field java.lang.foreign.ValueLayout 'JAVA_FLOAT))
-                  ((equal? type 'double) (static-field java.lang.foreign.ValueLayout 'JAVA_DOUBLE))
-                  ((equal? type 'pointer) (static-field java.lang.foreign.ValueLayout 'ADDRESS))
-                  ((equal? type 'void) (static-field java.lang.foreign.ValueLayout 'ADDRESS))
-                  (else (error "pffi-type->native-type -- No such pffi type" type)))))))
+            (cond
+              ((equal? type 'int8) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 1))
+              ;((equal? type 'int8) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
+              ((equal? type 'uint8) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 1))
+              ;((equal? type 'uint8) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
+              ((equal? type 'int16) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 2))
+              ;((equal? type 'int16) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
+              ((equal? type 'uint16) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 2))
+              ;((equal? type 'uint16) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
+              ((equal? type 'int32) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
+              ;((equal? type 'int32) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
+              ((equal? type 'uint32) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
+              ;((equal? type 'uint32) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
+              ((equal? type 'int64) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 8))
+              ;((equal? type 'int64) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
+              ((equal? type 'uint64) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 8))
+              ;((equal? type 'uint64) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
+              ((equal? type 'char) (static-field java.lang.foreign.ValueLayout 'JAVA_CHAR))
+              ((equal? type 'unsigned-char) (static-field java.lang.foreign.ValueLayout 'JAVA_CHAR))
+              ((equal? type 'short) (static-field java.lang.foreign.ValueLayout 'JAVA_SHORT))
+              ((equal? type 'unsigned-short) (static-field java.lang.foreign.ValueLayout 'JAVA_SHORT))
+              ((equal? type 'int) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
+              ((equal? type 'unsigned-int) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
+              ((equal? type 'long) (static-field java.lang.foreign.ValueLayout 'JAVA_LONG))
+              ((equal? type 'unsigned-long) (static-field java.lang.foreign.ValueLayout 'JAVA_LONG))
+              ((equal? type 'float) (static-field java.lang.foreign.ValueLayout 'JAVA_FLOAT))
+              ((equal? type 'double) (static-field java.lang.foreign.ValueLayout 'JAVA_DOUBLE))
+              ((equal? type 'pointer) (static-field java.lang.foreign.ValueLayout 'ADDRESS))
+              ((equal? type 'string) (static-field java.lang.foreign.ValueLayout 'ADDRESS))
+              ((equal? type 'void) (static-field java.lang.foreign.ValueLayout 'ADDRESS))
+              (else (error "pffi-type->native-type -- No such pffi type" type)))))))
 
     (define pffi-pointer?
       (lambda (object)
@@ -284,10 +287,8 @@
           (guile (pointer? object))
           (racket (cpointer? object))
           (stklos (cpointer? object))
-          (kawa (display "pffi-pointer? called with: ") ; TODO FIX
-                (write object)
-                (newline)
-                #f))))
+          (kawa (error "Not yet implemented: pffi-pointer?") ; TODO FIX
+                ))))
 
     ;> ### pffi-call
     ;>
@@ -355,9 +356,9 @@
                      (function-descriptor (if (equal? type 'void)
                                             (apply of-void types)
                                             (apply of (append (list native-type) types))))
-                     (method-handle (invoke linker
+                     (method-handle (invoke (cdr (assoc 'linker shared-object))
                                             'downcallHandle
-                                            (invoke (invoke lookup
+                                            (invoke (invoke (cdr (assoc 'lookup shared-object))
                                                             'find
                                                             (symbol->string name))
                                                     'orElseThrow)
@@ -377,8 +378,6 @@
                   ((eq? type 'uint32) size-of-uint32_t)
                   ((eq? type 'int64) size-of-int64_t)
                   ((eq? type 'uint64) size-of-uint64_t)
-                  ((eq? type 'intptr) size-of-intptr_t)
-                  ((eq? type 'uintptr) size-of-uintptr_t)
                   ((eq? type 'char) size-of-char)
                   ((eq? type 'unsigned-char) size-of-char)
                   ((eq? type 'short) size-of-short)
@@ -389,12 +388,13 @@
                   ((eq? type 'unsigned-long) size-of-unsigned-long)
                   ((eq? type 'float) size-of-float)
                   ((eq? type 'double) size-of-double)
+                  ((eq? type 'string) size-of-void*)
                   ((eq? type 'pointer) size-of-void*)
                   (else (error "Can not get size of unknown type" type))))
           (guile (sizeof (pffi-type->native-type type)))
           (racket (ctype-sizeof (pffi-type->native-type type)))
           (stklos 4) ; TODO FIX
-          (kawa (invoke (pffi-type->native-type type) 'byteSize)))))
+          (kawa (invoke (pffi-type->native-type type) 'byteAlignment)))))
 
     (define pffi-pointer-allocate
       (lambda (size)
@@ -410,9 +410,9 @@
         (cond-expand
           (sagittarius (integer->pointer 0))
           (guile (make-pointer 0))
-          (racket #f) ; In rackter #f is null pointer
+          (racket #f) ; In racket #f is null pointer
           (stklos (let ((p (allocate-bytes 0))) (cpointer-data-set! p 0) p))
-          (kawa (invoke-static java.lang.foreign.MemorySegment 'ofAddress 0)))))
+          (kawa (static-field java.lang.foreign.MemorySegment 'NULL)))))
 
     (define pffi-string->pointer
       (lambda (string-content)
@@ -428,7 +428,7 @@
                      (guile (pointer->string pointer))
                      (racket (cast pointer _pointer _string))
                      (cpointer->string pointer)
-                     (kawa (invoke pointer 'getString)))))
+                     (kawa (invoke (invoke pointer 'reinterpret (static-field java.lang.Integer 'MAX_VALUE)) 'getUtf8String 0)))))
 
     (define pffi-pointer->bytevector
       (lambda (pointer size)
@@ -436,7 +436,10 @@
                      (guile (pointer->bytevector pointer size))
                      (racket (cast pointer _pointer _bytes))
                      (stklos (error "Not yet implemented: pffi-pointer->bytevector")) ; TODO FIX
-                     (kawa (invoke pointer 'toArray)))))
+                     (kawa (invoke (invoke pointer 'reinterpret size)
+                                   'toArray
+                                   (static-field java.lang.foreign.ValueLayout
+                                                 'JAVA_BYTE))))))
 
     (define pffi-shared-object-load
       (lambda (path)
@@ -450,17 +453,16 @@
                               (library-parent-folder (make java.io.File (invoke library-file 'getParent)))
                               (absolute-path (string-append (invoke library-parent-folder 'getCanonicalPath)
                                                             "/"
-                                                            file-name)))
-                         (set! arena (invoke-static java.lang.foreign.Arena 'ofConfined))
-                         (set! linker (invoke-static java.lang.foreign.Linker 'nativeLinker))
-                         (set! lookup (invoke-static java.lang.foreign.SymbolLookup
+                                                            file-name))
+                              ;(set! arena (invoke-static java.lang.foreign.Arena 'ofConfined))
+
+                              (linker (invoke-static java.lang.foreign.Linker 'nativeLinker))
+                              (lookup (invoke-static java.lang.foreign.SymbolLookup
                                                      'libraryLookup
                                                      absolute-path
-                                                     (invoke-static java.lang.foreign.Arena 'ofAuto)
-                                                     ))
-                         ;(invoke-static java.lang.System 'load absolute-path)
-                         #t))
-                     )))
+                                                     arena)))
+                         (list (cons 'linker linker)
+                               (cons 'lookup lookup)))))))
 
     (define pffi-shared-object-auto-load
       (lambda (object-name additional-paths)
@@ -571,10 +573,7 @@
                          )))
           (racket (ptr-set! pointer type offset value))
           (stklos (error "Not yet impelemented: pffi-pointer-set!")) ; TODO FIX
-          (kawa (invoke pointer
-                        'set
-                        (pffi-type->native-type type)
-                        offset)))))
+          (kawa (invoke pointer 'set (pffi-type->native-type type) offset value)))))
 
     (define pffi-pointer-get
       (lambda (pointer type offset)
@@ -628,10 +627,7 @@
                     )))
           (racket (ptr-ref pointer type offset))
           (stklos (error "Not yet implemented: pffi-pointer-get")) ; TODO FIX
-          (kawa (invoke pointer
-                        'get
-                        (pffi-type->native-type type)
-                        offset)))))
+          (kawa (invoke pointer 'get (pffi-type->native-type type) offset)))))
 
     (define pffi-pointer-deref
       (lambda (pointer)
@@ -639,5 +635,4 @@
                      (guile (dereference-pointer pointer))
                      (racket (error "Not yet implemented: pffi-pointer-deref")) ; TODO FIX
                      (stklos (error "Not yet implemented: pffi-pointer-deref")) ; TODO FIX
-                     (kawa (error "Not yet implemented: pffi-pointer-deref")) ; TODO FIX
-                     )))))
+                     (kawa (invoke pointer 'get (static-field java.lang.foreign.ValueLayout 'ADDRESS) 0)))))))
