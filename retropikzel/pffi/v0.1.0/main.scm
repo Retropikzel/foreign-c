@@ -287,8 +287,8 @@
           (guile (pointer? object))
           (racket (cpointer? object))
           (stklos (cpointer? object))
-          (kawa (error "Not yet implemented: pffi-pointer?") ; TODO FIX
-                ))))
+          (kawa  (string=? (invoke (invoke object 'getClass) 'getName)
+                           "jdk.internal.foreign.NativeMemorySegmentImpl")))))
 
     ;> ### pffi-call
     ;>
