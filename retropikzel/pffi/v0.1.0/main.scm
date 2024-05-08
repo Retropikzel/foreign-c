@@ -21,8 +21,7 @@
               (scheme write)
               (scheme file)
               (scheme process-context)
-              (only (racket base)
-                    system-type)
+              (only (racket base) system-type)
               (compatibility mlist)
               (ffi unsafe)))
     (stklos
@@ -427,7 +426,7 @@
         (cond-expand (sagittarius (pointer->string pointer))
                      (guile (pointer->string pointer))
                      (racket (cast pointer _pointer _string))
-                     (cpointer->string pointer)
+                     (stklos (cpointer->string pointer))
                      (kawa (invoke (invoke pointer 'reinterpret (static-field java.lang.Integer 'MAX_VALUE)) 'getUtf8String 0)))))
 
     (define pffi-pointer->bytevector
@@ -571,7 +570,7 @@
                          ;((equal? native-type 'double) (pointer-ref-c-double p offset))
                          ;((equal? native-type '*) (pointer-ref-c-void* p offset))
                          )))
-          (racket (ptr-set! pointer type offset value))
+          (racket (ptr-set! pointer type offset 'abs value))
           (stklos (error "Not yet impelemented: pffi-pointer-set!")) ; TODO FIX
           (kawa (invoke pointer 'set (pffi-type->native-type type) offset value)))))
 
@@ -625,7 +624,7 @@
                     ;((equal? native-type 'double) (pointer-ref-c-double p offset))
                     ;((equal? native-type '*) (pointer-ref-c-void* p offset))
                     )))
-          (racket (ptr-ref pointer type offset))
+          (racket (ptr-ref pointer type 'abs offset))
           (stklos (error "Not yet implemented: pffi-pointer-get")) ; TODO FIX
           (kawa (invoke pointer 'get (pffi-type->native-type type) offset)))))
 
