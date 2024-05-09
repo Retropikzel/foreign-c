@@ -1,3 +1,4 @@
+;> # pffi
 (define-library
   (retropikzel pffi v0.1.0 main)
   (cond-expand
@@ -36,8 +37,9 @@
               (scheme file)
               (scheme process-context)))
     (else (error "Implementation not supported by r7rs-pffi")))
-  (export pffi-call
-          pffi-types
+  (export pffi-shared-object-auto-load
+          pffi-shared-object-load
+          pffi-call
           pffi-size-of
           pffi-pointer-allocate
           pffi-pointer-null
@@ -47,8 +49,6 @@
           pffi-pointer-free
           pffi-pointer?
           pffi-pointer-null?
-          pffi-shared-object-load
-          pffi-shared-object-auto-load
           pffi-pointer-set!
           pffi-pointer-get
           pffi-pointer-deref)
@@ -80,6 +80,8 @@
                   ((equal? type 'char)
                    (java.lang.Char value))
                   (else value))))))
+
+    ;> ## Procedures
 
     (define platform-file-extension
       (cond-expand
@@ -460,6 +462,13 @@
                                    (static-field java.lang.foreign.ValueLayout
                                                  'JAVA_BYTE))))))
 
+    ;> ### pffi-shared-object-load
+    ;>
+    ;> Arguments:
+    ;> - path (string) The path to the shared object you want to load, including any "lib" infront and .so/.dll at the end
+    ;>
+    ;> Returns:
+    ;> 
     (define pffi-shared-object-load
       (lambda (path)
         (cond-expand (sagittarius (open-shared-library path))
@@ -483,6 +492,16 @@
                          (list (cons 'linker linker)
                                (cons 'lookup lookup)))))))
 
+    ;> ### pffi-shared-object-auto-load
+    ;>
+    ;> Arguments:
+    ;> - object-name (symbol)
+    ;>  - The name of the dynamic library file you want to load without the "lib" in fron of it or .so/.dll at the end
+    ;> - addition-paths (list (string)...)
+    ;>  - Any additional paths you want to search for the library
+    ;>
+    ;> Returns:
+    ;> - (object) Shared object, the type depends on the implementation
     (define pffi-shared-object-auto-load
       (lambda (object-name additional-paths)
         (let* ((paths (append auto-load-paths additional-paths))

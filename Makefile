@@ -7,6 +7,14 @@ KAWA=java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exp
 
 build: build-rkt documentation
 
+update-documentation:
+	schubert document
+	mkdir -p docuptmp
+	cd docuptmp && git clone git@codeberg.org:r7rs-pffi/pffi.wiki.git
+	cp retropikzel/pffi/${VERSION}/schubert-doc.md docuptmp/pffi.wiki/Documentation.md
+	cd docuptmp/pffi.wiki && git add Documentation.md ; git commit -m "Update documentation" ; git push
+	rm -rf docutmp
+
 build-rkt:
 	echo "#lang r7rs" > retropikzel/pffi/${VERSION}/main.rkt
 	cat retropikzel/pffi/${VERSION}/main.scm >> retropikzel/pffi/${VERSION}/main.rkt
@@ -49,3 +57,6 @@ test/sdl2.scm: build
 	#${RACKET} $@
 	#${STKLOS} $@
 	${KAWA} $@
+
+clean:
+	rm -rf docuptmp

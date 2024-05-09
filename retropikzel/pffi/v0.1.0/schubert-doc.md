@@ -1,3 +1,9 @@
+# pffi test
+
+
+## Procedures
+
+
 ### pffi-call
 
 Arguments:
@@ -26,5 +32,11 @@ Example:
                                 (cons 'int 400)
                                 (cons 'int 400)
                                 (cons 'int 4))
+
+
+### pffi-shared-object-auto-load
+
+Arguments:
+- object-name (symbol)
 
 
