@@ -122,6 +122,23 @@
          double
          pointer))
 
+    (define string-split
+      (lambda (str mark)
+        (let* ((str-l (string->list str))
+               (res (list))
+               (last-index 0)
+               (index 0)
+               (splitter (lambda (c)
+                           (cond ((char=? c mark)
+                                  (begin
+                                    (set! res (append res (list (string-copy str last-index index))))
+                                    (set! last-index (+ index 1))))
+                                 ((equal? (length str-l) (+ index 1))
+                                  (set! res (append res (list (string-copy str last-index (+ index 1)))))))
+                           (set! index (+ index 1)))))
+          (for-each splitter str-l)
+          res)))
+
     (define auto-load-paths
       (append
         (cond-expand
@@ -137,11 +154,14 @@
               (string-split (get-environment-variable "PATH") #\;)))
           (else
             (append
+              ; Guix
               (list (if (get-environment-variable "GUIX_ENVIRONMENT")
                       (string-append (get-environment-variable "GUIX_ENVIRONMENT") "/lib")
-                      ""))
-              (if (get-environment-variable "LD_LOAD_PATH")
-                (list) ;(string-split (get-environment-variable "LD_LOAD_PATH") #\:)
+                      "")
+                    "/run/current-system/profile/lib")
+              ; Debian
+              (if (get-environment-variable "LD_LIBRARY_PATH")
+                (list (string-split (get-environment-variable "LD_LIBRARY_PATH") #\:))
                 (list))
               (list "/lib/x86_64-linux-gnu"
                     "/usr/lib/x86_64-linux-gnu"
