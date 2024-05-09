@@ -24,5 +24,6 @@ For bugs you can use the
 
 - [LIPS](https://lips.js.org/)
   - Waiting for implementation to have cond-expand and library support
+  - Will only work on nodejs
 
 
