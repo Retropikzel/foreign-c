@@ -2,7 +2,7 @@ VERSION=v0.1.0
 SASH=sash -r7 -L .
 GUILE=guile --r7rs -L .
 RACKET=racket -I r7rs --make -S $(shell pwd) --script
-STKLOS=stklos -A .
+STKLOS=stklos -A . -f
 KAWA=java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=".."
 
 build: build-rkt documentation
@@ -45,6 +45,13 @@ test/pointer-set-get.scm: build
 	${KAWA} $@
 
 test/string-to-pointer-to-string.scm: build
+	${SASH} $@
+	${GUILE} $@
+	#${RACKET} $@
+	#${STKLOS} $@
+	${KAWA} $@
+
+test/pffi-lambda.scm: build
 	${SASH} $@
 	${GUILE} $@
 	#${RACKET} $@

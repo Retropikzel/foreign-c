@@ -40,6 +40,7 @@
   (export pffi-shared-object-auto-load
           pffi-shared-object-load
           pffi-call
+          pffi-lambda
           pffi-size-of
           pffi-pointer-allocate
           pffi-pointer-null
@@ -86,18 +87,21 @@
     (define platform-file-extension
       (cond-expand
         (racket (if (equal? (system-type 'os) 'windows) ".dll" ".so"))
+        (stklos ".so")
         (windows ".dll")
         (else ".so")))
 
     (define platform-version-file-extension
       (cond-expand
         (racket (if (equal? (system-type 'os) 'windows) ".dll" ".so.0"))
+        (stklos ".so")
         (windows ".dll")
         (else ".so.0")))
 
     (define platform-lib-prefix
       (cond-expand
         (racket (if (equal? (system-type 'os) 'windows) "" "lib"))
+        (stklos ".so")
         (windows "")
         (else "lib")))
 
@@ -387,6 +391,48 @@
                      (values-objects (map value->object vals (map car arguments))))
                 (invoke method-handle 'invokeWithArguments values-objects)))))))
 
+    (define pffi-lambda
+      (lambda (shared-object name return-type argument-types)
+        (let ((types (map pffi-type->native-type argument-types))
+              (native-return-type (pffi-type->native-type return-type)))
+          (cond-expand
+            (sagittarius
+              (make-c-function shared-object
+                               native-return-type
+                               name
+                               types))
+            (guile
+              (foreign-library-function shared-object
+                                        (symbol->string name)
+                                        #:return-type native-return-type
+                                        #:arg-types types))
+            (racket
+              (get-ffi-obj name
+                           shared-object
+                           (_cprocedure (mlist->list types)
+                                        native-return-type)))
+            (stklos
+              (stklos (make-external-function
+                        (symbol->string name)
+                        types
+                        native-return-type
+                        shared-object)))
+            (kawa
+              (let* ((of-void (class-methods java.lang.foreign.FunctionDescriptor 'ofVoid))
+                     (of (class-methods java.lang.foreign.FunctionDescriptor 'of))
+                     (function-descriptor (if (equal? return-type 'void)
+                                            (apply of-void types)
+                                            (apply of (append (list native-return-type) types))))
+                     (method-handle (invoke (cdr (assoc 'linker shared-object))
+                                            'downcallHandle
+                                            (invoke (invoke (cdr (assoc 'lookup shared-object))
+                                                            'find
+                                                            (symbol->string name))
+                                                    'orElseThrow)
+                                            function-descriptor)))
+                (lambda vals
+                  (invoke method-handle 'invokeWithArguments (map value->object vals argument-types)))))))))
+
     (define pffi-size-of
       (lambda (type)
         (cond-expand
@@ -437,30 +483,33 @@
 
     (define pffi-string->pointer
       (lambda (string-content)
-        (cond-expand (sagittarius (bytevector->pointer (string->utf8 (string-copy string-content))))
-                     (guile (string->pointer string-content))
-                     (racket (cast string-content _string _pointer))
-                     (stklos string-content)
-                     (kawa (invoke arena 'allocateUtf8String string-content)))))
+        (cond-expand
+          (sagittarius (bytevector->pointer (string->utf8 (string-copy string-content))))
+          (guile (string->pointer string-content))
+          (racket (cast string-content _string _pointer))
+          (stklos string-content)
+          (kawa (invoke arena 'allocateUtf8String string-content)))))
 
     (define pffi-pointer->string
       (lambda (pointer)
-        (cond-expand (sagittarius (pointer->string pointer))
-                     (guile (pointer->string pointer))
-                     (racket (cast pointer _pointer _string))
-                     (stklos (cpointer->string pointer))
-                     (kawa (invoke (invoke pointer 'reinterpret (static-field java.lang.Integer 'MAX_VALUE)) 'getUtf8String 0)))))
+        (cond-expand
+          (sagittarius (pointer->string pointer))
+          (guile (pointer->string pointer))
+          (racket (cast pointer _pointer _string))
+          (stklos (cpointer->string pointer))
+          (kawa (invoke (invoke pointer 'reinterpret (static-field java.lang.Integer 'MAX_VALUE)) 'getUtf8String 0)))))
 
     (define pffi-pointer->bytevector
       (lambda (pointer size)
-        (cond-expand (sagittarius (pointer->bytevector pointer size))
-                     (guile (pointer->bytevector pointer size))
-                     (racket (cast pointer _pointer _bytes))
-                     (stklos (error "Not yet implemented: pffi-pointer->bytevector")) ; TODO FIX
-                     (kawa (invoke (invoke pointer 'reinterpret size)
-                                   'toArray
-                                   (static-field java.lang.foreign.ValueLayout
-                                                 'JAVA_BYTE))))))
+        (cond-expand
+          (sagittarius (pointer->bytevector pointer size))
+          (guile (pointer->bytevector pointer size))
+          (racket (cast pointer _pointer _bytes))
+          (stklos (bytevector)) ; TODO FIX
+          (kawa (invoke (invoke pointer 'reinterpret size)
+                        'toArray
+                        (static-field java.lang.foreign.ValueLayout
+                                      'JAVA_BYTE))))))
 
     ;> ### pffi-shared-object-load
     ;>
@@ -468,29 +517,30 @@
     ;> - path (string) The path to the shared object you want to load, including any "lib" infront and .so/.dll at the end
     ;>
     ;> Returns:
-    ;> 
+    ;>
     (define pffi-shared-object-load
       (lambda (path)
-        (cond-expand (sagittarius (open-shared-library path))
-                     (guile (load-foreign-library path #:lazy? #f))
-                     (racket (ffi-lib path))
-                     (stklos path)
-                     (kawa
-                       (let* ((library-file (make java.io.File path))
-                              (file-name (invoke library-file 'getName))
-                              (library-parent-folder (make java.io.File (invoke library-file 'getParent)))
-                              (absolute-path (string-append (invoke library-parent-folder 'getCanonicalPath)
-                                                            "/"
-                                                            file-name))
-                              ;(set! arena (invoke-static java.lang.foreign.Arena 'ofConfined))
+        (cond-expand
+          (sagittarius (open-shared-library path))
+          (guile (load-foreign-library path #:lazy? #f))
+          (racket (ffi-lib path))
+          (stklos path)
+          (kawa
+            (let* ((library-file (make java.io.File path))
+                   (file-name (invoke library-file 'getName))
+                   (library-parent-folder (make java.io.File (invoke library-file 'getParent)))
+                   (absolute-path (string-append (invoke library-parent-folder 'getCanonicalPath)
+                                                 "/"
+                                                 file-name))
+                   ;(set! arena (invoke-static java.lang.foreign.Arena 'ofConfined))
 
-                              (linker (invoke-static java.lang.foreign.Linker 'nativeLinker))
-                              (lookup (invoke-static java.lang.foreign.SymbolLookup
-                                                     'libraryLookup
-                                                     absolute-path
-                                                     arena)))
-                         (list (cons 'linker linker)
-                               (cons 'lookup lookup)))))))
+                   (linker (invoke-static java.lang.foreign.Linker 'nativeLinker))
+                   (lookup (invoke-static java.lang.foreign.SymbolLookup
+                                          'libraryLookup
+                                          absolute-path
+                                          arena)))
+              (list (cons 'linker linker)
+                    (cons 'lookup lookup)))))))
 
     ;> ### pffi-shared-object-auto-load
     ;>
@@ -547,19 +597,21 @@
 
     (define pffi-pointer-free
       (lambda (pointer)
-        (cond-expand (sagittarius (c-free pointer))
-                     (guile #t)
-                     (racket (free pointer))
-                     (stklos (free-bytes pointer))
-                     (kawa (invoke pointer 'unload)))))
+        (cond-expand
+          (sagittarius (c-free pointer))
+          (guile #t)
+          (racket (free pointer))
+          (stklos (free-bytes pointer))
+          (kawa (invoke pointer 'unload)))))
 
     (define pffi-pointer-null?
       (lambda (pointer)
-        (cond-expand (sagittarius (null-pointer? pointer))
-                     (guile (null-pointer? pointer))
-                     (racket (not pointer)) ; #f is the null pointer on racket
-                     (stklos (cpointer-null? pointer))
-                     (kawa (invoke pointer 'equals (pffi-pointer-null))))))
+        (cond-expand
+          (sagittarius (null-pointer? pointer))
+          (guile (null-pointer? pointer))
+          (racket (not pointer)) ; #f is the null pointer on racket
+          (stklos (cpointer-null? pointer))
+          (kawa (invoke pointer 'equals (pffi-pointer-null))))))
 
     (define pffi-pointer-set!
       (lambda (pointer type offset value)
@@ -610,7 +662,7 @@
                          ;((equal? native-type '*) (pointer-ref-c-void* p offset))
                          )))
           (racket (ptr-set! pointer type offset 'abs value))
-          (stklos (error "Not yet impelemented: pffi-pointer-set!")) ; TODO FIX
+          (stklos #f) ; TODO FIX
           (kawa (invoke pointer 'set (pffi-type->native-type type) offset value)))))
 
     (define pffi-pointer-get
@@ -664,13 +716,14 @@
                     ;((equal? native-type '*) (pointer-ref-c-void* p offset))
                     )))
           (racket (ptr-ref pointer type 'abs offset))
-          (stklos (error "Not yet implemented: pffi-pointer-get")) ; TODO FIX
+          (stklos #f) ; TODO FIX
           (kawa (invoke pointer 'get (pffi-type->native-type type) offset)))))
 
     (define pffi-pointer-deref
       (lambda (pointer)
-        (cond-expand (sagittarius (deref pointer 0))
-                     (guile (dereference-pointer pointer))
-                     (racket (error "Not yet implemented: pffi-pointer-deref")) ; TODO FIX
-                     (stklos (error "Not yet implemented: pffi-pointer-deref")) ; TODO FIX
-                     (kawa (invoke pointer 'get (static-field java.lang.foreign.ValueLayout 'ADDRESS) 0)))))))
+        (cond-expand
+          (sagittarius (deref pointer 0))
+          (guile (dereference-pointer pointer))
+          (racket #f) ; TODO FIX
+          (stklos #f) ; TODO FIX
+          (kawa (invoke pointer 'get (static-field java.lang.foreign.ValueLayout 'ADDRESS) 0)))))))

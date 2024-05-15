@@ -6,6 +6,7 @@
   (list "guile"
         "racket-minimal"
         "openjdk"
+        "curl"
         "sdl2"
         "sdl2-image"
         "sdl2-ttf"

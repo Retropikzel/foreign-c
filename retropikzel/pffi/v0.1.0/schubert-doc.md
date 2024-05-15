@@ -1,4 +1,4 @@
-# pffi test
+# pffi
 
 
 ## Procedures
@@ -34,9 +34,24 @@ Example:
                                 (cons 'int 4))
 
 
+### pffi-shared-object-load
+
+Arguments:
+- path (string) The path to the shared object you want to load, including any "lib" infront and .so/.dll at the end
+
+Returns:
+
+
+
 ### pffi-shared-object-auto-load
 
 Arguments:
 - object-name (symbol)
+ - The name of the dynamic library file you want to load without the "lib" in fron of it or .so/.dll at the end
+- addition-paths (list (string)...)
+ - Any additional paths you want to search for the library
+
+Returns:
+- (object) Shared object, the type depends on the implementation
 
 
