@@ -1,2 +1,8 @@
 *.swp
 docuptmp
+*.log
+*.c
+*.so
+*.o
+*.meta
+old

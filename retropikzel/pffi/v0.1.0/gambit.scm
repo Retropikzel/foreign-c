@@ -1,0 +1,94 @@
+(define-library
+  (retropikzel pffi v0.1.0 gambit)
+  (import (scheme base)
+          (scheme write)
+          (scheme file)
+          (scheme process-context))
+  (export pffi-shared-object-load
+          pffi-define
+          pffi-size-of
+          pffi-pointer-allocate
+          pffi-pointer-null
+          pffi-string->pointer
+          pffi-pointer->string
+          pffi-pointer->bytevector
+          pffi-pointer-free
+          pffi-pointer?
+          pffi-pointer-null?
+          pffi-pointer-set!
+          pffi-pointer-get
+          pffi-pointer-deref)
+  (begin
+
+    (define pffi-type->native-type
+      (lambda (type)
+        (error "Not defined")))
+
+    (define pffi-pointer?
+      (lambda (object)
+        (error "Not defined")))
+
+    (define-syntax pffi-define
+      (syntax-rules ()
+        ((pffi-define scheme-name shared-object c-name return-type argument-types)
+         (c-define scheme-name
+                   (pffi-type->native-type return-type)
+                   (symbol->string c-name)
+                   string
+                   )
+         )))
+
+
+    (define pffi-size-of
+      (lambda (type)
+        (error "Not defined")))
+
+    (define pffi-pointer-allocate
+      (lambda (size)
+        (error "Not defined")))
+
+    (define pffi-pointer-null
+      (lambda ()
+        (error "Not defined")))
+
+    (define pffi-string->pointer
+      (lambda (string-content)
+        (error "Not defined")))
+
+    (define pffi-pointer->string
+      (lambda (pointer)
+        pointer))
+
+    (define pffi-pointer->bytevector
+      (lambda (pointer size)
+        (error "Not defined")))
+
+    (define-syntax pffi-shared-object-load
+      (syntax-rules ()
+        ((header path)
+         (c-declare (string-append "#include <" header ">")))
+
+        ;(error "Not defined")
+
+        ))
+
+    (define pffi-pointer-free
+      (lambda (pointer)
+        (error "Not defined")))
+
+    (define pffi-pointer-null?
+      (lambda (pointer)
+        (error "Not defined")))
+
+    (define pffi-pointer-set!
+      (lambda (pointer type offset value)
+        (let ((p pointer))
+          (error "Not defined"))))
+
+    (define pffi-pointer-get
+      (lambda (pointer type offset)
+        (error "Not defined")))
+
+    (define pffi-pointer-deref
+      (lambda (pointer)
+        (error "Not defined")))))

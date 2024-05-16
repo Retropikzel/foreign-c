@@ -1,17 +1,15 @@
 (import (scheme base)
         (scheme write)
         (scheme file)
+        (scheme eval)
         (scheme process-context)
-        (stklos))
+        (cyclone foreign))
 
 
-(define puts (make-external-function "puts" (list :string) :string ""))
-
-(define hello "Hello")
-
-(display (%get-typed-ext-var hello :string))
-(newline)
-
-;(puts "Hello")
-;(newline)
-
+(define-syntax while
+  (syntax-rules ()
+    ((while condition . body)
+     (let loop ()
+       (cond (condition
+               (begin . body)
+               (loop)))))))

@@ -5,10 +5,15 @@
 (specifications->manifest
   (list "guile"
         "racket-minimal"
+        "gambit-c"
+        "chicken"
+        "chibi-scheme"
         "openjdk"
         "curl"
         "sdl2"
         "sdl2-image"
         "sdl2-ttf"
         "sdl2-mixer"
-        "zig"))
+        "ck"
+        "zig"
+        "gcc-toolchain"))
