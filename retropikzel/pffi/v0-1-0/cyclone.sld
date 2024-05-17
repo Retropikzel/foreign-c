@@ -55,15 +55,44 @@
 
 
     (define-syntax pffi-define
-      (syntax-rules ()
-        ((pffi-define msg)
-         ;(define-c t "(void *data, int argc, closure _, object k, object h)" "puts(string_str(h));")
-         ;(c-define puts int "puts" string)
-         (c-code "char* buffer[1000]; fgets(buffer, 1000, stdin); puts(buffer);")
-         #t
-         )
-        )
-      )
+      (er-macro-transformer
+        (lambda (expr rename compare)
+          (let* ((pffi-type->native-type
+                   (lambda (type)
+                     (cond ((equal? type 'int8) 'byte)
+                           ((equal? type 'uint8) 'unsigned-byte)
+                           ((equal? type 'int16) 'int16_t)
+                           ((equal? type 'uint16) 'uint16_t)
+                           ((equal? type 'int32) 'int32)
+                           ((equal? type 'uint32) 'unsigned-int32)
+                           ((equal? type 'int64) 'integer-64)
+                           ((equal? type 'uint64) 'unsigned-integer64)
+                           ((equal? type 'char) 'char)
+                           ((equal? type 'unsigned-char) 'unsigned-char)
+                           ((equal? type 'short) 'short)
+                           ((equal? type 'unsigned-short) 'unsigned-short)
+                           ((equal? type 'int) 'int)
+                           ((equal? type 'unsigned-int) 'unsigned-int)
+                           ((equal? type 'long) 'long)
+                           ((equal? type 'unsigned-long) 'unsigned-long)
+                           ((equal? type 'float) 'float)
+                           ((equal? type 'double) 'double)
+                           ((equal? type 'pointer) 'c-pointer)
+                           ((equal? type 'string) 'c-string)
+                           ((equal? type 'void) 'void)
+                           (else (error "pffi-type->native-type -- No such pffi type" type)))))
+                 (scheme-name (car (cdr expr)))
+                 (c-name (symbol->string (car (cdr (car (cdr (cdr (cdr expr))))))))
+                 (return-type (pffi-type->native-type (car (cdr (car (cdr (cdr (cdr (cdr expr)))))))))
+                 (argument-types
+                   (let ((types (cdr (car (cdr (cdr (cdr (cdr (cdr expr)))))))))
+                     (if (null? types)
+                       '()
+                       (map pffi-type->native-type (map car (map cdr types)))))))
+            (if (null? argument-types)
+              `(c-define ,scheme-name ,return-type ,c-name)
+              `(c-define ,scheme-name
+                         ,return-type ,c-name ,@ argument-types))))))
 
 
     (define pffi-size-of
@@ -90,12 +119,14 @@
       (lambda (pointer size)
         (error "Not defined")))
 
-(define-syntax pffi-shared-object-load
-  (syntax-rules ()
-    ((when headers shared-object additional-paths)
-
-
-     )))
+    (define-syntax pffi-shared-object-load
+      (er-macro-transformer
+        (lambda (expr rename compare)
+          `(begin
+             ,@ (map
+                  (lambda (header)
+                    `(include-c-header ,(string-append "<" header ">")))
+                  (cdr (car (cdr expr))))))))
 
     (define pffi-pointer-free
       (lambda (pointer)

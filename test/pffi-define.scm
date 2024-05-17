@@ -9,7 +9,7 @@
 (display libcurl)
 (newline)
 
-(pffi-define curl-version libcurl 'curl_version 'string (list))
+(pffi-define 'curl-version libcurl 'curl_version 'string (list))
 
 (display "=================")
 (newline)

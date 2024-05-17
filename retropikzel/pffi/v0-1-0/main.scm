@@ -200,6 +200,7 @@
         ((pffi-shared-object-auto-load headers object-name additional-paths)
          (cond-expand
            (cyclone (pffi-shared-object-load headers object-path))
+           (chicken (pffi-shared-object-load headers object-path))
            (else
              (let* ((paths (append auto-load-paths additional-paths))
                     (shared-object #f))

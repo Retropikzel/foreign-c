@@ -3,7 +3,9 @@
   (import (scheme base)
           (scheme write)
           (scheme file)
-          (scheme process-context))
+          (scheme process-context)
+          (chicken foreign)
+          (chicken syntax))
   (export pffi-shared-object-load
           pffi-define
           pffi-size-of
@@ -22,16 +24,73 @@
 
     (define pffi-type->native-type
       (lambda (type)
-        (error "Not defined")))
+        (cond ((equal? type 'int8) 'byte)
+              ((equal? type 'uint8) 'unsigned-byte)
+              ((equal? type 'int16) 'int16_t)
+              ((equal? type 'uint16) 'uint16_t)
+              ((equal? type 'int32) 'int32)
+              ((equal? type 'uint32) 'unsigned-int32)
+              ((equal? type 'int64) 'integer-64)
+              ((equal? type 'uint64) 'unsigned-integer64)
+              ((equal? type 'char) 'char)
+              ((equal? type 'unsigned-char) 'unsigned-char)
+              ((equal? type 'short) 'short)
+              ((equal? type 'unsigned-short) 'unsigned-short)
+              ((equal? type 'int) 'int)
+              ((equal? type 'unsigned-int) 'unsigned-int)
+              ((equal? type 'long) 'long)
+              ((equal? type 'unsigned-long) 'unsigned-long)
+              ((equal? type 'float) 'float)
+              ((equal? type 'double) 'double)
+              ((equal? type 'pointer) 'c-pointer)
+              ((equal? type 'string) 'c-string)
+              ((equal? type 'void) 'void)
+              (else (error "pffi-type->native-type -- No such pffi type" type)))) )
 
     (define pffi-pointer?
       (lambda (object)
         (error "Not defined")))
 
     (define-syntax pffi-define
-      (syntax-rules ()
-        ((pffi-define scheme-name shared-object c-name return-type argument-types)
-         (error "Not defined"))))
+      (er-macro-transformer
+        (lambda (expr rename compare)
+          (let* ((pffi-type->native-type
+                   (lambda (type)
+                     (cond ((equal? type 'int8) 'byte)
+                           ((equal? type 'uint8) 'unsigned-byte)
+                           ((equal? type 'int16) 'int16_t)
+                           ((equal? type 'uint16) 'uint16_t)
+                           ((equal? type 'int32) 'int32)
+                           ((equal? type 'uint32) 'unsigned-int32)
+                           ((equal? type 'int64) 'integer-64)
+                           ((equal? type 'uint64) 'unsigned-integer64)
+                           ((equal? type 'char) 'char)
+                           ((equal? type 'unsigned-char) 'unsigned-char)
+                           ((equal? type 'short) 'short)
+                           ((equal? type 'unsigned-short) 'unsigned-short)
+                           ((equal? type 'int) 'int)
+                           ((equal? type 'unsigned-int) 'unsigned-int)
+                           ((equal? type 'long) 'long)
+                           ((equal? type 'unsigned-long) 'unsigned-long)
+                           ((equal? type 'float) 'float)
+                           ((equal? type 'double) 'double)
+                           ((equal? type 'pointer) 'c-pointer)
+                           ((equal? type 'string) 'c-string)
+                           ((equal? type 'void) 'void)
+                           (else (error "pffi-type->native-type -- No such pffi type" type)))))
+                 (scheme-name (car (cdr expr)))
+                 (c-name (symbol->string (car (cdr (car (cdr (cdr (cdr expr))))))))
+                 (return-type (pffi-type->native-type (car (cdr (car (cdr (cdr (cdr (cdr expr)))))))))
+                 (argument-types
+                   (let ((types (cdr (car (cdr (cdr (cdr (cdr (cdr expr)))))))))
+                     (if (null? types)
+                       '()
+                       (map pffi-type->native-type (map car (map cdr types)))))))
+            (if (null? argument-types)
+              `(define ,scheme-name
+                 (foreign-lambda ,return-type ,c-name))
+              `(define ,scheme-name
+                 (foreign-lambda ,return-type ,c-name ,@ argument-types)))))))
 
     (define pffi-size-of
       (lambda (type)
@@ -57,9 +116,15 @@
       (lambda (pointer size)
         (error "Not defined")))
 
-    (define pffi-shared-object-load
-      (lambda (header path)
-        (error "Not defined")))
+    (define-syntax pffi-shared-object-load
+      (er-macro-transformer
+        (lambda (expr rename compare)
+          (let* ((headers (cdr (car (cdr expr)))))
+            `(begin
+               ,@ (map
+                    (lambda (header)
+                      `(foreign-declare ,(string-append "#include <" header ">")))
+                    headers))))))
 
     (define pffi-pointer-free
       (lambda (pointer)

@@ -6,10 +6,12 @@
         (cyclone foreign))
 
 
-(define-syntax while
-  (syntax-rules ()
-    ((while condition . body)
-     (let loop ()
-       (cond (condition
-               (begin . body)
-               (loop)))))))
+(define-syntax pffi-shared-object-load
+      (er-macro-transformer
+        (lambda (expr rename compare)
+          (let* ((headers (cdr (car (cdr expr)))))
+            `(begin
+               ,@ (map
+                    (lambda (header)
+                      `(include-c-header ,(string-append "<" header ">")))
+                    headers))))))

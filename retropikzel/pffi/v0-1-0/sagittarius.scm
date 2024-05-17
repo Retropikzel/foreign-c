@@ -32,8 +32,6 @@
               ((equal? type 'uint32) 'uint32_t)
               ((equal? type 'int64) 'int64_t)
               ((equal? type 'uint64) 'uint64_t)
-              ((equal? type 'intptr) 'intptr_t)
-              ((equal? type 'uintptr) 'uintptr_t)
               ((equal? type 'char) 'char)
               ((equal? type 'unsigned-char) 'char)
               ((equal? type 'short) 'short)

@@ -1,4 +1,4 @@
-.PHONY: test/import.scm test/import.scm test/pffi-define.scm
+.PHONY: test/import.scm test/import.scm test/pffi-define.scm test/size-of.scm
 
 VERSION=v0-1-0
 SASH=sash -c -r7 -L .
@@ -32,8 +32,8 @@ build-main-chicken:
 	${CHICKEN} -sJ retropikzel.pffi.${VERSION}.main.scm
 
 build-main-gambit:
-	#${GAMBIT} -obj retropikzel/pffi/${VERSION}/gambit.scm
-	#${GAMBIT} -obj retropikzel/pffi/${VERSION}/main.sld
+	${GAMBIT} -obj retropikzel/pffi/${VERSION}/gambit.scm
+	${GAMBIT} -obj retropikzel/pffi/${VERSION}/main.sld
 	#cp retropikzel/pffi/${VERSION}/*.o* test/
 
 build-main-gerbil:
@@ -60,24 +60,26 @@ test/import.scm: clean build
 	#${RACKET} $@
 	${STKLOS} $@
 	${KAWA} $@
-	#${CYCLONE} $@ && test/import
+	${CYCLONE} $@ && test/import
 	#${GAMBIT} -exe $@ && ./test/import
 	${CHICKEN} $@ && ./test/import
 	#${GERBIL} $@
+
+test/import.scm: clean build
+	${GAMBIT} -exe $@ && ./test/import
 
 test/pffi-define.scm: clean build
 	${SASH} $@
 	${GUILE} $@
 	${KAWA} $@
+	${CHICKEN} -L -lcurl $@ && ./test/pffi-define
 
 test/pffi-define.scm: clean build
-	${CHICKEN} $@ && ./test/pffi-define
+	${CYCLONE} -CLNK -lcurl $@ && test/pffi-define
 
 test/size-of.scm:
 	${SASH} $@
 	${GUILE} $@
-	#${RACKET} $@
-	#${STKLOS} $@
 	${KAWA} $@
 
 test/pointer-set-get.scm:
