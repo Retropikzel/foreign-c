@@ -21,6 +21,7 @@
               (scheme write)
               (scheme file)
               (scheme process-context)
+              (only (racket base) system-type)
               (retropikzel pffi v0-1-0 racket)))
     (stklos
       (import (scheme base)

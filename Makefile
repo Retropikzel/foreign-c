@@ -57,7 +57,7 @@ documentation:
 test/import.scm: clean build
 	${SASH} $@
 	${GUILE} $@ 
-	#${RACKET} $@
+	${RACKET} $@
 	${STKLOS} $@
 	${KAWA} $@
 	${CYCLONE} $@ && test/import
@@ -66,7 +66,8 @@ test/import.scm: clean build
 	#${GERBIL} $@
 
 test/import.scm: clean build
-	${GAMBIT} -exe $@ && ./test/import
+	${RACKET} $@
+	#${GAMBIT} -exe $@ && ./test/import
 
 test/pffi-define.scm: clean build
 	${SASH} $@
@@ -75,7 +76,8 @@ test/pffi-define.scm: clean build
 	${CHICKEN} -L -lcurl $@ && ./test/pffi-define
 
 test/pffi-define.scm: clean build
-	${CYCLONE} -CLNK -lcurl $@ && test/pffi-define
+	${RACKET} $@
+	#${CYCLONE} -CLNK -lcurl $@ && test/pffi-define
 
 test/size-of.scm:
 	${SASH} $@

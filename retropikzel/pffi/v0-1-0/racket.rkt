@@ -1,10 +1,11 @@
+#lang r7rs
+
 (define-library
   (retropikzel pffi v0-1-0 racket)
   (import (scheme base)
           (scheme write)
           (scheme file)
           (scheme process-context)
-          (only (racket base) system-type)
           (compatibility mlist)
           (ffi unsafe))
   (export pffi-shared-object-load
@@ -85,11 +86,14 @@
 
     (define pffi-pointer->bytevector
       (lambda (pointer size)
-        (pointer->bytevector pointer size)))
+        #f
+        ;(pointer->bytevector pointer size)
+
+        ))
 
     (define pffi-shared-object-load
-      (lambda header path)
-      (ffi-lib path))
+      (lambda (header path)
+        (ffi-lib path)))
 
     (define pffi-pointer-free
       (lambda (pointer)
