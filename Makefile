@@ -11,7 +11,7 @@ RACKET=racket -I r7rs --make -S $(shell pwd) --script
 STKLOS=STKLOS_FRAMES=200 stklos -A . --compiler-flags='+line-info,+time-display,unroll-iterations=3' -f
 KAWA=java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=".."
 CYCLONE=cyclone -t -A .
-GAMBIT=gsc -:r7rs,search=$(shell pwd),debug=ar9
+GAMBIT=gsc -:r7rs,search=$(shell pwd)
 GAMBIT_I=gsi -:r7rs,search=$(shell pwd)
 CHICKEN_ENV=CHICKEN_REPOSITORY_PATH=${ENV_CHICKEN_REPOSITORY_PATH}:${CHICKEN_INSTALL_REPOSITORY}:$(shell pwd) CHICKEN_INCLUDE_PATH=$(shell pwd) LD_LIBRARY_PATH=${GUIX_ENVIRONMENT}/lib
 CHICKEN=${CHICKEN_ENV} csc -X r7rs -R r7rs -sJ
@@ -74,7 +74,7 @@ test/import.scm: clean build
 
 test/import.scm: clean build
 	${GAMBIT_I} $@
-	${GAMBIT} -exe $@ && ./test/import -:r7rs,search=$(shell cd .. && pwd)
+	${GAMBIT} -exe $@ && ./test/import
 
 test/pffi-define.scm: clean build
 	${SASH} $@
