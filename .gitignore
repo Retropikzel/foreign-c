@@ -4,9 +4,15 @@ docuptmp
 *.c
 *.so
 *.o
+*.o*
 *.meta
 *.link
 old
 retropikzel.*
+import
 test/import
+pffi-define
 test/pffi-define
+retropikzel/pffi/*/*.c
+retropikzel/pffi/*/*.o*
+retropikzel/pffi/*/*.so
