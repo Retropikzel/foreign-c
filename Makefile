@@ -14,11 +14,11 @@ CHICKEN_I=csi -R r7rs
 GERBIL=gxc -prelude :scheme/r7rs -exe
 GERBIL_I=gxi --lang r7rs
 
-build: build-rkt build-main-scm build-main-chicken build-main-gambit build-main-gerbil
+build: build-main-scm build-main-chicken build-main-gambit build-main-gerbil
 
 build-rkt:
-	echo "#lang r7rs" > retropikzel/pffi/${VERSION}/main.rkt
-	cat retropikzel/pffi/${VERSION}/main.sld >> retropikzel/pffi/${VERSION}/main.rkt
+	#echo "#lang r7rs" > retropikzel/pffi/${VERSION}/main.rkt
+	#cat retropikzel/pffi/${VERSION}/main.sld >> retropikzel/pffi/${VERSION}/main.rkt
 
 build-main-scm:
 	cp retropikzel/pffi/${VERSION}/main.sld retropikzel/pffi/${VERSION}/main.scm

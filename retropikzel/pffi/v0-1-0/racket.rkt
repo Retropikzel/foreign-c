@@ -7,7 +7,8 @@
           (scheme file)
           (scheme process-context)
           (compatibility mlist)
-          (ffi unsafe))
+          (ffi unsafe)
+          (ffi vector))
   (export pffi-shared-object-load
           pffi-define
           pffi-size-of
@@ -34,7 +35,6 @@
               ((equal? type 'uint32) _uint32)
               ((equal? type 'int64) _int64)
               ((equal? type 'uint64) _uint64)
-              ;((equal? type 'char) _int32)
               ((equal? type 'char) _int)
               ((equal? type 'unsigned-char) _int)
               ((equal? type 'short) _short)
@@ -86,10 +86,7 @@
 
     (define pffi-pointer->bytevector
       (lambda (pointer size)
-        #f
-        ;(pointer->bytevector pointer size)
-
-        ))
+        (cast pointer _pointer _bytes)))
 
     (define pffi-shared-object-load
       (lambda (header path)
@@ -106,13 +103,14 @@
 
     (define pffi-pointer-set!
       (lambda (pointer type offset value)
-        (ptr-set! pointer type offset 'abs value)))
+        (ptr-set! pointer (pffi-type->native-type type) offset value)))
 
     (define pffi-pointer-get
       (lambda (pointer type offset)
-        (ptr-ref pointer type 'abs offset)))
+        (ptr-ref pointer (pffi-type->native-type type) offset)))
 
     (define pffi-pointer-deref
       (lambda (pointer)
-        #f ; TODO FIX
+        pointer
+        ;#f ; TODO FIX
         ))))
