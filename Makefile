@@ -1,9 +1,5 @@
 .PHONY: test/import.scm test/import.scm test/pffi-define.scm
 
-CHICKEN_INSTALL_REPOSITORY=${HOME}/.local/share/chicken
-ENV_CHICKEN_REPOSITORY_PATH=${CHICKEN_REPOSITORY_PATH}
-
-
 VERSION=v0-1-0
 SASH=sash -c -r7 -L .
 GUILE=GUILE_AUTO_COMPILE=0 guile --no-auto-compile --fresh-auto-compile --r7rs -L .
@@ -13,19 +9,12 @@ KAWA=java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exp
 CYCLONE=cyclone -t -A .
 GAMBIT=gsc -:r7rs,search=$(shell pwd)
 GAMBIT_I=gsi -:r7rs,search=$(shell pwd)
-CHICKEN_ENV=CHICKEN_REPOSITORY_PATH=${ENV_CHICKEN_REPOSITORY_PATH}:${CHICKEN_INSTALL_REPOSITORY}:$(shell pwd) CHICKEN_INCLUDE_PATH=$(shell pwd) LD_LIBRARY_PATH=${GUIX_ENVIRONMENT}/lib
-CHICKEN=${CHICKEN_ENV} csc -X r7rs -R r7rs -sJ
-CHICKEN_I=${CHICKEN_ENV} csi -R r7rs -s
+CHICKEN=csc -X r7rs -R r7rs
+CHICKEN_I=csi -R r7rs
 GERBIL=gxc -prelude :scheme/r7rs -exe
 GERBIL_I=gxi --lang r7rs
 
 build: build-rkt build-main-scm build-main-chicken build-main-gambit build-main-gerbil
-
-chicken-install:
-	mkdir -p ${CHICKEN_INSTALL_REPOSITORY}
-	CHICKEN_INSTALL_REPOSITORY=${CHICKEN_INSTALL_REPOSITORY} \
-							   CHICKEN_REPOSITORY_PATH=${ENV_CHICKEN_REPOSITORY_PATH}:${CHICKEN_INSTALL_REPOSITORY} \
-							   chicken-install r7rs
 
 build-rkt:
 	echo "#lang r7rs" > retropikzel/pffi/${VERSION}/main.rkt
@@ -39,13 +28,12 @@ build-main-chicken:
 	cp retropikzel/pffi/${VERSION}/chicken.scm retropikzel/pffi/${VERSION}/retropikzel.pffi.${VERSION}.chicken.scm
 	cp retropikzel/pffi/${VERSION}/main.sld retropikzel.pffi.${VERSION}.main.scm
 	cp retropikzel/pffi/${VERSION}/chicken.scm retropikzel.pffi.${VERSION}.chicken.scm
-	${CHICKEN} retropikzel.pffi.${VERSION}.chicken.scm
-	${CHICKEN} retropikzel.pffi.${VERSION}.main.scm
-	cp *.so test/
+	${CHICKEN} -sJ retropikzel.pffi.${VERSION}.chicken.scm
+	${CHICKEN} -sJ retropikzel.pffi.${VERSION}.main.scm
 
 build-main-gambit:
-	${GAMBIT} -obj retropikzel/pffi/${VERSION}/gambit.scm
-	${GAMBIT} -obj retropikzel/pffi/${VERSION}/main.sld
+	#${GAMBIT} -obj retropikzel/pffi/${VERSION}/gambit.scm
+	#${GAMBIT} -obj retropikzel/pffi/${VERSION}/main.sld
 	#cp retropikzel/pffi/${VERSION}/*.o* test/
 
 build-main-gerbil:
@@ -68,19 +56,22 @@ documentation:
 
 test/import.scm: clean build
 	${SASH} $@
-	${GUILE} $@
+	${GUILE} $@ 
 	#${RACKET} $@
 	${STKLOS} $@
 	${KAWA} $@
 	#${CYCLONE} $@ && test/import
 	#${GAMBIT} -exe $@ && ./test/import
-	#${CHICKEN} $@
+	${CHICKEN} $@ && ./test/import
 	#${GERBIL} $@
 
 test/pffi-define.scm: clean build
 	${SASH} $@
 	${GUILE} $@
 	${KAWA} $@
+
+test/pffi-define.scm: clean build
+	${CHICKEN} $@ && ./test/pffi-define
 
 test/size-of.scm:
 	${SASH} $@
@@ -129,3 +120,4 @@ clean:
 	rm -rf *.c
 	rm -rf *.o
 	rm -rf *.so
+	rm -rf *.a
