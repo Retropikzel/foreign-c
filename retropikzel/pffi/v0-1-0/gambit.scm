@@ -1,5 +1,5 @@
 (define-library
-  (retropikzel pffi v0.1.0 chicken)
+  (retropikzel pffi v0-1-0 gambit)
   (import (scheme base)
           (scheme write)
           (scheme file)
@@ -31,7 +31,12 @@
     (define-syntax pffi-define
       (syntax-rules ()
         ((pffi-define scheme-name shared-object c-name return-type argument-types)
-         (error "Not defined"))))
+         (c-define scheme-name
+                   (pffi-type->native-type return-type)
+                   (symbol->string c-name)
+                   string
+                   )
+         )))
 
 
     (define pffi-size-of
@@ -58,9 +63,14 @@
       (lambda (pointer size)
         (error "Not defined")))
 
-    (define pffi-shared-object-load
-      (lambda (header path)
-        (error "Not defined")))
+    (define-syntax pffi-shared-object-load
+      (syntax-rules ()
+        ((header path)
+         (c-declare (string-append "#include <" header ">")))
+
+        ;(error "Not defined")
+
+        ))
 
     (define pffi-pointer-free
       (lambda (pointer)

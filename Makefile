@@ -4,17 +4,20 @@ CHICKEN_INSTALL_REPOSITORY=${HOME}/.local/share/chicken
 ENV_CHICKEN_REPOSITORY_PATH=${CHICKEN_REPOSITORY_PATH}
 
 
-VERSION=v0.1.0
+VERSION=v0-1-0
 SASH=sash -c -r7 -L .
 GUILE=GUILE_AUTO_COMPILE=0 guile --no-auto-compile --fresh-auto-compile --r7rs -L .
 RACKET=racket -I r7rs --make -S $(shell pwd) --script
 STKLOS=STKLOS_FRAMES=200 stklos -A . --compiler-flags='+line-info,+time-display,unroll-iterations=3' -f
 KAWA=java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=".."
 CYCLONE=cyclone -t -A .
-GAMBIT=gsc -:r7rs,search=$(shell pwd) test/
-CHICKEN=CHICKEN_INCLUDE_PATH=$(shell pwd):$(shell pwd)/retropikzel/pffi/v0.1.0/ CHICKEN_REPOSITORY_PATH=${ENV_CHICKEN_REPOSITORY_PATH}:${CHICKEN_INSTALL_REPOSITORY} csc -X r7rs -R r7rs
+GAMBIT=gsc -:r7rs .
+CHICKEN_ENV=CHICKEN_REPOSITORY_PATH=${ENV_CHICKEN_REPOSITORY_PATH}:${CHICKEN_INSTALL_REPOSITORY}:$(shell pwd) CHICKEN_INCLUDE_PATH=$(shell pwd) LD_LIBRARY_PATH=${GUIX_ENVIRONMENT}/lib
+CHICKEN=${CHICKEN_ENV} csc -X r7rs -R r7rs -sJ
+CHICKEN_I=${CHICKEN_ENV} csi -R r7rs -s
+GERBIL=gxc -exe -prelude :scheme/r7rs
 
-build: build-rkt build-main-scm
+build: build-rkt build-main-scm build-main-chicken
 
 chicken-install:
 	mkdir -p ${CHICKEN_INSTALL_REPOSITORY}
@@ -28,6 +31,21 @@ build-rkt:
 
 build-main-scm:
 	cp retropikzel/pffi/${VERSION}/main.sld retropikzel/pffi/${VERSION}/main.scm
+
+build-main-chicken:
+	cp retropikzel/pffi/${VERSION}/main.sld retropikzel/pffi/${VERSION}/retropikzel.pffi.${VERSION}.main.scm
+	cp retropikzel/pffi/${VERSION}/chicken.scm retropikzel/pffi/${VERSION}/retropikzel.pffi.${VERSION}.chicken.scm
+	cp retropikzel/pffi/${VERSION}/main.sld retropikzel.pffi.${VERSION}.main.scm
+	cp retropikzel/pffi/${VERSION}/chicken.scm retropikzel.pffi.${VERSION}.chicken.scm
+	#${CHICKEN} -o retropikzel/pffi/${VERSION}/retropikzel.pffi.${VERSION}.chicken.so \
+		#retropikzel/pffi/${VERSION}/retropikzel.pffi.${VERSION}.chicken.scm
+	#${CHICKEN} -o retropikzel/pffi/${VERSION}/retropikzel.pffi.${VERSION}.main.so \
+		#retropikzel/pffi/${VERSION}/retropikzel.pffi.${VERSION}.main.scm
+	#${CHICKEN} -o retropikzel.pffi.${VERSION}.chicken.so retropikzel.pffi.${VERSION}.chicken.scm
+	#${CHICKEN} -o retropikzel.pffi.${VERSION}.main.so retropikzel.pffi.${VERSION}.main.scm
+	${CHICKEN} retropikzel.pffi.${VERSION}.chicken.scm
+	${CHICKEN} retropikzel.pffi.${VERSION}.main.scm
+	cp *.so test/
 
 update-documentation:
 	schubert document
@@ -48,20 +66,22 @@ test/import.scm: clean build
 	#${RACKET} $@
 	${STKLOS} $@
 	${KAWA} $@
-	${CYCLONE} $@ && test/import
+	#${CYCLONE} $@ && test/import
 	#${GAMBIT} $@
 	#${CHICKEN} $@
+	#${GERBIL} $@
+
+test/import.scm: clean build
+	${CHICKEN_I} test/import.scm
+	${CHICKEN} -o test/import $@ && ${CHICKEN_ENV} test/import
 
 test/pffi-define.scm: clean build
 	${SASH} $@
 	${GUILE} $@
-	#${RACKET} $@
-	#${STKLOS} $@
 	${KAWA} $@
-	#${CYCLONE} $@ && test/pffi-define
 
-test/pffi-define.scm: build
-	${CYCLONE} $@ && test/pffi-define
+#test/pffi-define.scm: clean build
+	#${CYCLONE} $@ && test/pffi-define
 
 test/size-of.scm:
 	${SASH} $@

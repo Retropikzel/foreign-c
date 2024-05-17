@@ -27,3 +27,7 @@ For bugs you can use the
   - Will only work on nodejs
 
 
+## Hacking
+
+main.sld is the real main which is copied to other suffixes like .scm and .rkt.
+

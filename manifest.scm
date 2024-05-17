@@ -8,6 +8,7 @@
         "gambit-c"
         "chicken"
         "chibi-scheme"
+        "gerbil"
         "openjdk"
         "curl"
         "sdl2"

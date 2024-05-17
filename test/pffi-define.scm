@@ -2,22 +2,19 @@
         (scheme write)
         (scheme process-context)
         (scheme eval)
-        (cyclone foreign)
-        (retropikzel pffi v0.1.0 main))
+        (retropikzel pffi v0-1-0 main))
 
-(define libc (pffi-shared-object-auto-load (list "stdio.h") "c" (list)))
+(define libcurl (pffi-shared-object-auto-load (list "curl/curl.h") "curl" (list)))
 
-(display libc)
+(display libcurl)
 (newline)
 
-;(pffi-shared-object-load #t (display "this"))
+(pffi-define curl-version libcurl 'curl_version 'string (list))
 
 (display "=================")
 (newline)
 
-;(pffi-define "hello")
-;(c-define puts int "puts" string)
-;(puts "I'm from C")
+(display (pffi-pointer->string (curl-version)))
 
 (newline)
 (display "=================")

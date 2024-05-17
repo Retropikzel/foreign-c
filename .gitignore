@@ -5,4 +5,8 @@ docuptmp
 *.so
 *.o
 *.meta
+*.link
 old
+retropikzel.*
+test/import
+test/pffi-define

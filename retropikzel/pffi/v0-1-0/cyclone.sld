@@ -1,9 +1,13 @@
 (define-library
-  (retropikzel pffi v0.1.0 empty)
+  (retropikzel pffi v0-1-0 cyclone)
   (import (scheme base)
           (scheme write)
           (scheme file)
-          (scheme process-context))
+          (scheme eval)
+          (scheme process-context)
+          (scheme eval)
+          (cyclone foreign)
+          (scheme cyclone primitives))
   (export pffi-shared-object-load
           pffi-define
           pffi-size-of
@@ -22,16 +26,44 @@
 
     (define pffi-type->native-type
       (lambda (type)
-        (error "Not defined")))
+        (cond ((equal? type 'int8) int)
+              ((equal? type 'uint8) int)
+              ((equal? type 'int16) int)
+              ((equal? type 'uint16) int)
+              ((equal? type 'int32) int)
+              ((equal? type 'uint32) int)
+              ((equal? type 'int64) int)
+              ((equal? type 'uint64) int)
+              ((equal? type 'char) char)
+              ((equal? type 'unsigned-char) char)
+              ((equal? type 'short) int)
+              ((equal? type 'unsigned-short) int)
+              ((equal? type 'int) int)
+              ((equal? type 'unsigned-int) int)
+              ((equal? type 'long) int)
+              ((equal? type 'unsigned-long) int)
+              ((equal? type 'float) float)
+              ((equal? type 'double) double)
+              ((equal? type 'pointer) opaque)
+              ((equal? type 'string) string)
+              ((equal? type 'void) c-void)
+              (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
     (define pffi-pointer?
       (lambda (object)
         (error "Not defined")))
 
+
     (define-syntax pffi-define
       (syntax-rules ()
-        ((pffi-define scheme-name shared-object c-name return-type argument-types)
-         (error "Not defined"))))
+        ((pffi-define msg)
+         ;(define-c t "(void *data, int argc, closure _, object k, object h)" "puts(string_str(h));")
+         ;(c-define puts int "puts" string)
+         (c-code "char* buffer[1000]; fgets(buffer, 1000, stdin); puts(buffer);")
+         #t
+         )
+        )
+      )
 
 
     (define pffi-size-of
@@ -58,9 +90,12 @@
       (lambda (pointer size)
         (error "Not defined")))
 
-    (define pffi-shared-object-load
-      (lambda (header path)
-        (error "Not defined")))
+(define-syntax pffi-shared-object-load
+  (syntax-rules ()
+    ((when headers shared-object additional-paths)
+
+
+     )))
 
     (define pffi-pointer-free
       (lambda (pointer)

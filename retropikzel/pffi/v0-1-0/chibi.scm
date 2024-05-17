@@ -1,5 +1,5 @@
 (define-library
-  (retropikzel pffi v0.1.0 chibi)
+  (retropikzel pffi v0-1-0 chibi)
   (import (scheme base)
           (scheme write)
           (scheme file)
