@@ -16,9 +16,10 @@ GAMBIT_I=gsi -:r7rs,search=$(shell pwd)
 CHICKEN_ENV=CHICKEN_REPOSITORY_PATH=${ENV_CHICKEN_REPOSITORY_PATH}:${CHICKEN_INSTALL_REPOSITORY}:$(shell pwd) CHICKEN_INCLUDE_PATH=$(shell pwd) LD_LIBRARY_PATH=${GUIX_ENVIRONMENT}/lib
 CHICKEN=${CHICKEN_ENV} csc -X r7rs -R r7rs -sJ
 CHICKEN_I=${CHICKEN_ENV} csi -R r7rs -s
-GERBIL=gxc -exe -prelude :scheme/r7rs
+GERBIL=gxc -prelude :scheme/r7rs -exe
+GERBIL_I=gxi --lang r7rs
 
-build: build-rkt build-main-scm build-main-chicken build-main-gambit
+build: build-rkt build-main-scm build-main-chicken build-main-gambit build-main-gerbil
 
 chicken-install:
 	mkdir -p ${CHICKEN_INSTALL_REPOSITORY}
@@ -47,6 +48,11 @@ build-main-gambit:
 	${GAMBIT} -obj retropikzel/pffi/${VERSION}/main.sld
 	#cp retropikzel/pffi/${VERSION}/*.o* test/
 
+build-main-gerbil:
+	#${GAMBIT} -obj retropikzel/pffi/${VERSION}/gambit.scm
+	#${GAMBIT} -obj retropikzel/pffi/${VERSION}/main.sld
+	#cp retropikzel/pffi/${VERSION}/*.o* test/
+
 
 update-documentation:
 	schubert document
@@ -60,7 +66,6 @@ documentation:
 	schubert document
 	VERSION=${VERSION} bash doc/generate.sh > documentation.md
 
-
 test/import.scm: clean build
 	${SASH} $@
 	${GUILE} $@
@@ -68,21 +73,14 @@ test/import.scm: clean build
 	${STKLOS} $@
 	${KAWA} $@
 	#${CYCLONE} $@ && test/import
-	#${GAMBIT} $@
+	#${GAMBIT} -exe $@ && ./test/import
 	#${CHICKEN} $@
 	#${GERBIL} $@
-
-test/import.scm: clean build
-	${GAMBIT_I} $@
-	${GAMBIT} -exe $@ && ./test/import
 
 test/pffi-define.scm: clean build
 	${SASH} $@
 	${GUILE} $@
 	${KAWA} $@
-
-#test/pffi-define.scm: clean build
-	#${CYCLONE} $@ && test/pffi-define
 
 test/size-of.scm:
 	${SASH} $@
@@ -119,9 +117,15 @@ clean:
 	rm -rf retropikzel/pffi/${VERSION}/*.o*
 	rm -rf retropikzel/pffi/${VERSION}/*.so
 	rm -rf retropikzel/pffi/${VERSION}/*.meta
+	rm -rf retropikzel.*
 	rm -rf test/*.c
-	rm -rf test/*.o
+	rm -rf test/*.o*
 	rm -rf test/*.so
 	rm -rf test/*.meta
 	rm -rf test/import
 	rm -rf test/pffi-define
+	rm -rf test/*gambit*
+	rm -rf test/*.link
+	rm -rf *.c
+	rm -rf *.o
+	rm -rf *.so

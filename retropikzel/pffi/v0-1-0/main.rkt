@@ -58,7 +58,13 @@
               (scheme write)
               (scheme file)
               (scheme process-context)
-              (retropikzel pffi v0-1-0 chibi))))
+              (retropikzel pffi v0-1-0 chibi)))
+    (mit-scheme
+      (import (scheme base)
+              (scheme write)
+              (scheme file)
+              (scheme process-context)
+              (retropikzel pffi v0-1-0 mit-scheme))))
   (export pffi-shared-object-auto-load
           pffi-shared-object-load
           pffi-define

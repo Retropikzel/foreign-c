@@ -7,7 +7,6 @@
         "racket-minimal"
         "gambit-c"
         "chicken"
-        "chibi-scheme"
         "gerbil"
         "openjdk"
         "curl"
