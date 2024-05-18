@@ -2,8 +2,8 @@
 
 source scripts/init-test.sh
 
-SCHEME="gsc -:r7rs,search=. -ld-options -lcurl -exe"
-SCHEME_LIB="gsc -:r7rs,search=. -obj"
+SCHEME="gsc -v -:r7rs,search=. -ld-options -lcurl -exe"
+SCHEME_LIB="gsc -v -:r7rs,search=. -obj"
 SCHEME_I="gsi -:r7rs,search=."
 
 
