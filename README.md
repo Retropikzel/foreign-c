@@ -1,8 +1,5 @@
 # Portable Foreign Function Interface for R7RS schemes
 
-For documentation see
-[Wiki](https://codeberg.org/r7rs-pffi/pffi/wiki/Documentation)
-
 For bugs you can use the
 [Bugs](https://codeberg.org/r7rs-pffi/pffi/projects/9101)
 
@@ -23,7 +20,7 @@ For bugs you can use the
 - [Cyclone](https://justinethier.github.io/cyclone/)
 - [Gambit](https://gambitscheme.org)
 
-## Waiting for the implementation
+## Support waiting for the implementation
 
 - [LIPS](https://lips.js.org/)
   - Waiting for implementation to have cond-expand and library support
