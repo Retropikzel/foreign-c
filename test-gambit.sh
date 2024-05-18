@@ -2,15 +2,13 @@
 
 source scripts/init-test.sh
 
-VERSION=v0-1-0
-
-
-SCHEME="gsc -:r7rs,search=."
+SCHEME="gsc -:r7rs,search=. -ld-options -lcurl -exe"
+SCHEME_LIB="gsc -:r7rs,search=. -obj"
 SCHEME_I="gsi -:r7rs,search=."
 
 
-${SCHEME} -obj retropikzel/pffi/${VERSION}/gambit.scm
-${SCHEME} -obj retropikzel/pffi/${VERSION}/main.sld
-${SCHEME_I} ./test/import.scm
-${SCHEME} -o ./tmp/import ./test/import.scm
-./tmp/import
+${SCHEME_LIB} retropikzel/pffi/${VERSION}/gambit.scm
+${SCHEME_LIB} retropikzel/pffi/${VERSION}/main.sld
+
+
+source scripts/test-runs-compilers.sh

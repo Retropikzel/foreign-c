@@ -80,7 +80,7 @@
 
     (define pffi-pointer->string
       (lambda (pointer)
-        (cpointer->string pointer)))
+        pointer))
 
     (define pffi-pointer->bytevector
       (lambda (pointer size)
