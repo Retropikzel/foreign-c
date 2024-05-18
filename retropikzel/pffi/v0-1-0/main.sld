@@ -200,8 +200,9 @@
       (syntax-rules ()
         ((pffi-shared-object-auto-load headers object-name additional-paths)
          (cond-expand
-           (cyclone (pffi-shared-object-load headers object-path))
-           (chicken (pffi-shared-object-load headers object-path))
+           (cyclone (pffi-shared-object-load headers))
+           (chicken (pffi-shared-object-load headers))
+           (gambit (pffi-shared-object-load headers))
            (else
              (let* ((paths (append auto-load-paths additional-paths))
                     (shared-object #f))

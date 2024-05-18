@@ -28,16 +28,9 @@
       (lambda (object)
         (error "Not defined")))
 
-    (define-syntax pffi-define
-      (syntax-rules ()
-        ((pffi-define scheme-name shared-object c-name return-type argument-types)
-         (c-define scheme-name
-                   (pffi-type->native-type return-type)
-                   (symbol->string c-name)
-                   string
-                   )
-         )))
-
+    (define pffi-define
+      (lambda (scheme-name shared-object c-name return-type argument-types)
+        (error "Not defined")))
 
     (define pffi-size-of
       (lambda (type)
@@ -63,14 +56,10 @@
       (lambda (pointer size)
         (error "Not defined")))
 
-    (define-syntax pffi-shared-object-load
-      (syntax-rules ()
-        ((header path)
-         (c-declare (string-append "#include <" header ">")))
 
-        ;(error "Not defined")
-
-        ))
+    (define pffi-shared-object-load
+      (lambda (headers)
+        (error "Not defined")))
 
     (define pffi-pointer-free
       (lambda (pointer)

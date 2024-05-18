@@ -7,18 +7,12 @@ RACKET=racket -I r7rs --make -S $(shell pwd) --script
 STKLOS=STKLOS_FRAMES=200 stklos -A . --compiler-flags='+line-info,+time-display,unroll-iterations=3' -f
 KAWA=java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=".."
 CYCLONE=cyclone -t -A .
-GAMBIT=gsc -:r7rs,search=$(shell pwd)
-GAMBIT_I=gsi -:r7rs,search=$(shell pwd)
 CHICKEN=csc -X r7rs -R r7rs
 CHICKEN_I=csi -R r7rs
 GERBIL=gxc -prelude :scheme/r7rs -exe
 GERBIL_I=gxi --lang r7rs
 
-build: build-main-scm build-main-chicken build-main-gambit build-main-gerbil
-
-build-rkt:
-	#echo "#lang r7rs" > retropikzel/pffi/${VERSION}/main.rkt
-	#cat retropikzel/pffi/${VERSION}/main.sld >> retropikzel/pffi/${VERSION}/main.rkt
+build: build-main-scm
 
 build-main-scm:
 	cp retropikzel/pffi/${VERSION}/main.sld retropikzel/pffi/${VERSION}/main.scm
@@ -30,17 +24,6 @@ build-main-chicken:
 	cp retropikzel/pffi/${VERSION}/chicken.scm retropikzel.pffi.${VERSION}.chicken.scm
 	${CHICKEN} -sJ retropikzel.pffi.${VERSION}.chicken.scm
 	${CHICKEN} -sJ retropikzel.pffi.${VERSION}.main.scm
-
-build-main-gambit:
-	${GAMBIT} -obj retropikzel/pffi/${VERSION}/gambit.scm
-	${GAMBIT} -obj retropikzel/pffi/${VERSION}/main.sld
-	#cp retropikzel/pffi/${VERSION}/*.o* test/
-
-build-main-gerbil:
-	#${GAMBIT} -obj retropikzel/pffi/${VERSION}/gambit.scm
-	#${GAMBIT} -obj retropikzel/pffi/${VERSION}/main.sld
-	#cp retropikzel/pffi/${VERSION}/*.o* test/
-
 
 update-documentation:
 	schubert document
@@ -54,6 +37,10 @@ documentation:
 	schubert document
 	VERSION=${VERSION} bash doc/generate.sh > documentation.md
 
+test-sagittarius:
+	${SASH} ./test/import.scm
+	${SASH} ./test/
+
 test/import.scm: clean build
 	${SASH} $@
 	${GUILE} $@ 
@@ -65,19 +52,15 @@ test/import.scm: clean build
 	${CHICKEN} $@ && ./test/import
 	#${GERBIL} $@
 
-test/import.scm: clean build
-	${RACKET} $@
-	#${GAMBIT} -exe $@ && ./test/import
-
 test/pffi-define.scm: clean build
 	${SASH} $@
 	${GUILE} $@
+	${RACKET} $@
 	${KAWA} $@
 	${CHICKEN} -L -lcurl $@ && ./test/pffi-define
 
 test/pffi-define.scm: clean build
-	${RACKET} $@
-	#${CYCLONE} -CLNK -lcurl $@ && test/pffi-define
+	${GAMBIT} -ld-options -lcurl -exe $@ && ./test/pffi-define
 
 test/size-of.scm:
 	${SASH} $@
@@ -106,6 +89,9 @@ test/sdl2.scm:
 	#${STKLOS} $@
 	${KAWA} $@
 
+tmp:
+	mkdir -p tmp
+
 clean:
 	rm -rf docutmp
 	rm -rf retropikzel/pffi/${VERSION}/*.c
@@ -125,3 +111,4 @@ clean:
 	rm -rf *.o
 	rm -rf *.so
 	rm -rf *.a
+	rm -rf tmp

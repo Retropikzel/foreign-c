@@ -20,3 +20,4 @@ test/size-of
 retropikzel/pffi/*/*.c
 retropikzel/pffi/*/*.o*
 retropikzel/pffi/*/*.so
+tmp

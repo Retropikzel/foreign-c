@@ -19,6 +19,8 @@ For bugs you can use the
 
 - [Racket](https://racket-lang.org/)
 - [STKlos](https://stklos.net/)
+- [Cyclone](https://justinethier.github.io/cyclone/)
+- [Chicken](https://www.call-cc.org/)
 
 ## Support is waiting for the implementation
 

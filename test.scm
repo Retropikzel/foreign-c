@@ -1,17 +1,17 @@
 (import (scheme base)
         (scheme write)
         (scheme file)
-        (scheme eval)
-        (scheme process-context)
-        (cyclone foreign))
+        (scheme process-context))
+
+(define t "hello")
 
 
 (define-syntax pffi-shared-object-load
-      (er-macro-transformer
-        (lambda (expr rename compare)
-          (let* ((headers (cdr (car (cdr expr)))))
-            `(begin
-               ,@ (map
-                    (lambda (header)
-                      `(include-c-header ,(string-append "<" header ">")))
-                    headers))))))
+  (syntax-rules ()
+    ((pffi-shared-object-load headers path)
+     (begin (display "hello")
+
+            ))
+    )
+
+  )
