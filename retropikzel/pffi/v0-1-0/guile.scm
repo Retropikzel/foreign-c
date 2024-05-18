@@ -14,7 +14,6 @@
           pffi-pointer-null
           pffi-string->pointer
           pffi-pointer->string
-          pffi-pointer->bytevector
           pffi-pointer-free
           pffi-pointer?
           pffi-pointer-null?
@@ -83,15 +82,9 @@
       (lambda (pointer)
         (pointer->string pointer)))
 
-    (define pffi-pointer->bytevector
-      (lambda (pointer size)
-        (pointer->bytevector pointer size)))
-
     (define pffi-shared-object-load
       (lambda (header path)
         (load-foreign-library path)))
-
-
 
     (define pffi-pointer-free
       (lambda (pointer)
@@ -113,8 +106,6 @@
                 ((equal? native-type uint32) (bytevector-u32-set! p offset value (native-endianness)))
                 ((equal? native-type int64) (bytevector-s64-set! p offset value (native-endianness)))
                 ((equal? native-type uint64) (bytevector-u64-set! p offset value (native-endianness)))
-                ;((equal? native-type 'intptr_t) (pointer-ref-c-intptr_t p offset))
-                ;((equal? native-type 'uintptr_t) (pointer-ref-c-uintptr_t p offset))
                 ;((equal? native-type char) (string-set! (pointer->string pointer) offset value))
                 ;((equal? native-type 'short) (pointer-set-c-short p offset value))
                 ;((equal? native-type 'unsigned-short) (pointer-ref-c-unsigned-short p offset))
@@ -139,8 +130,6 @@
                 ((equal? native-type uint32) (bytevector-u32-ref p offset (native-endianness)))
                 ((equal? native-type int64) (bytevector-s64-ref p offset (native-endianness)))
                 ((equal? native-type uint64) (bytevector-u64-ref p offset (native-endianness)))
-                ;((equal? native-type 'intptr_t) (pointer-ref-c-intptr_t p offset))
-                ;((equal? native-type 'uintptr_t) (pointer-ref-c-uintptr_t p offset))
                 ;((equal? native-type char) (string-ref (pointer->string pointer) offset))
                 ;((equal? native-type 'short) (pointer-set-c-short p offset value))
                 ;((equal? native-type 'unsigned-short) (pointer-ref-c-unsigned-short p offset))

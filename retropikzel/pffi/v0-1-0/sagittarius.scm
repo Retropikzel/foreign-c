@@ -13,7 +13,6 @@
           pffi-pointer-null
           pffi-string->pointer
           pffi-pointer->string
-          pffi-pointer->bytevector
           pffi-pointer-free
           pffi-pointer?
           pffi-pointer-null?
@@ -97,10 +96,6 @@
     (define pffi-pointer->string
       (lambda (pointer)
         (pointer->string pointer)))
-
-    (define pffi-pointer->bytevector
-      (lambda (pointer size)
-        (pointer->bytevector pointer size)))
 
     (define pffi-shared-object-load
       (lambda (header path)

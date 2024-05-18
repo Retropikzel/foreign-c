@@ -14,7 +14,6 @@
           pffi-pointer-null
           pffi-string->pointer
           pffi-pointer->string
-          pffi-pointer->bytevector
           pffi-pointer-free
           pffi-pointer?
           pffi-pointer-null?
@@ -124,7 +123,7 @@
 
     (define pffi-pointer-null
       (lambda ()
-        (error "Not defined")))
+        (address->pointer 0)))
 
     (define pffi-string->pointer
       (lambda (string-content)
@@ -144,10 +143,6 @@
             (move-memory! pointer string-content size 0)
             string-content))))
 
-    (define pffi-pointer->bytevector
-      (lambda (pointer size)
-        (error "Not defined")))
-
     (define-syntax pffi-shared-object-load
       (er-macro-transformer
         (lambda (expr rename compare)
@@ -164,7 +159,7 @@
 
     (define pffi-pointer-null?
       (lambda (pointer)
-        (error "Not defined")))
+        (= (pointer->address pointer) 0)))
 
     (define pffi-pointer-set!
       (lambda (pointer type offset value)
@@ -212,4 +207,4 @@
 
     (define pffi-pointer-deref
       (lambda (pointer)
-        (error "Not defined")))))
+        pointer))))

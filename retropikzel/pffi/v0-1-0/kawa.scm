@@ -116,13 +116,6 @@
   (lambda (pointer)
     (invoke (invoke pointer 'reinterpret (static-field java.lang.Integer 'MAX_VALUE)) 'getUtf8String 0)))
 
-(define pffi-pointer->bytevector
-  (lambda (pointer size)
-    (invoke (invoke pointer 'reinterpret size)
-            'toArray
-            (static-field java.lang.foreign.ValueLayout
-                          'JAVA_BYTE))))
-
 (define pffi-shared-object-load
   (lambda (header path)
     (let* ((library-file (make java.io.File path))

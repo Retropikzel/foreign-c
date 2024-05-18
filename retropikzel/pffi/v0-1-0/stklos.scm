@@ -6,7 +6,6 @@
           (scheme process-context)
           (stklos))
   (export pffi-define
-          pffi-pointer->bytevector
           pffi-pointer->string
           pffi-pointer-allocate
           pffi-pointer-deref
@@ -81,11 +80,6 @@
     (define pffi-pointer->string
       (lambda (pointer)
         pointer))
-
-    (define pffi-pointer->bytevector
-      (lambda (pointer size)
-        (bytevector) ; TODO FIX
-        ))
 
     (define pffi-shared-object-load
       (lambda (header path)

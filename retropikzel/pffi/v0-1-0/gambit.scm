@@ -11,7 +11,6 @@
           pffi-pointer-null
           pffi-string->pointer
           pffi-pointer->string
-          pffi-pointer->bytevector
           pffi-pointer-free
           pffi-pointer?
           pffi-pointer-null?
@@ -51,11 +50,6 @@
     (define pffi-pointer->string
       (lambda (pointer)
         pointer))
-
-    (define pffi-pointer->bytevector
-      (lambda (pointer size)
-        (error "Not defined")))
-
 
     (define pffi-shared-object-load
       (lambda (headers)
