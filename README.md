@@ -74,7 +74,7 @@ Types are given as symbols, for example 'int8 or 'pointer.
 
 ### Procedures or macros
 
-#### pffi-shared-object-auto-load
+#### pffi-shared-object-auto-load object-name additional-paths
 
 Arguments:
 
