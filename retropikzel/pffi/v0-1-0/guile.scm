@@ -92,7 +92,8 @@
 
     (define pffi-pointer-null?
       (lambda (pointer)
-        (null-pointer? pointer)))
+        (and (pffi-pointer? pointer)
+             (null-pointer? pointer))))
 
     (define pffi-pointer-set!
       (lambda (pointer type offset value)

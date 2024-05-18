@@ -83,7 +83,7 @@
 
     (define pffi-pointer-allocate
       (lambda (size)
-        (allocate-pointer size)))
+        (c-malloc size)))
 
     (define pffi-pointer-null
       (lambda ()

@@ -3,17 +3,23 @@
 ;; that accepts a '--manifest' (or '-m') option.
 
 (specifications->manifest
-  (list "guile"
-        "racket-minimal"
-        "gambit-c"
-        "chicken"
-        "gerbil"
-        "openjdk"
-        "curl"
-        "sdl2"
-        "sdl2-image"
-        "sdl2-ttf"
-        "sdl2-mixer"
-        "ck"
-        "zig"
-        "gcc-toolchain"))
+  (list
+    ; Guile
+    "guile"
+    ; Racket
+    "racket-minimal"
+    ; Gambit
+    "gambit-c"
+    ; Chicken
+    "chicken"
+    ; Gerbil
+    "gerbil"
+    ; Cyclone
+    "ck"
+    ; Kawa
+    "openjdk"
+    ; Test libraries
+    "curl"
+    ; Compilers
+    "zig"
+    "gcc-toolchain"))

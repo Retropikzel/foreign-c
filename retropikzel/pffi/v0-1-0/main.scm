@@ -1,6 +1,3 @@
-;> # pffi
-
-;> ## Procedures
 (define-library
   (retropikzel pffi v0-1-0 main)
   (cond-expand
@@ -73,7 +70,6 @@
           pffi-pointer-null
           pffi-string->pointer
           pffi-pointer->string
-          pffi-pointer->bytevector
           pffi-pointer-free
           pffi-pointer?
           pffi-pointer-null?
@@ -81,12 +77,7 @@
           pffi-pointer-get
           pffi-pointer-deref)
   (begin
-
-
-
     (define library-version "v0-1-0")
-
-    ;> ## Procedures
 
     (define platform-file-extension
       (cond-expand
@@ -173,28 +164,6 @@
               (list "/lib/x86_64-linux-gnu"
                     "/usr/lib/x86_64-linux-gnu"
                     "/usr/local/lib"))))))
-
-    ;> ### pffi-shared-object-load
-    ;>
-    ;> Arguments:
-    ;> - path (string) The path to the shared object you want to load, including any "lib" infront and .so/.dll at the end
-    ;>
-    ;> Returns:
-    ;>
-
-
-
-
-    ;> ### pffi-shared-object-auto-load
-    ;>
-    ;> Arguments:
-    ;> - object-name (symbol)
-    ;>  - The name of the dynamic library file you want to load without the "lib" in fron of it or .so/.dll at the end
-    ;> - addition-paths (list (string)...)
-    ;>  - Any additional paths you want to search for the library
-    ;>
-    ;> Returns:
-    ;> - (object) Shared object, the type depends on the implementation
 
     (define-syntax pffi-shared-object-auto-load
       (syntax-rules ()

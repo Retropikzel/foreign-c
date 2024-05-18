@@ -136,7 +136,7 @@
 
 (define pffi-pointer-free
   (lambda (pointer)
-    (invoke pointer 'unload)))
+    #t))
 
 (define pffi-pointer-null?
   (lambda (pointer)
