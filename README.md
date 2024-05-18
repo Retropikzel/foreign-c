@@ -10,7 +10,7 @@ For bugs you can use the
 - [Kawa](https://www.gnu.org/software/kawa/index.html)
 - Needs atleast java 21
 - Needs jvm flags
-- java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar FILENAME.scm
+  - java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar FILENAME.scm
 - [Racket](https://racket-lang.org/)
 - [Chicken](https://www.call-cc.org/)
 
@@ -23,8 +23,8 @@ For bugs you can use the
 ## Support waiting for the implementation
 
 - [LIPS](https://lips.js.org/)
-- Waiting for implementation to have cond-expand and library support
-- Will only work on nodejs
+  - Waiting for implementation to have cond-expand and library support
+  - Will only work on nodejs
 
 ## Not supported
 
@@ -83,37 +83,37 @@ Arguments:
 - addition-paths (list (string)...)
   - Any additional paths you want to search for the library
 
-  Returns:
+Returns:
 
-  - (object) Shared object, the type depends on the implementation
+- (object) Shared object, the type depends on the implementation
 
 #### pffi-shared-object-load
 
   It is recommended to use the pffi-shared-object-auto-load instead of this
   directly.
 
-  Arguments:
+Arguments:
 
-  - headers (list (string) ...) Headers that need to be included
-  - Example (list "curl/curl.h")
-  - path (string) The full path to the shared object you want to load, including any "lib" infront and .so/.dll at the end
-  - Example "libcurl.so"
+- headers (list (string) ...) Headers that need to be included
+- Example (list "curl/curl.h")
+- path (string) The full path to the shared object you want to load, including any "lib" infront and .so/.dll at the end
+- Example "libcurl.so"
 
-  Returns:
+Returns:
 
-  - (object) Shared object, the type depends on the implementation
+- (object) Shared object, the type depends on the implementation
 
 
 
 #### pffi-define
 
-  Defines new foreign procedure.
+Defines new foreign procedure.
 
-  Arguments:
+Arguments:
 
-  - scheme-name () The name of the procedure used on scheme side
-  - shared-object (object) The shared object
-  - Use pffi-shared-object-auto-load and pffi-shared-object-load to get this
-  - c-name (symbol) The name of the C function
-  - return-type (symbol) The return type of the C function
-  - arguments-types (list (symbol) ...) The C function argument types
+- scheme-name () The name of the procedure used on scheme side
+- shared-object (object) The shared object
+- Use pffi-shared-object-auto-load and pffi-shared-object-load to get this
+- c-name (symbol) The name of the C function
+- return-type (symbol) The return type of the C function
+- arguments-types (list (symbol) ...) The C function argument types
