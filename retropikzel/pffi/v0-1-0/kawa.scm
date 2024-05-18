@@ -20,41 +20,17 @@
           (else value))))
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 (define pffi-type->native-type
   (lambda (type)
     (cond
       ((equal? type 'int8) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 1))
-      ;((equal? type 'int8) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
       ((equal? type 'uint8) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 1))
-      ;((equal? type 'uint8) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
       ((equal? type 'int16) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 2))
-      ;((equal? type 'int16) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
       ((equal? type 'uint16) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 2))
-      ;((equal? type 'uint16) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
       ((equal? type 'int32) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
-      ;((equal? type 'int32) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
       ((equal? type 'uint32) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
-      ;((equal? type 'uint32) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
       ((equal? type 'int64) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 8))
-      ;((equal? type 'int64) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
       ((equal? type 'uint64) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 8))
-      ;((equal? type 'uint64) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
       ((equal? type 'char) (static-field java.lang.foreign.ValueLayout 'JAVA_CHAR))
       ((equal? type 'unsigned-char) (static-field java.lang.foreign.ValueLayout 'JAVA_CHAR))
       ((equal? type 'short) (static-field java.lang.foreign.ValueLayout 'JAVA_SHORT))

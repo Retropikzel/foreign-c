@@ -77,6 +77,7 @@
           pffi-pointer-get
           pffi-pointer-deref)
   (begin
+
     (define library-version "v0-1-0")
 
     (define platform-file-extension
@@ -106,8 +107,6 @@
          uint32
          int64
          uint64
-         intptr
-         uintptr
          char
          unsigned-char
          short
@@ -118,7 +117,9 @@
          unsigned-long
          float
          double
-         pointer))
+         string
+         pointer
+         void))
 
     (define string-split
       (lambda (str mark)

@@ -62,8 +62,7 @@
 
     (define pffi-size-of
       (lambda (type)
-        4 ; TODO FIX
-        ))
+        (error "Not implemented")))
 
     (define pffi-pointer-allocate
       (lambda (size)
@@ -83,7 +82,7 @@
 
     (define pffi-shared-object-load
       (lambda (header path)
-        path ))
+        path))
 
     (define pffi-pointer-free
       (lambda (pointer)
@@ -95,15 +94,12 @@
 
     (define pffi-pointer-set!
       (lambda (pointer type offset value)
-        #f ; TODO FIX
-        ))
+        (error "Not implemented")))
 
     (define pffi-pointer-get
       (lambda (pointer type offset)
-        #f ; TODO FIX
-        ))
+        (error "Not implemented")))
 
     (define pffi-pointer-deref
       (lambda (pointer)
-        #f ; TODO FIX
-        ))))
+        (error "Not implemented")))))

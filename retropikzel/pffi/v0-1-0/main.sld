@@ -77,6 +77,7 @@
           pffi-pointer-get
           pffi-pointer-deref)
   (begin
+
     (define library-version "v0-1-0")
 
     (define platform-file-extension
@@ -117,7 +118,8 @@
          float
          double
          string
-         pointer))
+         pointer
+         void))
 
     (define string-split
       (lambda (str mark)

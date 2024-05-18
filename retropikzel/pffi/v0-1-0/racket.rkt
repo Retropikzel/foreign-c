@@ -106,6 +106,4 @@
 
     (define pffi-pointer-deref
       (lambda (pointer)
-        pointer
-        ;#f ; TODO FIX
-        ))))
+        pointer))))
