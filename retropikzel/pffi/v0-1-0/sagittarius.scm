@@ -125,8 +125,6 @@
                 ((equal? type 'uint32) (pointer-set-c-uint32_t! p offset value))
                 ((equal? type 'int64) (pointer-set-c-int64_t! p offset value))
                 ((equal? type 'uint64) (pointer-set-c-uint64_t! p offset value))
-                ((equal? type 'intptr) (pointer-set-c-intptr_t! p offset value))
-                ((equal? type 'uintptr) (pointer-set-c-uintptr_t! p offset value))
                 ((equal? type 'char) (pointer-set-c-char! p offset value))
                 ((equal? type 'short) (pointer-set-c-short! p offset value))
                 ((equal? type 'unsigned-short) (pointer-set-c-unsigned-short! p offset value))
@@ -136,7 +134,7 @@
                 ((equal? type 'unsigned-long) (pointer-set-c-unsigned-long! p offset value))
                 ((equal? type 'float) (pointer-set-c-float! p offset value))
                 ((equal? type 'double) (pointer-set-c-double! p offset value))
-                ((equal? type 'void) (pointer-set-c-void*! p offset value))))))
+                ((equal? type 'void*) (pointer-set-c-void*! p offset value))))))
 
     (define pffi-pointer-get
       (lambda (pointer type offset)
@@ -150,8 +148,6 @@
                 ((equal? native-type 'uint32_t) (pointer-ref-c-uint32_t p offset))
                 ((equal? native-type 'int64_t) (pointer-ref-c-int64_t p offset))
                 ((equal? native-type 'uint64_t) (pointer-ref-c-uint64_t p offset))
-                ((equal? native-type 'intptr_t) (pointer-ref-c-intptr_t p offset))
-                ((equal? native-type 'uintptr_t) (pointer-ref-c-uintptr_t p offset))
                 ((equal? native-type 'char) (pointer-ref-c-char p offset))
                 ((equal? native-type 'short) (pointer-set-c-short p offset value))
                 ((equal? native-type 'unsigned-short) (pointer-ref-c-unsigned-short p offset))

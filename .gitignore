@@ -16,7 +16,8 @@ test/import
 pffi-define
 test/pffi-define
 size-of
-test/size-of
+test/*
+!test/*.scm
 retropikzel/pffi/*/*.c
 retropikzel/pffi/*/*.o*
 retropikzel/pffi/*/*.so

@@ -36,7 +36,6 @@ clean:
 	rm -rf test/*.o*
 	rm -rf test/*.so
 	rm -rf test/*.meta
-	rm -rf test/import
 	rm -rf test/pffi-define
 	rm -rf test/*gambit*
 	rm -rf test/*.link
@@ -45,3 +44,4 @@ clean:
 	rm -rf *.so
 	rm -rf *.a
 	rm -rf tmp
+	find ./test -type f -not -name "*.scm" -exec bash -c "test -x {} && rm {}" \;

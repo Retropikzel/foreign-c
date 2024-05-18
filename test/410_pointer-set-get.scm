@@ -18,11 +18,14 @@
 (write p)
 (newline)
 
-(write (pffi-pointer-get p
-                        'uint8
-                        (+ (* (pffi-size-of 'uint32))
-                           (* (pffi-size-of 'uint8) 2))
-                        ))
-(newline)
+(let ((result(pffi-pointer-get p
+                               'uint8
+                               (+ (* (pffi-size-of 'uint32))
+                                  (* (pffi-size-of 'uint8) 2)))))
+  (if (not (= result 42))
+    (error "pffi-pointer-get did not return 42"))
+
+  (write result)
+  (newline))
 
 

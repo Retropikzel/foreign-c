@@ -1,6 +1,7 @@
 
-${SCHEME} ./test/import.scm
-./test/import
-
-${SCHEME} ./test/pffi-define.scm
-./test/pffi-define
+for file in ./test/*.scm
+do
+    echo "Testing ${file}"
+    ${SCHEME} ${file}
+    ${file//.scm/}
+done
