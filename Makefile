@@ -1,7 +1,6 @@
 .PHONY: test/import.scm test/import.scm test/pffi-define.scm test/size-of.scm
 
 VERSION=v0-1-0
-SASH=sash -c -r7 -L .
 GUILE=GUILE_AUTO_COMPILE=0 guile --no-auto-compile --fresh-auto-compile --r7rs -L .
 RACKET=racket -I r7rs --make -S $(shell pwd) --script
 STKLOS=STKLOS_FRAMES=200 stklos -A . --compiler-flags='+line-info,+time-display,unroll-iterations=3' -f
@@ -37,12 +36,7 @@ documentation:
 	schubert document
 	VERSION=${VERSION} bash doc/generate.sh > documentation.md
 
-test-sagittarius:
-	${SASH} ./test/import.scm
-	${SASH} ./test/
-
 test/import.scm: clean build
-	${SASH} $@
 	${GUILE} $@ 
 	${RACKET} $@
 	${STKLOS} $@
@@ -53,7 +47,6 @@ test/import.scm: clean build
 	#${GERBIL} $@
 
 test/pffi-define.scm: clean build
-	${SASH} $@
 	${GUILE} $@
 	${RACKET} $@
 	${KAWA} $@
@@ -63,27 +56,16 @@ test/pffi-define.scm: clean build
 	${GAMBIT} -ld-options -lcurl -exe $@ && ./test/pffi-define
 
 test/size-of.scm:
-	${SASH} $@
 	${GUILE} $@
 	${KAWA} $@
 
 test/pointer-set-get.scm:
-	${SASH} $@
 	${GUILE} $@
 	#${RACKET} $@
 	#${STKLOS} $@
 	${KAWA} $@
 
 test/string-to-pointer-to-string.scm:
-	${SASH} $@
-	${GUILE} $@
-	#${RACKET} $@
-	#${STKLOS} $@
-	${KAWA} $@
-
-
-test/sdl2.scm:
-	${SASH} $@
 	${GUILE} $@
 	#${RACKET} $@
 	#${STKLOS} $@
