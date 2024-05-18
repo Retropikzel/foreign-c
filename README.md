@@ -3,7 +3,7 @@
 For bugs you can use the
 [Bugs](https://codeberg.org/r7rs-pffi/pffi/projects/9101)
 
-## All tests pass
+## All tests (there is not that many yet) pass
 
 - [Sagittarius](https://bitbucket.org/ktakashi/sagittarius-scheme/wiki/Home)
 - [Guile](https://www.gnu.org/software/guile/)
