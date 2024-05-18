@@ -106,8 +106,6 @@
          uint32
          int64
          uint64
-         intptr
-         uintptr
          char
          unsigned-char
          short
@@ -118,6 +116,7 @@
          unsigned-long
          float
          double
+         string
          pointer))
 
     (define string-split
