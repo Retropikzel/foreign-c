@@ -1,6 +1,6 @@
 (import (scheme base)
         (scheme write)
-        (retropikzel pffi v0-1-0 main))
+        (retropikzel pffi v0-2-0 main))
 
 (display 'int8)
 (display " ")
