@@ -67,6 +67,7 @@
                                                      (symbol->string c-name))
                                              'orElseThrow)
                                      function-descriptor)))
+
          (lambda vals
            (invoke method-handle 'invokeWithArguments (map value->object vals argument-types))))))))
 

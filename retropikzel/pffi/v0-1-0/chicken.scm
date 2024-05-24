@@ -159,7 +159,8 @@
 
     (define pffi-pointer-null?
       (lambda (pointer)
-        (= (pointer->address pointer) 0)))
+        (and (pffi-pointer? pointer)
+             (= (pointer->address pointer) 0))))
 
     (define pffi-pointer-set!
       (lambda (pointer type offset value)

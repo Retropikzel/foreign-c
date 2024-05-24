@@ -79,18 +79,13 @@
   (begin
 
     (define library-version "v0-1-0")
+    (define slash (cond-expand (windows (string #\\)) (else "/")))
 
     (define platform-file-extension
       (cond-expand
         (racket (if (equal? (system-type 'os) 'windows) ".dll" ".so"))
         (windows ".dll")
         (else ".so")))
-
-    (define platform-version-file-extension
-      (cond-expand
-        (racket (if (equal? (system-type 'os) 'windows) ".dll" ".so.0"))
-        (windows ".dll")
-        (else ".so.0")))
 
     (define platform-lib-prefix
       (cond-expand
@@ -166,7 +161,9 @@
                     "/usr/lib/x86_64-linux-gnu"
                     "/usr/local/lib"))))))
 
-    (define-syntax pffi-shared-object-auto-load
+    (define auto-load-versions (list ""))
+
+    (define-syntax pffi-shared-object-auto-load-old
       (syntax-rules ()
         ((pffi-shared-object-auto-load headers object-name additional-paths)
          (cond-expand
@@ -214,6 +211,35 @@
                (if (not shared-object)
                  (error "Could not load shared object" object-name)
                  shared-object)))))))
+
+    (define-syntax pffi-shared-object-auto-load
+      (syntax-rules ()
+        ((pffi-shared-object-auto-load headers object-name additional-versions additional-paths)
+         (cond-expand
+           (cyclone (pffi-shared-object-load headers))
+           (chicken (pffi-shared-object-load headers))
+           (gambit (pffi-shared-object-load headers))
+           (else
+             (let* ((paths (append auto-load-paths additional-paths))
+                    (versions (append auto-load-versions additional-versions))
+                    (shared-object #f))
+               (for-each
+                 (lambda (path)
+                   (for-each
+                     (lambda (version)
+                       (let ((library-path (string-append path
+                                                          slash
+                                                          platform-lib-prefix
+                                                          object-name
+                                                          platform-file-extension
+                                                          version)))
+                         (if (file-exists? library-path)
+                           (set! shared-object library-path))))
+                     versions))
+                 paths)
+               (if (not shared-object)
+                 (error "Could not load shared object" object-name)
+                 (pffi-shared-object-load headers shared-object))))))))
 
     (cond-expand
       (kawa (include "kawa.scm"))
