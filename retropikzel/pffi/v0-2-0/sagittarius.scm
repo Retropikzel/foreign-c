@@ -42,7 +42,7 @@
               ((equal? type 'float) 'float)
               ((equal? type 'double) 'double)
               ((equal? type 'pointer) 'void*)
-              ((equal? type 'string) 'void*)
+              ((equal? type 'string) 'char*)
               ((equal? type 'void) 'void)
               (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
@@ -91,7 +91,7 @@
 
     (define pffi-string->pointer
       (lambda (string-content)
-        (bytevector->pointer (string->utf8 (string-copy string-content)))))
+        string-content))
 
     (define pffi-pointer->string
       (lambda (pointer)

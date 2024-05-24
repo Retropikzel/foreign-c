@@ -141,7 +141,7 @@ Arguments:
 
 - scheme-name () The name of the procedure used on scheme side
 - shared-object (object) The shared object
-- Use pffi-shared-object-auto-load and pffi-shared-object-load to get this
+  - Use pffi-shared-object-auto-load or pffi-shared-object-load to get this
 - c-name (symbol) The name of the C function
 - return-type (symbol) The return type of the C function
 - arguments-types (list (symbol) ...) The C function argument types
