@@ -78,6 +78,11 @@
           pffi-pointer-deref)
   (begin
 
+
+    #|doc Testing multiline comment |#
+
+
+
     (define library-version "v0-2-0")
     (define slash (cond-expand (windows (string #\\)) (else "/")))
 
