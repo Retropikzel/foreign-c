@@ -1,5 +1,5 @@
 (define-library
-  (retropikzel pffi v0-2-0 chicken)
+  (retropikzel pffi v0-2-1 chicken)
   (import (scheme base)
           (scheme write)
           (scheme file)

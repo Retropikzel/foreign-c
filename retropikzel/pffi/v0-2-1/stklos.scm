@@ -1,5 +1,5 @@
 (define-library
-  (retropikzel pffi v0-2-0 stklos)
+  (retropikzel pffi v0-2-1 stklos)
   (import (scheme base)
           (scheme write)
           (scheme file)

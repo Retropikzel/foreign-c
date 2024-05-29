@@ -1,5 +1,5 @@
 (define-library
-  (retropikzel pffi v0-2-0 guile)
+  (retropikzel pffi v0-2-1 guile)
   (import (scheme base)
           (scheme write)
           (scheme file)
@@ -138,7 +138,7 @@
                 ((equal? native-type unsigned-long) (bytevector-u64-ref p offset value (native-endianness)))
                 ((equal? native-type float) (bytevector-u64-ref p offset value (native-endianness)))
                 ((equal? native-type double) (bytevector-u64-ref p offset value (native-endianness)))
-                ((equal? native-type '*) (bytevector-sint-ref p offset value (native-endianness) (pffi-size-of type)))))))))))
+                ((equal? native-type '*) (bytevector-sint-ref p offset value (native-endianness) (pffi-size-of type)))))))
 
     (define pffi-pointer-deref
       (lambda (pointer)
