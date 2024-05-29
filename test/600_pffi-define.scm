@@ -5,9 +5,9 @@
         (retropikzel pffi v0-2-1 main))
 
 (define libcurl (pffi-shared-object-auto-load (list "curl/curl.h")
+                                              (list)
                                               "curl"
-                                              (list ".4")
-                                              (list)))
+                                              (list ".4")))
 
 (pffi-define curl-version libcurl 'curl_version 'string (list))
 
