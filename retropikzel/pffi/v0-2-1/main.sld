@@ -165,7 +165,9 @@
               (list "/lib/x86_64-linux-gnu"
                     "/usr/lib/x86_64-linux-gnu"
                     "/usr/local/lib"
-                    "/usr/lib"))))))
+                    "/usr/lib"
+                    "/usr/lib32"
+                    "/usr/lib64"))))))
 
     (define auto-load-versions (list ""))
 
