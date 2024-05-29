@@ -164,7 +164,10 @@
                 (list))
               (list "/lib/x86_64-linux-gnu"
                     "/usr/lib/x86_64-linux-gnu"
-                    "/usr/local/lib"))))))
+                    "/usr/local/lib"
+                    "/usr/lib"
+                    "/usr/lib32"
+                    "/usr/lib64"))))))
 
     (define auto-load-versions (list ""))
 
@@ -189,6 +192,8 @@
                                                           object-name
                                                           platform-file-extension
                                                           version)))
+                         (write library-path)
+                         (newline)
                          (if (file-exists? library-path)
                            (set! shared-object library-path))))
                      versions))
