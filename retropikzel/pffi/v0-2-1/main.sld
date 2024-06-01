@@ -149,7 +149,16 @@
               (if (get-environment-variable "WINDIR")
                 (list (get-environment-variable "WINDIR"))
                 (list))
-              (list ".")
+              (if (get-environment-variable "WINEDLLDIR0")
+                (list (get-environment-variable "WINEDLLDIR0"))
+                (list))
+              (if (get-environment-variable "SystemRoot")
+                (list (string-append
+                        (get-environment-variable "SystemRoot")
+                                     "system32"))
+                (list))
+              (list "."
+                    )
               (string-split (get-environment-variable "PATH") #\;)))
           (else
             (append
@@ -181,6 +190,8 @@
              (let* ((paths (append auto-load-paths additional-paths))
                     (versions (append auto-load-versions additional-versions))
                     (shared-object #f))
+               (write paths)
+               (newline)
                (for-each
                  (lambda (path)
                    (for-each
@@ -191,12 +202,22 @@
                                                           object-name
                                                           platform-file-extension
                                                           version)))
+                         (write library-path)
                          (if (file-exists? library-path)
-                           (set! shared-object library-path))))
+                           (begin
+                             (write " exists!")
+                             (set! shared-object library-path)))
+                         (newline)
+
+                         ))
                      versions))
                  paths)
                (if (not shared-object)
-                 (error "Could not load shared object" object-name)
+                 (error "Could not load shared object"
+                        (list (cons 'object object-name)
+                              (cons 'paths paths)
+                              (cons 'platform-file-extension platform-file-extension)
+                              (cons 'versions versions)))
                  (pffi-shared-object-load headers shared-object))))))))
 
     (cond-expand

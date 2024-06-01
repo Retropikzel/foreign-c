@@ -87,7 +87,7 @@
 
     (define pffi-pointer-null
       (lambda ()
-        (integer->pointer 0)))
+        (empty-pointer)))
 
     (define pffi-string->pointer
       (lambda (string-content)
