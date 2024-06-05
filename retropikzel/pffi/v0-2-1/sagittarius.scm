@@ -87,7 +87,7 @@
 
     (define pffi-pointer-null
       (lambda ()
-        (empty-pointer)))
+        (integer->pointer 0)))
 
     (define pffi-string->pointer
       (lambda (string-content)
@@ -131,7 +131,7 @@
                 ((equal? type 'unsigned-long) (pointer-set-c-unsigned-long! p offset value))
                 ((equal? type 'float) (pointer-set-c-float! p offset value))
                 ((equal? type 'double) (pointer-set-c-double! p offset value))
-                ((equal? type 'void*) (pointer-set-c-void*! p offset value))))))
+                ((equal? type 'void*) (pointer-set-c-pointer p offset value))))))
 
     (define pffi-pointer-get
       (lambda (pointer type offset)
@@ -154,7 +154,7 @@
                 ((equal? native-type 'unsigned-long) (pointer-ref-c-unsigned-long p offset))
                 ((equal? native-type 'float) (pointer-ref-c-float p offset))
                 ((equal? native-type 'double) (pointer-ref-c-double p offset))
-                ((equal? native-type 'void*) (pointer-ref-c-void* p offset))))))
+                ((equal? native-type 'void*) (pointer-ref-c-pointer p offset))))))
 
     (define pffi-pointer-deref
       (lambda (pointer)
