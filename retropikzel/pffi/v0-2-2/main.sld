@@ -1,5 +1,5 @@
 (define-library
-  (retropikzel pffi v0-2-1 main)
+  (retropikzel pffi v0-2-2 main)
   (cond-expand
     (sagittarius
       (import (scheme base)
@@ -190,8 +190,6 @@
              (let* ((paths (append auto-load-paths additional-paths))
                     (versions (append auto-load-versions additional-versions))
                     (shared-object #f))
-               (write paths)
-               (newline)
                (for-each
                  (lambda (path)
                    (for-each
@@ -202,14 +200,8 @@
                                                           object-name
                                                           platform-file-extension
                                                           version)))
-                         (write library-path)
                          (if (file-exists? library-path)
-                           (begin
-                             (write " exists!")
-                             (set! shared-object library-path)))
-                         (newline)
-
-                         ))
+                           (set! shared-object library-path))))
                      versions))
                  paths)
                (if (not shared-object)

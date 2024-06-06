@@ -1,6 +1,6 @@
 ((packager . "retropikzel")
  (name . "pffi")
- (version . "v0-2-1")
+ (version . "v0-2-2")
  (type . "library")
  (description . "Portable Foreign Function Interface for R7RS schemes")
  (license . "LGPL")
