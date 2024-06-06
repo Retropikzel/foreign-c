@@ -2,7 +2,11 @@
 
 VERSION=$(shell cat VERSION)
 
+
 build: build-main-scm
+
+install: build
+	schubert install
 
 build-main-scm:
 	cp retropikzel/pffi/${VERSION}/main.sld retropikzel/pffi/${VERSION}/main.scm
@@ -22,7 +26,7 @@ documentation:
 tmp:
 	mkdir -p tmp
 
-test:
+test: build
 	bash test-all.sh
 
 clean:

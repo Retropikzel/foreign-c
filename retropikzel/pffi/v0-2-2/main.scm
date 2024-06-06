@@ -1,32 +1,32 @@
 (define-library
-  (retropikzel pffi v0-2-1 main)
+  (retropikzel pffi v0-2-2 main)
   (cond-expand
     (sagittarius
       (import (scheme base)
               (scheme write)
               (scheme file)
               (scheme process-context)
-              (retropikzel pffi v0-2-1 sagittarius)))
+              (retropikzel pffi v0-2-2 sagittarius)))
     (guile
       (import (scheme base)
               (scheme write)
               (scheme file)
               (scheme process-context)
-              (retropikzel pffi v0-2-1 guile)))
+              (retropikzel pffi v0-2-2 guile)))
     (racket
       (import (scheme base)
               (scheme write)
               (scheme file)
               (scheme process-context)
               (only (racket base) system-type)
-              (retropikzel pffi v0-2-1 racket)))
+              (retropikzel pffi v0-2-2 racket)))
     (stklos
       (import (scheme base)
               (scheme write)
               (scheme file)
               (scheme process-context)
               (stklos)
-              (retropikzel pffi v0-2-1 stklos)))
+              (retropikzel pffi v0-2-2 stklos)))
     (kawa
       (import (scheme base)
               (scheme write)
@@ -37,31 +37,31 @@
               (scheme write)
               (scheme file)
               (scheme process-context)
-              (retropikzel pffi v0-2-1 cyclone)))
+              (retropikzel pffi v0-2-2 cyclone)))
     (gambit
       (import (scheme base)
               (scheme write)
               (scheme file)
               (scheme process-context)
-              (retropikzel pffi v0-2-1 gambit)))
+              (retropikzel pffi v0-2-2 gambit)))
     (chicken
       (import (scheme base)
               (scheme write)
               (scheme file)
               (scheme process-context)
-              (retropikzel pffi v0-2-1 chicken)))
+              (retropikzel pffi v0-2-2 chicken)))
     (chibi
       (import (scheme base)
               (scheme write)
               (scheme file)
               (scheme process-context)
-              (retropikzel pffi v0-2-1 chibi)))
+              (retropikzel pffi v0-2-2 chibi)))
     (mit-scheme
       (import (scheme base)
               (scheme write)
               (scheme file)
               (scheme process-context)
-              (retropikzel pffi v0-2-1 mit-scheme))))
+              (retropikzel pffi v0-2-2 mit-scheme))))
   (export pffi-shared-object-auto-load
           pffi-shared-object-load
           pffi-define
@@ -83,7 +83,7 @@
 
 
 
-    (define library-version "v0-2-1")
+    (define library-version "v0-2-2")
     (define slash (cond-expand (windows (string #\\)) (else "/")))
 
     (define platform-file-extension
@@ -149,7 +149,16 @@
               (if (get-environment-variable "WINDIR")
                 (list (get-environment-variable "WINDIR"))
                 (list))
-              (list ".")
+              (if (get-environment-variable "WINEDLLDIR0")
+                (list (get-environment-variable "WINEDLLDIR0"))
+                (list))
+              (if (get-environment-variable "SystemRoot")
+                (list (string-append
+                        (get-environment-variable "SystemRoot")
+                                     "system32"))
+                (list))
+              (list "."
+                    )
               (string-split (get-environment-variable "PATH") #\;)))
           (else
             (append
@@ -166,7 +175,6 @@
                     "/usr/lib/x86_64-linux-gnu"
                     "/usr/local/lib"
                     "/usr/lib"
-                    "/usr/lib32"
                     "/usr/lib64"))))))
 
     (define auto-load-versions (list ""))
@@ -192,14 +200,16 @@
                                                           object-name
                                                           platform-file-extension
                                                           version)))
-                         (write library-path)
-                         (newline)
                          (if (file-exists? library-path)
                            (set! shared-object library-path))))
                      versions))
                  paths)
                (if (not shared-object)
-                 (error "Could not load shared object" object-name)
+                 (error "Could not load shared object"
+                        (list (cons 'object object-name)
+                              (cons 'paths paths)
+                              (cons 'platform-file-extension platform-file-extension)
+                              (cons 'versions versions)))
                  (pffi-shared-object-load headers shared-object))))))))
 
     (cond-expand

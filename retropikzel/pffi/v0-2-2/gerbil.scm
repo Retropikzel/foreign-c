@@ -1,5 +1,5 @@
 (define-library
-  (retropikzel pffi v0-2-1 gerbil)
+  (retropikzel pffi v0-2-2 gerbil)
   (import (scheme base)
           (scheme write)
           (scheme file)

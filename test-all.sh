@@ -3,6 +3,8 @@
 set -eu
 set -o pipefail
 
+VERSION=$(cat VERSION)
+
 for testfile in ./test-*.sh
 do
     if [[ ! "${testfile}" = "./test-all.sh" ]];

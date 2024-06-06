@@ -1,5 +1,5 @@
 (define-library
-  (retropikzel pffi v0-2-1 gambit)
+  (retropikzel pffi v0-2-2 gambit)
   (import (scheme base)
           (scheme write)
           (scheme file)
