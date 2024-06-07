@@ -62,7 +62,9 @@ For bugs you can use the
 
 main.sld is the real main which is copied to main.scm
 
-## Documentation
+## Documentation WIP
+
+Note that this documentation is work in process and very incomplete, sorry about that.
 
 On some implementations these are procedures, on some macros.
 
