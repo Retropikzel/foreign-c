@@ -4,7 +4,9 @@ Foreign function interface that is supported on multiple R7RS Sceheme implementa
 
 Note that this software is in alpha stage.
 
-Pull requests to fix bugs and add more tests are welcome.
+Any help in form of constructive advice, bug reports, feature suggestions are appreciated.
+
+
 
 Got a [bug](https://codeberg.org/r7rs-pffi/pffi/projects/9101)?
 
@@ -66,6 +68,11 @@ Got a [question](https://codeberg.org/r7rs-pffi/pffi/projects/9575)?
 
 main.sld is the real main which is copied to main.scm
 
+### Pull requests
+Pull requests for bug fixes, additional implementation support and additional tests are appreciated.
+But please do not change the interface (library exports) and if you add support for implementation
+then all exported procedures of main.sld need to be implemented and tests must pass.
+
 ## Documentation
 
 On some implementations these are procedures, on some macros.
@@ -117,9 +124,9 @@ Arguments:
   - The name of the dynamic library file you want to load
   - Without the "lib" in front of it
   - Without the ".so" or ".dll" at the end
-- addition-versions - (list string...)
+- additional-versions - (list string...)
   - For example (list ".0" ".1")
-- addition-paths - (list string...)
+- additional-paths - (list string...)
   - Any additional paths you want to search for the library
   - For example (list "./mylibs")
 
