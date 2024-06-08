@@ -2,6 +2,8 @@
 
 Foreign function interface that is supported on multiple R7RS Sceheme implementations.
 
+Note that this software is in alpha stage.
+
 Pull requests to fix bugs and add more tests are welcome.
 
 Got a [bug](https://codeberg.org/r7rs-pffi/pffi/projects/9101)?
