@@ -1,9 +1,14 @@
 # Portable Foreign Function Interface for R7RS schemes
 
-An attempt to make basic foreign function interface that is supported on
-multiple R7RS Sceheme implementations.
+Foreign function interface that is supported on multiple R7RS Sceheme implementations.
 
 Pull requests to fix bugs and add more tests are welcome.
+
+Got a [bug](https://codeberg.org/r7rs-pffi/pffi/projects/9101)?
+
+Got a [feature suggestion](https://codeberg.org/r7rs-pffi/pffi/projects/9102)?
+
+Got a [question](https://codeberg.org/r7rs-pffi/pffi/projects/9575)?
 
 ## Goals
 
