@@ -55,6 +55,7 @@ Got a [question](https://codeberg.org/r7rs-pffi/pffi/projects/9575)?
 ## Support needs to be investigated
 
 - [Gerbil](https://cons.io/)
+- [Ypsilon](http://www.littlewingpinball.com/doc/en/ypsilon/)
 
 ## Support maybe possible/dreaming about
 
