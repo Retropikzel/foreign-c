@@ -52,16 +52,26 @@ Got a [question](https://codeberg.org/r7rs-pffi/pffi/projects/9575)?
   - Waiting for implementation to have cond-expand and library support
   - Will only work on nodejs
 
+## Support needs to be investigated
+
+- [Gerbil](https://cons.io/)
+
+## Support maybe possible/dreaming about
+
+- [Airship](https://gitlab.com/mbabich/airship-scheme)
+
 ## Not supported
 
 - [Chibi](https://synthcode.com/scheme/chibi)
-- FFI requires C code
+    - FFI requires C code
 - [MIT-Scheme](https://www.gnu.org/software/mit-scheme/)
-- FF requires C code
+    - FF requires C code
 - [tr7](https://gitlab.com/jobol/tr7)
-- FFI requires C code
+    - FFI requires C code
 - [Gauche](https://practical-scheme.net/gauche/)
-- FFI requires C code
+    - FFI requires C code
+- [Loko](https://scheme.fail/)
+    - Desires no C interop, I can respect that
 
 
 ## Hacking
