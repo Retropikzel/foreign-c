@@ -66,7 +66,7 @@ Got a [question](https://codeberg.org/r7rs-pffi/pffi/projects/9575)?
 - [Chibi](https://synthcode.com/scheme/chibi)
     - FFI requires C code
 - [MIT-Scheme](https://www.gnu.org/software/mit-scheme/)
-    - FF requires C code
+    - FFI requires C code
 - [tr7](https://gitlab.com/jobol/tr7)
     - FFI requires C code
 - [Gauche](https://practical-scheme.net/gauche/)
