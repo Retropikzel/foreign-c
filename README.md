@@ -51,6 +51,9 @@ Got a [question](https://codeberg.org/r7rs-pffi/pffi/projects/9575)?
 - [LIPS](https://lips.js.org/)
   - Waiting for implementation to have cond-expand and library support
   - Will only work on nodejs
+- [Biwascheme](https://www.biwascheme.org/)
+  - Waiting for implementation to have cond-expand and library support
+  - Will only work on nodejs
 
 ## Support needs to be investigated
 
