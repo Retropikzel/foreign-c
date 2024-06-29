@@ -1,8 +1,7 @@
 (import (scheme base)
         (scheme write)
         (scheme process-context)
-        (retropikzel pffi v0-2-2 main)
-        (sagittarius ffi))
+        (retropikzel pffi v0-2-2 main))
 
 (define libcurl (pffi-shared-object-auto-load (list "curl/curl.h") ; Headers
                                               (list ".") ; Additional search paths
@@ -30,11 +29,10 @@
 
 (define result "")
 (pffi-define-callback collect-result
-                      'int
+                      'void
                       (list 'pointer 'int 'int 'pointer)
                       (lambda (pointer size nmemb client-pointer)
-                        (set! result
-                          (string-append result (pffi-pointer->string pointer)))))
+                        (set! result (string-append result (pffi-pointer->string pointer)))))
 
 (define handle (curl-easy-init))
 (define url (pffi-string->pointer "https://scheme.org"))
