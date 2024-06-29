@@ -42,8 +42,6 @@ Got a [question](https://codeberg.org/r7rs-pffi/pffi/projects/9575)?
 
 ## Not all tests pass
 
-- [STKlos](https://stklos.net/)
-- [Cyclone](https://justinethier.github.io/cyclone/)
 - [Gambit](https://gambitscheme.org)
 
 ## Support waiting for the implementation
@@ -66,6 +64,10 @@ Got a [question](https://codeberg.org/r7rs-pffi/pffi/projects/9575)?
 
 ## Not supported
 
+- [STKlos](https://stklos.net/)
+    - No callbacks in FFI
+- [Cyclone](https://justinethier.github.io/cyclone/)
+    - No callbacks in FFI
 - [Chibi](https://synthcode.com/scheme/chibi)
     - FFI requires C code
 - [MIT-Scheme](https://www.gnu.org/software/mit-scheme/)
