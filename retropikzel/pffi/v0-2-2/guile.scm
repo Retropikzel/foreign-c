@@ -9,6 +9,7 @@
           (system foreign-library))
   (export pffi-shared-object-load
           pffi-define
+          pffi-define-callback
           pffi-size-of
           pffi-pointer-allocate
           pffi-pointer-null
@@ -45,6 +46,7 @@
               ((equal? type 'pointer) '*)
               ((equal? type 'string) '*)
               ((equal? type 'void) void)
+              ((equal? type 'callback) '*)
               (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
     (define pffi-pointer?
@@ -59,6 +61,14 @@
                                      (symbol->string c-name)
                                      #:return-type (pffi-type->native-type return-type)
                                      #:arg-types (map pffi-type->native-type argument-types))))))
+
+    (define-syntax pffi-define-callback
+      (syntax-rules ()
+        ((pffi-define scheme-name return-type argument-types procedure)
+         (define scheme-name
+           (procedure->pointer (pffi-type->native-type return-type)
+                               procedure
+                               (map pffi-type->native-type argument-types))))))
 
 
     (define pffi-size-of
