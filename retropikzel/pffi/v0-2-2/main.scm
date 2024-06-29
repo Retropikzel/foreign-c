@@ -65,6 +65,7 @@
   (export pffi-shared-object-auto-load
           pffi-shared-object-load
           pffi-define
+          pffi-define-callback
           pffi-size-of
           pffi-pointer-allocate
           pffi-pointer-null
@@ -155,7 +156,7 @@
               (if (get-environment-variable "SystemRoot")
                 (list (string-append
                         (get-environment-variable "SystemRoot")
-                                     "system32"))
+                        "system32"))
                 (list))
               (list "."
                     )
@@ -171,11 +172,24 @@
               (if (get-environment-variable "LD_LIBRARY_PATH")
                 (list (string-split (get-environment-variable "LD_LIBRARY_PATH") #\:))
                 (list))
-              (list "/lib/x86_64-linux-gnu"
-                    "/usr/lib/x86_64-linux-gnu"
-                    "/usr/local/lib"
-                    "/usr/lib"
-                    "/usr/lib64"))))))
+              (list
+                ;;; x86-64
+                ; Debian
+                "/lib/x86_64-linux-gnu"
+                "/usr/lib/x86_64-linux-gnu"
+                "/usr/local/lib"
+                ; Fedora/Alpine
+                "/usr/lib"
+                "/usr/lib64"
+                ;;; aarch64
+                ; Debian
+                "/lib/aarch64-linux-gnu"
+                "/usr/lib/aarch64-linux-gnu"
+                "/usr/local/lib"
+                ; Fedora/Alpine
+                "/usr/lib"
+                "/usr/lib64"
+                ))))))
 
     (define auto-load-versions (list ""))
 
