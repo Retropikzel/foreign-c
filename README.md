@@ -57,6 +57,7 @@ Got a [question](https://codeberg.org/r7rs-pffi/pffi/projects/9575)?
 
 - [Gerbil](https://cons.io/)
 - [Ypsilon](http://www.littlewingpinball.com/doc/en/ypsilon/)
+- [Larceny](https://larcenists.org/)
 
 ## Support maybe possible/dreaming about
 
@@ -188,6 +189,22 @@ Arguments:
     - The return type of the C function
 - arguments-types - (list symbol ...)
     - The C function argument types
+
+#### pffi-define-callback
+
+Defines new callback function.
+
+Arguments:
+
+- scheme-name
+    - The name of the function used on scheme side
+- return-type - symbol
+    - The return type of the callback
+- arguments-types - (list symbol ...)
+    - The callback function argument types
+-  procedure - procedure
+    - Procedure used as callback function
+    - Argument count must mathc the argument-types count
 
 ### pffi-size-of
 

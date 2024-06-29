@@ -65,6 +65,7 @@
   (export pffi-shared-object-auto-load
           pffi-shared-object-load
           pffi-define
+          pffi-define-callback
           pffi-size-of
           pffi-pointer-allocate
           pffi-pointer-null

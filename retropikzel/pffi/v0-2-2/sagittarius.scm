@@ -8,6 +8,7 @@
           (sagittarius))
   (export pffi-shared-object-load
           pffi-define
+          pffi-define-callback
           pffi-size-of
           pffi-pointer-allocate
           pffi-pointer-null
@@ -44,6 +45,7 @@
               ((equal? type 'pointer) 'void*)
               ((equal? type 'string) 'char*)
               ((equal? type 'void) 'void)
+              ((equal? type 'callback) 'callback)
               (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
     (define pffi-pointer? (lambda (object) (pointer? object)))
@@ -56,6 +58,14 @@
                             (pffi-type->native-type return-type)
                             c-name
                             (map pffi-type->native-type argument-types))))))
+
+    (define-syntax pffi-define-callback
+      (syntax-rules ()
+        ((pffi-define-callback scheme-name return-type argument-types procedure)
+         (define scheme-name
+           (make-c-callback (pffi-type->native-type return-type)
+                            (map pffi-type->native-type argument-types)
+                            procedure)))))
 
     (define pffi-size-of
       (lambda (type)
