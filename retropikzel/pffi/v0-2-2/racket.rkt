@@ -11,6 +11,7 @@
           (ffi vector))
   (export pffi-shared-object-load
           pffi-define
+          pffi-define-callback
           pffi-size-of
           pffi-pointer-allocate
           pffi-pointer-null
@@ -61,6 +62,14 @@
                         shared-object
                         (_cprocedure (mlist->list (map pffi-type->native-type argument-types))
                                      (pffi-type->native-type return-type)))))))
+
+    (define-syntax pffi-define-callback
+      (syntax-rules ()
+        ((pffi-define-callback scheme-name return-type argument-types procedure)
+         (define scheme-name
+           (ffi-callback procedure
+                         (mlist->list (map pffi-type->native-type argument-types))
+                         (pffi-type->native-type return-type))))))
 
     (define pffi-size-of
       (lambda (type)
