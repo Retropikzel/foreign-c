@@ -206,7 +206,7 @@ Arguments:
     - Procedure used as callback function
     - Argument count must mathc the argument-types count
 
-### pffi-size-of
+#### pffi-size-of
 
 Get the size of type.
 
@@ -221,7 +221,7 @@ Returns:
     - The size of the given type
 
 
-### pffi-pointer-allocate
+#### pffi-pointer-allocate
 
 Allocates a pointer of given size.
 
@@ -236,7 +236,7 @@ Returns:
     - A pointer of given size
 
 
-### pffi-pointer-null
+#### pffi-pointer-null
 
 Create a null pointer.
 
@@ -244,7 +244,7 @@ Returns:
 - object
     - Null pointer
 
-### pffi-string->pointer
+#### pffi-string->pointer
 
 Arguments:
 
@@ -257,7 +257,7 @@ Returns:
     - Pointer of the given string
 
 
-### pffi-pointer->string
+#### pffi-pointer->string
 
 Arguments:
 
@@ -269,14 +269,14 @@ Returns:
 - string
     - String from the given pointer
 
-### pffi-pointer-free
+#### pffi-pointer-free
 
 Arguments:
 
 - pointer - object
     - The pointer you want to free
 
-### pffi-pointer?
+#### pffi-pointer?
 
 Arguments:
 
@@ -289,7 +289,7 @@ Returns:
     - Returns true if given object is pointer, otherwise false
 
 
-### pffi-pointer-set!
+#### pffi-pointer-set!
 
 Arguments:
 
@@ -303,7 +303,7 @@ Arguments:
 - value - object
     - The value to be placed into the object
 
-### pffi-pointer-get
+#### pffi-pointer-get
 
 Arguments:
 
@@ -321,7 +321,7 @@ Returns:
 - object
     - The value in the poiner in the given offset as given type
 
-### pffi-pointer-deref
+#### pffi-pointer-deref
 
 Arguments:
 

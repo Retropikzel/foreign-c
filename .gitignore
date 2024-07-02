@@ -22,4 +22,5 @@ test/*
 retropikzel/pffi/*/*.c
 retropikzel/pffi/*/*.o*
 retropikzel/pffi/*/*.so
+retropikzel/pffi/*/compiled
 tmp

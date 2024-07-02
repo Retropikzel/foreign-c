@@ -1,5 +1,5 @@
 (define-library
-  (retropikzel pffi v0-2-2 sagittarius)
+  (retropikzel pffi v0-3-0 sagittarius)
   (import (scheme base)
           (scheme write)
           (scheme file)

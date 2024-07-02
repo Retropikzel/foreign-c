@@ -36,6 +36,7 @@ clean:
 	rm -rf retropikzel/pffi/${VERSION}/*.so
 	rm -rf retropikzel/pffi/${VERSION}/*.meta
 	rm -rf retropikzel/pffi/${VERSION}/retropikzel.*
+	rm -rf retropikzel/pffi/${VERSION}/compiled
 	rm -rf retropikzel.*
 	rm -rf test/*.c
 	rm -rf test/*.o*

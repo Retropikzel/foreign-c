@@ -1,6 +1,6 @@
 (import (scheme base)
         (scheme write)
-        (retropikzel pffi v0-2-2 main))
+        (retropikzel pffi v0-3-0 main))
 
 (define original "Hello world")
 
