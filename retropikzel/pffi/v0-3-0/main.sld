@@ -156,11 +156,13 @@
               (if (get-environment-variable "SystemRoot")
                 (list (string-append
                         (get-environment-variable "SystemRoot")
+                        slash
                         "system32"))
                 (list))
-              (list "."
-                    )
-              (string-split (get-environment-variable "PATH") #\;)))
+              (list ".")
+              (if (get-environment-variable "PATH")
+                (string-split (get-environment-variable "PATH") #\;)
+                (list))))
           (else
             (append
               ; Guix
