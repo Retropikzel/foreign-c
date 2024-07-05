@@ -1,0 +1,4 @@
+FROM debian:trixie
+RUN dpkg --add-architecture i386 && dpkg --add-architecture amd64 && dpkg --add-architecture aarch64
+RUN apt-get update && apt-get install -y wine64:amd64
+RUN wget 

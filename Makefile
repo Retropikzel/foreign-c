@@ -26,14 +26,27 @@ documentation:
 tmp:
 	mkdir -p tmp
 
-dockerfiles:
+.dockerfiles:
 	mkdir -p dockerfiles/build
-	cat dockerfiles/src/debian_bookworm > dockerfiles/build/Dockerfile.debian_bookworm
-	cat dockerfiles/src/shared >> dockerfiles/build/Dockerfile.debian_bookworm
+	cat dockerfiles/src/wine > dockerfiles/build/Dockerfile.wine
+	cat dockerfiles/src/debian_trixie > dockerfiles/build/Dockerfile.debian_trixie
+	cat dockerfiles/src/shared >> dockerfiles/build/Dockerfile.debian_trixie
+	cat dockerfiles/src/fedora_40 > dockerfiles/build/Dockerfile.fedora_40
+	cat dockerfiles/src/shared >> dockerfiles/build/Dockerfile.fedora_40
 
-test-in-docker: dockerfiles
-	docker build . -f dockerfiles/Dockerfile.debian_bookworm --name pffi-test-debian-bookworm
-	docker run -v ${PWD}:/workdir pffi-test-debian-bookworm
+test-in-docker-wine: .dockerfiles
+	docker build . -f dockerfiles/build/Dockerfile.wine --tag pffi-test-wine
+	docker run -v ${PWD}:/workdir:z pffi-test-wine
+
+test-in-docker-debian-trixie: .dockerfiles
+	docker build . -f dockerfiles/build/Dockerfile.debian_trixie --tag pffi-test-debian-trixie
+	docker run -v ${PWD}:/workdir:z pffi-test-debian-trixi2
+
+test-in-docker-fedora-40: .dockerfiles
+	docker build . -f dockerfiles/build/Dockerfile.fedora_40 --tag pffi-test-fedora-40
+	docker run -v ${PWD}:/workdir:z pffi-test-fedora-40
+
+test-in-docker: test-in-docker-debian-trixie test-in-docker-fedora-40
 	
 
 test: build
@@ -61,3 +74,4 @@ clean:
 	rm -rf *.a
 	rm -rf tmp
 	find ./test -type f -not -name "*.scm" -exec bash -c "test -x {} && rm {}" \;
+	rm -rf dockerfiles/build
