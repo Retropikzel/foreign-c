@@ -27,6 +27,7 @@ tmp:
 	mkdir -p tmp
 
 dockerfiles:
+	mkdir -p dockerfiles/build
 	cat dockerfiles/src/debian_bookworm > dockerfiles/build/Dockerfile.debian_bookworm
 	cat dockerfiles/src/shared >> dockerfiles/build/Dockerfile.debian_bookworm
 

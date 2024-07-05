@@ -1,3 +1,4 @@
 RUN mkdir -p /workdir
+RUN wget https://bitbucket.org/ktakashi/sagittarius-scheme/downloads/sagittarius-0.9.11.tar.gz
 WORKDIR /workdir
 ENTRYPOINT ["bash", "test-all.sh"]
