@@ -26,6 +26,15 @@ documentation:
 tmp:
 	mkdir -p tmp
 
+dockerfiles:
+	cat dockerfiles/src/debian_bookworm > dockerfiles/build/Dockerfile.debian_bookworm
+	cat dockerfiles/src/shared >> dockerfiles/build/Dockerfile.debian_bookworm
+
+test-in-docker: dockerfiles
+	docker build . -f dockerfiles/Dockerfile.debian_bookworm --name pffi-test-debian-bookworm
+	docker run -v ${PWD}:/workdir pffi-test-debian-bookworm
+	
+
 test: build
 	bash test-all.sh
 

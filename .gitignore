@@ -24,3 +24,4 @@ retropikzel/pffi/*/*.o*
 retropikzel/pffi/*/*.so
 retropikzel/pffi/*/compiled
 tmp
+dockerfiles/build
