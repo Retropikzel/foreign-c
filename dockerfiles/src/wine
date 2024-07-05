@@ -1,4 +1,6 @@
 FROM debian:trixie
 RUN dpkg --add-architecture i386 && dpkg --add-architecture amd64 && dpkg --add-architecture aarch64
-RUN apt-get update && apt-get install -y wine64:amd64
-RUN wget 
+RUN apt-get update && apt-get install -y wine:i386 binfmt-support qemu-user tree wget && update-binfmts --display
+RUN wget https://bitbucket.org/ktakashi/sagittarius-scheme/downloads/setup_sagittarius_0.9.11.exe
+RUN wine setup_sagittarius_0.9.11.exe /quiet
+RUN tree ${HOME}/.wine

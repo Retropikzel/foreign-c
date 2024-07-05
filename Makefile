@@ -36,7 +36,7 @@ tmp:
 
 test-in-docker-wine: .dockerfiles
 	docker build . -f dockerfiles/build/Dockerfile.wine --tag pffi-test-wine
-	docker run -v ${PWD}:/workdir:z pffi-test-wine
+	docker run --privileged --cap-add=all -v ${PWD}:/workdir:z pffi-test-wine
 
 test-in-docker-debian-trixie: .dockerfiles
 	docker build . -f dockerfiles/build/Dockerfile.debian_trixie --tag pffi-test-debian-trixie
