@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.20
 ENV WINEDEBUG=-all
 RUN apk add wine innoextract 7zip
 ADD https://bitbucket.org/ktakashi/sagittarius-scheme/downloads/setup_sagittarius_0.9.11_x64.exe /

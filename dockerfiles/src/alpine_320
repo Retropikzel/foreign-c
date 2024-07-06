@@ -1,0 +1,6 @@
+FROM alpine:3.20
+RUN apk add guile chicken racket gcc make cmake gc libffi zlib openssl wget bash curl
+#RUN wget https://bitbucket.org/ktakashi/sagittarius-scheme/downloads/sagittarius-0.9.11.tar.gz && tar -xf sagittarius-0.9.11.tar.gz && cd sagittarius-0.9.11 && cmake . && make && make install
+WORKDIR /workdir
+ENTRYPOINT ["bash", "/workdir/test-guile.sh"]
+

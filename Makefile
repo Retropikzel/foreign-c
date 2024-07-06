@@ -33,6 +33,8 @@ tmp:
 	cat dockerfiles/src/shared >> dockerfiles/build/Dockerfile.debian_trixie
 	cat dockerfiles/src/fedora_40 > dockerfiles/build/Dockerfile.fedora_40
 	cat dockerfiles/src/shared >> dockerfiles/build/Dockerfile.fedora_40
+	cat dockerfiles/src/alpine_320 > dockerfiles/build/Dockerfile.alpine_320
+	cat dockerfiles/src/shared >> dockerfiles/build/Dockerfile.alpine_320
 
 test-in-container-wine-alpine-x86_64: .dockerfiles
 	docker build --arch=x86_64 . -f dockerfiles/build/Dockerfile.wine_alpine_x86_64 --tag pffi-test-wine-alpine-x86_64
@@ -46,7 +48,11 @@ test-in-container-fedora-40-arm64: .dockerfiles
 	docker build --arch=arm64 . -f dockerfiles/build/Dockerfile.fedora_40 --tag pffi-test-fedora-40-arm64
 	docker run --arch=arm64 -v ${PWD}:/workdir:z pffi-test-fedora-40-arm64
 
-test-in-docker-arm64: test-in-docker-debian-trixie-arm64 test-in-docker-fedora-40-arm64
+test-in-container-alpine-320-arm64: .dockerfiles
+	docker build --arch=arm64 . -f dockerfiles/build/Dockerfile.alpine_320 --tag pffi-test-alpine-320-arm64
+	docker run --arch=arm64 -v ${PWD}:/workdir:z pffi-test-alpine-320-arm64
+
+test-in-container-arm64: test-in-container-fedora-40-arm64 test-in-container-debian-trixie-arm64 test-in-container-fedora-40-arm64
 
 test: build
 	bash test-all.sh
