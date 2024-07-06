@@ -28,26 +28,25 @@ tmp:
 
 .dockerfiles:
 	mkdir -p dockerfiles/build
-	cat dockerfiles/src/wine > dockerfiles/build/Dockerfile.wine
+	cat dockerfiles/src/wine_alpine_x86_64 > dockerfiles/build/Dockerfile.wine_alpine_x86_64
 	cat dockerfiles/src/debian_trixie > dockerfiles/build/Dockerfile.debian_trixie
 	cat dockerfiles/src/shared >> dockerfiles/build/Dockerfile.debian_trixie
 	cat dockerfiles/src/fedora_40 > dockerfiles/build/Dockerfile.fedora_40
 	cat dockerfiles/src/shared >> dockerfiles/build/Dockerfile.fedora_40
 
-test-in-docker-wine: .dockerfiles
-	docker build . -f dockerfiles/build/Dockerfile.wine --tag pffi-test-wine
-	docker run --privileged --cap-add=all -v ${PWD}:/workdir:z pffi-test-wine
+test-in-container-wine-alpine-x86_64: .dockerfiles
+	docker build --arch=x86_64 . -f dockerfiles/build/Dockerfile.wine_alpine_x86_64 --tag pffi-test-wine-alpine-x86_64
+	docker run --arch=x86_64  -v ${PWD}:/workdir:z pffi-test-wine-alpine-x86_64
 
-test-in-docker-debian-trixie: .dockerfiles
-	docker build . -f dockerfiles/build/Dockerfile.debian_trixie --tag pffi-test-debian-trixie
-	docker run -v ${PWD}:/workdir:z pffi-test-debian-trixi2
+test-in-container-debian-trixie-arm64: .dockerfiles
+	docker build --arch=arm64 . -f dockerfiles/build/Dockerfile.debian_trixie --tag pffi-test-debian-trixie-arm64
+	docker run --arch=arm64 -v ${PWD}:/workdir:z pffi-test-debian-trixie-arm64
 
-test-in-docker-fedora-40: .dockerfiles
-	docker build . -f dockerfiles/build/Dockerfile.fedora_40 --tag pffi-test-fedora-40
-	docker run -v ${PWD}:/workdir:z pffi-test-fedora-40
+test-in-container-fedora-40-arm64: .dockerfiles
+	docker build --arch=arm64 . -f dockerfiles/build/Dockerfile.fedora_40 --tag pffi-test-fedora-40-arm64
+	docker run --arch=arm64 -v ${PWD}:/workdir:z pffi-test-fedora-40-arm64
 
-test-in-docker: test-in-docker-debian-trixie test-in-docker-fedora-40
-	
+test-in-docker-arm64: test-in-docker-debian-trixie-arm64 test-in-docker-fedora-40-arm64
 
 test: build
 	bash test-all.sh
