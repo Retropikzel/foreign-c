@@ -82,7 +82,10 @@ Got a [question](https://codeberg.org/r7rs-pffi/pffi/projects/9575)?
 
 ## Hacking
 
-main.sld is the real main which is copied to main.scm
+- main.sld is the real main which is copied to main.scm
+- You will need to have [scheme_testrunner](https://git.sr.ht/~retropikzel/scheme-testrunner)
+installed to run tests on large scale
+    - You can also run them on your machine
 
 ### Pull requests
 Pull requests for bug fixes, additional implementation support and additional tests are appreciated.
