@@ -57,6 +57,10 @@ test-in-container-arm64: test-in-container-fedora-40-arm64 test-in-container-deb
 test: build
 	bash test-all.sh
 
+test-arm64:
+	scheme_testrunner debian_trixie arm64 "bash test-all.sh"
+	#scheme_testrunner fedora_40 arm64 "bash test-all.sh"
+
 clean:
 	rm -rf docutmp
 	rm -rf retropikzel/pffi/${VERSION}/*.c
