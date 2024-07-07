@@ -58,7 +58,8 @@ test: build
 	bash test-all.sh
 
 test-arm64:
-	scheme_testrunner debian_trixie arm64 "bash test-all.sh"
+	scheme_testrunner debian:trixie arm64 guile "test-guile.sh"
+	scheme_testrunner debian:trixie arm64 kawa "test-kawa.sh"
 	#scheme_testrunner fedora_40 arm64 "bash test-all.sh"
 
 clean:

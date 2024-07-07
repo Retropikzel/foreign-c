@@ -1,0 +1,6 @@
+#!/bin/sh
+
+apt update && apt install -y make build-essential curl wget
+wget https://git.savannah.gnu.org/cgit/guix.git/plain/etc/guix-install.sh
+bash guix-install.sh -y
+echo "Hello from init container"
