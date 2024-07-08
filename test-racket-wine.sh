@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source scripts/init-test.sh
 
-SCHEME="wine /app/sash.exe -c -r7 -L ."
+SCHEME="racket.exe -I r7rs --make -S . --script"
 
 source scripts/test-runs-dynamic.sh

@@ -1,6 +1,6 @@
-#!/bin/sh
-
-apt update && apt install -y make build-essential curl wget
-wget https://git.savannah.gnu.org/cgit/guix.git/plain/etc/guix-install.sh
-bash guix-install.sh -y
-echo "Hello from init container"
+RUN apk add build-base wget bash curl make cmake || true
+RUN apt update && apt install -y make cmake build-essential curl wget bash || true
+RUN dnf group install "Development Tools" -y || true
+RUN dnf install -y curl wget bash make cmake || true
+RUN zypper install -t pattern devel_basis || true
+RUN zypper install -y curl wget bash make cmake findutils || true

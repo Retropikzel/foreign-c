@@ -58,9 +58,22 @@ test: build
 	bash test-all.sh
 
 test-arm64:
-	scheme_testrunner debian:trixie arm64 guile "test-guile.sh"
-	scheme_testrunner debian:trixie arm64 kawa "test-kawa.sh"
-	#scheme_testrunner fedora_40 arm64 "bash test-all.sh"
+	scheme_testrunner alpine:3.20 arm64 guile "bash test-guile.sh"
+	scheme_testrunner alpine:3.20 arm64 sagittarius "bash test-sagittarius.sh"
+	#
+	scheme_testrunner debian:trixie arm64 guile "bash test-guile.sh"
+	scheme_testrunner debian:trixie arm64 sagittarius "bash test-sagittarius.sh"
+	#
+	scheme_testrunner fedora:40 arm64 guile "bash test-guile.sh"
+	scheme_testrunner fedora:40 arm64 sagittarius "bash test-sagittarius.sh"
+	#
+	scheme_testrunner opensuse/tumbleweed arm64 guile "bash test-guile.sh"
+	scheme_testrunner opensuse/tumbleweed arm64 sagittarius "bash test-sagittarius.sh"
+
+test-amd64-wine:
+	#scheme_testrunner alpine:3.20 amd64 sagittarius_wine "bash test-sagittarius-wine.sh"
+	scheme_testrunner alpine:3.20 amd64 racket_wine "bash test-racket-wine.sh"
+
 
 clean:
 	rm -rf docutmp

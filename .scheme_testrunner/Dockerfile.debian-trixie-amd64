@@ -1,7 +1,0 @@
-FROM debian:trixie
-WORKDIR /workdir
-RUN mkdir -p /workdir/.scheme_testrunner
-COPY .scheme_testrunner/ /workdir/.scheme_testrunner
-RUN bash .scheme_testrunner/init
-RUN bash .scheme_testrunner/implementation_installer.sh
-ENTRYPOINT ["bash", "-c", "bash test-guile.sh"]
