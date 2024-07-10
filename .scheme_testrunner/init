@@ -1,6 +1,0 @@
-RUN apk add build-base wget bash curl make cmake || true
-RUN apt update && apt install -y make cmake build-essential curl wget bash || true
-RUN dnf group install "Development Tools" -y || true
-RUN dnf install -y curl wget bash make cmake || true
-RUN zypper install -t pattern devel_basis || true
-RUN zypper install -y curl wget bash make cmake findutils || true
