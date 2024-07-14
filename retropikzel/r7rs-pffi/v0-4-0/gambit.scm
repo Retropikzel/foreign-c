@@ -1,5 +1,5 @@
 (define-library
-  (retropikzel pffi v0-3-0 gerbil)
+  (retropikzel r7rs-pffi v0-4-0 gambit)
   (import (scheme base)
           (scheme write)
           (scheme file)
@@ -27,11 +27,9 @@
       (lambda (object)
         (error "Not defined")))
 
-    (define-syntax pffi-define
-      (syntax-rules ()
-        ((pffi-define scheme-name shared-object c-name return-type argument-types)
-         (error "Not defined"))))
-
+    (define pffi-define
+      (lambda (scheme-name shared-object c-name return-type argument-types)
+        (error "Not defined")))
 
     (define pffi-size-of
       (lambda (type)
@@ -54,7 +52,7 @@
         pointer))
 
     (define pffi-shared-object-load
-      (lambda (header path)
+      (lambda (headers)
         (error "Not defined")))
 
     (define pffi-pointer-free

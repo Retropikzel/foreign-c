@@ -1,5 +1,5 @@
 (define-library
-  (retropikzel pffi v0-3-0 guile)
+  (retropikzel r7rs-pffi v0-4-0 guile)
   (import (scheme base)
           (scheme write)
           (scheme file)

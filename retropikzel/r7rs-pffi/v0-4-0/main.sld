@@ -1,32 +1,32 @@
 (define-library
-  (retropikzel pffi v0-3-0 main)
+  (retropikzel r7rs-pffi v0-4-0 main)
   (cond-expand
     (sagittarius
       (import (scheme base)
               (scheme write)
               (scheme file)
               (scheme process-context)
-              (retropikzel pffi v0-3-0 sagittarius)))
+              (retropikzel r7rs-pffi v0-4-0 sagittarius)))
     (guile
       (import (scheme base)
               (scheme write)
               (scheme file)
               (scheme process-context)
-              (retropikzel pffi v0-3-0 guile)))
+              (retropikzel r7rs-pffi v0-4-0 guile)))
     (racket
       (import (scheme base)
               (scheme write)
               (scheme file)
               (scheme process-context)
               (only (racket base) system-type)
-              (retropikzel pffi v0-3-0 racket)))
+              (retropikzel r7rs-pffi v0-4-0 racket)))
     (stklos
       (import (scheme base)
               (scheme write)
               (scheme file)
               (scheme process-context)
               (stklos)
-              (retropikzel pffi v0-3-0 stklos)))
+              (retropikzel r7rs-pffi v0-4-0 stklos)))
     (kawa
       (import (scheme base)
               (scheme write)
@@ -37,31 +37,31 @@
               (scheme write)
               (scheme file)
               (scheme process-context)
-              (retropikzel pffi v0-3-0 cyclone)))
+              (retropikzel r7rs-pffi v0-4-0 cyclone)))
     (gambit
       (import (scheme base)
               (scheme write)
               (scheme file)
               (scheme process-context)
-              (retropikzel pffi v0-3-0 gambit)))
+              (retropikzel r7rs-pffi v0-4-0 gambit)))
     (chicken
       (import (scheme base)
               (scheme write)
               (scheme file)
               (scheme process-context)
-              (retropikzel pffi v0-3-0 chicken)))
+              (retropikzel r7rs-pffi v0-4-0 chicken)))
     (chibi
       (import (scheme base)
               (scheme write)
               (scheme file)
               (scheme process-context)
-              (retropikzel pffi v0-3-0 chibi)))
+              (retropikzel r7rs-pffi v0-4-0 chibi)))
     (mit-scheme
       (import (scheme base)
               (scheme write)
               (scheme file)
               (scheme process-context)
-              (retropikzel pffi v0-3-0 mit-scheme))))
+              (retropikzel r7rs-pffi v0-4-0 mit-scheme))))
   (export pffi-shared-object-auto-load
           pffi-shared-object-load
           pffi-define
