@@ -5,6 +5,9 @@ docuptmp
 *.c
 *.so
 *.o
+*.so
+*.import.*
+*.link
 *.o*
 *.meta
 *.link
@@ -28,3 +31,4 @@ dockerfiles/build
 .scheme_testrunner
 retropikzel/pffi/version/main.sld
 retropikzel/pffi/version/main.rkt
+
