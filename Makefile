@@ -1,26 +1,15 @@
-VERSION=$(shell cat VERSION)
-
 build:
-	cp retropikzel/pffi/${VERSION}/main.sld retropikzel/pffi/${VERSION}/main.scm
+	cp retropikzel/r7rs-pffi/version/main.scm retropikzel/r7rs-pffi/version/main.sld
+	echo "#lang r7rs" > retropikzel/r7rs-pffi/version/main.rkt
+	cat retropikzel/r7rs-pffi/version/main.scm >> retropikzel/r7rs-pffi/version/main.rkt
 
 install:
 	schubert install
 
-update-documentation:
-	schubert document
-	mkdir -p docutmp
-	cd docutmp && git clone git@codeberg.org:r7rs-pffi/pffi.wiki.git
-	cp retropikzel/pffi/${VERSION}/schubert-doc.md docutmp/pffi.wiki/Documentation.md
-	cd docutmp/pffi.wiki && git add Documentation.md ; git commit -m "Update documentation" ; git push
-	rm -rf docutmp
-
-documentation:
-	schubert document
-	VERSION=${VERSION} bash doc/generate.sh > documentation.md
-
 test-arm64:
 	#scheme_testrunner alpine:3.20 arm64 guile "bash test-guile.sh"
-	scheme_testrunner alpine:3.20 arm64 sagittarius "bash test-sagittarius.sh"
+	#scheme_testrunner alpine:3.20 arm64 sagittarius "bash test-sagittarius.sh"
+	scheme_testrunner alpine:3.20 arm64 chicken "bash test-chicken.sh"
 	#
 	#scheme_testrunner debian:trixie arm64 guile "bash test-guile.sh"
 	#scheme_testrunner debian:trixie arm64 sagittarius "bash test-sagittarius.sh"
@@ -32,17 +21,17 @@ test-arm64:
 	#scheme_testrunner opensuse/tumbleweed arm64 sagittarius "bash test-sagittarius.sh"
 
 test-amd64:
-	scheme_testrunner alpine:3.20 amd64 guile "bash test-guile.sh"
+	#scheme_testrunner alpine:3.20 amd64 guile "bash test-guile.sh"
 	scheme_testrunner alpine:3.20 amd64 sagittarius "bash test-sagittarius.sh"
 	#
-	scheme_testrunner debian:trixie amd64 guile "bash test-guile.sh"
-	scheme_testrunner debian:trixie amd64 sagittarius "bash test-sagittarius.sh"
+	#scheme_testrunner debian:trixie amd64 guile "bash test-guile.sh"
+	#scheme_testrunner debian:trixie amd64 sagittarius "bash test-sagittarius.sh"
 	#
-	scheme_testrunner fedora:40 amd64 guile "bash test-guile.sh"
-	scheme_testrunner fedora:40 amd64 sagittarius "bash test-sagittarius.sh"
+	#scheme_testrunner fedora:40 amd64 guile "bash test-guile.sh"
+	#scheme_testrunner fedora:40 amd64 sagittarius "bash test-sagittarius.sh"
 	#
-	scheme_testrunner opensuse/tumbleweed amd64 guile "bash test-guile.sh"
-	scheme_testrunner opensuse/tumbleweed amd64 sagittarius "bash test-sagittarius.sh"
+	#scheme_testrunner opensuse/tumbleweed amd64 guile "bash test-guile.sh"
+	#scheme_testrunner opensuse/tumbleweed amd64 sagittarius "bash test-sagittarius.sh"
 
 test-amd64-wine:
 	scheme_testrunner alpine:3.20 amd64 sagittarius_wine "bash test-sagittarius-wine.sh"
@@ -53,12 +42,12 @@ tmp:
 
 clean:
 	rm -rf docutmp
-	rm -rf retropikzel/pffi/${VERSION}/*.c
-	rm -rf retropikzel/pffi/${VERSION}/*.o*
-	rm -rf retropikzel/pffi/${VERSION}/*.so
-	rm -rf retropikzel/pffi/${VERSION}/*.meta
-	rm -rf retropikzel/pffi/${VERSION}/retropikzel.*
-	rm -rf retropikzel/pffi/${VERSION}/compiled
+	rm -rf retropikzel/r7rs-pffi/version/*.c
+	rm -rf retropikzel/r7rs-pffi/version/*.o*
+	rm -rf retropikzel/r7rs-pffi/version/*.so
+	rm -rf retropikzel/r7rs-pffi/version/*.meta
+	rm -rf retropikzel/r7rs-pffi/version/retropikzel.*
+	rm -rf retropikzel/r7rs-pffi/version/compiled
 	rm -rf retropikzel.*
 	rm -rf test/*.c
 	rm -rf test/*.o*

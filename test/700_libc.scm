@@ -2,7 +2,7 @@
         (scheme write)
         (scheme process-context)
         (scheme eval)
-        (retropikzel r7rs-pffi v0-4-0 main))
+        (retropikzel r7rs-pffi version main))
 
 (define libc (pffi-shared-object-auto-load (list "curl/curl.h")
                                               (list)

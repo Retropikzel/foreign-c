@@ -1,5 +1,5 @@
 (define-library
-  (retropikzel r7rs-pffi v0-4-0 guile)
+  (retropikzel r7rs-pffi version guile)
   (import (scheme base)
           (scheme write)
           (scheme file)

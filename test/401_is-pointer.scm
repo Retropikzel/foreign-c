@@ -1,6 +1,6 @@
 (import (scheme base)
         (scheme write)
-        (retropikzel r7rs-pffi v0-4-0 main))
+        (retropikzel r7rs-pffi version main))
 
 (define p (pffi-pointer-allocate (+ (* (pffi-size-of 'uint32) 3)
                                     (* (pffi-size-of 'uint8) 4)

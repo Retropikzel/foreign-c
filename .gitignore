@@ -26,3 +26,5 @@ retropikzel/pffi/*/compiled
 tmp
 dockerfiles/build
 .scheme_testrunner
+retropikzel/pffi/version/main.sld
+retropikzel/pffi/version/main.rkt

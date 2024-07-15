@@ -1,7 +1,7 @@
 (import (scheme base)
         (scheme write)
         (scheme process-context)
-        (retropikzel r7rs-pffi v0-4-0 main))
+        (retropikzel r7rs-pffi version main))
 
 (define libcurl (pffi-shared-object-auto-load (list "curl/curl.h") ; Headers
                                               (list ".") ; Additional search paths

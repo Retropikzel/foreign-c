@@ -1,7 +1,5 @@
-#lang r7rs
-
 (define-library
- (retropikzel r7rs-pffi v0-4-0 racket)
+ (retropikzel r7rs-pffi version racket)
  (import (scheme base)
          (scheme write)
          (scheme file)
