@@ -4,10 +4,10 @@
         (scheme eval)
         (retropikzel r7rs-pffi version main))
 
-(define libc (pffi-shared-object-auto-load (list "curl/curl.h")
-                                              (list)
-                                              "c"
-                                              (list ".6")))
+(define libc
+  (if (string=? pffi-os-name "windows")
+    (pffi-shared-object-auto-load (list "stdio.h") (list) "ucrtbase" (list ""))
+    (pffi-shared-object-auto-load (list "stdio.h") (list) "c" (list "" ".6"))))
 
 (pffi-define puts libc 'puts 'int (list 'pointer))
 

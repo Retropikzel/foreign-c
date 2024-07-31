@@ -130,3 +130,7 @@
 (define pffi-pointer-deref
   (lambda (pointer)
     (invoke pointer 'get (static-field java.lang.foreign.ValueLayout 'ADDRESS) 0)))
+
+(define pffi-define-callback
+  (lambda (scheme-name return-type argument-types procedure)
+    (error "pffi-define-callback not yet implemented for Kawa")))

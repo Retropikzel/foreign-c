@@ -1,3 +1,3 @@
 #lang r7rs
 (import (scheme base))
-(include "main.scm")
+(include "racket.scm")
