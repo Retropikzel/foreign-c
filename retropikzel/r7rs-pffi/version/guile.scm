@@ -124,8 +124,7 @@
                 ((equal? native-type unsigned-long) (bytevector-u64-set! p offset value (native-endianness)))
                 ((equal? native-type float) (bytevector-ieee-single-set! p offset value (native-endianness)))
                 ((equal? native-type double) (bytevector-ieee-double-set! p offset value (native-endianness)))
-                ((equal? native-type '*) (bytevector-sint-set! p offset (pointer-address value) (native-endianness) (pffi-size-of type))))
-          )))
+                ((equal? native-type '*) (bytevector-sint-set! p offset (pointer-address value) (native-endianness) (pffi-size-of type)))))))
 
     (define pffi-pointer-get
       (lambda (pointer type offset)
@@ -147,7 +146,8 @@
                 ((equal? native-type unsigned-long) (bytevector-u64-ref p offset (native-endianness)))
                 ((equal? native-type float) (bytevector-ieee-single-ref p offset (native-endianness)))
                 ((equal? native-type double) (bytevector-ieee-double-ref p offset (native-endianness)))
-                ((equal? native-type '*) (make-pointer (bytevector-sint-ref p offset (native-endianness) (pffi-size-of type))))))))
+                ((equal? type 'pointer) (make-pointer (bytevector-sint-ref p offset (native-endianness) (pffi-size-of type))))
+                ((equal? type 'string) (pffi-pointer->string (make-pointer (bytevector-sint-ref p offset (native-endianness) (pffi-size-of type)))))))))
 
     (define pffi-pointer-deref
       (lambda (pointer)

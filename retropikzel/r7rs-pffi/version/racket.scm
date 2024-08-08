@@ -111,7 +111,9 @@
 
    (define pffi-pointer-get
      (lambda (pointer type offset)
-       (ptr-ref pointer (pffi-type->native-type type) offset)))
+       (if (equal? type 'string)
+         (pffi-pointer->string (ptr-ref pointer (pffi-type->native-type type) offset))
+         (ptr-ref pointer (pffi-type->native-type type) offset))))
 
    (define pffi-pointer-deref
      (lambda (pointer)

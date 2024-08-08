@@ -5,6 +5,7 @@
           (scheme file)
           (scheme process-context)
           (chicken foreign)
+          (chicken locative)
           (chicken syntax)
           (chicken memory)
           (chicken random))
@@ -143,7 +144,7 @@
                       (define ,scheme-name (location external_123456789)))
             ))))
 
-    (define-syntax pffi-size-of
+    (define-syntax pffi-size-of-old
       (er-macro-transformer
         (lambda (expr rename compare)
           (let ((type (car (cdr (car (cdr expr))))))
@@ -165,8 +166,33 @@
                   ((equal? type 'unsigned-long) `(foreign-value "sizeof(unsigned long)" int))
                   ((equal? type 'float) `(foreign-value "sizeof(float)" int))
                   ((equal? type 'double) `(foreign-value "sizeof(double)" int))
-                  ((equal? type 'pointer) `(foreign-value "sizeof(int)" int))
+                  ((equal? type 'pointer) `(foreign-value "sizeof(void*)" int))
+                  ((equal? type 'string) `(foreign-value "sizeof(void*)" int))
                   (else `(error "pffi-size-of -- No such pffi type" type)))))))
+
+    (define pffi-size-of
+      (lambda (type)
+        (cond ((equal? type 'int8) (foreign-value "sizeof(int8_t)" int))
+              ((equal? type 'uint8) (foreign-value "sizeof(uint8_t)" int))
+              ((equal? type 'int16) (foreign-value "sizeof(int16_t)" int))
+              ((equal? type 'uint16) (foreign-value "sizeof(uint16_t)" int))
+              ((equal? type 'int32) (foreign-value "sizeof(int32_t)" int))
+              ((equal? type 'uint32) (foreign-value "sizeof(uint32_t)" int))
+              ((equal? type 'int64) (foreign-value "sizeof(int64_t)" int))
+              ((equal? type 'uint64) (foreign-value "sizeof(uint64_t)" int))
+              ((equal? type 'char) (foreign-value "sizeof(char)" int))
+              ((equal? type 'unsigned-char) (foreign-value "sizeof(unsigned char)" int))
+              ((equal? type 'short) (foreign-value "sizeof(short)" int))
+              ((equal? type 'unsigned-short) (foreign-value "sizeof(unsigned short)" int))
+              ((equal? type 'int) (foreign-value "sizeof(int)" int))
+              ((equal? type 'unsigned-int) (foreign-value "sizeof(unsigned int)" int))
+              ((equal? type 'long) (foreign-value "sizeof(long)" int))
+              ((equal? type 'unsigned-long) (foreign-value "sizeof(unsigned long)" int))
+              ((equal? type 'float) (foreign-value "sizeof(float)" int))
+              ((equal? type 'double) (foreign-value "sizeof(double)" int))
+              ((equal? type 'pointer) (foreign-value "sizeof(void*)" int))
+              ((equal? type 'string) (foreign-value "sizeof(void*)" int))
+              (else (error "pffi-size-of -- No such pffi type" type)))))
 
     (define pffi-pointer-allocate
       (lambda (size)
@@ -178,18 +204,22 @@
 
     (define pffi-string->pointer
       (lambda (string-content)
-        (location string-content)))
+        (let* ((size (+ (string-length string-content) 1))
+               (pointer (pffi-pointer-allocate size)))
+            (move-memory! string-content pointer (- size 1) 0)
+            pointer)))
 
     (pffi-define strlen #f 'strlen 'int (list 'pointer))
 
     (define pffi-pointer->string
       (lambda (pointer)
-        (if (string? pointer)
-          pointer
-          (let* ((size (strlen pointer))
-                 (string-content (make-string size)))
-            (move-memory! pointer string-content size 0)
-            string-content))))
+        (cond ((string? pointer) pointer)
+              ((pffi-pointer? pointer)
+               (let* ((size (strlen pointer))
+                      (string-content (make-string size)))
+                 (move-memory! pointer string-content size 0)
+                 string-content))
+              (error "Argument not pointer or string" pointer))))
 
     (define-syntax pffi-shared-object-load
       (er-macro-transformer
@@ -203,7 +233,8 @@
 
     (define pffi-pointer-free
       (lambda (pointer)
-        (free pointer)))
+        (when (pffi-pointer? pointer)
+          (free pointer))))
 
     (define pffi-pointer-null?
       (lambda (pointer)
@@ -230,7 +261,7 @@
           ((equal? type 'unsigned-long) (pointer-u32-set! (pointer+ pointer offset) value))
           ((equal? type 'float) (pointer-s32-set! (pointer+ pointer offset) value))
           ((equal? type 'double) (pointer-s32-set! (pointer+ pointer offset) value))
-          ((equal? type 'pointer) (pointer-u32-set! (pointer+ pointer offset) value)))))
+          ((equal? type 'pointer) (pointer-s32-set! (pointer+ pointer offset) value)))))
 
     (define pffi-pointer-get
       (lambda (pointer type offset)
@@ -252,7 +283,8 @@
           ((equal? type 'unsigned-long) (pointer-u32-ref (pointer+ pointer offset)))
           ((equal? type 'float) (pointer-s32-ref (pointer+ pointer offset)))
           ((equal? type 'double) (pointer-s32-ref (pointer+ pointer offset)))
-          ((equal? type 'pointer) (pointer-u32-ref (pointer+ pointer offset))))))
+          ((equal? type 'pointer) (pointer-s32-ref (pointer+ pointer offset)))
+          ((equal? type 'string) (pffi-pointer->string (address->pointer (pffi-pointer-get pointer 'pointer offset)))))))
 
     (define pffi-pointer-deref
       (lambda (pointer)

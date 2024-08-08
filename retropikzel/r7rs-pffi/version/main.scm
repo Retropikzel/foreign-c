@@ -63,7 +63,8 @@
               (scheme file)
               (scheme process-context)
               (retropikzel r7rs-pffi version mit-scheme))))
-  (export pffi-shared-object-auto-load
+  (export pffi-init
+          pffi-shared-object-auto-load
           pffi-shared-object-load
           pffi-define
           pffi-define-callback
@@ -81,8 +82,13 @@
           pffi-os-name)
   (begin
 
+    (define-syntax pffi-init
+      (syntax-rules ()
+        ((pffi-init)
+         (cond-expand
+           (chicken (import (chicken foreign)))
+           (else #t)))))
 
-    #|doc Testing multiline comment |#
 
     (define pffi-os-name
       (cond-expand
