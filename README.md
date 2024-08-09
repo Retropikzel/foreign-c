@@ -6,14 +6,6 @@ Note that this software is in alpha stage.
 
 Any help in form of constructive advice, bug reports, feature suggestions are appreciated.
 
-
-
-Got a [bug](https://codeberg.org/r7rs-pffi/pffi/projects/9101)?
-
-Got a [feature suggestion](https://codeberg.org/r7rs-pffi/pffi/projects/9102)?
-
-Got a [question](https://codeberg.org/r7rs-pffi/pffi/projects/9575)?
-
 ## Goals
 
 - Support only R7RS implementations
