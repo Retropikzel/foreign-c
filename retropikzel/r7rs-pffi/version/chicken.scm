@@ -202,18 +202,25 @@
       (lambda ()
         (address->pointer 0)))
 
-    (define pffi-string->pointer
+    (define pffi-string->pointer-old
       (lambda (string-content)
         (let* ((size (+ (string-length string-content) 1))
                (pointer (pffi-pointer-allocate size)))
             (move-memory! string-content pointer (- size 1) 0)
             pointer)))
 
+    (define pffi-string->pointer
+      (lambda (string-content)
+        (location string-content)))
+
     (pffi-define strlen #f 'strlen 'int (list 'pointer))
 
     (define pffi-pointer->string
       (lambda (pointer)
+        (write pointer)
+        (newline)
         (cond ((string? pointer) pointer)
+              ((locative? pointer) (locative->object pointer))
               ((pffi-pointer? pointer)
                (let* ((size (strlen pointer))
                       (string-content (make-string size)))
@@ -233,13 +240,15 @@
 
     (define pffi-pointer-free
       (lambda (pointer)
-        (when (pffi-pointer? pointer)
-          (free pointer))))
+        (if (not (pointer? pointer))
+          (error "pffi-pointer-free -- Argument is not pointer" pointer))
+        (free pointer)))
 
     (define pffi-pointer-null?
       (lambda (pointer)
-        (and (pffi-pointer? pointer)
-             (= (pointer->address pointer) 0))))
+        (if (not (pointer? pointer))
+          (error "pffi-pointer-null? -- Argument is not pointer" pointer))
+        (= (pointer->address pointer) 0)))
 
     (define pffi-pointer-set!
       (lambda (pointer type offset value)
@@ -261,7 +270,8 @@
           ((equal? type 'unsigned-long) (pointer-u32-set! (pointer+ pointer offset) value))
           ((equal? type 'float) (pointer-s32-set! (pointer+ pointer offset) value))
           ((equal? type 'double) (pointer-s32-set! (pointer+ pointer offset) value))
-          ((equal? type 'pointer) (pointer-s32-set! (pointer+ pointer offset) value)))))
+          ((equal? type 'pointer) (pointer-s8-set! (pointer+ pointer offset) value))
+          ((equal? type 'string) (pffi-pointer-set! pointer type offset (pffi-string->pointer value))))))
 
     (define pffi-pointer-get
       (lambda (pointer type offset)
@@ -282,9 +292,9 @@
           ((equal? type 'long) (pointer-s32-ref (pointer+ pointer offset)))
           ((equal? type 'unsigned-long) (pointer-u32-ref (pointer+ pointer offset)))
           ((equal? type 'float) (pointer-s32-ref (pointer+ pointer offset)))
-          ((equal? type 'double) (pointer-s32-ref (pointer+ pointer offset)))
-          ((equal? type 'pointer) (pointer-s32-ref (pointer+ pointer offset)))
-          ((equal? type 'string) (pffi-pointer->string (address->pointer (pffi-pointer-get pointer 'pointer offset)))))))
+          ((equal? type 'double) (pointer-s8-ref (pointer+ pointer offset)))
+          ((equal? type 'pointer) (pointer->address (pointer+ pointer offset)))
+          ((equal? type 'string) (pffi-pointer->string (pffi-pointer-get pointer 'pointer offset))))))
 
     (define pffi-pointer-deref
       (lambda (pointer)

@@ -20,7 +20,8 @@
           pffi-pointer-null?
           pffi-pointer-set!
           pffi-pointer-get
-          pffi-pointer-deref)
+          pffi-pointer-deref
+          pffi-define-callback)
   (begin
 
     (define pffi-type->native-type
@@ -142,4 +143,8 @@
 
     (define pffi-pointer-deref
       (lambda (pointer)
-        (error "Not defined")))))
+        (error "Not defined")))
+
+    (define pffi-define-callback
+      (lambda (scheme-name return-type argument-types procedure)
+        (error "pffi-define-callback not yet implemented on Cyclone")))))

@@ -142,7 +142,8 @@
                 ((equal? type 'unsigned-long) (pointer-set-c-unsigned-long! p offset value))
                 ((equal? type 'float) (pointer-set-c-float! p offset value))
                 ((equal? type 'double) (pointer-set-c-double! p offset value))
-                ((equal? type 'void*) (pointer-set-c-pointer p offset value))))))
+                ((equal? type 'void*) (pointer-set-c-pointer! p offset value))
+                ((equal? type 'pointer) (pointer-set-c-pointer! p offset value))))))
 
     (define pffi-pointer-get
       (lambda (pointer type offset)

@@ -64,7 +64,7 @@
 
     (define-syntax pffi-define-callback
       (syntax-rules ()
-        ((pffi-define scheme-name return-type argument-types procedure)
+        ((pffi-define-callback scheme-name return-type argument-types procedure)
          (define scheme-name
            (procedure->pointer (pffi-type->native-type return-type)
                                procedure
@@ -124,7 +124,8 @@
                 ((equal? native-type unsigned-long) (bytevector-u64-set! p offset value (native-endianness)))
                 ((equal? native-type float) (bytevector-ieee-single-set! p offset value (native-endianness)))
                 ((equal? native-type double) (bytevector-ieee-double-set! p offset value (native-endianness)))
-                ((equal? native-type '*) (bytevector-sint-set! p offset (pointer-address value) (native-endianness) (pffi-size-of type)))))))
+                ((equal? type 'pointer) (bytevector-sint-set! p offset (pointer-address value) (native-endianness) (pffi-size-of type)))
+                ((equal? type 'string) (bytevector-sint-set! p offset (pointer-address (pffi-string->pointer value)) (native-endianness) (pffi-size-of type)))))))
 
     (define pffi-pointer-get
       (lambda (pointer type offset)
