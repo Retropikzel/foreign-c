@@ -66,6 +66,9 @@ These implementations do not have callback support on their FFI. If I'm wrong pl
 ## Support maybe possible/dreaming about
 
 - [Airship](https://gitlab.com/mbabich/airship-scheme)
+- [Other gambit targets](https://gambitscheme.org/)
+  - Gambit compiles to different targets other than C too, for example Javascript. It would be cool
+  and interesting to see if this FFI could also support some of those
 
 ## Not supported
 

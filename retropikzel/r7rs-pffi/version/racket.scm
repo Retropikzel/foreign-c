@@ -68,8 +68,7 @@
         (define scheme-name (function-ptr procedure
                                           (_cprocedure
                                            (mlist->list (map pffi-type->native-type argument-types))
-                                           (pffi-type->native-type return-type)))
-          ))))
+                                           (pffi-type->native-type return-type)))))))
 
    (define pffi-size-of
      (lambda (type)
@@ -77,12 +76,11 @@
 
    (define pffi-pointer-allocate
      (lambda (size)
-       (malloc size 'raw)))
+       (malloc 'raw size)))
 
    (define pffi-pointer-null
      (lambda ()
-       #f ; In racket #f is null pointer
-       ))
+       #f )) ; #f is the null pointer on racket
 
    (define pffi-string->pointer
      (lambda (string-content)
@@ -102,18 +100,24 @@
 
    (define pffi-pointer-null?
      (lambda (pointer)
-       (not pointer) ; #f is the null pointer on racket
-       ))
+       (not pointer))) ; #f is the null pointer on racket
 
    (define pffi-pointer-set!
      (lambda (pointer type offset value)
-       (ptr-set! pointer (pffi-type->native-type type) offset value)))
+       (cond
+         ((equal? type 'string)
+          (ptr-set! pointer (pffi-type->native-type type) 'abs offset (pffi-string->pointer value)))
+         ;((equal? type 'pointer) (ptr-set! pointer _intptr offset (cast value _pointer _intptr)))
+         (else
+           (ptr-set! pointer (pffi-type->native-type type) 'abs offset value)))))
 
    (define pffi-pointer-get
      (lambda (pointer type offset)
-       (if (equal? type 'string)
-         (pffi-pointer->string (ptr-ref pointer (pffi-type->native-type type) offset))
-         (ptr-ref pointer (pffi-type->native-type type) offset))))
+       (cond
+         ((equal? type 'string)
+          (pffi-pointer->string (ptr-ref pointer (pffi-type->native-type type) 'abs offset)))
+         (else
+           (ptr-ref pointer (pffi-type->native-type type) 'abs offset)))))
 
    (define pffi-pointer-deref
      (lambda (pointer)
