@@ -42,9 +42,12 @@ These implementations do not have callback support on their FFI. If I'm wrong pl
 ### Callbacks not implemented yet
 
 - [Kawa](https://www.gnu.org/software/kawa/index.html)
-    - Needs atleast java 21
-    - Needs jvm flags
-        - java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar FILENAME.scm
+    - Needs at least java version 22
+    - Needs jvm flags:
+        - --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED
+        - --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED
+        - --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED
+        - --enable-native-access=ALL-UNNAMED
 
 ## Support waiting for the implementation
 

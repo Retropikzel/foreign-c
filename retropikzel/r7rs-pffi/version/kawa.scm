@@ -67,7 +67,6 @@
                                                      (symbol->string c-name))
                                              'orElseThrow)
                                      function-descriptor)))
-
          (lambda vals
            (invoke method-handle 'invokeWithArguments (map value->object vals argument-types))))))))
 
@@ -87,11 +86,11 @@
 
 (define pffi-string->pointer
   (lambda (string-content)
-    (invoke arena 'allocateUtf8String string-content)))
+    (invoke arena 'allocateFrom string-content)))
 
 (define pffi-pointer->string
   (lambda (pointer)
-    (invoke (invoke pointer 'reinterpret (static-field java.lang.Integer 'MAX_VALUE)) 'getUtf8String 0)))
+    (invoke (invoke pointer 'reinterpret (static-field java.lang.Integer 'MAX_VALUE)) 'getString 0)))
 
 (define pffi-shared-object-load
   (lambda (header path)
