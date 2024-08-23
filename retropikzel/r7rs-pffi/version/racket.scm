@@ -107,7 +107,6 @@
        (cond
          ((equal? type 'string)
           (ptr-set! pointer (pffi-type->native-type type) 'abs offset (pffi-string->pointer value)))
-         ;((equal? type 'pointer) (ptr-set! pointer _intptr offset (cast value _pointer _intptr)))
          (else
            (ptr-set! pointer (pffi-type->native-type type) 'abs offset value)))))
 
