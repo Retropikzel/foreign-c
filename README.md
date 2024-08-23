@@ -6,7 +6,7 @@ Note that this software is in alpha stage.
 
 Any help in form of constructive advice, bug reports, feature suggestions are appreciated.
 
-See: [Issue tracker](https://todo.sr.ht/~retropikzel/r7rs-pffi)
+[Issue tracker](https://todo.sr.ht/~retropikzel/r7rs-pffi)
 
 ## Goals
 
