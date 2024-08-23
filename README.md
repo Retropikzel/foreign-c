@@ -85,6 +85,9 @@ These implementations do not have callback support on their FFI. If I'm wrong pl
     - FFI requires C code
 - [Gauche](https://practical-scheme.net/gauche/)
     - FFI requires C code
+- [s7](https://scheme.fail://ccrma.stanford.edu/software/snd/snd/s7.html)
+    - No library support
+    - Might have other things missing too
 - [Loko](https://scheme.fail/)
     - Desires no C interop, I can respect that
 
