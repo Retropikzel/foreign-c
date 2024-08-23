@@ -55,20 +55,18 @@
   (syntax-rules ()
     ((pffi-define scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
-       (let* ((of-void (class-methods java.lang.foreign.FunctionDescriptor 'ofVoid))
-              (of (class-methods java.lang.foreign.FunctionDescriptor 'of))
-              (function-descriptor (if (equal? return-type 'void)
-                                     (apply of-void (map pffi-type->native-type argument-types))
-                                     (apply of (append (list (pffi-type->native-type return-type)) (map pffi-type->native-type argument-types)))))
-              (method-handle (invoke (cdr (assoc 'linker shared-object))
-                                     'downcallHandle
-                                     (invoke (invoke (cdr (assoc 'lookup shared-object))
-                                                     'find
-                                                     (symbol->string c-name))
-                                             'orElseThrow)
-                                     function-descriptor)))
-         (lambda vals
-           (invoke method-handle 'invokeWithArguments (map value->object vals argument-types))))))))
+       (lambda vals
+         (invoke (invoke (cdr (assoc 'linker shared-object))
+                         'downcallHandle
+                         (invoke (invoke (cdr (assoc 'lookup shared-object))
+                                         'find
+                                         (symbol->string c-name))
+                                 'orElseThrow)
+                         (if (equal? return-type 'void)
+                           (apply (class-methods java.lang.foreign.FunctionDescriptor 'ofVoid) (map pffi-type->native-type argument-types))
+                           (apply (class-methods java.lang.foreign.FunctionDescriptor 'of) (cons (pffi-type->native-type return-type) (map pffi-type->native-type argument-types)))))
+                 'invokeWithArguments
+                 (map value->object vals argument-types)))))))
 
 
 
