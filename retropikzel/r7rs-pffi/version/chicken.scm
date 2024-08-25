@@ -141,8 +141,7 @@
               `(begin (define-external ,(cons 'external_123456789 arguments)
                                 ,return-type
                                 (begin ,@ procedure-body))
-                      (define ,scheme-name (location external_123456789)))
-            ))))
+                      (define ,scheme-name (location external_123456789)))))))
 
     (define-syntax pffi-size-of-old
       (er-macro-transformer
@@ -202,14 +201,14 @@
       (lambda ()
         (address->pointer 0)))
 
-    (define pffi-string->pointer-old
+    (define pffi-string->pointer
       (lambda (string-content)
         (let* ((size (+ (string-length string-content) 1))
                (pointer (pffi-pointer-allocate size)))
             (move-memory! string-content pointer (- size 1) 0)
             pointer)))
 
-    (define pffi-string->pointer
+    (define pffi-string->pointer-maybe
       (lambda (string-content)
         (location string-content)))
 
@@ -217,16 +216,12 @@
 
     (define pffi-pointer->string
       (lambda (pointer)
-        (write pointer)
-        (newline)
-        (cond ((string? pointer) pointer)
-              ((locative? pointer) (locative->object pointer))
-              ((pffi-pointer? pointer)
+        (cond ((pffi-pointer? pointer)
                (let* ((size (strlen pointer))
                       (string-content (make-string size)))
                  (move-memory! pointer string-content size 0)
                  string-content))
-              (error "Argument not pointer or string" pointer))))
+              (error "pffi-pointer->string -- Argument not pointer " pointer))))
 
     (define-syntax pffi-shared-object-load
       (er-macro-transformer
@@ -252,6 +247,8 @@
 
     (define pffi-pointer-set!
       (lambda (pointer type offset value)
+        (write pointer)
+        (newline)
         (cond
           ((equal? type 'int8) (pointer-s8-set! (pointer+ pointer offset) value))
           ((equal? type 'uint8) (pointer-u8-set! (pointer+ pointer offset) value))
@@ -275,6 +272,8 @@
 
     (define pffi-pointer-get
       (lambda (pointer type offset)
+        (write pointer)
+        (newline)
         (cond
           ((equal? type 'int8) (pointer-s8-ref (pointer+ pointer offset)))
           ((equal? type 'uint8) (pointer-u8-ref (pointer+ pointer offset)))
