@@ -51,7 +51,9 @@ or run mkdocs serve or see or docs/ directory.
 These implementations do not have callback support on their FFI. If I'm wrong please let me know!
 
 - [STKlos](https://stklos.net/)
+    - Still needs work
 - [Cyclone](https://justinethier.github.io/cyclone/)
+    - Still needs work
 
 ### Callbacks not implemented yet
 
