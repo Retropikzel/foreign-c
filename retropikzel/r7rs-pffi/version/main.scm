@@ -184,7 +184,7 @@
                 "/run/current-system/profile/lib")
           ; Debian
           (if (get-environment-variable "LD_LIBRARY_PATH")
-            (list (string-split (get-environment-variable "LD_LIBRARY_PATH") #\:))
+            (string-split (get-environment-variable "LD_LIBRARY_PATH") #\:)
             (list))
           (list
             ;;; x86-64
