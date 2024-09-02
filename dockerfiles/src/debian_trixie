@@ -1,3 +1,0 @@
-FROM debian:bookworm
-RUN apt-get update && apt-get install -y build-essential bash git wget make cmake libgc-dev zlib1g-dev libffi-dev libssl-dev guile-3.0 chicken-bin racket
-

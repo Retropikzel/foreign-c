@@ -1,3 +1,0 @@
-FROM fedora:40
-RUN dnf group install "Development Tools" -y && dnf install -y openssl-devel guile30 chicken racket-minimal
-RUN ln -s /usr/bin/guile3.0 /usr/bin/guile

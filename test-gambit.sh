@@ -7,8 +7,8 @@ SCHEME_LIB="gsc -v -:r7rs,search=. -obj"
 SCHEME_I="gsi -:r7rs,search=."
 
 
-${SCHEME_LIB} retropikzel/pffi/${VERSION}/gambit.scm
-${SCHEME_LIB} retropikzel/pffi/${VERSION}/main.sld
+${SCHEME_LIB} retropikzel/pffi/version/gambit.scm
+${SCHEME_LIB} retropikzel/pffi/version/main.sld
 
 
 source scripts/test-runs-compilers.sh

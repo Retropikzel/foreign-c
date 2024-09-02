@@ -19,6 +19,7 @@
               (scheme file)
               (scheme process-context)
               (only (racket base) system-type)
+              (ffi winapi)
               (retropikzel r7rs-pffi version racket)))
     (stklos
       (import (scheme base)
@@ -62,7 +63,8 @@
               (scheme file)
               (scheme process-context)
               (retropikzel r7rs-pffi version mit-scheme))))
-  (export pffi-shared-object-auto-load
+  (export pffi-init
+          pffi-shared-object-auto-load
           pffi-shared-object-load
           pffi-define
           pffi-define-callback
@@ -76,13 +78,23 @@
           pffi-pointer-null?
           pffi-pointer-set!
           pffi-pointer-get
-          pffi-pointer-deref)
+          pffi-pointer-deref
+          pffi-os-name)
   (begin
 
+    (define-syntax pffi-init
+      (syntax-rules ()
+        ((pffi-init)
+         (cond-expand
+           (chicken (import (chicken foreign)))
+           (else #t)))))
 
-    #|doc Testing multiline comment |#
 
-
+    (define pffi-os-name
+      (cond-expand
+        (windows "windows")
+        (racket (if (equal? (system-type 'os) 'windows) "windows" "unix"))
+        (else "unix")))
 
     (define library-version "v0-3-0")
     (define slash (cond-expand (windows (string #\\)) (else "/")))
@@ -140,58 +152,58 @@
           res)))
 
     (define auto-load-paths
-      (append
-        (cond-expand
-          (windows
-            (append
-              (if (get-environment-variable "SYSTEM")
-                (list (get-environment-variable "SYSTEM"))
-                (list))
-              (if (get-environment-variable "WINDIR")
-                (list (get-environment-variable "WINDIR"))
-                (list))
-              (if (get-environment-variable "WINEDLLDIR0")
-                (list (get-environment-variable "WINEDLLDIR0"))
-                (list))
-              (if (get-environment-variable "SystemRoot")
-                (list (string-append
-                        (get-environment-variable "SystemRoot")
-                        slash
-                        "system32"))
-                (list))
-              (list ".")
-              (if (get-environment-variable "PATH")
-                (string-split (get-environment-variable "PATH") #\;)
-                (list))))
-          (else
-            (append
-              ; Guix
-              (list (if (get-environment-variable "GUIX_ENVIRONMENT")
-                      (string-append (get-environment-variable "GUIX_ENVIRONMENT") "/lib")
-                      "")
-                    "/run/current-system/profile/lib")
-              ; Debian
-              (if (get-environment-variable "LD_LIBRARY_PATH")
-                (list (string-split (get-environment-variable "LD_LIBRARY_PATH") #\:))
-                (list))
-              (list
-                ;;; x86-64
-                ; Debian
-                "/lib/x86_64-linux-gnu"
-                "/usr/lib/x86_64-linux-gnu"
-                "/usr/local/lib"
-                ; Fedora/Alpine
-                "/usr/lib"
-                "/usr/lib64"
-                ;;; aarch64
-                ; Debian
-                "/lib/aarch64-linux-gnu"
-                "/usr/lib/aarch64-linux-gnu"
-                "/usr/local/lib"
-                ; Fedora/Alpine
-                "/usr/lib"
-                "/usr/lib64"
-                ))))))
+      (if (string=? pffi-os-name "windows")
+        (append
+          (if (get-environment-variable "SYSTEM")
+            (list (get-environment-variable "SYSTEM"))
+            (list))
+          (if (get-environment-variable "WINDIR")
+            (list (get-environment-variable "WINDIR"))
+            (list))
+          (if (get-environment-variable "WINEDLLDIR0")
+            (list (get-environment-variable "WINEDLLDIR0"))
+            (list))
+          (if (get-environment-variable "SystemRoot")
+            (list (string-append
+                    (get-environment-variable "SystemRoot")
+                    slash
+                    "system32"))
+            (list))
+          (list ".")
+          (if (get-environment-variable "PATH")
+            (string-split (get-environment-variable "PATH") #\;)
+            (list))
+        (if (get-environment-variable "PWD")
+            (list (get-environment-variable "PWD"))
+            (list)))
+        (append
+          ; Guix
+          (list (if (get-environment-variable "GUIX_ENVIRONMENT")
+                  (string-append (get-environment-variable "GUIX_ENVIRONMENT") slash "lib")
+                  "")
+                "/run/current-system/profile/lib")
+          ; Debian
+          (if (get-environment-variable "LD_LIBRARY_PATH")
+            (string-split (get-environment-variable "LD_LIBRARY_PATH") #\:)
+            (list))
+          (list
+            ;;; x86-64
+            ; Debian
+            "/lib/x86_64-linux-gnu"
+            "/usr/lib/x86_64-linux-gnu"
+            "/usr/local/lib"
+            ; Fedora/Alpine
+            "/usr/lib"
+            "/usr/lib64"
+            ;;; aarch64
+            ; Debian
+            "/lib/aarch64-linux-gnu"
+            "/usr/lib/aarch64-linux-gnu"
+            "/usr/local/lib"
+            ; Fedora/Alpine
+            "/usr/lib"
+            "/usr/lib64"
+            ))))
 
     (define auto-load-versions (list ""))
 

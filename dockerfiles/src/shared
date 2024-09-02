@@ -1,4 +1,0 @@
-RUN mkdir -p /workdir
-#RUN wget https://bitbucket.org/ktakashi/sagittarius-scheme/downloads/sagittarius-0.9.11.tar.gz && tar -xf sagittarius-0.9.11.tar.gz && cd sagittarius-0.9.11 && cmake . && make && make install
-WORKDIR /workdir
-ENTRYPOINT ["bash", "test-guile.sh"]
