@@ -32,12 +32,15 @@ or run mkdocs serve or see or docs/ directory.
 
 # Support tiers
 
+Support is defined in tiers, each tier has short explanation about it after the title.
+
+Currently the interface of the library is okay. Now work needs to be done to make tests and see
+that each implementation passes those tests. This will be done in tiered order starting from tier 1.
+
 ## Tier 1
 
 - [Chicken](https://www.call-cc.org/)
-    - Still needs work
 - [Guile](https://www.gnu.org/software/guile/)
-    - Good support, recommended
 - [Kawa](https://www.gnu.org/software/kawa/index.html)
     - Needs at least java version 22
     - Needs jvm flags:
@@ -45,26 +48,22 @@ or run mkdocs serve or see or docs/ directory.
         - --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED
         - --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED
         - --enable-native-access=ALL-UNNAMED
-    - Good support (otherwise), recommended
 - [Sagittarius](https://bitbucket.org/ktakashi/sagittarius-scheme/wiki/Home)
-    - Good support, recommended
 - [Racket](https://racket-lang.org/)
-    - Good support, recommended
-- [Gambit](https://gambitscheme.org)
-    - Still needs work
 
 ## Tier 2
 
-These implementations do not have callback support on their FFI. If I'm wrong please let me know!
-
+- [Gambit](https://gambitscheme.org)
+    - Propably able to support everything but so annoying to deal with that it's currently in tier 2
+    - Still needs work
 - [STKlos](https://stklos.net/)
+    - No callback support
     - Still needs work
 - [Cyclone](https://justinethier.github.io/cyclone/)
+    - No callback support
     - Still needs work
 
 ## Tier 3
-
-Support waiting for the implementation.
 
 - [LIPS](https://lips.js.org/)
     - Waiting for implementation to have cond-expand and library support
