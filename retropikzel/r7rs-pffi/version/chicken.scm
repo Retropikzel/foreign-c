@@ -143,32 +143,6 @@
                                 (begin ,@ procedure-body))
                       (define ,scheme-name (location external_123456789)))))))
 
-    (define-syntax pffi-size-of-old
-      (er-macro-transformer
-        (lambda (expr rename compare)
-          (let ((type (car (cdr (car (cdr expr))))))
-            (cond ((equal? type 'int8) `(foreign-value "sizeof(int8_t)" int))
-                  ((equal? type 'uint8) `(foreign-value "sizeof(uint8_t)" int))
-                  ((equal? type 'int16) `(foreign-value "sizeof(int16_t)" int))
-                  ((equal? type 'uint16) `(foreign-value "sizeof(uint16_t)" int))
-                  ((equal? type 'int32) `(foreign-value "sizeof(int32_t)" int))
-                  ((equal? type 'uint32) `(foreign-value "sizeof(uint32_t)" int))
-                  ((equal? type 'int64) `(foreign-value "sizeof(int64_t)" int))
-                  ((equal? type 'uint64) `(foreign-value "sizeof(uint64_t)" int))
-                  ((equal? type 'char) `(foreign-value "sizeof(char)" int))
-                  ((equal? type 'unsigned-char) `(foreign-value "sizeof(unsigned char)" int))
-                  ((equal? type 'short) `(foreign-value "sizeof(short)" int))
-                  ((equal? type 'unsigned-short) `(foreign-value "sizeof(unsigned short)" int))
-                  ((equal? type 'int) `(foreign-value "sizeof(int)" int))
-                  ((equal? type 'unsigned-int) `(foreign-value "sizeof(unsigned int)" int))
-                  ((equal? type 'long) `(foreign-value "sizeof(long)" int))
-                  ((equal? type 'unsigned-long) `(foreign-value "sizeof(unsigned long)" int))
-                  ((equal? type 'float) `(foreign-value "sizeof(float)" int))
-                  ((equal? type 'double) `(foreign-value "sizeof(double)" int))
-                  ((equal? type 'pointer) `(foreign-value "sizeof(void*)" int))
-                  ((equal? type 'string) `(foreign-value "sizeof(void*)" int))
-                  (else `(error "pffi-size-of -- No such pffi type" type)))))))
-
     (define pffi-size-of
       (lambda (type)
         (cond ((equal? type 'int8) (foreign-value "sizeof(int8_t)" int))

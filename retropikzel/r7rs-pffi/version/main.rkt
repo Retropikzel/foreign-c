@@ -63,7 +63,8 @@
               (scheme write)
               (scheme file)
               (scheme process-context)
-              (retropikzel r7rs-pffi version mit-scheme))))
+              (retropikzel r7rs-pffi version mit-scheme)))
+    (else (error "Unsupported version")))
   (export pffi-init
           pffi-shared-object-auto-load
           pffi-shared-object-load
@@ -89,7 +90,6 @@
          (cond-expand
            (chicken (import (chicken foreign)))
            (else #t)))))
-
 
     (define pffi-os-name
       (cond-expand

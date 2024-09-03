@@ -18,6 +18,12 @@ test-tier1: \
 	test-sagittarius \
 	test-racket
 
+test-tier2:
+	test-cyclone \
+	test-gambit \
+	test-stklos
+	
+
 CHICKEN_LIB=csc -X r7rs -R r7rs -s -J
 build-chicken-libs:
 	cp retropikzel/r7rs-pffi/version/chicken.scm retropikzel.r7rs-pffi.version.chicken.scm
@@ -53,7 +59,8 @@ test-gambit: clean build
 
 GUILE=guile -L . -L ./schubert
 test-guile: build
-	${SCHEME_RUNNER} guile "${GUILE} test.scm"
+	#${SCHEME_RUNNER} guile "${GUILE} test.scm"
+	${GUILE} test.scm
 
 KAWA=java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=.:./schubert
 test-kawa: build
@@ -63,20 +70,9 @@ SASH=sash -L . -L ./schubert
 test-sagittarius: build
 	${SCHEME_RUNNER} sagittarius "${SASH} test.scm"
 
-test-sagittarius-wine: build
-	PACKAGES="${TEST_PACKAGES_APT}" \
-	WINE="true" \
-		scheme_runner sagittarius "bash"
-
 RACKET=racket -I r7rs -S . -S ./schubert --script
 test-racket: build
-	#${SCHEME_RUNNER} racket "racket --help"
 	${SCHEME_RUNNER} racket "${RACKET} test.scm"
-
-test-racket-wine: build
-	PACKAGES="${TEST_PACKAGES_APT}" \
-	WINE=true \
-		scheme_runner racket "bash test-racket-wine.sh"
 
 STKLOS=stklos -A . -A ./schubert -f
 test-stklos: build

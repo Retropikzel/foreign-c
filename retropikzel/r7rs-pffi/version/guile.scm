@@ -70,7 +70,6 @@
                                procedure
                                (map pffi-type->native-type argument-types))))))
 
-
     (define pffi-size-of
       (lambda (type)
         (sizeof (pffi-type->native-type type))))

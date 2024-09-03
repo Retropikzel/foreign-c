@@ -4,19 +4,42 @@
         (scheme process-context)
         (retropikzel r7rs-pffi version main))
 
-(define tag 'none)
+(define exit-on-fail? #t)
 
+(define tag 'none)
 (define-syntax assert
   (syntax-rules ()
     ((_ check value)
-     (when (not (apply check (list value)))
+     (let ((result (apply check (list value))))
+       (if (not result) (display "FAIL: ") (display "PASS: "))
        (display "[")
        (display tag)
        (display "] ")
-       (display "Assert failed: ")
        (write (list 'check 'value))
-       (newline)))))
+       (newline)
+       (when (and exit-on-fail? (not result)) (exit 1))
+       ))))
 
+;; pffi-init
+
+(set! tag 'pffi-init)
+
+(pffi-init)
+
+;; pffi-shared-object-auto-load
+(set! tag 'pffi-shared-object-auto-load-libc)
+
+(define libc-stdlib
+  (if (string=? pffi-os-name "windows")
+    (pffi-shared-object-auto-load (list "stdlib.h") (list) "ucrtbase" (list ""))
+    (pffi-shared-object-auto-load (list "stdlib.h") (list) "c" (list "" ".6"))))
+
+;; pffi-define
+(set! tag 'pffi-define-atoi)
+(pffi-define atoi libc-stdlib 'atoi 'int (list 'pointer))
+(assert number? (atoi (pffi-string->pointer "100")))
+
+;; Size of
 
 (set! tag 'size-of)
 (assert number? (pffi-size-of 'int8))
@@ -38,7 +61,6 @@
 (assert number? (pffi-size-of 'float))
 (assert number? (pffi-size-of 'double))
 (assert number? (pffi-size-of 'string))
-(assert string? (pffi-size-of 'pointer))
-
+(assert number? (pffi-size-of 'pointer))
 
 (exit 0)
