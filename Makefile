@@ -111,3 +111,4 @@ clean:
 	rm -rf *.so
 	rm -rf *.a
 	rm -rf test
+	rm -rf tmp
