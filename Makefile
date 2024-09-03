@@ -1,4 +1,7 @@
-TEST_PACKAGES_APT=libcurl4 libcurl4-openssl-dev
+TEST_PACKAGES_APT="libcurl4-openssl-dev libuv1"
+SCHEME_RUNNER=PACKAGES=${TEST_PACKAGES_APT} scheme_runner
+TESTFILES=$(shell ls tests/*.scm)
+SRFI_BUNDLE_VERSION=v0-1-0
 
 build: retropikzel/r7rs-pffi/version/*.scm
 	cp retropikzel/r7rs-pffi/version/main.scm retropikzel/r7rs-pffi/version/main.sld
@@ -12,54 +15,75 @@ test-all: \
 	test-chicken\
 	test-cyclone \
 	test-gambit \
-	test-gerbil \
 	test-guile \
 	test-kawa \
 	test-sagittarius \
-	test-racket \
-	test-stklos
+	test-racket
 
-test-chicken: build
-	PACKAGES="${TEST_PACKAGES_APT}" \
-			 scheme_runner chicken "bash test-chicken.sh"
+CHICKEN_LIB=csc -X r7rs -R r7rs -s -J
+build-chicken-libs:
+	cp retropikzel/r7rs-pffi/version/chicken.scm retropikzel.r7rs-pffi.version.chicken.scm
+	${SCHEME_RUNNER} chicken "${CHICKEN_LIB} retropikzel.r7rs-pffi.version.chicken.scm"
+	cp retropikzel/r7rs-pffi/version/main.scm retropikzel.r7rs-pffi.version.main.scm
+	${SCHEME_RUNNER} chicken "${CHICKEN_LIB} retropikzel.r7rs-pffi.version.main.scm"
 
-test-cyclone: build
+CHICKEN=csc -X r7rs -R r7rs -L -lcurl
+test-chicken: clean build build-chicken-libs
+	${SCHEME_RUNNER} chicken "${CHICKEN} test.scm"
+	${SCHEME_RUNNER} chicken "./test"
+
+CYCLONE=cyclone -A . -A ./schubert
+build-cyclone-libs:
+	${SCHEME_RUNNER} cyclone "${CYCLONE} retropikzel/r7rs-pffi/version/cyclone.scm"
+	${SCHEME_RUNNER} cyclone "${CYCLONE} retropikzel/r7rs-pffi/version/main.scm"
+	${SCHEME_RUNNER} cyclone "${CYCLONE} test.scm"
+	${SCHEME_RUNNER} cyclone "./test"
+
+CYCLONE=cyclone -A . -A ./schubert
+test-cyclone: clean build build-cyclone-libs
 	PACKAGES="${TEST_PACKAGES_APT}" \
 	scheme_runner cyclone "bash test-cyclone.sh"
 
-test-gambit: build
-	PACKAGES="${TEST_PACKAGES_APT}" \
-	scheme_runner gambit "bash test-gambit.sh"
+GAMBIT_LIB=gsc -:r7rs,search=. -dynamic
+build-gambit-libs:
+	${SCHEME_RUNNER} gambit "${GAMBIT_LIB} retropikzel/pffi/version/gambit.scm"
+	${SCHEME_RUNNER} gambit "${GAMBIT_LIB} retropikzel/pffi/version/main.sld"
 
-test-gerbil: build
-	PACKAGES="${TEST_PACKAGES_APT}" \
-	scheme_runner gerbil "bash test-gerbil.sh"
+GAMBIT=gsc -:r7rs,search=. -ld-options -lcurl -exe
+test-gambit: clean build
+	${SCHEME_RUNNER} gambit "${GAMBIT} test.scm"
 
+GUILE=guile -L . -L ./schubert
 test-guile: build
-	PACKAGES="${TEST_PACKAGES_APT}" \
-	scheme_runner guile "bash test-guile.sh"
+	${SCHEME_RUNNER} guile "${GUILE} test.scm"
 
+KAWA=java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=.:./schubert
 test-kawa: build
-	PACKAGES="${TEST_PACKAGES_APT}" \
-	scheme_runner kawa "bash test-kawa.sh"
+	${SCHEME_RUNNER} kawa "${KAWA} test.scm"
 
+SASH=sash -L . -L ./schubert
 test-sagittarius: build
-	PACKAGES="${TEST_PACKAGES_APT}" \
-	scheme_runner sagittarius "bash test-sagittarius.sh"
+	${SCHEME_RUNNER} sagittarius "${SASH} test.scm"
 
+test-sagittarius-wine: build
+	PACKAGES="${TEST_PACKAGES_APT}" \
+	WINE="true" \
+		scheme_runner sagittarius "bash"
+
+RACKET=racket -I r7rs -S . -S ./schubert --script
 test-racket: build
-	PACKAGES="${TEST_PACKAGES_APT}" \
-	scheme_runner racket "bash test-racket.sh"
+	#${SCHEME_RUNNER} racket "racket --help"
+	${SCHEME_RUNNER} racket "${RACKET} test.scm"
 
+test-racket-wine: build
+	PACKAGES="${TEST_PACKAGES_APT}" \
+	WINE=true \
+		scheme_runner racket "bash test-racket-wine.sh"
+
+STKLOS=stklos -A . -A ./schubert -f
 test-stklos: build
-	PACKAGES="${TEST_PACKAGES_APT}" \
-	scheme_runner stklos "bash test-stklos.sh"
+	${SCHEME_RUNNER} stklos "${STKLOS} test.scm"
 
-test-amd64-wine: build
-	PACKAGES="${TEST_PACKAGES_APT}" \
-	scheme_testrunner sagittarius_wine "bash test-sagittarius-wine.sh"
-	PACKAGES="${TEST_PACKAGES_APT}" \
-	scheme_testrunner racket_wine "bash test-racket-wine.sh"
 
 tmp:
 	mkdir -p tmp
@@ -84,4 +108,4 @@ clean:
 	rm -rf *.o
 	rm -rf *.so
 	rm -rf *.a
-	find ./test -type f -not -name "*.scm" -exec bash -c "test -x {} && rm {}" \;
+	rm -rf test

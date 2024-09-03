@@ -34,3 +34,5 @@ retropikzel/pffi/version/main.rkt
 *.sld
 *.rkt
 site
+test
+schubert

@@ -242,8 +242,8 @@
     (define pffi-pointer-null?
       (lambda (pointer)
         (if (not (pointer? pointer))
-          (error "pffi-pointer-null? -- Argument is not pointer" pointer))
-        (= (pointer->address pointer) 0)))
+          #f
+          (= (pointer->address pointer) 0))))
 
     (define pffi-pointer-set!
       (lambda (pointer type offset value)
