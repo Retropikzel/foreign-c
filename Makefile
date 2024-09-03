@@ -11,10 +11,8 @@ build: retropikzel/r7rs-pffi/version/*.scm
 install:
 	schubert install
 
-test-all: \
+test-tier1: \
 	test-chicken\
-	test-cyclone \
-	test-gambit \
 	test-guile \
 	test-kawa \
 	test-sagittarius \
@@ -44,12 +42,12 @@ test-cyclone: clean build build-cyclone-libs
 	PACKAGES="${TEST_PACKAGES_APT}" \
 	scheme_runner cyclone "bash test-cyclone.sh"
 
-GAMBIT_LIB=gsc -:r7rs,search=. -dynamic
+GAMBIT_LIB=gsc -:r7rs,search=.:./schubert -dynamic
 build-gambit-libs:
 	${SCHEME_RUNNER} gambit "${GAMBIT_LIB} retropikzel/pffi/version/gambit.scm"
 	${SCHEME_RUNNER} gambit "${GAMBIT_LIB} retropikzel/pffi/version/main.sld"
 
-GAMBIT=gsc -:r7rs,search=. -ld-options -lcurl -exe
+GAMBIT=gsc -:r7rs,search=.:./schubert -ld-options -lcurl -exe
 test-gambit: clean build
 	${SCHEME_RUNNER} gambit "${GAMBIT} test.scm"
 
@@ -83,6 +81,10 @@ test-racket-wine: build
 STKLOS=stklos -A . -A ./schubert -f
 test-stklos: build
 	${SCHEME_RUNNER} stklos "${STKLOS} test.scm"
+
+documentation:
+	cat README.md > docs/index.md
+	mkdocs build
 
 
 tmp:
