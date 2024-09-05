@@ -87,24 +87,24 @@ tmp:
 	mkdir -p tmp
 
 clean:
-	rm -rf docutmp
-	rm -rf retropikzel/r7rs-pffi/version/*.c
-	rm -rf retropikzel/r7rs-pffi/version/*.o*
-	rm -rf retropikzel/r7rs-pffi/version/*.so
-	rm -rf retropikzel/r7rs-pffi/version/*.meta
-	rm -rf retropikzel/r7rs-pffi/version/retropikzel.*
-	rm -rf retropikzel/r7rs-pffi/version/compiled
-	rm -rf retropikzel.*
-	rm -rf test/*.c
-	rm -rf test/*.o*
-	rm -rf test/*.so
-	rm -rf test/*.meta
-	rm -rf test/pffi-define
-	rm -rf test/*gambit*
-	rm -rf test/*.link
-	rm -rf *.c
-	rm -rf *.o
-	rm -rf *.so
-	rm -rf *.a
-	rm -rf test
-	rm -rf tmp
+	@rm -rf docutmp
+	@rm -rf retropikzel/r7rs-pffi/version/*.c
+	@rm -rf retropikzel/r7rs-pffi/version/*.o*
+	@rm -rf retropikzel/r7rs-pffi/version/*.so
+	@rm -rf retropikzel/r7rs-pffi/version/*.meta
+	@rm -rf retropikzel/r7rs-pffi/version/retropikzel.*
+	@rm -rf retropikzel/r7rs-pffi/version/compiled
+	@rm -rf retropikzel.*
+	@rm -rf test/*.c
+	@rm -rf test/*.o*
+	@rm -rf test/*.so
+	@rm -rf test/*.meta
+	@rm -rf test/pffi-define
+	@rm -rf test/*gambit*
+	@rm -rf test/*.link
+	@rm -rf *.c
+	@rm -rf *.o
+	@rm -rf *.so
+	@rm -rf *.a
+	@rm -rf test
+	@rm -rf tmp
