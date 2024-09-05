@@ -1,5 +1,5 @@
 TEST_PACKAGES_APT="libcurl4-openssl-dev libuv1"
-SCHEME_RUNNER=PACKAGES=${TEST_PACKAGES_APT} scheme_runner
+SCHEME_RUNNER=PACKAGES=${TEST_PACKAGES_APT} ./scheme_runner
 TESTFILES=$(shell ls tests/*.scm)
 SRFI_BUNDLE_VERSION=v0-1-0
 
