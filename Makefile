@@ -48,11 +48,11 @@ test-cyclone: clean build build-cyclone-libs
 GAMBIT_LIB=gsc -:r7rs,search=.:./schubert -dynamic
 build-gambit-libs:
 	${SCHEME_RUNNER} gambit "${GAMBIT_LIB} retropikzel/pffi/version/gambit.scm"
-	${SCHEME_RUNNER} gambit "${GAMBIT_LIB} retropikzel/pffi/version/main.sld"
+	${SCHEME_RUNNER} gambit "${GAMBIT_LIB} retropikzel/pffi/version/main.scm"
 
 GAMBIT=gsc -:r7rs,search=.:./schubert -ld-options -lcurl -exe
 test-gambit: clean build
-	${SCHEME_RUNNER} gambit "${GAMBIT} test.scm"
+	${SCHEME_RUNNER} gambit "${GAMBIT} test.scm && ./test"
 
 GUILE=guile -L . -L ./schubert
 test-guile: build
