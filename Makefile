@@ -38,15 +38,12 @@ test-chicken: clean build build-chicken-libs
 
 CYCLONE=cyclone -A . -A ./schubert
 build-cyclone-libs:
-	${SCHEME_RUNNER} cyclone "${CYCLONE} retropikzel/r7rs-pffi/version/cyclone.scm"
-	${SCHEME_RUNNER} cyclone "${CYCLONE} retropikzel/r7rs-pffi/version/main.scm"
-	${SCHEME_RUNNER} cyclone "${CYCLONE} test.scm"
-	${SCHEME_RUNNER} cyclone "./test"
+	${SCHEME_RUNNER} cyclone "${CYCLONE} retropikzel/r7rs-pffi/version/cyclone.sld"
+	${SCHEME_RUNNER} cyclone "${CYCLONE} retropikzel/r7rs-pffi/version/main.sld"
 
 CYCLONE=cyclone -A . -A ./schubert
 test-cyclone: clean build build-cyclone-libs
-	PACKAGES="${TEST_PACKAGES_APT}" \
-	scheme_runner cyclone "bash test-cyclone.sh"
+	${SCHEME_RUNNER} cyclone "icyc -s test.scm"
 
 GAMBIT_LIB=gsc -:r7rs,search=.:./schubert -dynamic
 build-gambit-libs:
