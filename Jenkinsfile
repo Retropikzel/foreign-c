@@ -1,5 +1,10 @@
 pipeline {
     agent any
+
+    options {
+            buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
+    }
+
     stages {
         stage('Tier 1 - Chicken') {
             steps {
