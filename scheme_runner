@@ -24,7 +24,6 @@ else
         --build-arg WINE="${WINE}" \
         -f ${DOCKERFILE} \
         --tag ${tag}:latest \
-        --quiet \
         .
     docker run -it -v ${PWD}:/workdir:z ${tag}:latest ${cmd}
 fi
