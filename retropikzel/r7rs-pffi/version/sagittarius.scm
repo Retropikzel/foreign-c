@@ -64,7 +64,7 @@
 
     (define-syntax pffi-define-callback
       (syntax-rules ()
-        ((pffi-define-callback scheme-name return-type argument-types procedure)
+        ((_ scheme-name return-type argument-types procedure)
          (define scheme-name
            (make-c-callback (pffi-type->native-type return-type)
                             (map pffi-type->native-type argument-types)
