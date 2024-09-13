@@ -48,7 +48,10 @@
               ((equal? type 'callback) 'callback)
               (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
-    (define pffi-pointer? (lambda (object) (pointer? object)))
+    (define pffi-pointer?
+      (lambda (object)
+        (or (string? object)
+            (pointer? object))))
 
     (define-syntax pffi-define
       (syntax-rules ()
@@ -158,7 +161,7 @@
                 ((equal? native-type 'int64_t) (pointer-ref-c-int64_t p offset))
                 ((equal? native-type 'uint64_t) (pointer-ref-c-uint64_t p offset))
                 ((equal? native-type 'char) (pointer-ref-c-char p offset))
-                ((equal? native-type 'short) (pointer-set-c-short p offset value))
+                ((equal? native-type 'short) (pointer-ref-c-short p offset))
                 ((equal? native-type 'unsigned-short) (pointer-ref-c-unsigned-short p offset))
                 ((equal? native-type 'int) (pointer-ref-c-int p offset))
                 ((equal? native-type 'unsigned-int) (pointer-ref-c-unsigned-int p offset))
