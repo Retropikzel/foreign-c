@@ -53,7 +53,8 @@
 
     (define pffi-pointer?
       (lambda (object)
-        (pointer? object)))
+        (or (string? object)
+            (pointer? object))))
 
     (define-syntax pffi-define
       (er-macro-transformer
@@ -175,17 +176,33 @@
       (lambda ()
         (address->pointer 0)))
 
+    (pffi-define strncpy-ps #f 'strncpy 'pointer (list 'pointer 'pointer 'int))
+    (pffi-define puts #f 'puts 'int (list 'pointer))
+    (pffi-define memset #f 'memset 'void (list 'pointer 'int 'int))
+
     (define pffi-string->pointer
       (lambda (string-content)
-        (let* ((size (+ (string-length string-content) 1))
-               (pointer (pffi-pointer-allocate size)))
-            (move-memory! string-content pointer (- size 1) 0)
-            pointer)))
+        (let* ((size (string-length string-content))
+               (pointer (pffi-pointer-allocate (+ size 1))))
+          (memset pointer 0 size)
+          (display "STRING-LENGTH: ")
+          (display size)
+          (display " / ")
+          (display pointer)
+          (display " === ")
+          (strncpy-ps pointer (location string-content) size)
+          ;(move-memory! string-content pointer size 0)
+          ;(pffi-pointer-set! pointer 'char size #\null)
+          (puts pointer)
+          (display " ::: ")
+          (write string-content)
+          (display " OTHER: ")
+          (display (strlen pointer))
+          (newline)
+          ;(pointer-s8-set! pointer size (foreign-value "\0" char))
+          pointer)))
 
-    (define pffi-string->pointer-maybe
-      (lambda (string-content)
-        (location string-content)))
-
+    (pffi-define strncpy-pp #f 'strncpy 'pointer (list 'pointer 'pointer 'int))
     (pffi-define strlen #f 'strlen 'int (list 'pointer))
 
     (define pffi-pointer->string
@@ -193,7 +210,17 @@
         (cond ((pffi-pointer? pointer)
                (let* ((size (strlen pointer))
                       (string-content (make-string size)))
-                 (move-memory! pointer string-content size 0)
+                 (display "STRLEN: ")
+                 (display size)
+                 (display " / ")
+                 (display pointer)
+                 ;(move-memory! pointer string-content size)
+                 (strncpy-pp (location string-content) pointer size)
+                 (display " ::: ")
+                 (write string-content)
+                 (display " === ")
+                 (puts pointer)
+                 (newline)
                  string-content))
               (error "pffi-pointer->string -- Argument not pointer " pointer))))
 
@@ -221,8 +248,6 @@
 
     (define pffi-pointer-set!
       (lambda (pointer type offset value)
-        (write pointer)
-        (newline)
         (cond
           ((equal? type 'int8) (pointer-s8-set! (pointer+ pointer offset) value))
           ((equal? type 'uint8) (pointer-u8-set! (pointer+ pointer offset) value))
@@ -239,15 +264,13 @@
           ((equal? type 'unsigned-int) (pointer-u32-set! (pointer+ pointer offset) value))
           ((equal? type 'long) (pointer-s32-set! (pointer+ pointer offset) value))
           ((equal? type 'unsigned-long) (pointer-u32-set! (pointer+ pointer offset) value))
-          ((equal? type 'float) (pointer-s32-set! (pointer+ pointer offset) value))
-          ((equal? type 'double) (pointer-s32-set! (pointer+ pointer offset) value))
-          ((equal? type 'pointer) (pointer-s8-set! (pointer+ pointer offset) value))
-          ((equal? type 'string) (pffi-pointer-set! pointer type offset (pffi-string->pointer value))))))
+          ((equal? type 'float) (pointer-f32-set! (pointer+ pointer offset) value))
+          ((equal? type 'double) (pointer-f64-set! (pointer+ pointer offset) value))
+          ((equal? type 'pointer) (pointer-u64-set! (pointer+ pointer offset) (pointer->address value)))
+          ((equal? type 'string) (pffi-pointer-set! pointer 'pointer offset (pffi-string->pointer value))))))
 
     (define pffi-pointer-get
       (lambda (pointer type offset)
-        (write pointer)
-        (newline)
         (cond
           ((equal? type 'int8) (pointer-s8-ref (pointer+ pointer offset)))
           ((equal? type 'uint8) (pointer-u8-ref (pointer+ pointer offset)))
@@ -264,9 +287,9 @@
           ((equal? type 'unsigned-int) (pointer-u32-ref (pointer+ pointer offset)))
           ((equal? type 'long) (pointer-s32-ref (pointer+ pointer offset)))
           ((equal? type 'unsigned-long) (pointer-u32-ref (pointer+ pointer offset)))
-          ((equal? type 'float) (pointer-s32-ref (pointer+ pointer offset)))
-          ((equal? type 'double) (pointer-s8-ref (pointer+ pointer offset)))
-          ((equal? type 'pointer) (pointer->address (pointer+ pointer offset)))
+          ((equal? type 'float) (pointer-f32-ref (pointer+ pointer offset)))
+          ((equal? type 'double) (pointer-f64-ref (pointer+ pointer offset)))
+          ((equal? type 'pointer) (address->pointer (pointer-u64-ref (pointer+ pointer offset))))
           ((equal? type 'string) (pffi-pointer->string (pffi-pointer-get pointer 'pointer offset))))))
 
     (define pffi-pointer-deref

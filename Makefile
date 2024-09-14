@@ -70,6 +70,7 @@ test-sagittarius: build
 RACKET=racket -I r7rs -S . -S ./schubert --script
 test-racket: build
 	${SCHEME_RUNNER} racket "${RACKET} test.scm"
+	#${RACKET} test.scm
 
 STKLOS=stklos -A . -A ./schubert -f
 test-stklos: build
