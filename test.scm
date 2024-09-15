@@ -98,61 +98,117 @@
 
 (define size-uint8 (pffi-size-of 'uint8))
 (debug size-uint8)
+(assert equal? (number? size-uint8) #t)
+(assert = size-uint8 1)
+
 (assert equal? (number? (pffi-size-of 'uint8)) #t)
 (define size-int16 (pffi-size-of 'int16))
 (debug size-int16)
+(assert equal? (number? size-int16) #t)
+(assert = size-int16 2)
+
 (assert equal? (number? (pffi-size-of 'int16)) #t)
 (define size-uint16 (pffi-size-of 'uint16))
 (debug size-uint16)
+(assert equal? (number? size-uint16) #t)
+(assert = size-uint16 2)
+
 (assert equal? (number? (pffi-size-of 'uint16)) #t)
 (define size-int32 (pffi-size-of 'int32))
 (debug size-int32)
+(assert equal? (number? size-int32) #t)
+(assert = size-int32 4)
+
 (assert equal? (number? (pffi-size-of 'int32)) #t)
 (define size-uint32 (pffi-size-of 'uint32))
 (debug size-uint32)
+(assert equal? (number? size-uint32) #t)
+(assert = size-uint32 4)
+
 (assert equal? (number? (pffi-size-of 'uint32)) #t)
 (define size-int64 (pffi-size-of 'int64))
 (debug size-int64)
+(assert equal? (number? size-int64) #t)
+(assert = size-int64 8)
+
 (assert equal? (number? (pffi-size-of 'int64)) #t)
 (define size-uint64 (pffi-size-of 'uint64))
 (debug size-uint64)
+(assert equal? (number? size-uint64) #t)
+(assert = size-uint64 8)
+
 (assert equal? (number? (pffi-size-of 'uint64)) #t)
 (define size-char (pffi-size-of 'char))
 (debug size-char)
+(assert equal? (number? size-char) #t)
+(assert = size-char 1)
+
 (assert equal? (number? (pffi-size-of 'char)) #t)
 (define size-unsigned-char (pffi-size-of 'unsigned-char))
 (debug size-unsigned-char)
+(assert equal? (number? size-unsigned-char) #t)
+(assert = size-unsigned-char 1)
+
 (assert equal? (number? (pffi-size-of 'unsigned-char)) #t)
 (define size-short (pffi-size-of 'short))
 (debug size-short)
+(assert equal? (number? size-short) #t)
+(assert = size-short 2)
+
 (assert equal? (number? (pffi-size-of 'short)) #t)
 (define size-unsigned-short (pffi-size-of 'unsigned-short))
 (debug size-unsigned-short)
+(assert equal? (number? size-unsigned-short) #t)
+(assert = size-unsigned-short 2)
+
 (assert equal? (number? (pffi-size-of 'unsigned-short)) #t)
 (define size-int (pffi-size-of 'int))
 (debug size-int)
+(assert equal? (number? size-int) #t)
+(assert = size-int 4)
+
 (assert equal? (number? (pffi-size-of 'int)) #t)
 (define size-unsigned-int (pffi-size-of 'unsigned-int))
 (debug size-unsigned-int)
+(assert equal? (number? size-unsigned-int) #t)
+(assert = size-unsigned-int 4)
+
 (assert equal? (number? (pffi-size-of 'unsigned-int)) #t)
 (define size-long (pffi-size-of 'long))
 (debug size-long)
+(assert equal? (number? size-long) #t)
+(assert = size-long 8)
+
 (assert equal? (number? (pffi-size-of 'long)) #t)
 (define size-unsigned-long (pffi-size-of 'unsigned-long))
 (debug size-unsigned-long)
+(assert equal? (number? size-unsigned-long) #t)
+(assert = size-unsigned-long 8)
+
 (assert equal? (number? (pffi-size-of 'unsigned-long)) #t)
 (define size-float (pffi-size-of 'float))
 (debug size-float)
+(assert equal? (number? size-float) #t)
+(assert = size-float 4)
+
 (assert equal? (number? (pffi-size-of 'float)) #t)
 (define size-double (pffi-size-of 'double))
 (debug size-double)
+(assert equal? (number? size-double) #t)
+(assert = size-double 8)
+
 (assert equal? (number? (pffi-size-of 'double)) #t)
 (define size-string (pffi-size-of 'string))
 (debug size-string)
+(assert equal? (number? size-string) #t)
+(assert = size-string 8)
+
 (assert equal? (number? (pffi-size-of 'string)) #t)
 (define size-pointer (pffi-size-of 'pointer))
 (debug size-pointer)
-(assert equal? (number? (pffi-size-of 'pointer)) #t)
+(assert equal? (number? size-pointer) #t)
+(assert = size-pointer 8)
+
 
 ;; pffi-pointer-allocate
 
@@ -285,8 +341,10 @@
 (print-header 'pffi-define)
 
 
-(pffi-define atoi libc-stdlib 'atoi 'int (list 'pointer))
-(assert = (atoi (pffi-string->pointer "100")) 100)
+(pffi-define atoi-pointer libc-stdlib 'atoi 'int (list 'pointer))
+(assert = (atoi-pointer (pffi-string->pointer "100")) 100)
+(pffi-define atoi-string libc-stdlib 'atoi 'int (list 'string))
+(assert = (atoi-string (pffi-string->pointer "100")) 100)
 
 (exit)
 ;; pffi-define-callback

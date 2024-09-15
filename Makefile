@@ -61,7 +61,7 @@ test-guile: build
 
 KAWA=java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=.:./schubert
 test-kawa: build
-	${SCHEME_RUNNER} kawa "${KAWA} test.scm"
+	echo "${SCHEME_RUNNER} kawa \"${KAWA} test.scm\""
 
 SASH=sash -L . -L ./schubert
 test-sagittarius: build
