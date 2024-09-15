@@ -45,7 +45,6 @@
               ((equal? type 'float) float)
               ((equal? type 'double) double)
               ((equal? type 'pointer) opaque)
-              ((equal? type 'string) string)
               ((equal? type 'void) c-void)
               (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
@@ -78,7 +77,6 @@
                            ((equal? type 'float) 'float)
                            ((equal? type 'double) 'double)
                            ((equal? type 'pointer) 'c-pointer)
-                           ((equal? type 'string) 'c-string)
                            ((equal? type 'void) 'void)
                            (else (error "pffi-type->native-type -- No such pffi type" type)))))
                  (scheme-name (car (cdr expr)))
@@ -94,10 +92,28 @@
               `(c-define ,scheme-name
                          ,return-type ,c-name ,@ argument-types))))))
 
-
-    (define pffi-size-of
-      (lambda (type)
-        (error "Not defined")))
+        (define pffi-size-of
+          (lambda (type)
+            (cond ((equal? type 'int8) (c-value "sizeof(int8_t)" int))
+                  ((equal? type 'uint8) (c-value "sizeof(uint8_t)" int))
+                  ((equal? type 'int16) (c-value "sizeof(int16_t)" int))
+                  ((equal? type 'uint16) (c-value "sizeof(uint16_t)" int))
+                  ((equal? type 'int32) (c-value "sizeof(int32_t)" int))
+                  ((equal? type 'uint32) (c-value "sizeof(uint32_t)" int))
+                  ((equal? type 'int64) (c-value "sizeof(int64_t)" int))
+                  ((equal? type 'uint64) (c-value "sizeof(uint64_t)" int))
+                  ((equal? type 'char) (c-value "sizeof(char)" int))
+                  ((equal? type 'unsigned-char) (c-value "sizeof(unsigned char)" int))
+                  ((equal? type 'short) (c-value "sizeof(short)" int))
+                  ((equal? type 'unsigned-short) (c-value "sizeof(unsigned short)" int))
+                  ((equal? type 'int) (c-value "sizeof(int)" int))
+                  ((equal? type 'unsigned-int) (c-value "sizeof(unsigned int)" int))
+                  ((equal? type 'long) (c-value "sizeof(long)" int))
+                  ((equal? type 'unsigned-long) (c-value "sizeof(unsigned long)" int))
+                  ((equal? type 'float) (c-value "sizeof(float)" int))
+                  ((equal? type 'double) (c-value "sizeof(double)" int))
+                  ((equal? type 'pointer) (c-value "sizeof(void*)" int))
+                  (else (error "pffi-size-of -- No such pffi type" type)))))
 
     (define pffi-pointer-allocate
       (lambda (size)
@@ -109,7 +125,8 @@
 
     (define pffi-string->pointer
       (lambda (string-content)
-        (error "Not defined")))
+        (error "Not defined")
+        ))
 
     (define pffi-pointer->string
       (lambda (pointer)

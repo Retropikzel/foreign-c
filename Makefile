@@ -18,7 +18,7 @@ test-tier1: \
 	test-sagittarius \
 	test-racket
 
-test-tier2:
+test-tier2: \
 	test-cyclone \
 	test-gambit \
 	test-stklos
@@ -43,16 +43,17 @@ build-cyclone-libs:
 
 CYCLONE=cyclone -A . -A ./schubert
 test-cyclone: clean build build-cyclone-libs
-	${SCHEME_RUNNER} cyclone "icyc -s test.scm"
+	${SCHEME_RUNNER} cyclone "${CYCLONE} test.scm && icyc -s test.scm"
 
-GAMBIT_LIB=gsc -:r7rs,search=.:./schubert -dynamic
+GAMBIT_LIB=gsc -:r7rs -dynamic
 build-gambit-libs:
-	${SCHEME_RUNNER} gambit "${GAMBIT_LIB} retropikzel/pffi/version/gambit.scm"
-	${SCHEME_RUNNER} gambit "${GAMBIT_LIB} retropikzel/pffi/version/main.scm"
+	${SCHEME_RUNNER} gambit "${GAMBIT_LIB} retropikzel/r7rs-pffi/version/gambit.scm"
+	${SCHEME_RUNNER} gambit "${GAMBIT_LIB} retropikzel/r7rs-pffi/version/main.scm"
 
 GAMBIT=gsc -:r7rs,search=.:./schubert -ld-options -lcurl -exe
 test-gambit: clean build
-	${SCHEME_RUNNER} gambit "${GAMBIT} test.scm && ./test"
+	#${SCHEME_RUNNER} gambit "${GAMBIT} test.scm && ./test"
+	${GAMBIT} test.scm && ./test
 
 GUILE=guile -L . -L ./schubert
 test-guile: build

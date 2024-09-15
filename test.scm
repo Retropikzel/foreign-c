@@ -47,46 +47,6 @@
        (write value)
        (newline)))))
 
-;; pffi-init
-
-(print-header 'pffi-init)
-
-(pffi-init)
-
-;; pffi-shared-object-auto-load
-
-(print-header 'pffi-shared-object-auto-load)
-
-(define libc-stdlib
-  (if (string=? pffi-os-name "windows")
-    (pffi-shared-object-auto-load (list "stdlib.h") (list) "ucrtbase" (list ""))
-    (pffi-shared-object-auto-load (list "stdlib.h") (list) "c" (list "" ".6"))))
-
-;; pffi-string->pointer
-
-(print-header 'pffi-string->pointer)
-
-(define string-pointer (pffi-string->pointer "Hello world"))
-(debug string-pointer)
-(assert equal? (pffi-pointer? string-pointer) #t)
-(assert equal? (pffi-pointer-null? string-pointer) #f)
-
-;; pffi-pointer->string
-
-(print-header 'pffi-pointer->string)
-
-(define pointer-string (pffi-pointer->string string-pointer))
-(debug pointer-string)
-(assert equal? (string? pointer-string) #t)
-(assert string=? pointer-string "Hello world")
-(assert string=? (pffi-pointer->string (pffi-string->pointer "https://scheme.org")) "https://scheme.org")
-(define test-url-string "https://scheme.org")
-(debug test-url-string)
-(define test-url (pffi-string->pointer test-url-string))
-(debug test-url)
-(debug (pffi-pointer->string test-url))
-(assert equal? (string=? (pffi-pointer->string test-url) test-url-string) #t)
-
 ;; pffi-size-of
 
 (print-header 'pffi-size-of)
@@ -201,6 +161,47 @@
 (debug size-pointer)
 (assert equal? (number? size-pointer) #t)
 (assert = size-pointer 8)
+
+;; pffi-init
+
+(print-header 'pffi-init)
+
+(pffi-init)
+
+;; pffi-shared-object-auto-load
+
+(print-header 'pffi-shared-object-auto-load)
+
+(define libc-stdlib
+  (if (string=? pffi-os-name "windows")
+    (pffi-shared-object-auto-load (list "stdlib.h") (list) "ucrtbase" (list ""))
+    (pffi-shared-object-auto-load (list "stdlib.h") (list) "c" (list "" ".6"))))
+
+;; pffi-string->pointer
+
+(print-header 'pffi-string->pointer)
+
+(define string-pointer (pffi-string->pointer "Hello world"))
+(debug string-pointer)
+(assert equal? (pffi-pointer? string-pointer) #t)
+(assert equal? (pffi-pointer-null? string-pointer) #f)
+
+;; pffi-pointer->string
+
+(print-header 'pffi-pointer->string)
+
+(define pointer-string (pffi-pointer->string string-pointer))
+(debug pointer-string)
+(assert equal? (string? pointer-string) #t)
+(assert string=? pointer-string "Hello world")
+(assert string=? (pffi-pointer->string (pffi-string->pointer "https://scheme.org")) "https://scheme.org")
+(define test-url-string "https://scheme.org")
+(debug test-url-string)
+(define test-url (pffi-string->pointer test-url-string))
+(debug test-url)
+(debug (pffi-pointer->string test-url))
+(assert equal? (string=? (pffi-pointer->string test-url) test-url-string) #t)
+
 
 
 ;; pffi-pointer-allocate
@@ -334,10 +335,11 @@
 (print-header 'pffi-define)
 
 
-(pffi-define atoi-pointer libc-stdlib 'atoi 'int (list 'pointer))
-(assert = (atoi-pointer (pffi-string->pointer "100")) 100)
+(pffi-define atoi libc-stdlib 'atoi 'int (list 'pointer))
+(assert = (atoi (pffi-string->pointer "100")) 100)
 
-(exit)
+(exit 0)
+
 ;; pffi-define-callback
 
 (print-header 'pffi-define-callback)
@@ -361,17 +363,16 @@
                       'void
                       (list 'pointer 'int 'int 'pointer)
                       (lambda (pointer size nmemb client-pointer)
-                        (set! result (string-append result (pffi-pointer->string pointer)))))
+                        (set! result (string-append result (string-copy (pffi-pointer->string pointer))))))
 
 (define handle (curl-easy-init))
 (define url "https://scheme.org")
-(define url-pointer (pffi-string->pointer url))
 (debug url)
-(define curl-code1 (curl-easy-setopt handle CURLOPT-FOLLOWLOCATION url-pointer))
+(define curl-code1 (curl-easy-setopt handle CURLOPT-FOLLOWLOCATION (pffi-string->pointer url)))
 (debug curl-code1)
 (assert = curl-code1 0)
 
-(define curl-code2 (curl-easy-setopt handle CURLOPT-URL url-pointer))
+(define curl-code2 (curl-easy-setopt handle CURLOPT-URL (pffi-string->pointer url)))
 (debug curl-code2)
 (assert = curl-code2 0)
 
