@@ -34,7 +34,7 @@
               ((equal? type 'int64) int64)
               ((equal? type 'uint64) uint64)
               ((equal? type 'char) int8)
-              ((equal? type 'unsigned-char) int8)
+              ((equal? type 'unsigned-char) uint8)
               ((equal? type 'short) short)
               ((equal? type 'unsigned-short) unsigned-short)
               ((equal? type 'int) int)
