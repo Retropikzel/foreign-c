@@ -42,7 +42,6 @@
       ((equal? type 'float) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_FLOAT) 'withByteAlignment 4))
       ((equal? type 'double) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_DOUBLE) 'withByteAlignment 8))
       ((equal? type 'pointer) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
-      ((equal? type 'string) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
       ((equal? type 'void) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 1))
       (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
@@ -68,7 +67,6 @@
       ((equal? type 'float) (static-field java.lang.foreign.ValueLayout 'JAVA_FLOAT))
       ((equal? type 'double) (static-field java.lang.foreign.ValueLayout 'JAVA_DOUBLE))
       ((equal? type 'pointer) (static-field java.lang.foreign.ValueLayout 'ADDRESS))
-      ((equal? type 'string) (static-field java.lang.foreign.ValueLayout 'ADDRESS))
       ((equal? type 'void) (static-field java.lang.foreign.ValueLayout 'ADDRESS))
       (else (error "pffi-type->function-argument-type -- No such pffi type" type)))))
 
@@ -145,36 +143,22 @@
 
 (define pffi-pointer-set!
   (lambda (pointer type offset value)
-    (cond ((equal? type 'string)
-           (invoke (invoke pointer
-                           'reinterpret
-                           (static-field java.lang.Integer 'MAX_VALUE))
-                   'setString
-                   offset
-                   value))
-          (else
-            (invoke (invoke pointer
-                            'reinterpret
-                            (static-field java.lang.Integer 'MAX_VALUE))
-                    'set
-                    (invoke (pffi-type->native-type type) 'withByteAlignment 1)
-                    offset
-                    value)))))
+    (invoke (invoke pointer
+                    'reinterpret
+                    (static-field java.lang.Integer 'MAX_VALUE))
+            'set
+            (invoke (pffi-type->native-type type) 'withByteAlignment 1)
+            offset
+            value)))
 
 (define pffi-pointer-get
   (lambda (pointer type offset)
-    (cond ((equal? type 'string)
-           (invoke (invoke pointer
-                           'reinterpret
-                           (static-field java.lang.Integer 'MAX_VALUE))
-                   'getString
-                   offset))
-          (else (invoke (invoke pointer
-                                'reinterpret
-                                (static-field java.lang.Integer 'MAX_VALUE))
-                        'get
-                        (invoke (pffi-type->native-type type) 'withByteAlignment 1)
-                        offset)))))
+    (invoke (invoke pointer
+                    'reinterpret
+                    (static-field java.lang.Integer 'MAX_VALUE))
+            'get
+            (invoke (pffi-type->native-type type) 'withByteAlignment 1)
+            offset)))
 
 (define pffi-pointer-deref
   (lambda (pointer)

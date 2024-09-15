@@ -46,7 +46,6 @@
               ((equal? type 'float) 'float)
               ((equal? type 'double) 'double)
               ((equal? type 'pointer) 'c-pointer)
-              ((equal? type 'string) 'c-string)
               ((equal? type 'void) 'void)
               ((equal? type 'callback) 'c-pointer)
               (else (error "pffi-type->native-type -- No such pffi type" type)))) )
@@ -80,7 +79,6 @@
                            ((equal? type 'float) 'float)
                            ((equal? type 'double) 'double)
                            ((equal? type 'pointer) 'c-pointer)
-                           ((equal? type 'string) 'c-string)
                            ((equal? type 'void) 'void)
                            ((equal? type 'callback) 'c-pointer)
                            (else (error "pffi-type->native-type -- No such pffi type" type)))))
@@ -122,7 +120,6 @@
                            ((equal? type 'float) 'float)
                            ((equal? type 'double) 'double)
                            ((equal? type 'pointer) 'c-pointer)
-                           ((equal? type 'string) 'c-string)
                            ((equal? type 'void) 'void)
                            ((equal? type 'callback) 'c-pointer)
                            (else (error "pffi-type->native-type -- No such pffi type" type)))))
@@ -165,7 +162,6 @@
               ((equal? type 'float) (foreign-value "sizeof(float)" int))
               ((equal? type 'double) (foreign-value "sizeof(double)" int))
               ((equal? type 'pointer) (foreign-value "sizeof(void*)" int))
-              ((equal? type 'string) (foreign-value "sizeof(void*)" int))
               (else (error "pffi-size-of -- No such pffi type" type)))))
 
     (define pffi-pointer-allocate
@@ -266,8 +262,7 @@
           ((equal? type 'unsigned-long) (pointer-u32-set! (pointer+ pointer offset) value))
           ((equal? type 'float) (pointer-f32-set! (pointer+ pointer offset) value))
           ((equal? type 'double) (pointer-f64-set! (pointer+ pointer offset) value))
-          ((equal? type 'pointer) (pointer-u64-set! (pointer+ pointer offset) (pointer->address value)))
-          ((equal? type 'string) (pffi-pointer-set! pointer 'pointer offset (pffi-string->pointer value))))))
+          ((equal? type 'pointer) (pointer-u64-set! (pointer+ pointer offset) (pointer->address value))))))
 
     (define pffi-pointer-get
       (lambda (pointer type offset)
@@ -289,8 +284,7 @@
           ((equal? type 'unsigned-long) (pointer-u32-ref (pointer+ pointer offset)))
           ((equal? type 'float) (pointer-f32-ref (pointer+ pointer offset)))
           ((equal? type 'double) (pointer-f64-ref (pointer+ pointer offset)))
-          ((equal? type 'pointer) (address->pointer (pointer-u64-ref (pointer+ pointer offset))))
-          ((equal? type 'string) (pffi-pointer->string (pffi-pointer-get pointer 'pointer offset))))))
+          ((equal? type 'pointer) (address->pointer (pointer-u64-ref (pointer+ pointer offset)))))))
 
     (define pffi-pointer-deref
       (lambda (pointer)

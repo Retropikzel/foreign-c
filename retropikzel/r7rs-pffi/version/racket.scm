@@ -45,7 +45,6 @@
          ((equal? type 'float) _float)
          ((equal? type 'double) _double)
          ((equal? type 'pointer) _pointer)
-         ((equal? type 'string) _string)
          ((equal? type 'void) _void)
          ((equal? type 'callback) _pointer)
          (else (error "pffi-type->native-type -- No such pffi type" type)))))
@@ -85,29 +84,14 @@
 
    (define pffi-string->pointer
      (lambda (string-content)
-       (write string-content)
-       (newline)
        (let* ((size (string-length string-content))
               (pointer (pffi-pointer-allocate (+ size 1))))
-         (memmove pointer (cast string-content _string _pointer) size)
-         (display "STRING SIZE: ")
-         (display size)
-         (display " : ")
-         (write (cast pointer _pointer _string))
-         (newline)
+         (memmove pointer (cast (string-append string-content "") _string _pointer) (+ size 1))
          pointer)))
 
    (define pffi-pointer->string
      (lambda (pointer)
-     (let* ((size (string-length (cast pointer _pointer _string)))
-            (string-content (string-copy (cast pointer _pointer _string))))
-       (memmove (cast string-content _string _pointer) pointer size)
-       (display "SIZE: ")
-       (display size)
-       (display " : ")
-       (write string-content)
-       (newline)
-        string-content)))
+       (string-copy (cast pointer _pointer _string))))
 
    (define pffi-shared-object-load
      (lambda (header path)

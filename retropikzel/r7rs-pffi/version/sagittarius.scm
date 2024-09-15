@@ -43,7 +43,6 @@
               ((equal? type 'float) 'float)
               ((equal? type 'double) 'double)
               ((equal? type 'pointer) 'void*)
-              ((equal? type 'string) 'char*)
               ((equal? type 'void) 'void)
               ((equal? type 'callback) 'callback)
               (else (error "pffi-type->native-type -- No such pffi type" type)))))
@@ -89,7 +88,6 @@
               ((eq? type 'unsigned-long) size-of-unsigned-long)
               ((eq? type 'float) size-of-float)
               ((eq? type 'double) size-of-double)
-              ((eq? type 'string) size-of-void*)
               ((eq? type 'pointer) size-of-void*)
               (else (error "Can not get size of unknown type" type)))))
 
@@ -144,7 +142,6 @@
               ((equal? type 'float) (pointer-set-c-float! pointer offset value))
               ((equal? type 'double) (pointer-set-c-double! pointer offset value))
               ((equal? type 'void*) (pointer-set-c-pointer! pointer offset value))
-              ((equal? type 'string) (pointer-set-c-pointer! pointer offset value))
               ((equal? type 'pointer) (pointer-set-c-pointer! pointer offset value)))))
 
     (define pffi-pointer-get
@@ -167,7 +164,6 @@
               ((equal? type 'float) (pointer-ref-c-float pointer offset))
               ((equal? type 'double) (pointer-ref-c-double pointer offset))
               ((equal? type 'void) (pointer-ref-c-pointer pointer offset))
-              ((equal? type 'string) (pffi-pointer->string (pointer-ref-c-pointer pointer offset)))
               ((equal? type 'pointer) (pointer-ref-c-pointer pointer offset)))))
 
     (define pffi-pointer-deref

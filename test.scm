@@ -197,13 +197,6 @@
 (assert equal? (number? size-double) #t)
 (assert = size-double 8)
 
-(assert equal? (number? (pffi-size-of 'double)) #t)
-(define size-string (pffi-size-of 'string))
-(debug size-string)
-(assert equal? (number? size-string) #t)
-(assert = size-string 8)
-
-(assert equal? (number? (pffi-size-of 'string)) #t)
 (define size-pointer (pffi-size-of 'pointer))
 (debug size-pointer)
 (assert equal? (number? size-pointer) #t)
@@ -315,8 +308,8 @@
 
 (define string-to-be-set "FOOBAR")
 (debug string-to-be-set)
-(pffi-pointer-set! set-pointer 'string offset string-to-be-set)
-(assert string=? (pffi-pointer-get set-pointer 'string offset) "FOOBAR")
+(pffi-pointer-set! set-pointer 'pointer offset (pffi-string->pointer string-to-be-set))
+(assert string=? (pffi-pointer->string (pffi-pointer-get set-pointer 'pointer offset)) "FOOBAR")
 
 ;; pffi-pointer-deref
 
@@ -343,8 +336,6 @@
 
 (pffi-define atoi-pointer libc-stdlib 'atoi 'int (list 'pointer))
 (assert = (atoi-pointer (pffi-string->pointer "100")) 100)
-(pffi-define atoi-string libc-stdlib 'atoi 'int (list 'string))
-(assert = (atoi-string (pffi-string->pointer "100")) 100)
 
 (exit)
 ;; pffi-define-callback
@@ -357,11 +348,9 @@
                                               (list ".4")))
 (pffi-define curl-easy-init libcurl 'curl_easy_init 'pointer (list))
 (pffi-define curl-easy-setopt libcurl 'curl_easy_setopt 'int (list 'pointer 'int 'pointer))
-(pffi-define curl-easy-setopt-url libcurl 'curl_easy_setopt 'int (list 'pointer 'int 'string))
 (pffi-define curl-easy-setopt-callback libcurl 'curl_easy_setopt 'int (list 'pointer 'int 'callback))
 (pffi-define curl-easy-getinfo libcurl 'curl_easy_getinfo 'int (list 'pointer 'int 'pointer))
 (pffi-define curl-easy-perform libcurl 'curl_easy_perform 'int (list 'pointer))
-(pffi-define curl-easy-strerror libcurl 'curl_easy_strerror 'string (list 'int))
 (define CURLOPT-WRITEFUNCTION 20011)
 (define CURLOPT-FOLLOWLOCATION 52)
 (define CURLOPT-URL 10002)
@@ -376,12 +365,13 @@
 
 (define handle (curl-easy-init))
 (define url "https://scheme.org")
+(define url-pointer (pffi-string->pointer url))
 (debug url)
-(define curl-code1 (curl-easy-setopt-url handle CURLOPT-FOLLOWLOCATION url))
+(define curl-code1 (curl-easy-setopt handle CURLOPT-FOLLOWLOCATION url-pointer))
 (debug curl-code1)
 (assert = curl-code1 0)
 
-(define curl-code2 (curl-easy-setopt-url handle CURLOPT-URL url))
+(define curl-code2 (curl-easy-setopt handle CURLOPT-URL url-pointer))
 (debug curl-code2)
 (assert = curl-code2 0)
 

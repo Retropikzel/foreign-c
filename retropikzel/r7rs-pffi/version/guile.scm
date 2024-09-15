@@ -44,7 +44,6 @@
               ((equal? type 'float) float)
               ((equal? type 'double) double)
               ((equal? type 'pointer) '*)
-              ((equal? type 'string) '*)
               ((equal? type 'void) void)
               ((equal? type 'callback) '*)
               (else (error "pffi-type->native-type -- No such pffi type" type)))))

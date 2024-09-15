@@ -22,7 +22,6 @@ Types are given as symbols, for example 'int8 or 'pointer.
 - unsigned-long
 - float
 - double
-- string
 - pointer
 
 # Procedures or macros
