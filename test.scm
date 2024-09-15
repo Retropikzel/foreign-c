@@ -338,8 +338,6 @@
 (pffi-define atoi libc-stdlib 'atoi 'int (list 'pointer))
 (assert = (atoi (pffi-string->pointer "100")) 100)
 
-(exit 0)
-
 ;; pffi-define-callback
 
 (print-header 'pffi-define-callback)

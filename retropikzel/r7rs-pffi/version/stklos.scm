@@ -5,7 +5,9 @@
           (scheme file)
           (scheme process-context)
           (stklos))
-  (export pffi-define
+  (export pffi-shared-object-load
+          pffi-define
+          pffi-define-callback
           pffi-pointer->string
           pffi-pointer-allocate
           pffi-pointer-deref
@@ -15,7 +17,6 @@
           pffi-pointer-null?
           pffi-pointer-set!
           pffi-pointer?
-          pffi-shared-object-load
           pffi-size-of
           pffi-string->pointer)
   (begin
@@ -59,6 +60,10 @@
              (pffi-type->native-type return-type)
              shared-object)))))
 
+
+    (define pffi-define-callback
+      (lambda ()
+        (error "STklos does not support callbacks")))
 
     (define pffi-size-of
       (lambda (type)

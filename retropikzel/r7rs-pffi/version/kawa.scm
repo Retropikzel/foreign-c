@@ -43,6 +43,7 @@
       ((equal? type 'double) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_DOUBLE) 'withByteAlignment 8))
       ((equal? type 'pointer) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
       ((equal? type 'void) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 1))
+      ((equal? type 'callback) (static-field java.lang.foreign.ValueLayout 'ADDRESS))
       (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
 (define pffi-type->native-type-old
@@ -95,7 +96,20 @@
                  'invokeWithArguments
                  (map value->object vals argument-types)))))))
 
-
+(define-syntax pffi-define-callback
+  (syntax-rules ()
+    ((_ scheme-name return-type argument-types procedure)
+     (define scheme-name
+       (invoke (invoke (invoke-static java.lang.foreign.Linker 'nativeLinker)
+                       'upcallStub
+                       procedure
+                       (if (equal? return-type 'void)
+                         (apply (class-methods java.lang.foreign.FunctionDescriptor 'ofVoid)
+                                (map pffi-type->native-type argument-types))
+                         (apply (class-methods java.lang.foreign.FunctionDescriptor 'of)
+                                (pffi-type->native-type return-type)
+                                (map pffi-type->native-type argument-types)))
+                       arena))))))
 
 (define pffi-size-of
   (lambda (type)
@@ -164,6 +178,3 @@
   (lambda (pointer)
     (invoke pointer 'get (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 1) 0)))
 
-(define pffi-define-callback
-  (lambda (scheme-name return-type argument-types procedure)
-    (error "pffi-define-callback not yet implemented for Kawa")))
