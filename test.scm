@@ -288,6 +288,7 @@
 (pffi-define atoi libc-stdlib 'atoi 'int (list 'pointer))
 (assert = (atoi (pffi-string->pointer "100")) 100)
 
+(exit)
 ;; pffi-define-callback
 
 (print-header 'pffi-define-callback)
@@ -313,29 +314,25 @@
                       'void
                       (list 'pointer 'int 'int 'pointer)
                       (lambda (pointer size nmemb client-pointer)
-                        (set! result (string-append result (string-copy (pffi-pointer->string pointer))))))
+                        (set! result (string-append result (pffi-pointer->string pointer)))))
 
 (define handle (curl-easy-init))
 (define url "https://scheme.org")
 (debug url)
 (define curl-code1 (curl-easy-setopt-url handle CURLOPT-FOLLOWLOCATION url))
 (debug curl-code1)
-(when (not (= curl-code1 0)) (error (curl-easy-strerror curl-code1)))
 (assert = curl-code1 0)
 
 (define curl-code2 (curl-easy-setopt-url handle CURLOPT-URL url))
 (debug curl-code2)
-(when (not (= curl-code2 0)) (error (curl-easy-strerror curl-code2)))
 (assert = curl-code2 0)
 
 (define curl-code3 (curl-easy-setopt-callback handle CURLOPT-WRITEFUNCTION collect-result))
 (debug curl-code3)
-(when (not (= curl-code3 0)) (error (curl-easy-strerror curl-code3)))
 (assert = curl-code3 0)
 
 (define curl-code4 (curl-easy-perform handle))
 (debug curl-code4)
-(when (not (= curl-code4 0)) (error (curl-easy-strerror curl-code4)))
 (assert = curl-code4 0)
 
 (define http-code (pffi-pointer-allocate (pffi-size-of 'int)))

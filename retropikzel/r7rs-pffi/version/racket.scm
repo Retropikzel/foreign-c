@@ -5,6 +5,7 @@
          (scheme file)
          (scheme process-context)
          (compatibility mlist)
+         (only (racket base) system-type)
          (ffi unsafe)
          (ffi vector))
  (export pffi-shared-object-load
@@ -44,7 +45,7 @@
          ((equal? type 'float) _float)
          ((equal? type 'double) _double)
          ((equal? type 'pointer) _pointer)
-         ((equal? type 'string) _pointer)
+         ((equal? type 'string) _string)
          ((equal? type 'void) _void)
          ((equal? type 'callback) _pointer)
          (else (error "pffi-type->native-type -- No such pffi type" type)))))
@@ -84,11 +85,29 @@
 
    (define pffi-string->pointer
      (lambda (string-content)
-       (cast string-content _string _pointer)))
+       (write string-content)
+       (newline)
+       (let* ((size (string-length string-content))
+              (pointer (pffi-pointer-allocate (+ size 1))))
+         (memmove pointer (cast string-content _string _pointer) size)
+         (display "STRING SIZE: ")
+         (display size)
+         (display " : ")
+         (write (cast pointer _pointer _string))
+         (newline)
+         pointer)))
 
    (define pffi-pointer->string
      (lambda (pointer)
-       (cast pointer _pointer _string)))
+     (let* ((size (string-length (cast pointer _pointer _string)))
+            (string-content (string-copy (cast pointer _pointer _string))))
+       (memmove (cast string-content _string _pointer) pointer size)
+       (display "SIZE: ")
+       (display size)
+       (display " : ")
+       (write string-content)
+       (newline)
+        string-content)))
 
    (define pffi-shared-object-load
      (lambda (header path)
@@ -104,19 +123,11 @@
 
    (define pffi-pointer-set!
      (lambda (pointer type offset value)
-       (cond
-         ((equal? type 'string)
-          (ptr-set! pointer (pffi-type->native-type type) 'abs offset (pffi-string->pointer value)))
-         (else
-           (ptr-set! pointer (pffi-type->native-type type) 'abs offset value)))))
+       (ptr-set! pointer (pffi-type->native-type type) 'abs offset value)))
 
    (define pffi-pointer-get
      (lambda (pointer type offset)
-       (cond
-         ((equal? type 'string)
-          (pffi-pointer->string (ptr-ref pointer (pffi-type->native-type type) 'abs offset)))
-         (else
-           (ptr-ref pointer (pffi-type->native-type type) 'abs offset)))))
+       (ptr-ref pointer (pffi-type->native-type type) 'abs offset)))
 
    (define pffi-pointer-deref
      (lambda (pointer)

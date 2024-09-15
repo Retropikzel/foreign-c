@@ -83,18 +83,18 @@
           pffi-os-name)
   (begin
 
+    (define pffi-os-name
+      (cond-expand
+        (windows "windows")
+        (racket (if (equal? (system-type 'os) 'windows) "windows" "unix"))
+        (else "unix")))
+
     (define-syntax pffi-init
       (syntax-rules ()
         ((pffi-init)
          (cond-expand
            (chicken (import (chicken foreign)))
            (else #t)))))
-
-    (define pffi-os-name
-      (cond-expand
-        (windows "windows")
-        (racket (if (equal? (system-type 'os) 'windows) "windows" "unix"))
-        (else "unix")))
 
     (define library-version "v0-3-0")
     (define slash (cond-expand (windows (string #\\)) (else "/")))
