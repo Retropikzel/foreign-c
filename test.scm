@@ -2,7 +2,7 @@
         (scheme write)
         (scheme load)
         (scheme process-context)
-        (retropikzel r7rs-pffi version main))
+        (retropikzel r7rs-pffi))
 
 (define print-header
   (lambda (title)

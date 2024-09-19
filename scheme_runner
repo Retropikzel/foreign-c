@@ -25,5 +25,10 @@ else
         -f ${DOCKERFILE} \
         --tag ${tag}:latest \
         .
-    docker run -it -v ${PWD}:/workdir:z ${tag}:latest ${cmd}
+    docker run \
+        -it \
+        -e CHICKEN_INCLUDE_PATH=/workdir/retropikzel \
+        -v ${PWD}:/workdir:z \
+        ${tag}:latest \
+        ${cmd}
 fi

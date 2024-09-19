@@ -51,7 +51,7 @@ that each implementation passes those tests. This will be done in tiered order s
 - [Sagittarius](https://bitbucket.org/ktakashi/sagittarius-scheme/wiki/Home)
 - [Racket](https://racket-lang.org/)
 
-## Tier 2
+## Tier 2 - Work in progress
 
 - [Gambit](https://gambitscheme.org)
     - Propably able to support everything but so annoying to deal with that it's currently in tier 2
