@@ -1,5 +1,7 @@
 
 (define arena (invoke-static java.lang.foreign.Arena 'global))
+(define method-handle-lookup (invoke-static java.lang.invoke.MethodHandles 'lookup))
+(define native-linker (invoke-static java.lang.foreign.Linker 'nativeLinker))
 
 (define value->object
   (lambda (value type)
@@ -46,31 +48,6 @@
       ((equal? type 'callback) (static-field java.lang.foreign.ValueLayout 'ADDRESS))
       (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
-(define pffi-type->native-type-old
-  (lambda (type)
-    (cond
-      ((equal? type 'int8) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-      ((equal? type 'uint8) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-      ((equal? type 'int16) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-      ((equal? type 'uint16) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-      ((equal? type 'int32) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-      ((equal? type 'uint32) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-      ((equal? type 'int64) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-      ((equal? type 'uint64) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-      ((equal? type 'char) (static-field java.lang.foreign.ValueLayout 'JAVA_CHAR))
-      ((equal? type 'unsigned-char) (static-field java.lang.foreign.ValueLayout 'JAVA_CHAR))
-      ((equal? type 'short) (static-field java.lang.foreign.ValueLayout 'JAVA_SHORT))
-      ((equal? type 'unsigned-short) (static-field java.lang.foreign.ValueLayout 'JAVA_SHORT))
-      ((equal? type 'int) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-      ((equal? type 'unsigned-int) (static-field java.lang.foreign.ValueLayout 'JAVA_INT))
-      ((equal? type 'long) (static-field java.lang.foreign.ValueLayout 'JAVA_LONG))
-      ((equal? type 'unsigned-long) (static-field java.lang.foreign.ValueLayout 'JAVA_LONG))
-      ((equal? type 'float) (static-field java.lang.foreign.ValueLayout 'JAVA_FLOAT))
-      ((equal? type 'double) (static-field java.lang.foreign.ValueLayout 'JAVA_DOUBLE))
-      ((equal? type 'pointer) (static-field java.lang.foreign.ValueLayout 'ADDRESS))
-      ((equal? type 'void) (static-field java.lang.foreign.ValueLayout 'ADDRESS))
-      (else (error "pffi-type->function-argument-type -- No such pffi type" type)))))
-
 (define pffi-pointer?
   (lambda (object)
     (string=? (invoke (invoke object 'getClass) 'getName)
@@ -96,20 +73,64 @@
                  'invokeWithArguments
                  (map value->object vals argument-types)))))))
 
+(define range
+  (lambda (from to)
+    (letrec*
+      ((looper
+         (lambda (count result)
+           (if (= count to)
+             (append result (list count))
+             (looper (+ count 1) (append result (list count)))))))
+      (looper from (list)))))
+
 (define-syntax pffi-define-callback
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
      (define scheme-name
-       (invoke (invoke (invoke-static java.lang.foreign.Linker 'nativeLinker)
-                       'upcallStub
-                       procedure
-                       (if (equal? return-type 'void)
-                         (apply (class-methods java.lang.foreign.FunctionDescriptor 'ofVoid)
-                                (map pffi-type->native-type argument-types))
-                         (apply (class-methods java.lang.foreign.FunctionDescriptor 'of)
-                                (pffi-type->native-type return-type)
-                                (map pffi-type->native-type argument-types)))
-                       arena))))))
+       (let* ((helper-object (object () (callback procedure)))
+              (function-descriptor
+                (let ((function-descriptor
+                        (if (equal? return-type 'void)
+                          (apply (class-methods java.lang.foreign.FunctionDescriptor 'ofVoid)
+                                 (map pffi-type->native-type argument-types))
+                          (apply (class-methods java.lang.foreign.FunctionDescriptor 'of)
+                                 (pffi-type->native-type return-type)
+                                 (map pffi-type->native-type argument-types)))))
+                  (write function-descriptor)
+                  (newline)
+                  function-descriptor))
+              (method-type
+                (let ((method-type (invoke-static java.lang.invoke.MethodType
+                                                  'methodType
+                                                  (invoke int 'getClass)
+                                                  (invoke java.lang.foreign.MemorySegment 'getClass)
+                                                  (invoke java.lang.foreign.MemorySegment 'getClass)
+                                                  )))
+                  (write method-type)
+                  (newline)
+                  method-type))
+              (method-handle
+                (let ((method-handle
+                        (invoke method-handle-lookup
+                                'unreflect
+                                ((invoke (invoke helper-object 'getClass) 'getMethods) 0))))
+                  (invoke method-handle-lookup 'revealDirect method-handle)
+                  (set! method-handle (invoke method-handle 'asType method-type))
+                  (write method-handle)
+                  (newline)
+                  method-handle)))
+         (invoke native-linker
+                 'upcallStub
+                 method-handle
+                 function-descriptor
+                 arena))))))
+
+(define-syntax pffi-define-callback-old
+  (syntax-rules ()
+    ((_ scheme-name return-type argument-types procedure)
+     (define scheme-name
+       (invoke-static java.lang.invoke.MethodType 'genericMethodType (length argument-types))
+       ))))
 
 (define pffi-size-of
   (lambda (type)
