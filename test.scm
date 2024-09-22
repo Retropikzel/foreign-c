@@ -349,6 +349,14 @@
 
 (pffi-define qsort libc-stdlib 'qsort 'void (list 'pointer 'int 'int 'callback))
 
+(define test1234
+  (lambda (pointer-a pointer-b)
+    (let ((a (pffi-pointer-get pointer-a 'int 0))
+          (b (pffi-pointer-get pointer-b 'int 0)))
+      (cond ((> a b) 1)
+            ((= a b) 0)
+            ((< a b) -1)))))
+
 (pffi-define-callback compare
                       'int
                       (list 'pointer 'pointer)
