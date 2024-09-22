@@ -87,7 +87,9 @@
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
      (define scheme-name
-       (let* ((helper-object (object () (callback procedure)))
+       (let* ((helper-procedure
+                (lambda (a b)
+                  (apply procedure (list a b))))
               (function-descriptor
                 (let ((function-descriptor
                         (if (equal? return-type 'void)
@@ -98,39 +100,26 @@
                                  (map pffi-type->native-type argument-types)))))
                   (write function-descriptor)
                   (newline)
+                  (write (invoke function-descriptor 'toMethodType))
+                  (newline)
                   function-descriptor))
               (method-type
-                (let ((method-type (invoke-static java.lang.invoke.MethodType
-                                                  'methodType
-                                                  (invoke int 'getClass)
-                                                  (invoke java.lang.foreign.MemorySegment 'getClass)
-                                                  (invoke java.lang.foreign.MemorySegment 'getClass)
-                                                  )))
+                (let ((method-type (invoke function-descriptor 'toMethodType)))
                   (write method-type)
                   (newline)
                   method-type))
               (method-handle
-                (let ((method-handle
-                        (invoke method-handle-lookup
-                                'unreflect
-                                ((invoke (invoke helper-object 'getClass) 'getMethods) 0))))
-                  (invoke method-handle-lookup 'revealDirect method-handle)
+                (let (
+                      ;(method-handle (invoke procedure 'getApplyMethod))
+                      )
+                  ;(invoke method-handle-lookup 'revealDirect method-handle)
+                  (write method-handle)
+                  (newline)
                   (set! method-handle (invoke method-handle 'asType method-type))
                   (write method-handle)
                   (newline)
                   method-handle)))
-         (invoke native-linker
-                 'upcallStub
-                 method-handle
-                 function-descriptor
-                 arena))))))
-
-(define-syntax pffi-define-callback-old
-  (syntax-rules ()
-    ((_ scheme-name return-type argument-types procedure)
-     (define scheme-name
-       (invoke-static java.lang.invoke.MethodType 'genericMethodType (length argument-types))
-       ))))
+         (invoke native-linker 'upcallStub method-handle function-descriptor arena))))))
 
 (define pffi-size-of
   (lambda (type)

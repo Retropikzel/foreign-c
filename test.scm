@@ -360,7 +360,6 @@
                                 ((< a b) -1)))))
 (write compare)
 (newline)
-(exit)
 
 (display "Unsorted: ")
 (write (list (pffi-pointer-get array 'int (* (pffi-size-of 'int) 0))
