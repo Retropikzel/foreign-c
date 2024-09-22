@@ -342,48 +342,34 @@
 
 (print-header 'pffi-define-callback)
 
-(define libcurl (pffi-shared-object-auto-load (list "curl/curl.h") ; Headers
-                                              (list ".") ; Additional search paths
-                                              "curl" ; The named of shared object without the lib prefix
-                                              (list ".4")))
-(pffi-define curl-easy-init libcurl 'curl_easy_init 'pointer (list))
-(pffi-define curl-easy-setopt libcurl 'curl_easy_setopt 'int (list 'pointer 'int 'pointer))
-(pffi-define curl-easy-setopt-callback libcurl 'curl_easy_setopt 'int (list 'pointer 'int 'callback))
-(pffi-define curl-easy-getinfo libcurl 'curl_easy_getinfo 'int (list 'pointer 'int 'pointer))
-(pffi-define curl-easy-perform libcurl 'curl_easy_perform 'int (list 'pointer))
-(define CURLOPT-WRITEFUNCTION 20011)
-(define CURLOPT-FOLLOWLOCATION 52)
-(define CURLOPT-URL 10002)
-(define CURLINFO-RESPONSE-CODE 2097154)
+(define array (pffi-pointer-allocate (* (pffi-size-of 'int) 3)))
+(pffi-pointer-set! array 'int (* (pffi-size-of 'int) 0) 3)
+(pffi-pointer-set! array 'int (* (pffi-size-of 'int) 1) 2)
+(pffi-pointer-set! array 'int (* (pffi-size-of 'int) 2) 1)
 
-(define result "")
-(pffi-define-callback collect-result
-                      'void
-                      (list 'pointer 'int 'int 'pointer)
-                      (lambda (pointer size nmemb client-pointer)
-                        (set! result (string-append result (string-copy (pffi-pointer->string pointer))))))
+(pffi-define qsort libc-stdlib 'qsort 'void (list 'pointer 'int 'int 'callback))
 
-(define handle (curl-easy-init))
-(define url "https://scheme.org")
-(debug url)
-(define curl-code1 (curl-easy-setopt handle CURLOPT-FOLLOWLOCATION (pffi-string->pointer url)))
-(debug curl-code1)
-(assert = curl-code1 0)
+(pffi-define-callback compare
+                      'int
+                      (list 'pointer 'pointer)
+                      (lambda (pointer-a pointer-b)
+                        (let ((a (pffi-pointer-get pointer-a 'int 0))
+                              (b (pffi-pointer-get pointer-b 'int 0)))
+                          (cond ((> a b) 1)
+                                ((= a b) 0)
+                                ((< a b) -1)))))
 
-(define curl-code2 (curl-easy-setopt handle CURLOPT-URL (pffi-string->pointer url)))
-(debug curl-code2)
-(assert = curl-code2 0)
+(display "Unsorted: ")
+(write (list (pffi-pointer-get array 'int (* (pffi-size-of 'int) 0))
+             (pffi-pointer-get array 'int (* (pffi-size-of 'int) 1))
+             (pffi-pointer-get array 'int (* (pffi-size-of 'int) 2))))
+(newline)
+(qsort array 3 (pffi-size-of 'int) compare)
 
-(define curl-code3 (curl-easy-setopt-callback handle CURLOPT-WRITEFUNCTION collect-result))
-(debug curl-code3)
-(assert = curl-code3 0)
-
-(define curl-code4 (curl-easy-perform handle))
-(debug curl-code4)
-(assert = curl-code4 0)
-
-(define http-code (pffi-pointer-allocate (pffi-size-of 'int)))
-(curl-easy-getinfo handle CURLINFO-RESPONSE-CODE http-code)
-(assert = (pffi-pointer-get http-code 'int 0) 200)
+(display "Sorted: ")
+(write (list (pffi-pointer-get array 'int (* (pffi-size-of 'int) 0))
+             (pffi-pointer-get array 'int (* (pffi-size-of 'int) 1))
+             (pffi-pointer-get array 'int (* (pffi-size-of 'int) 2))))
+(newline)
 
 (exit 0)
