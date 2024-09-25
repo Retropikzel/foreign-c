@@ -78,7 +78,6 @@
           pffi-pointer-deref
           pffi-os-name)
   (begin
-    (include "r7rs-pffi/main.scm")
     (cond-expand
       (chicken (include "r7rs-pffi/chicken.scm"))
       (cyclone (include "r7rs-pffi/cyclone.scm"))
@@ -88,4 +87,6 @@
       (racket (include "r7rs-pffi/racket.scm"))
       (sagittarius (include "r7rs-pffi/sagittarius.scm"))
       (stklos (include "r7rs-pffi/stklos.scm"))
-      (else #t))))
+      (else #t))
+    (include "r7rs-pffi/main.scm")
+    ))

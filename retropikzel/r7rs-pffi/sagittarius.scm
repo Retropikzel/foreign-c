@@ -25,7 +25,8 @@
 
 (define pffi-pointer?
   (lambda (object)
-    (pointer? object)))
+    (or (pointer? object)
+        (string? object))))
 
 (define-syntax pffi-define
   (syntax-rules ()
@@ -73,17 +74,17 @@
 
 (define pffi-pointer-null
   (lambda ()
-    (integer->pointer 0)))
+    null-pointer))
 
 (define pffi-string->pointer
   (lambda (string-content)
-    (write string-content)
-    (newline)
-    (bytevector->pointer (string->utf8 string-content))))
+    string-content))
 
 (define pffi-pointer->string
   (lambda (pointer)
-    (pointer->string pointer)))
+    (if (string? pointer)
+      pointer
+      (pointer->string pointer))))
 
 (define pffi-shared-object-load
   (lambda (header path)

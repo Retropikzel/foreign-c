@@ -91,6 +91,8 @@
 
    (define pffi-pointer->string
      (lambda (pointer)
+       (when (pffi-pointer-null? pointer)
+         (error "Can not make string from null pointer" pointer))
        (string-copy (cast pointer _pointer _string))))
 
    (define pffi-shared-object-load

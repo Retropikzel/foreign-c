@@ -83,14 +83,19 @@
              (looper (+ count 1) (append result (list count)))))))
       (looper from (list)))))
 
+
+
 (define-syntax pffi-define-callback
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
      (define scheme-name
-       (let* ((helper-object
-                (object ()
-                        ((test1234 a b)
-                          1)))
+       (let* ((callback-procedure
+                (lambda (arg1 . args)
+                  (try-catch
+                    (begin
+                      (apply procedure (append (list arg1) args)))
+                    (ex <java.lang.Throwable>
+                        #f))))
               (function-descriptor
                 (let ((function-descriptor
                         (if (equal? return-type 'void)
@@ -99,40 +104,17 @@
                           (apply (class-methods java.lang.foreign.FunctionDescriptor 'of)
                                  (pffi-type->native-type return-type)
                                  (map pffi-type->native-type argument-types)))))
-                  (write (invoke (class-methods (invoke helper-object 'getClass) 'test1234) 'getName))
+                  (write function-descriptor)
+                  (newline)
+                  (write (invoke function-descriptor 'getClass))
                   (newline)
                   (write function-descriptor)
                   (newline)
-                  (write (invoke function-descriptor 'toMethodType))
-                  (newline)
                   function-descriptor))
-              (method-type
-                (let (
-                      (method-type (invoke function-descriptor 'toMethodType))
-                      ;(method-type (field procedure 'applyMethodType))
-                      )
-                  (write method-type)
-                  (newline)
-                  method-type))
+              ;(method-type (invoke function-descriptor 'toMethodType))
+              (method-type (field callback-procedure 'applyMethodType))
               (method-handle
-                (let (
-                      ;(method-handle (invoke procedure 'getApplyMethod))
-                      (method-handle (invoke (class-methods (invoke helper-object 'getClass) 'test1234) 'getApplyMethod))
-                      #;(method-handle (invoke (class-methods (invoke helper-object 'getClass)
-                                                            'test1234) 'getApplyMethod))
-                      #;(method-handle (invoke method-handle-lookup
-                                             'findStatic
-                                             (invoke helper-object 'getClass)
-                                             (invoke (class-methods (invoke helper-object 'getClass) 'test1234) 'getName)
-                                             method-type
-
-                                             ))
-
-                      )
-                  ;(invoke method-handle-lookup 'revealDirect method-handle)
-                  (write method-handle)
-                  (newline)
-                  ;(set! method-handle (invoke method-handle 'asType method-type))
+                (let* ((method-handle (field callback-procedure 'applyToConsumerDefault)))
                   (write method-handle)
                   (newline)
                   method-handle)))
