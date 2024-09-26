@@ -41,12 +41,10 @@ build-gambit-libs:
 GAMBIT=gsc -:r7rs,search=.:./schubert -ld-options -lcurl -exe
 test-gambit: clean build-gambit-libs
 	${SCHEME_RUNNER} gambit "${GAMBIT} test.scm && ./test"
-	#${GAMBIT} test.scm && ./test
 
 GUILE=guile --r7rs -L . -L ./schubert
 test-guile:
-	#${SCHEME_RUNNER} guile "${GUILE} test.scm"
-	${GUILE} test.scm
+	${SCHEME_RUNNER} guile "${GUILE} test.scm"
 
 KAWA=java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=.:*.sld
 test-kawa:
@@ -60,7 +58,6 @@ test-sagittarius:
 RACKET=racket -I r7rs -S . -S ./schubert --script
 test-racket:
 	${SCHEME_RUNNER} racket "${RACKET} test.scm"
-	#${RACKET} test.scm
 
 STKLOS=stklos -A . -A ./schubert -f
 test-stklos:
