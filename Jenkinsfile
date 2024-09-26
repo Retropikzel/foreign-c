@@ -3,7 +3,6 @@ pipeline {
         dockerfile {
             filename 'Dockerfile.jenkins'
             dir '.'
-            label 'r7rs-pffi-jenkins'
             args '--privileged'
         }
     }
