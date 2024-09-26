@@ -12,56 +12,56 @@ pipeline {
     }
 
     stages {
-        stage('Tier 1 - Chicken') {
+        stage('Chicken') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make test-chicken'
                 }
             }
         }
-        stage('Tier 1 - Guile') {
+        stage('Guile') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make test-guile'
                 }
             }
         }
-        stage('Tier 1 - Kawa') {
+        stage('Kawa') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make test-kawa'
                 }
             }
         }
-        stage('Tier 1 - Sagittarius') {
+        stage('Sagittarius') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make test-sagittarius'
                 }
             }
         }
-        stage('Tier 1 - Racket') {
+        stage('Racket') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make test-racket'
                 }
             }
         }
-        stage('Tier 2 - Cyclone') {
+        stage('Cyclone') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make test-cyclone'
                 }
             }
         }
-        stage('Tier 2 - Gambit') {
+        stage('Gambit') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make test-gambit'
                 }
             }
         }
-        stage('Tier 2 - STklos') {
+        stage('STklos') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make test-stklos'

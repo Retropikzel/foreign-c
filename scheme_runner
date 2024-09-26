@@ -26,7 +26,6 @@ else
         --tag ${tag}:latest \
         .
     docker run \
-        -it \
         -e CHICKEN_INCLUDE_PATH=/workdir/retropikzel \
         -v ${PWD}:/workdir:z \
         ${tag}:latest \
