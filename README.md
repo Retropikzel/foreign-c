@@ -35,6 +35,15 @@ Support is defined in tiers, each tier has short explanation about it after the 
 Currently the interface of the library is okay. Now work needs to be done to make tests and see
 that each implementation passes those tests. This will be done in tiered order starting from tier 1.
 
+Untiered, support needs to be investigated:
+
+- [Gerbil](https://cons.io/)
+- [Ypsilon](http://www.littlewingpinball.com/doc/en/ypsilon/)
+- [Larceny](https://larcenists.org/)
+- [Mosh](https://mosh.monaos.org)
+- [Skint](https://github.com/false-schemers/skint)
+- [s7](https://scheme.fail://ccrma.stanford.edu/software/snd/snd/s7.html)
+
 ## Tier 1
 
 Aiming to support these first
@@ -75,17 +84,6 @@ In queue
 
 ## Tier 4
 
-Support needs to be investigated.
-
-- [Gerbil](https://cons.io/)
-- [Ypsilon](http://www.littlewingpinball.com/doc/en/ypsilon/)
-- [Larceny](https://larcenists.org/)
-- [Mosh](https://mosh.monaos.org)
-- [Skint](https://github.com/false-schemers/skint)
-- [s7](https://scheme.fail://ccrma.stanford.edu/software/snd/snd/s7.html)
-
-## Tier 5
-
 Support needs investigation and serious design or making dynamic FFI for the implementation
 
 - [Chibi](https://synthcode.com/scheme/chibi)
@@ -97,7 +95,7 @@ Support needs investigation and serious design or making dynamic FFI for the imp
 - [Gauche](https://practical-scheme.net/gauche/)
     - FFI requires C code
 
-## Tier 6
+## Tier 5
 
 Support maybe possible/dreaming about.
 
@@ -106,9 +104,9 @@ Support maybe possible/dreaming about.
   - Gambit compiles to different targets other than C too, for example Javascript. It would be cool
   and interesting to see if this FFI could also support some of those
 
-## Tier 7
+## Tier 6
 
-Other
+Other.
 
 - [Loko](https://scheme.fail/)
     - Desires no C interop, I can respect that

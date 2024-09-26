@@ -1,5 +1,12 @@
 pipeline {
-    agent any
+    agent {
+        dockerfile {
+            filename 'Dockerfile.jenkins'
+            dir '.'
+            label 'r7rs-pffi-jenkins'
+            args '--privileged'
+        }
+    }
 
     options {
             buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
