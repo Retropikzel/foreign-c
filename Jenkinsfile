@@ -19,17 +19,24 @@ pipeline {
                 }
             }
         }
+        stage('Cyclone') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh 'make test-cyclone'
+                }
+            }
+        }
+        stage('Gambit') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh 'make test-gambit'
+                }
+            }
+        }
         stage('Guile') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make test-guile'
-                }
-            }
-        }
-        stage('Kawa') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make test-kawa'
                 }
             }
         }
@@ -47,17 +54,10 @@ pipeline {
                 }
             }
         }
-        stage('Cyclone') {
+        stage('Kawa') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make test-cyclone'
-                }
-            }
-        }
-        stage('Gambit') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make test-gambit'
+                    sh 'make test-kawa'
                 }
             }
         }

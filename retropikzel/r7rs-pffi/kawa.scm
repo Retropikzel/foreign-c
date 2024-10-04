@@ -1,4 +1,3 @@
-
 (define arena (invoke-static java.lang.foreign.Arena 'global))
 (define method-handle-lookup (invoke-static java.lang.invoke.MethodHandles 'lookup))
 (define native-linker (invoke-static java.lang.foreign.Linker 'nativeLinker))
@@ -9,9 +8,15 @@
            (java.lang.Byte value))
           ((equal? type 'short)
            (java.lang.Short value))
+          ((equal? type 'unsigned-short)
+           (java.lang.Short value))
           ((equal? type 'int)
            (java.lang.Integer value))
+          ((equal? type 'unsigned-int)
+           (java.lang.Integer value))
           ((equal? type 'long)
+           (java.lang.Long value))
+          ((equal? type 'unsigned-long)
            (java.lang.Long value))
           ((equal? type 'float)
            (java.lang.Float value))
@@ -176,14 +181,17 @@
 
 (define pffi-pointer-get
   (lambda (pointer type offset)
-    (invoke (invoke pointer
-                    'reinterpret
-                    (static-field java.lang.Integer 'MAX_VALUE))
-            'get
-            (invoke (pffi-type->native-type type) 'withByteAlignment 1)
-            offset)))
+    (let ((r (invoke (invoke pointer 'reinterpret
+                             (static-field java.lang.Integer 'MAX_VALUE))
+                     'get
+                     (invoke (pffi-type->native-type type) 'withByteAlignment 1)
+                     offset)))
+      r)))
 
 (define pffi-pointer-deref
   (lambda (pointer)
     (invoke pointer 'get (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 1) 0)))
 
+(define pffi-pointer-cast->struct
+  (lambda (struct-name pointer)
+    pointer))

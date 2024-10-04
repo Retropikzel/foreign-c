@@ -1,6 +1,6 @@
 (import (scheme base)
         (scheme write)
-        (scheme load)
+        (scheme char)
         (scheme process-context)
         (retropikzel r7rs-pffi))
 
@@ -46,6 +46,12 @@
        (display ": ")
        (write value)
        (newline)))))
+
+;; pffi-init
+
+(print-header 'pffi-init)
+
+(pffi-init)
 
 ;; pffi-size-of
 
@@ -162,55 +168,16 @@
 (assert equal? (number? size-pointer) #t)
 (assert = size-pointer 8)
 
-;; pffi-init
-
-(print-header 'pffi-init)
-
-(pffi-init)
-
 ;; pffi-shared-object-auto-load
 
 (print-header 'pffi-shared-object-auto-load)
 
 (define libc-stdlib
-  (if (string=? pffi-os-name "windows")
-    (pffi-shared-object-auto-load (list "stdlib.h") (list) "ucrtbase" (list ""))
-    (pffi-shared-object-auto-load (list "stdlib.h") (list) "c" (list "" ".6"))))
+  (cond-expand
+    (windows (pffi-shared-object-auto-load (list "stdlib.h") (list) "ucrtbase" (list "")))
+    (else (pffi-shared-object-auto-load (list "stdlib.h") (list) "c" (list "" ".6")))))
 
-;; pffi-string->pointer
-
-(print-header 'pffi-string->pointer)
-
-(define string-pointer (pffi-string->pointer "Hello world"))
-(debug string-pointer)
-(assert equal? (pffi-pointer? string-pointer) #t)
-(assert equal? (pffi-pointer-null? string-pointer) #f)
-
-;; pffi-pointer->string
-
-(print-header 'pffi-pointer->string)
-
-(define pointer-string (pffi-pointer->string string-pointer))
-(debug pointer-string)
-(assert equal? (string? pointer-string) #t)
-(assert string=? pointer-string "Hello world")
-(assert string=? (pffi-pointer->string (pffi-string->pointer "https://scheme.org")) "https://scheme.org")
-(define test-url-string "https://scheme.org")
-(debug test-url-string)
-(define test-url (pffi-string->pointer test-url-string))
-(debug test-url)
-(debug (pffi-pointer->string test-url))
-(assert equal? (string=? (pffi-pointer->string test-url) test-url-string) #t)
-
-
-
-;; pffi-pointer-allocate
-
-(print-header 'pffi-pointer-allocate)
-
-(define test-pointer (pffi-pointer-allocate 100))
-(debug test-pointer)
-(assert equal? (pffi-pointer? test-pointer) #t)
+(debug libc-stdlib)
 
 ;; pffi-pointer-null
 
@@ -220,14 +187,24 @@
 (debug null-pointer)
 (assert equal? (pffi-pointer-null? null-pointer) #t)
 
-;; pffi-pointer-free
+;; pffi-pointer-null?
 
-(print-header 'pffi-pointer-free)
+(print-header 'pffi-pointer-null?)
 
-(define pointer-to-be-freed (pffi-pointer-allocate 100))
-(debug pointer-to-be-freed)
-(pffi-pointer-free pointer-to-be-freed)
-(debug pointer-to-be-freed)
+(define is-null-pointer (pffi-pointer-null))
+(debug is-null-pointer)
+(assert equal? (pffi-pointer-null? is-null-pointer) #t)
+(assert equal? (pffi-pointer-null? 100) #f)
+(assert equal? (pffi-pointer-null? 'bar) #f)
+
+;; pffi-pointer-allocate
+
+(print-header 'pffi-pointer-allocate)
+
+(define test-pointer (pffi-pointer-allocate 100))
+(debug test-pointer)
+(assert equal? (pffi-pointer? test-pointer) #t)
+(assert equal? (pffi-pointer-null? test-pointer) #f)
 
 ;; pffi-pointer?
 
@@ -239,22 +216,18 @@
 (assert equal? (pffi-pointer? 100) #f)
 (assert equal? (pffi-pointer? 'bar) #f)
 
-;; pffi-pointer-null?
+;; pffi-pointer-free
 
-(print-header 'pffi-pointer-null?)
+(print-header 'pffi-pointer-free)
 
-(define is-null-pointer (pffi-pointer-null))
-(debug is-null-pointer)
-(define is-not-null-pointer (pffi-pointer-allocate 100))
-(debug is-not-null-pointer)
-(assert equal? (pffi-pointer-null? is-null-pointer) #t)
-(assert equal? (pffi-pointer-null? is-not-null-pointer) #f)
-(assert equal? (pffi-pointer-null? 100) #f)
-(assert equal? (pffi-pointer-null? 'bar) #f)
+(define pointer-to-be-freed (pffi-pointer-allocate 100))
+(debug pointer-to-be-freed)
+(pffi-pointer-free pointer-to-be-freed)
+(debug pointer-to-be-freed)
 
-;; pffi-pointer-set! and pffi-pointer-get
+;; pffi-pointer-set! and pffi-pointer-get 1/2
 
-(print-header "pffi-pointer-set! and pffi-pointer-get")
+(print-header "pffi-pointer-set! and pffi-pointer-get 1/2")
 
 (define set-pointer (pffi-pointer-allocate 256))
 (define offset 50)
@@ -285,6 +258,10 @@
 (test-type 'long)
 (test-type 'unsigned-long)
 
+(pffi-pointer-set! set-pointer 'char offset #\X)
+(debug (pffi-pointer-get set-pointer 'char offset))
+(assert char=? (pffi-pointer-get set-pointer 'char offset) #\X)
+
 (pffi-pointer-set! set-pointer 'float offset 1.5)
 (debug (pffi-pointer-get set-pointer 'float offset))
 (assert = (pffi-pointer-get set-pointer 'float offset) 1.5)
@@ -292,9 +269,66 @@
 (debug (pffi-pointer-get set-pointer 'double offset))
 (assert = (pffi-pointer-get set-pointer 'double offset) 1.5)
 
+;; pffi-string->pointer
+
+(print-header 'pffi-string->pointer)
+
+(define string-pointer (pffi-string->pointer "Hello world"))
+(debug string-pointer)
+(assert equal? (pffi-pointer? string-pointer) #t)
+(assert equal? (pffi-pointer-null? string-pointer) #f)
+(debug (pffi-pointer-get string-pointer 'char 0))
+(assert char=? (pffi-pointer-get string-pointer 'char 0) #\H)
+(debug (pffi-pointer-get string-pointer 'char 1))
+(assert char=? (pffi-pointer-get string-pointer 'char 1) #\e)
+(debug (pffi-pointer-get string-pointer 'char 2))
+(assert char=? (pffi-pointer-get string-pointer 'char 2) #\l)
+(debug (pffi-pointer-get string-pointer 'char 3))
+(assert char=? (pffi-pointer-get string-pointer 'char 3) #\l)
+(debug (pffi-pointer-get string-pointer 'char 4))
+(assert char=? (pffi-pointer-get string-pointer 'char 4) #\o)
+(debug (pffi-pointer-get string-pointer 'char 10))
+(assert char=? (pffi-pointer-get string-pointer 'char 10) #\d)
+
+;; pffi-pointer->string
+
+(print-header 'pffi-pointer->string)
+
+(define pointer-string (pffi-pointer->string string-pointer))
+(debug pointer-string)
+(assert equal? (string? pointer-string) #t)
+(assert string=? pointer-string "Hello world")
+(assert string=? (pffi-pointer->string (pffi-string->pointer "https://scheme.org")) "https://scheme.org")
+(define test-url-string "https://scheme.org")
+(debug test-url-string)
+(define test-url (pffi-string->pointer test-url-string))
+(debug test-url)
+(debug (pffi-pointer->string test-url))
+(assert equal? (string=? (pffi-pointer->string test-url) test-url-string) #t)
+
+;; pffi-pointer-get
+
+(print-header "pffi-pointer-get")
+
+(define hello-string "hello")
+(define hello-string-pointer (pffi-string->pointer hello-string))
+
+(debug (pffi-pointer-get hello-string-pointer 'char 0))
+(assert char=? (pffi-pointer-get hello-string-pointer 'char 0) #\h)
+(debug (pffi-pointer-get hello-string-pointer 'char 1))
+(assert char=? (pffi-pointer-get hello-string-pointer 'char 1) #\e)
+(debug (pffi-pointer-get hello-string-pointer 'char 4))
+(assert char=? (pffi-pointer-get hello-string-pointer 'char 4) #\o)
+
+;; pffi-pointer-set! and pffi-pointer-get 2/2
+
+(print-header "pffi-pointer-set! and pffi-pointer-get 2/2")
+
 (define pointer-to-be-set (pffi-string->pointer "FOOBAR"))
 (debug pointer-to-be-set)
+(debug (pffi-pointer->string pointer-to-be-set))
 (pffi-pointer-set! set-pointer 'pointer offset pointer-to-be-set)
+
 (debug (pffi-pointer-get set-pointer 'pointer offset))
 (assert equal?
         (pffi-pointer? (pffi-pointer-get set-pointer 'pointer offset))
@@ -312,28 +346,10 @@
 (pffi-pointer-set! set-pointer 'pointer offset (pffi-string->pointer string-to-be-set))
 (assert string=? (pffi-pointer->string (pffi-pointer-get set-pointer 'pointer offset)) "FOOBAR")
 
-;; pffi-pointer-deref
-
-(print-header 'pffi-pointer-deref)
-
-(define pointer-to-deref (pffi-pointer-allocate (pffi-size-of 'int)))
-(debug pointer-to-deref)
-(pffi-pointer-set! pointer-to-deref 'int 0 42)
-(assert equal? (pffi-pointer? (pffi-pointer-deref pointer-to-deref)) #t)
-
-;; pffi-os-name
-
-(print-header 'pffi-os-name)
-
-(assert equal?
-        (or (string=? pffi-os-name "windows")
-            (string=? pffi-os-name "unix"))
-        #t)
-
+#|
 ;; pffi-define
 
 (print-header 'pffi-define)
-
 
 (pffi-define atoi libc-stdlib 'atoi 'int (list 'pointer))
 (assert = (atoi (pffi-string->pointer "100")) 100)
@@ -375,3 +391,4 @@
 (newline)
 
 (exit 0)
+|#

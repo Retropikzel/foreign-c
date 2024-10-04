@@ -1,3 +1,9 @@
+(define-syntax pffi-init
+  (er-macro-transformer
+    (lambda (expr rename compare)
+      '(import (chicken foreign)
+               (chicken memory)))))
+
 (define pffi-type->native-type
   (lambda (type)
     (cond ((equal? type 'int8) 'byte)
@@ -25,8 +31,7 @@
 
 (define pffi-pointer?
   (lambda (object)
-    (or (string? object)
-        (pointer? object))))
+    (pointer? object)))
 
 (define-syntax pffi-define
   (er-macro-transformer
@@ -149,49 +154,28 @@
 (pffi-define puts #f 'puts 'int (list 'pointer))
 (pffi-define memset #f 'memset 'void (list 'pointer 'int 'int))
 
-(define pffi-string->pointer
+#;(define pffi-string->pointer
   (lambda (string-content)
     (let* ((size (string-length string-content))
            (pointer (pffi-pointer-allocate (+ size 1))))
-      (memset pointer 0 size)
-      (display "STRING-LENGTH: ")
-      (display size)
-      (display " / ")
-      (display pointer)
-      (display " === ")
+      (memset pointer 0 (+ size 1))
       (strncpy-ps pointer (location string-content) size)
-      ;(move-memory! string-content pointer size 0)
-      ;(pffi-pointer-set! pointer 'char size #\null)
       (puts pointer)
-      (display " ::: ")
-      (write string-content)
-      (display " OTHER: ")
-      (display (strlen pointer))
-      (newline)
-      ;(pointer-s8-set! pointer size (foreign-value "\0" char))
       pointer)))
+
+(define pffi-string->pointer
+  (foreign-lambda* c-pointer
+                   ((c-string str))
+                   "C_return((void*)str);"))
+
 
 (pffi-define strncpy-pp #f 'strncpy 'pointer (list 'pointer 'pointer 'int))
 (pffi-define strlen #f 'strlen 'int (list 'pointer))
 
 (define pffi-pointer->string
-  (lambda (pointer)
-    (cond ((pffi-pointer? pointer)
-           (let* ((size (strlen pointer))
-                  (string-content (make-string size)))
-             (display "STRLEN: ")
-             (display size)
-             (display " / ")
-             (display pointer)
-             ;(move-memory! pointer string-content size)
-             (strncpy-pp (location string-content) pointer size)
-             (display " ::: ")
-             (write string-content)
-             (display " === ")
-             (puts pointer)
-             (newline)
-             string-content))
-          (error "pffi-pointer->string -- Argument not pointer " pointer))))
+  (foreign-lambda* c-string
+                   ((c-pointer p))
+                   "C_return((char*)p);"))
 
 (define-syntax pffi-shared-object-load
   (er-macro-transformer
@@ -226,7 +210,7 @@
       ((equal? type 'uint32) (pointer-u32-set! (pointer+ pointer offset) value))
       ((equal? type 'int64) (pointer-s64-set! (pointer+ pointer offset) value))
       ((equal? type 'uint64) (pointer-u64-set! (pointer+ pointer offset) value))
-      ((equal? type 'char) (pointer-s8-set! (pointer+ pointer offset) value))
+      ((equal? type 'char) (pointer-s8-set! (pointer+ pointer offset) (char->integer value)))
       ((equal? type 'short) (pointer-s8-set! (pointer+ pointer offset) value))
       ((equal? type 'unsigned-short) (pointer-u8-set! (pointer+ pointer offset) value))
       ((equal? type 'int) (pointer-s32-set! (pointer+ pointer offset) value))
@@ -248,7 +232,7 @@
       ((equal? type 'uint32) (pointer-u32-ref (pointer+ pointer offset)))
       ((equal? type 'int64) (pointer-s64-ref (pointer+ pointer offset)))
       ((equal? type 'uint64) (pointer-u64-ref (pointer+ pointer offset)))
-      ((equal? type 'char) (pointer-s8-ref (pointer+ pointer offset)))
+      ((equal? type 'char) (integer->char (pointer-s8-ref (pointer+ pointer offset))))
       ((equal? type 'short) (pointer-s8-ref (pointer+ pointer offset)))
       ((equal? type 'unsigned-short) (pointer-u8-ref (pointer+ pointer offset)))
       ((equal? type 'int) (pointer-s32-ref (pointer+ pointer offset)))
@@ -259,6 +243,3 @@
       ((equal? type 'double) (pointer-f64-ref (pointer+ pointer offset)))
       ((equal? type 'pointer) (address->pointer (pointer-u64-ref (pointer+ pointer offset)))))))
 
-(define pffi-pointer-deref
-  (lambda (pointer)
-    pointer))

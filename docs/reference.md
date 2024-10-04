@@ -229,15 +229,3 @@ Returns:
 
 - object
     - The value in the poiner in the given offset as given type
-
-## pffi-pointer-deref
-
-Arguments:
-
-- pointer
-    - The pointer to dereference
-
-Returns:
-
-- object
-    - Whatever the pointer holds

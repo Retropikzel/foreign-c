@@ -15,53 +15,58 @@ test-tier2: \
 	test-gambit \
 	test-stklos
 
-CHICKEN_LIB=csc -X r7rs -R r7rs -s -J
-build-chicken-libs:
+CHICKEN=csc -X r7rs -R r7rs
+CHICKEN_LIB=csc -X r7rs -R r7rs -include-path ./retropikzel -s -J
+test-chicken: clean
+	docker build . --build-arg IMPLEMENTATION=chicken -f Dockerfile --tag=r7rs-pffi-chicken
 	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
-	${SCHEME_RUNNER} chicken "${CHICKEN_LIB} retropikzel.r7rs-pffi.sld"
+	docker run -it -v ${PWD}:/workdir r7rs-pffi-chicken bash -c "cd /workdir && ${CHICKEN_LIB} retropikzel.r7rs-pffi.sld"
+	docker run -it -v ${PWD}:/workdir r7rs-pffi-chicken bash -c "cd /workdir && ${CHICKEN} test.scm && ./test"
 
-CHICKEN=csc -X r7rs -R r7rs -L -lcurl
-test-chicken: clean build-chicken-libs
-	${SCHEME_RUNNER} chicken "${CHICKEN} test.scm"
-	${SCHEME_RUNNER} chicken "./test"
+CYCLONE=cyclone -A .
+test-cyclone: clean
+	docker build . --build-arg IMPLEMENTATION=cyclone -f Dockerfile --tag=r7rs-pffi-cyclone
+	docker run -it -v ${PWD}:/workdir r7rs-pffi-cyclone bash -c "cd /workdir && ${CYCLONE} retropikzel/r7rs-pffi.sld"
+	docker run -it -v ${PWD}:/workdir r7rs-pffi-cyclone bash -c "cd /workdir && ${CYCLONE} test.scm && ./test"
 
-CYCLONE=cyclone -A . -A ./schubert
-build-cyclone-libs:
-	${SCHEME_RUNNER} cyclone "${CYCLONE} retropikzel/r7rs-pffi.sld"
+GAMBIT_LIB=gsc . retropikzel/r7rs-pffi
+GAMBIT_CC=gsc -exe . -nopreload
+test-gambit: clean
+	docker build . --build-arg IMPLEMENTATION=gambit -f Dockerfile --tag=r7rs-pffi-gambit
+	docker run -it -v ${PWD}:/workdir r7rs-pffi-gambit bash -c "cd /workdir && ${GAMBIT_LIB} retropikzel/r7rs-pffi.sld; echo $$?"
+	docker run -it -v ${PWD}:/workdir r7rs-pffi-gambit bash -c "cd /workdir && ${GAMBIT_CC} test.scm; echo $$?"
+	docker run -it -v ${PWD}:/workdir r7rs-pffi-gambit bash -c "cd /workdir && ./test -:search=.; echo $$?"
 
-CYCLONE=cyclone -A . -A ./schubert
-test-cyclone: clean build-cyclone-libs
-	${SCHEME_RUNNER} cyclone "${CYCLONE} test.scm && icyc -s test.scm"
-
-GAMBIT_LIB=gsc -:r7rs -dynamic
-build-gambit-libs:
-	${SCHEME_RUNNER} gambit "${GAMBIT_LIB} retropikzel/r7rs-pffi/gambit.scm"
-	${SCHEME_RUNNER} gambit "${GAMBIT_LIB} retropikzel/r7rs-pffi.sld"
-
-GAMBIT=gsc -:r7rs,search=.:./schubert -ld-options -lcurl -exe
-test-gambit: clean build-gambit-libs
-	${SCHEME_RUNNER} gambit "${GAMBIT} test.scm && ./test"
-
-GUILE=guile --r7rs -L . -L ./schubert
+GUILE=guile --r7rs --fresh-auto-compile -L .
 test-guile:
-	${SCHEME_RUNNER} guile "${GUILE} test.scm"
+	docker build . --build-arg IMPLEMENTATION=guile -f Dockerfile --tag=r7rs-pffi-guile
+	docker run -it -v ${PWD}:/workdir r7rs-pffi-guile bash -c "cd /workdir && ${GUILE} test.scm"
 
 KAWA=java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=.:*.sld
 test-kawa:
-	#${SCHEME_RUNNER} kawa "${KAWA} test.scm"
-	${KAWA} test.scm
+	docker build . --build-arg IMPLEMENTATION=kawa -f Dockerfile --tag=r7rs-pffi-kawa
+	docker run -it -v ${PWD}:/workdir r7rs-pffi-kawa bash -c "cd /workdir && ${KAWA} test.scm"
 
-SASH=sash -L . -L ./schubert
+SASH=sash -r7 -L . -L ./schubert
 test-sagittarius:
-	${SCHEME_RUNNER} sagittarius "${SASH} test.scm"
+	docker build . --build-arg IMPLEMENTATION=sagittarius -f Dockerfile --tag=r7rs-pffi-sagittarius
+	docker run -it -v ${PWD}:/workdir r7rs-pffi-sagittarius bash -c "cd /workdir && ${SASH} test.scm"
 
 RACKET=racket -I r7rs -S . -S ./schubert --script
 test-racket:
-	${SCHEME_RUNNER} racket "${RACKET} test.scm"
+	docker build . --build-arg IMPLEMENTATION=racket -f Dockerfile --tag=r7rs-pffi-racket
+	docker run -it -v ${PWD}:/workdir r7rs-pffi-racket bash -c "cd /workdir && ${RACKET} test.scm"
 
-STKLOS=stklos -A . -A ./schubert -f
+STKLOS=stklos -A . -f
 test-stklos:
-	${SCHEME_RUNNER} stklos "${STKLOS} test.scm"
+	docker build . --build-arg IMPLEMENTATION=stklos -f Dockerfile --tag=r7rs-pffi-stklos
+	docker run -it -v ${PWD}:/workdir r7rs-pffi-stklos bash -c "cd /workdir && ${STKLOS} test.scm"
+
+CHIBI=chibi-scheme
+CHIBI_STUB=chibi-ffi
+test-chibi:
+	docker build . --build-arg IMPLEMENTATION=chibi -f Dockerfile --tag=r7rs-pffi-chibi
+	docker run -it -v ${PWD}:/workdir r7rs-pffi-chibi bash -c "cd /workdir && ${CHIBI_STUB} retropikzel/r7rs-pffi/chibi.stub"
 
 documentation:
 	cat README.md > docs/index.md
@@ -80,16 +85,16 @@ clean:
 	@rm -rf retropikzel/r7rs-pffi/retropikzel.*
 	@rm -rf retropikzel/r7rs-pffi/compiled
 	@rm -rf retropikzel.*
-	@rm -rf test/*.c
-	@rm -rf test/*.o*
-	@rm -rf test/*.so
-	@rm -rf test/*.meta
+	find . -name "*.meta" -delete
 	@rm -rf test/pffi-define
 	@rm -rf test/*gambit*
-	@rm -rf test/*.link
-	@rm -rf *.c
-	@rm -rf *.o
-	@rm -rf *.so
-	@rm -rf *.a
+	find . -name "*.link" -delete
+	find . -name "*.c" -delete
+	find . -name "*.o" -delete
+	find . -name "*.o[1-9]" -delete
+	find . -name "*.so" -delete
+	find . -name "*.a" -delete
 	@rm -rf test
 	@rm -rf tmp
+	find . -name "core.1" -delete
+	find . -name "test@gambit*" -delete

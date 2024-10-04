@@ -19,6 +19,7 @@
           ((equal? type 'float) 'float)
           ((equal? type 'double) 'double)
           ((equal? type 'pointer) 'void*)
+          ((equal? type 'string) 'string)
           ((equal? type 'void) 'void)
           ((equal? type 'callback) 'callback)
           (else (error "pffi-type->native-type -- No such pffi type" type)))))
@@ -74,17 +75,25 @@
 
 (define pffi-pointer-null
   (lambda ()
-    null-pointer))
+    (empty-pointer)))
 
 (define pffi-string->pointer
   (lambda (string-content)
-    string-content))
+    (letrec* ((bytes (string->utf8 string-content))
+              (bytes-length (bytevector-length bytes))
+              (pointer-length (+ bytes-length 1))
+              (pointer (pffi-pointer-allocate pointer-length))
+              (looper
+                (lambda (index)
+                  (when (< index bytes-length)
+                    (pointer-set-c-uint8_t! pointer index (bytevector-u8-ref bytes index))
+                    (looper (+ index 1))))))
+      (looper 0)
+      pointer)))
 
 (define pffi-pointer->string
   (lambda (pointer)
-    (if (string? pointer)
-      pointer
-      (pointer->string pointer))))
+      (pointer->string pointer)))
 
 (define pffi-shared-object-load
   (lambda (header path)
@@ -109,7 +118,7 @@
           ((equal? type 'uint32) (pointer-set-c-uint32_t! pointer offset value))
           ((equal? type 'int64) (pointer-set-c-int64_t! pointer offset value))
           ((equal? type 'uint64) (pointer-set-c-uint64_t! pointer offset value))
-          ((equal? type 'char) (pointer-set-c-char! pointer offset value))
+          ((equal? type 'char) (pointer-set-c-char! pointer offset (char->integer value)))
           ((equal? type 'short) (pointer-set-c-short! pointer offset value))
           ((equal? type 'unsigned-short) (pointer-set-c-unsigned-short! pointer offset value))
           ((equal? type 'int) (pointer-set-c-int! pointer offset value))
@@ -118,7 +127,7 @@
           ((equal? type 'unsigned-long) (pointer-set-c-unsigned-long! pointer offset value))
           ((equal? type 'float) (pointer-set-c-float! pointer offset value))
           ((equal? type 'double) (pointer-set-c-double! pointer offset value))
-          ((equal? type 'void*) (pointer-set-c-pointer! pointer offset value))
+          ((equal? type 'void) (pointer-set-c-pointer! pointer offset value))
           ((equal? type 'pointer) (pointer-set-c-pointer! pointer offset value)))))
 
 (define pffi-pointer-get
@@ -131,7 +140,7 @@
           ((equal? type 'uint32) (pointer-ref-c-uint32_t pointer offset))
           ((equal? type 'int64) (pointer-ref-c-int64_t pointer offset))
           ((equal? type 'uint64) (pointer-ref-c-uint64_t pointer offset))
-          ((equal? type 'char) (pointer-ref-c-char pointer offset))
+          ((equal? type 'char) (integer->char (pointer-ref-c-char pointer offset)))
           ((equal? type 'short) (pointer-ref-c-short pointer offset))
           ((equal? type 'unsigned-short) (pointer-ref-c-unsigned-short pointer offset))
           ((equal? type 'int) (pointer-ref-c-int pointer offset))
@@ -143,6 +152,6 @@
           ((equal? type 'void) (pointer-ref-c-pointer pointer offset))
           ((equal? type 'pointer) (pointer-ref-c-pointer pointer offset)))))
 
-(define pffi-pointer-deref
-  (lambda (pointer)
-    (deref pointer 0)))
+(define pffi-pointer-cast->struct
+  (lambda (struct-name pointer)
+    pointer))

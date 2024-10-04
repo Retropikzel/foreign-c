@@ -5,6 +5,7 @@
       (import (scheme base)
               (scheme write)
               (scheme file)
+              (scheme char)
               (scheme process-context)
               (chicken foreign)
               (chicken locative)
@@ -14,6 +15,7 @@
     (cyclone
       (import (scheme base)
               (scheme write)
+              (scheme char)
               (scheme file)
               (scheme process-context)
               (cyclone foreign)
@@ -21,11 +23,13 @@
     (gambit
       (import (scheme base)
               (scheme write)
+              (scheme char)
               (scheme file)
               (scheme process-context)))
     (guile
       (import (scheme base)
               (scheme write)
+              (scheme char)
               (scheme file)
               (scheme process-context)
               (rnrs bytevectors)
@@ -34,11 +38,13 @@
     (kawa
       (import (scheme base)
               (scheme write)
+              (scheme char)
               (scheme file)
               (scheme process-context)))
     (racket
       (import (scheme base)
               (scheme write)
+              (scheme char)
               (scheme file)
               (scheme process-context)
               (only (racket base) system-type)
@@ -49,6 +55,7 @@
     (sagittarius
       (import (scheme base)
               (scheme write)
+              (scheme char)
               (scheme file)
               (scheme process-context)
               (sagittarius ffi)
@@ -56,6 +63,7 @@
     (stklos
       (import (scheme base)
               (scheme write)
+              (scheme char)
               (scheme file)
               (scheme process-context)
               (stklos)))
@@ -74,19 +82,19 @@
           pffi-pointer?
           pffi-pointer-null?
           pffi-pointer-set!
-          pffi-pointer-get
-          pffi-pointer-deref
-          pffi-os-name)
+          pffi-pointer-get)
   (begin
     (cond-expand
       (chicken (include "r7rs-pffi/chicken.scm"))
-      (cyclone (include "r7rs-pffi/cyclone.scm"))
+      (cyclone (include "retropikzel/r7rs-pffi/cyclone.scm"))
       (gambit (include "r7rs-pffi/gambit.scm"))
       (guile (include "r7rs-pffi/guile.scm"))
       (kawa (include "r7rs-pffi/kawa.scm"))
       (racket (include "r7rs-pffi/racket.scm"))
       (sagittarius (include "r7rs-pffi/sagittarius.scm"))
-      (stklos (include "r7rs-pffi/stklos.scm"))
+      (stklos (include "retropikzel/r7rs-pffi/stklos.scm"))
       (else #t))
-    (include "r7rs-pffi/main.scm")
-    ))
+    (cond-expand
+      (cyclone (include "retropikzel/r7rs-pffi/main.scm"))
+      (stklos (include "retropikzel/r7rs-pffi/main.scm"))
+      (else (include "r7rs-pffi/main.scm")))))

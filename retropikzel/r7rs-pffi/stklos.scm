@@ -37,14 +37,36 @@
          (pffi-type->native-type return-type)
          shared-object)))))
 
-
 (define pffi-define-callback
   (lambda ()
-    (error "STklos does not support callbacks")))
+    (error "Not implemented")
+    ))
 
+; If youre reading this, this is just a temp hack. Dont judge me :D
 (define pffi-size-of
   (lambda (type)
-    (error "Not implemented")))
+    (cond
+      ((equal? type 'int8) 1)
+      ((equal? type 'uint8) 1)
+      ((equal? type 'int16) 2)
+      ((equal? type 'uint16) 2)
+      ((equal? type 'int32) 4)
+      ((equal? type 'uint32) 4)
+      ((equal? type 'int64) 8)
+      ((equal? type 'uint64) 8)
+      ((equal? type 'char) 1)
+      ((equal? type 'unsigned-char) 1)
+      ((equal? type 'short) 2)
+      ((equal? type 'unsigned-short) 2)
+      ((equal? type 'int) 4)
+      ((equal? type 'unsigned-int) 4)
+      ((equal? type 'long) 8)
+      ((equal? type 'unsigned-long) 8)
+      ((equal? type 'float) 4)
+      ((equal? type 'double) 8)
+      ((equal? type 'pointer) 8)
+
+      )))
 
 (define pffi-pointer-allocate
   (lambda (size)
@@ -52,7 +74,9 @@
 
 (define pffi-pointer-null
   (lambda ()
-    (let ((p (allocate-bytes 0))) (cpointer-data-set! p 0) p)))
+    (let ((p (allocate-bytes 0)))
+      (free-bytes p)
+       p)))
 
 (define pffi-string->pointer
   (lambda (string-content)
@@ -60,7 +84,9 @@
 
 (define pffi-pointer->string
   (lambda (pointer)
-    pointer))
+    (if (string? pointer)
+      pointer
+      (cpointer->string pointer))))
 
 (define pffi-shared-object-load
   (lambda (header path)
@@ -72,11 +98,21 @@
 
 (define pffi-pointer-null?
   (lambda (pointer)
-    (cpointer-null? pointer)))
+    (and (cpointer? pointer)
+         (cpointer-null? pointer))))
 
 (define pffi-pointer-set!
   (lambda (pointer type offset value)
-    (error "Not implemented")))
+    (let ((null-pointer (pffi-pointer-null))
+          (offset-address (cpointer-data pointer)))
+      (cpointer-data-set! null-pointer offset-address)
+      (display "HERE")
+      (newline)
+      (write null-pointer)
+      (newline)
+      (exit)
+    ;(error "Not implemented")
+    )))
 
 (define pffi-pointer-get
   (lambda (pointer type offset)
