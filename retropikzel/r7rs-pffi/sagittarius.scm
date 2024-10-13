@@ -73,6 +73,10 @@
   (lambda (size)
     (c-malloc size)))
 
+(define pffi-pointer-address
+  (lambda (pointer)
+    (address pointer)))
+
 (define pffi-pointer-null
   (lambda ()
     (empty-pointer)))

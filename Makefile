@@ -62,12 +62,6 @@ test-stklos:
 	docker build . --build-arg IMPLEMENTATION=stklos -f Dockerfile --tag=r7rs-pffi-stklos
 	docker run -it -v ${PWD}:/workdir r7rs-pffi-stklos bash -c "cd /workdir && ${STKLOS} test.scm"
 
-CHIBI=chibi-scheme
-CHIBI_STUB=chibi-ffi
-test-chibi:
-	docker build . --build-arg IMPLEMENTATION=chibi -f Dockerfile --tag=r7rs-pffi-chibi
-	docker run -it -v ${PWD}:/workdir r7rs-pffi-chibi bash -c "cd /workdir && ${CHIBI_STUB} retropikzel/r7rs-pffi/chibi.stub"
-
 documentation:
 	cat README.md > docs/index.md
 	mkdocs build

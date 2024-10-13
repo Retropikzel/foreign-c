@@ -75,6 +75,7 @@
           pffi-define-callback
           pffi-size-of
           pffi-pointer-allocate
+          pffi-pointer-address
           pffi-pointer-null
           pffi-string->pointer
           pffi-pointer->string
