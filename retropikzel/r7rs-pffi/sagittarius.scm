@@ -155,7 +155,3 @@
           ((equal? type 'double) (pointer-ref-c-double pointer offset))
           ((equal? type 'void) (pointer-ref-c-pointer pointer offset))
           ((equal? type 'pointer) (pointer-ref-c-pointer pointer offset)))))
-
-(define pffi-pointer-cast->struct
-  (lambda (struct-name pointer)
-    pointer))

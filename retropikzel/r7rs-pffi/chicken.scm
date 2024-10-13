@@ -146,6 +146,11 @@
   (lambda (size)
     (allocate size)))
 
+(define pffi-pointer-address
+  (lambda (pointer)
+    ;; TODO
+    pointer))
+
 (define pffi-pointer-null
   (lambda ()
     (address->pointer 0)))

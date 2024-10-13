@@ -375,7 +375,3 @@
       ((equal? type 'double) (pffi-pointer-double-get pointer offset))
       ((equal? type 'pointer) (pffi-pointer-pointer-get pointer offset))
     )))
-
-(define pffi-pointer-cast->struct
-  (lambda (struct-name pointer)
-    pointer))

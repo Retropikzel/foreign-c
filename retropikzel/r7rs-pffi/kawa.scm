@@ -133,6 +133,11 @@
   (lambda (size)
     (invoke (invoke arena 'allocate size 1) 'reinterpret (static-field java.lang.Integer 'MAX_VALUE))))
 
+(define pffi-pointer-address
+  (lambda (pointer)
+    ;; TODO
+    pointer))
+
 (define pffi-pointer-null
   (lambda ()
     (static-field java.lang.foreign.MemorySegment 'NULL)))
@@ -191,7 +196,3 @@
 (define pffi-pointer-deref
   (lambda (pointer)
     (invoke pointer 'get (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 1) 0)))
-
-(define pffi-pointer-cast->struct
-  (lambda (struct-name pointer)
-    pointer))

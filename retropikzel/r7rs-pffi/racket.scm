@@ -52,6 +52,10 @@
   (lambda (size)
     (malloc 'raw size)))
 
+(define pffi-pointer-address
+  (lambda (pointer)
+    pointer))
+
 (define pffi-pointer-null
   (lambda ()
     #f )) ; #f is the null pointer on racket
@@ -100,7 +104,3 @@
       (if (equal? type 'char)
         (integer->char r)
         r))))
-
-(define pffi-pointer-cast->struct
-  (lambda (struct-name pointer)
-    pointer))

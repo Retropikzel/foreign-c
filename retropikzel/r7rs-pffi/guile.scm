@@ -52,6 +52,11 @@
   (lambda (size)
     (bytevector->pointer (make-bytevector size 0))))
 
+(define pffi-pointer-address
+  (lambda (pointer)
+    ;; TODO
+    pointer))
+
 (define pffi-pointer-null
   (lambda ()
     (make-pointer 0)))
@@ -122,7 +127,3 @@
             ((equal? type 'double) (bytevector-ieee-double-ref p offset (native-endianness)))
             ((equal? type 'pointer) (make-pointer (bytevector-sint-ref p offset (native-endianness) (pffi-size-of type))))
             ((equal? type 'string) (pffi-pointer->string (make-pointer (bytevector-sint-ref p offset (native-endianness) (pffi-size-of type)))))))))
-
-(define pffi-pointer-cast->struct
-  (lambda (struct-name pointer)
-    pointer))
