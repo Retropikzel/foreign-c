@@ -118,6 +118,7 @@
   (lambda (pointer type offset)
     (error "Not implemented")))
 
-(define pffi-pointer-deref
+(define pffi-pointer-address
   (lambda (pointer)
     (error "Not implemented")))
+

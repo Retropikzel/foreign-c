@@ -4,8 +4,8 @@
     (chicken
       (import (scheme base)
               (scheme write)
-              (scheme file)
               (scheme char)
+              (scheme file)
               (scheme process-context)
               (chicken foreign)
               (chicken locative)

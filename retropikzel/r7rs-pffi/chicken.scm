@@ -200,9 +200,11 @@
 
 (define pffi-pointer-null?
   (lambda (pointer)
-    (if (not (pointer? pointer))
+    (if (and (not (pointer? pointer))
+             pointer)
       #f
-      (= (pointer->address pointer) 0))))
+      (or (not pointer) ; #f counts as null pointer on Chicken
+          (= (pointer->address pointer) 0)))))
 
 (define pffi-pointer-set!
   (lambda (pointer type offset value)
