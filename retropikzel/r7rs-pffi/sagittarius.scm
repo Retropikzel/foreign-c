@@ -77,6 +77,10 @@
   (lambda (pointer)
     (address pointer)))
 
+(define pffi-pointer-dereference
+  (lambda (pointer)
+    (deref pointer 0)))
+
 (define pffi-pointer-null
   (lambda ()
     (empty-pointer)))
@@ -94,6 +98,10 @@
                     (looper (+ index 1))))))
       (looper 0)
       pointer)))
+
+(define pffi-string->pointer
+  (lambda (string-content)
+    string-content))
 
 (define pffi-pointer->string
   (lambda (pointer)

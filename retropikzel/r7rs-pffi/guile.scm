@@ -54,8 +54,11 @@
 
 (define pffi-pointer-address
   (lambda (pointer)
-    ;; TODO
-    pointer))
+    (pointer-address pointer)))
+
+(define pffi-pointer-dereference
+  (lambda (pointer)
+    (dereference-pointer pointer)))
 
 (define pffi-pointer-null
   (lambda ()

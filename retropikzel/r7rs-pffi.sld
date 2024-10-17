@@ -76,6 +76,7 @@
           pffi-size-of
           pffi-pointer-allocate
           pffi-pointer-address
+          pffi-pointer-dereference
           pffi-pointer-null
           pffi-string->pointer
           pffi-pointer->string
