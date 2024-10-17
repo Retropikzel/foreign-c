@@ -87,20 +87,6 @@
 
 (define pffi-string->pointer
   (lambda (string-content)
-    (letrec* ((bytes (string->utf8 string-content))
-              (bytes-length (bytevector-length bytes))
-              (pointer-length (+ bytes-length 1))
-              (pointer (pffi-pointer-allocate pointer-length))
-              (looper
-                (lambda (index)
-                  (when (< index bytes-length)
-                    (pointer-set-c-uint8_t! pointer index (bytevector-u8-ref bytes index))
-                    (looper (+ index 1))))))
-      (looper 0)
-      pointer)))
-
-(define pffi-string->pointer
-  (lambda (string-content)
     string-content))
 
 (define pffi-pointer->string
