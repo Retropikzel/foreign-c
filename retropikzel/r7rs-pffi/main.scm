@@ -108,6 +108,8 @@
                           ; Fedora/Alpine
                           "/usr/lib"
                           "/usr/lib64"
+                          ; NetBSD
+                          "/usr/pkg/lib"
                           )))))
                 (auto-load-versions (list))
                 (paths (append auto-load-paths additional-paths))
