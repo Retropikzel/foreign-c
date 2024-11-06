@@ -1,6 +1,8 @@
-
 (c-declare "#include <stdint.h>")
 
+(define pffi-init (lambda () #t))
+
+#|
 (define pffi-type->native-type
   (lambda (type)
     (cond ((equal? type 'int8) int8)
@@ -30,7 +32,7 @@
   (lambda (object)
     (error "Not defined")))
 
-(define-syntax pffi-define
+#;(define-syntax pffi-define
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
@@ -43,22 +45,25 @@
   (lambda (scheme-name shared-object c-name return-type argument-types)
     (error "Not defined")))
 
-(c-declare "int size_of_int8() { return sizeof(int8_t);}")
+;(c-declare "int size_of_int8() { return sizeof(int8_t);}")
 ;(define size-of-int8 (c-lambda () int "__return(sizeof(int8_t));"))
 ;(define int8-size ((c-lambda () int "__return(sizeof(int8_t));")))
 ;(define int8-size (c-lambda () int "__return(1);"))
 
+|#
 (define pffi-size-of
   (lambda (type)
-    (cond ((equal? type 'int8) 1)
+    (cond ((equal? type 'int8) (c-lambda () int "___return(sizeof(int8_t));"))
           (else (error "pffi-size-of -- No such pffi type" type)))))
 
-(define-syntax pffi-pointer-allocate
+
+#|
+#;(define-syntax pffi-pointer-allocate
   (syntax-rules
     ((pffi-pointer-allocate size)
      (c-declare (string-append "malloc(" (number->string size) ")")))))
 
-(define-syntax pffi-pointer-null
+#;(define-syntax pffi-pointer-null
   (syntax-rules
     ((pffi-pointer-null)
      (c-declare "NULL"))))
@@ -71,7 +76,7 @@
   (lambda (pointer)
     pointer))
 
-(define-syntax pffi-shared-object-load
+#;(define-syntax pffi-shared-object-load
   (syntax-rules ()
     ((pffi-shared-object-load headers)
      (c-declare (apply string-append
@@ -98,3 +103,4 @@
 (define pffi-pointer-deref
   (lambda (pointer)
     (error "Not defined")))
+|#

@@ -1,3 +1,5 @@
+(define pffi-init (lambda () #t))
+
 (define pffi-type->native-type
   (lambda (type)
     (cond ((equal? type 'int8) 'int8_t)

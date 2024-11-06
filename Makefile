@@ -1,66 +1,90 @@
-TEST_PACKAGES_APT="libcurl4-openssl-dev libuv1"
-DOCKER_INIT=apt update && apt install libcurl4-openssl-dev libuv1 && cd /workdir
-SCHEME_RUNNER=PACKAGES=${TEST_PACKAGES_APT} ./scheme_runner
-TESTFILES=$(shell ls tests/*.scm)
-
-test-tier1: \
-	test-chicken\
-	test-guile \
-	test-kawa \
-	test-sagittarius \
-	test-racket
-
-test-tier2: \
-	test-cyclone \
-	test-gambit \
-	test-stklos
+test-chibi:
+	chibi-scheme test.scm
 
 CHICKEN=csc -X r7rs -R r7rs
 CHICKEN_LIB=csc -X r7rs -R r7rs -include-path ./retropikzel -s -J
-test-chicken: clean
-	docker build . --build-arg IMPLEMENTATION=chicken -f Dockerfile --tag=r7rs-pffi-chicken
+test-chicken-podman-amd65: clean
 	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
-	docker run -it -v ${PWD}:/workdir r7rs-pffi-chicken bash -c "cd /workdir && ${CHICKEN_LIB} retropikzel.r7rs-pffi.sld"
-	docker run -it -v ${PWD}:/workdir r7rs-pffi-chicken bash -c "cd /workdir && ${CHICKEN} test.scm && ./test"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/chicken bash -c "cd /workdir && ${CHICKEN_LIB} retropikzel.r7rs-pffi.sld"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/chicken bash -c "cd /workdir && ${CHICKEN} test.scm && ./test"
+
+test-chicken: clean
+	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
+	${CHICKEN_LIB} retropikzel.r7rs-pffi.sld
+	${CHICKEN} test.scm && ./test
 
 CYCLONE=cyclone -A .
-test-cyclone: clean
-	docker build . --build-arg IMPLEMENTATION=cyclone -f Dockerfile --tag=r7rs-pffi-cyclone
-	docker run -it -v ${PWD}:/workdir r7rs-pffi-cyclone bash -c "cd /workdir && ${CYCLONE} retropikzel/r7rs-pffi.sld"
-	docker run -it -v ${PWD}:/workdir r7rs-pffi-cyclone bash -c "cd /workdir && ${CYCLONE} test.scm && ./test"
+test-cyclone-podman-amd64: clean
+	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/cyclone bash -c "cd /workdir && ${CYCLONE} retropikzel/r7rs-pffi.sld"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/cyclone bash -c "cd /workdir && ${CYCLONE} test.scm && ./test"
 
-GAMBIT_LIB=gsc . retropikzel/r7rs-pffi
+test-cyclone: clean
+	${CYCLONE} retropikzel/r7rs-pffi.sld
+	${CYCLONE} test.scm
+	./test
+
+GAMBIT_LIB=gsc -dynamic
 GAMBIT_CC=gsc -exe . -nopreload
+test-gambit-podman-amd64: clean
+	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/gambit bash -c "cd /workdir && ${GAMBIT_LIB} retropikzel/r7rs-pffi.sld; echo $$?"
+	podman run --arch=amd64 run -it -v ${PWD}:/workdir schemers/gambit bash -c "cd /workdir && ${GAMBIT_CC} test.scm; echo $$?"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/gambit bash -c "cd /workdir && ./test -:search=.; echo $$?"
+
 test-gambit: clean
-	docker build . --build-arg IMPLEMENTATION=gambit -f Dockerfile --tag=r7rs-pffi-gambit
-	docker run -it -v ${PWD}:/workdir r7rs-pffi-gambit bash -c "cd /workdir && ${GAMBIT_LIB} retropikzel/r7rs-pffi.sld; echo $$?"
-	docker run -it -v ${PWD}:/workdir r7rs-pffi-gambit bash -c "cd /workdir && ${GAMBIT_CC} test.scm; echo $$?"
-	docker run -it -v ${PWD}:/workdir r7rs-pffi-gambit bash -c "cd /workdir && ./test -:search=.; echo $$?"
+	${GAMBIT_LIB} retropikzel/r7rs-pffi.sld; echo $$?
+	${GAMBIT_CC} test.scm; echo $$?
+	./test -:search=.; echo $$?
+
+test-gauche:
+	gosh -r7 -A . test.scm
 
 GUILE=guile --r7rs --fresh-auto-compile -L .
+test-guile-podman-amd64:
+	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/guile bash -c "cd /workdir && ${GUILE} test.scm"
+
 test-guile:
-	docker build . --build-arg IMPLEMENTATION=guile -f Dockerfile --tag=r7rs-pffi-guile
-	docker run -it -v ${PWD}:/workdir r7rs-pffi-guile bash -c "cd /workdir && ${GUILE} test.scm"
+	${GUILE} test.scm
 
 KAWA=java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=.:*.sld
+test-kawa-podman-amd64:
+	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/kawa bash -c "cd /workdir && ${KAWA} test.scm"
+
 test-kawa:
-	docker build . --build-arg IMPLEMENTATION=kawa -f Dockerfile --tag=r7rs-pffi-kawa
-	docker run -it -v ${PWD}:/workdir r7rs-pffi-kawa bash -c "cd /workdir && ${KAWA} test.scm"
+	${KAWA} test.scm
+
+MOSH=mosh --loadpath=.
+test-mosh-podman-amd64:
+	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/mosh:0 bash -c "cd /workdir && ${MOSH} test.scm"
+
+test-mosh:
+	${MOSH} test.scm
 
 SASH=sash -r7 -L . -L ./schubert
+test-sagittarius-podman-amd64:
+	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/sagittarius bash -c "cd /workdir && ${SASH} test.scm"
+
 test-sagittarius:
-	docker build . --build-arg IMPLEMENTATION=sagittarius -f Dockerfile --tag=r7rs-pffi-sagittarius
-	docker run -it -v ${PWD}:/workdir r7rs-pffi-sagittarius bash -c "cd /workdir && ${SASH} test.scm"
+	${SASH} test.scm
 
 RACKET=racket -I r7rs -S . -S ./schubert --script
+test-racket-podman-amd64:
+	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/racket bash -c "cd /workdir && ${RACKET} test.scm"
+
 test-racket:
-	docker build . --build-arg IMPLEMENTATION=racket -f Dockerfile --tag=r7rs-pffi-racket
-	docker run -it -v ${PWD}:/workdir r7rs-pffi-racket bash -c "cd /workdir && ${RACKET} test.scm"
+	${RACKET} test.scm
+
+test-skint:
+	skint test.scm
 
 STKLOS=stklos -A . -f
+test-stklos-podman-amd64:
+	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/stklos bash -c "cd /workdir && ${STKLOS} test.scm"
+
 test-stklos:
-	docker build . --build-arg IMPLEMENTATION=stklos -f Dockerfile --tag=r7rs-pffi-stklos
-	docker run -it -v ${PWD}:/workdir r7rs-pffi-stklos bash -c "cd /workdir && ${STKLOS} test.scm"
+	${STKLOS} test.scm
+
+test-tr7:
+	tr7i test.scm
 
 documentation:
 	cat README.md > docs/index.md

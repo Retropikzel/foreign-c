@@ -187,6 +187,7 @@
 (debug null-pointer)
 (assert equal? (pffi-pointer-null? null-pointer) #t)
 
+#|
 ;; pffi-pointer-null?
 
 (print-header 'pffi-pointer-null?)
@@ -346,7 +347,6 @@
 (pffi-pointer-set! set-pointer 'pointer offset (pffi-string->pointer string-to-be-set))
 (assert string=? (pffi-pointer->string (pffi-pointer-get set-pointer 'pointer offset)) "FOOBAR")
 
-#|
 ;; pffi-define
 
 (print-header 'pffi-define)

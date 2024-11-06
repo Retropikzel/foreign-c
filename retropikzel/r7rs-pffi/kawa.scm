@@ -2,6 +2,8 @@
 (define method-handle-lookup (invoke-static java.lang.invoke.MethodHandles 'lookup))
 (define native-linker (invoke-static java.lang.foreign.Linker 'nativeLinker))
 
+(define pffi-init (lambda () #t))
+
 (define value->object
   (lambda (value type)
     (cond ((equal? type 'byte)

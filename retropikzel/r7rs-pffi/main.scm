@@ -1,6 +1,3 @@
-(cond-expand
-  (chicken #t)
-  (else (define pffi-init (lambda () #t))))
 
 (define pffi-types
   '(int8
