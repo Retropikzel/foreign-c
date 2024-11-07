@@ -38,6 +38,15 @@ test-gambit: clean
 test-gauche:
 	gosh -r7 -A . test.scm
 
+GERBIL_LIB=gxc -O
+GERBIL=GERBIL_LOADPATH=. gxi --lang r7rs
+test-gerbil-podman-amd64:
+	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/gerbil bash -c "cd /workdir && ${GERBIL_LIB} retropikzel/r7rs-pffi.sld"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/gerbil bash -c "cd /workdir && ${GERBIL} test.scm"
+
+test-gerbil:
+	gxi --lang r7rs test.scm
+
 GUILE=guile --r7rs --fresh-auto-compile -L .
 test-guile-podman-amd64:
 	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/guile bash -c "cd /workdir && ${GUILE} test.scm"

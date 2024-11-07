@@ -111,17 +111,17 @@
           pffi-shared-object-load
           pffi-pointer-null
           pffi-pointer-null?
-          ;pffi-define
-          ;pffi-define-callback
-          ;pffi-pointer-allocate
+          pffi-pointer-allocate
+          pffi-pointer?
+          pffi-pointer-free
+          pffi-pointer-set!
+          pffi-pointer-get
+          pffi-string->pointer
+          pffi-pointer->string
+          pffi-define
+          pffi-define-callback
           ;pffi-pointer-address
           ;pffi-pointer-dereference
-          ;pffi-string->pointer
-          ;pffi-pointer->string
-          ;pffi-pointer-free
-          ;pffi-pointer?
-          ;pffi-pointer-set!
-          ;pffi-pointer-get
           )
   (cond-expand
     (chibi (include "r7rs-pffi/chibi.scm"))
