@@ -129,7 +129,7 @@
           ((equal? type 'pointer) 'void*)
           ((equal? type 'string) 'char*)
           ((equal? type 'void) 'void)
-          ((equal? type 'callback) 'callback)
+          ((equal? type 'callback) 'void*)
           (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
 (define-syntax pffi-define
