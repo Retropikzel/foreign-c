@@ -57,21 +57,33 @@ guarantees are being made just yet.
 ### Work in progress
 
 - [Cyclone](https://justinethier.github.io/cyclone/)
-    - No callbacks implemented yet
+    - TODO
+        - pffi-define-callback
+        - pffi-pointer-address
+        - pffi-pointer-dereference
+- [STKlos](https://stklos.net/)
 - [Kawa](https://www.gnu.org/software/kawa/index.html)
-    - No callbacks implemented yet
+    - TODO
+        - pffi-define-callback
+        - pffi-pointer-address
+        - pffi-pointer-dereference
+- [STKlos](https://stklos.net/)
     - Needs at least java version 22
     - Needs jvm flags:
         - --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED
         - --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED
         - --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED
         - --enable-native-access=ALL-UNNAMED
-- [Gambit](https://gambitscheme.org)
+- [STKlos](https://stklos.net/)
 - [Mosh](https://mosh.monaos.org)
+    - TODO
+        - pffi-pointer-address
+        - pffi-pointer-dereference
 - [STKlos](https://stklos.net/)
 
 ### Design/exploration
 
+- [Gambit](https://gambitscheme.org)
 - [LIPS](https://lips.js.org/)
     - Will work on nodejs by using some Javascript FFI
     - Javascript side needs design

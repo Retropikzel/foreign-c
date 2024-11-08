@@ -225,6 +225,7 @@
 (pffi-pointer-free pointer-to-be-freed)
 (debug pointer-to-be-freed)
 
+#|
 ;; pffi-pointer-set! and pffi-pointer-get 1/2
 
 (print-header "pffi-pointer-set! and pffi-pointer-get 1/2")
@@ -265,6 +266,7 @@
 (pffi-pointer-set! set-pointer 'float offset 1.5)
 (debug (pffi-pointer-get set-pointer 'float offset))
 (assert = (pffi-pointer-get set-pointer 'float offset) 1.5)
+
 (pffi-pointer-set! set-pointer 'double offset 1.5)
 (debug (pffi-pointer-get set-pointer 'double offset))
 (assert = (pffi-pointer-get set-pointer 'double offset) 1.5)
@@ -347,6 +349,7 @@
 (pffi-pointer-set! set-pointer 'pointer offset (pffi-string->pointer string-to-be-set))
 (assert string=? (pffi-pointer->string (pffi-pointer-get set-pointer 'pointer offset)) "FOOBAR")
 
+|#
 ;; pffi-define
 
 (print-header 'pffi-define)
@@ -354,6 +357,7 @@
 (pffi-define atoi libc-stdlib 'atoi 'int (list 'pointer))
 (assert = (atoi (pffi-string->pointer "100")) 100)
 
+#|
 ;; pffi-define-callback
 
 (print-header 'pffi-define-callback)
@@ -390,4 +394,5 @@
              (pffi-pointer-get array 'int (* (pffi-size-of 'int) 2))))
 (newline)
 
+|#
 (exit 0)

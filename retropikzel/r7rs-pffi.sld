@@ -6,7 +6,10 @@
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context)))
+              (scheme process-context)
+              (chibi ast)
+              (chibi))
+      (include-shared "r7rs-pffi/chibi"))
     (chicken
       (import (scheme base)
               (scheme write)
