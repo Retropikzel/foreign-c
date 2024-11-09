@@ -12,11 +12,10 @@ Any help in form of constructive advice and bug reports are appreciated.
 
 [Maling lists](https://sr.ht/~retropikzel/r7rs-pffi/lists)
 
+[Jenkins](https://jenkins.staging.scheme.org/job/r7rs-pffi/job/master/).
+
 For documentation see [retropikzel.neocities.org/r7rs-pffi](retropikzel.neocities.org/r7rs-pffi)
 or run mkdocs serve or see or docs/ directory.
-
-For status of what tests pass on which implementations see
-[Jenkins](https://jenkins.staging.scheme.org/job/r7rs-pffi/job/master/).
 
 ## Goals
 
