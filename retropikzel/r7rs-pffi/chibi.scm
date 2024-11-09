@@ -1,6 +1,6 @@
 (define pffi-init (lambda () #t))
 
-;(write (get-ffi-type-int))
+;(write (scheme-procedure-to-pointer (lambda () (display "Hello"))))
 ;(newline)
 ;(exit)
 
@@ -162,12 +162,25 @@
       ((equal? type 'callback) (get-ffi-type-pointer))
       )))
 
+(define argument->pointer
+  (lambda (value type)
+    (cond ((pffi-pointer? value)
+           value)
+          ((procedure? value)
+           (scheme-procedure-to-pointer value))
+          (else (let ((pointer (pffi-pointer-allocate (pffi-size-of type))))
+                  (pffi-pointer-set! pointer type 0 value)
+                  pointer)))))
+
 (define make-c-function
   (lambda (shared-object return-type c-name argument-types)
     (dlerror) ;; Clean all previous errors
     (let ((func (dlsym shared-object c-name))
           (maybe-dlerror (dlerror))
-          (return-value (pffi-pointer-allocate (pffi-size-of return-type))))
+          (return-value (pffi-pointer-allocate
+                          (if (equal? return-type 'void)
+                            0
+                            (pffi-size-of return-type)))))
       (when (not (pffi-pointer-null? maybe-dlerror))
         (error (pffi-pointer->string maybe-dlerror)))
       (lambda (argument-1 . arguments)
@@ -176,8 +189,13 @@
                            (map pffi-type->libffi-type argument-types)
                            func
                            return-value
-                           (append (list argument-1) arguments))
-        (pffi-pointer-get return-value return-type 0)))))
+                           (map argument->pointer
+                                (append (list argument-1) arguments)
+                                argument-types))
+        (cond ((equal? return-type 'pointer)
+               return-value)
+              ((not (equal? return-type 'void))
+               (pffi-pointer-get return-value return-type 0)))))))
 
 (define-syntax pffi-define
   (syntax-rules ()
@@ -187,3 +205,14 @@
                         return-type
                         (symbol->string c-name)
                         argument-types)))))
+
+
+(define make-c-callback
+  (lambda (return-type argument-types procedure)
+    procedure))
+
+(define-syntax pffi-define-callback
+  (syntax-rules ()
+    ((pffi-define scheme-name return-type argument-types procedure)
+     (define scheme-name
+       (make-c-callback return-type argument-types procedure)))))

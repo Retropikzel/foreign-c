@@ -255,9 +255,9 @@
 
 (c-declare
   "void* scheme_procedure_to_pointer(void* proc) {
-    if(sexp_procedurep(proc) == 1) {
+    /*if(sexp_procedurep(proc) == 1) {
       puts(\"ITS A PROCEDURE\");
-    }
+    }*/
     return proc;
   }")
 
