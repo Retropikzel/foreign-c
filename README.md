@@ -68,8 +68,6 @@ guarantees are being made just yet.
       - ${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so -fPIC -shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c -lchibi-scheme -lffi
 - Chicken 5
     - Needs [r7rs egg](https://wiki.call-cc.org/eggref/5/r7rs)
-- Racket
-    - Needs [racket-r7rs](https://github.com/lexi-lambda/racket-r7rs)
 - Kawa
     - Needs at least Java version 22
     - Needs jvm flags:
@@ -77,6 +75,8 @@ guarantees are being made just yet.
         - --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED
         - --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED
         - --enable-native-access=ALL-UNNAMED
+- Racket
+    - Needs [racket-r7rs](https://github.com/lexi-lambda/racket-r7rs)
 
 ### Design/exploration/waiting for implementation features
 
