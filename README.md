@@ -39,7 +39,7 @@ guarantees are being made just yet.
 
 ## Implementation table
 
-| Procedure                       | Chibi | Chicken | Cyclone |  Gambit | Gauche | Gerbil | Guile | Kawa | Mosh | Racket | Sagittarius | Skint | STklos | tr7 |
+|                                 | Chibi | Chicken | Cyclone |  Gambit | Gauche | Gerbil | Guile | Kawa | Mosh | Racket | Sagittarius | Skint | STklos | tr7 |
 | ------------------------------- | ----- | ------- | ------- | ------- | ------ | ------ | ----- | ---- | ---- | ------ | ----------- | ----- | ------ | --- |
 | pffi-init                       | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       |        |     |
 | pffi-size-of                    | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       |        |     |
