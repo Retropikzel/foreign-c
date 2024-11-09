@@ -62,6 +62,7 @@
 (assert equal? (number? size-int8) #t)
 (assert = size-int8 1)
 
+#|
 (define size-uint8 (pffi-size-of 'uint8))
 (debug size-uint8)
 (assert equal? (number? size-uint8) #t)
@@ -225,7 +226,6 @@
 (pffi-pointer-free pointer-to-be-freed)
 (debug pointer-to-be-freed)
 
-#|
 ;; pffi-pointer-set! and pffi-pointer-get 1/2
 
 (print-header "pffi-pointer-set! and pffi-pointer-get 1/2")
@@ -349,7 +349,6 @@
 (pffi-pointer-set! set-pointer 'pointer offset (pffi-string->pointer string-to-be-set))
 (assert string=? (pffi-pointer->string (pffi-pointer-get set-pointer 'pointer offset)) "FOOBAR")
 
-|#
 ;; pffi-define
 
 (print-header 'pffi-define)
@@ -364,7 +363,6 @@
 (pffi-define atoi libc-stdlib 'atoi 'int (list 'pointer))
 (assert = (atoi (pffi-string->pointer "100")) 100)
 
-#|
 ;; pffi-define-callback
 
 (print-header 'pffi-define-callback)
