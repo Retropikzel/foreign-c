@@ -81,10 +81,10 @@ guarantees are being made just yet.
 ### Design/exploration/waiting for implementation features
 
 - [LIPS](https://lips.js.org/)
-    - Will work on nodejs by using some Javascript FFI
+    - Will work on nodejs by using some C FFI library from npm
     - Javascript side needs design
 - [Biwascheme](https://www.biwascheme.org/)
-    - Will work on nodejs by using some Javascript FFI
+    - Will work on nodejs by using some C FFI library from npm
     - Javascript side needs design
 - [MIT-Scheme](https://www.gnu.org/software/mit-scheme/)
 - [s7](https://scheme.fail://ccrma.stanford.edu/software/snd/snd/s7.html)
