@@ -64,8 +64,8 @@ guarantees are being made just yet.
 - Chibi
     - Install libffi-dev
     - Build with:
-  chibi-ffi retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub
-  ${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so -fPIC -shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c -lchibi-scheme -lffi
+      - chibi-ffi retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub
+      - ${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so -fPIC -shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c -lchibi-scheme -lffi
 - Chicken 5
     - Needs [r7rs egg](https://wiki.call-cc.org/eggref/5/r7rs)
 - Racket
