@@ -71,7 +71,7 @@ guarantees are being made just yet.
 - Racket
     - Needs [racket-r7rs](https://github.com/lexi-lambda/racket-r7rs)
 - Kawa
-    - Needs at least java version 22
+    - Needs at least Java version 22
     - Needs jvm flags:
         - --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED
         - --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED
