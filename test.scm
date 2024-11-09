@@ -62,7 +62,6 @@
 (assert equal? (number? size-int8) #t)
 (assert = size-int8 1)
 
-#|
 (define size-uint8 (pffi-size-of 'uint8))
 (debug size-uint8)
 (assert equal? (number? size-uint8) #t)
@@ -271,7 +270,6 @@
 (debug (pffi-pointer-get set-pointer 'double offset))
 (assert = (pffi-pointer-get set-pointer 'double offset) 1.5)
 
-
 ;; pffi-string->pointer
 
 (print-header 'pffi-string->pointer)
@@ -399,5 +397,4 @@
              (pffi-pointer-get array 'int (* (pffi-size-of 'int) 2))))
 (newline)
 
-|#
 (exit 0)

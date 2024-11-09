@@ -41,15 +41,15 @@ guarantees are being made just yet.
 
 |                                 | Chibi | Chicken | Cyclone |  Gambit | Gauche | Gerbil | Guile | Kawa | Mosh | Racket | Sagittarius | Skint | STklos | tr7 |
 | ------------------------------- | ----- | ------- | ------- | ------- | ------ | ------ | ----- | ---- | ---- | ------ | ----------- | ----- | ------ | --- |
-| pffi-init                       | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       |        |     |
-| pffi-size-of                    | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       |        |     |
-| pffi-shared-object-auto-load    | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       |        |     |
-| pffi-shared-object-load         | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       |        |     |
-| pffi-pointer-null               | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       |        |     |
-| pffi-pointer-null?              | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       |        |     |
-| pffi-pointer-allocate           | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       |        |     |
-| pffi-pointer?                   | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       |        |     |
-| pffi-pointer-free               | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       |        |     |
+| pffi-init                       | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       | X      |     |
+| pffi-size-of                    | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       | X      |     |
+| pffi-shared-object-auto-load    | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       | X      |     |
+| pffi-shared-object-load         | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       | X      |     |
+| pffi-pointer-null               | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       | X      |     |
+| pffi-pointer-null?              | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       | X      |     |
+| pffi-pointer-allocate           | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       | X      |     |
+| pffi-pointer?                   | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       | X      |     |
+| pffi-pointer-free               | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       | X      |     |
 | pffi-pointer-set!               | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       |        |     |
 | pffi-pointer-get                | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       |        |     |
 | pffi-string->pointer            | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       |        |     |
