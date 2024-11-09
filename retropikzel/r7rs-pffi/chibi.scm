@@ -29,7 +29,11 @@
 
 (define pffi-shared-object-load
   (lambda (headers path)
-    (dlopen path RTLD-NOW)))
+    (let ((shared-object (dlopen path RTLD-NOW))
+          (maybe-error (dlerror)))
+      (when (not (pffi-pointer-null? maybe-error))
+        (error (pffi-pointer->string maybe-error)))
+      shared-object)))
 
 (define pffi-pointer-null
   (lambda ()
@@ -145,7 +149,7 @@
       ;((equal? type 'bool) ffi_type_sint8)
       ;((equal? type 'short) ffi_type_sint16)
       ;((equal? type 'unsigned-short) ffi_type_uint16)
-      ((equal? type 'int) (get-ffi-type-int))
+      ((equal? type 'int) (get-ffi-type-sint))
       ;((equal? type 'unsigned-int) ffi_type_uint32)
       ;((equal? type 'long) ffi_type_long)
       ;((equal? type 'unsigned-long) ffi_type_uint32)
@@ -157,35 +161,28 @@
       )))
 
 (define make-c-function
-  (lambda (shared-object return-type c-name args)
-    (let ((func (dlsym shared-object c-name)))
-      (display "HERE: ")
-      (write args)
-      (newline)
-      (write (length args))
-      (newline)
-      (write (pffi-type->libffi-type return-type))
-      (newline)
-      (write (map
-               (lambda (item)
-                 (display "ITEM: ")
-                 (write item)
-                 (newline))
-                 args))
-      (newline)
-      (internal-ffi-prep-cif (length args)
-                    return-type
-                    args
-                    )
-      func
-
-    )))
+  (lambda (shared-object return-type c-name argument-types)
+    (dlerror) ;; Clean all previous errors
+    (let ((func (dlsym shared-object c-name))
+          (maybe-dlerror (dlerror))
+          (return-value (pffi-pointer-allocate (pffi-size-of return-type))))
+      (when (not (pffi-pointer-null? maybe-dlerror))
+        (error (pffi-pointer->string maybe-dlerror)))
+      (lambda (argument-1 . arguments)
+        (cond ((equal? return-type 'int)
+                 (internal-ffi-call (length argument-types)
+                                    (pffi-type->libffi-type return-type)
+                                    (map pffi-type->libffi-type argument-types)
+                                    func
+                                    return-value
+                                    (append (list argument-1) arguments))
+               (pffi-pointer-get return-value 'int 0)))))))
 
 (define-syntax pffi-define
   (syntax-rules ()
     ((pffi-define scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
        (make-c-function shared-object
-                        (pffi-type->libffi-type return-type)
+                        return-type
                         (symbol->string c-name)
-                        (map pffi-type->libffi-type argument-types))))))
+                        argument-types)))))
