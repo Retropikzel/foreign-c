@@ -177,17 +177,55 @@
 (c-declare "ffi_cif cif;")
 (define-c (pointer void*) dlsym ((maybe-null void*) string))
 
+(c-declare "void* get_ffi_type_int8() { return &ffi_type_sint8; }")
+(define-c (pointer void*) (get-ffi-type-int8 get_ffi_type_int8) ())
+(c-declare "void* get_ffi_type_uint8() { return &ffi_type_uint8; }")
+(define-c (pointer void*) (get-ffi-type-uint8 get_ffi_type_uint8) ())
 
+(c-declare "void* get_ffi_type_int16() { return &ffi_type_sint16; }")
+(define-c (pointer void*) (get-ffi-type-int16 get_ffi_type_int16) ())
+(c-declare "void* get_ffi_type_uint16() { return &ffi_type_uint16; }")
+(define-c (pointer void*) (get-ffi-type-uint16 get_ffi_type_uint16) ())
 
-;(define-c-type ffi_status)
-;(define-c-type ffi_cif)
-;(define-c-type ffi_type)
-;(define-c-type ffi_status)
+(c-declare "void* get_ffi_type_int32() { return &ffi_type_sint32; }")
+(define-c (pointer void*) (get-ffi-type-int32 get_ffi_type_int32) ())
+(c-declare "void* get_ffi_type_uint32() { return &ffi_type_uint32; }")
+(define-c (pointer void*) (get-ffi-type-uint32 get_ffi_type_uint32) ())
 
-;(c-declare "ffi_type* test1() { ffi_type* p = malloc(sizeof(ffi_type_sint32)); p->size = &ffi_type_sint32->size; return p; }")
-;(define-c ffi_type test1 ())
-(c-declare "void* get_ffi_type_sint() { return &ffi_type_sint; }")
-(define-c (pointer void*) (get-ffi-type-sint get_ffi_type_sint) ())
+(c-declare "void* get_ffi_type_int64() { return &ffi_type_sint64; }")
+(define-c (pointer void*) (get-ffi-type-int64 get_ffi_type_int64) ())
+(c-declare "void* get_ffi_type_uint64() { return &ffi_type_uint64; }")
+(define-c (pointer void*) (get-ffi-type-uint64 get_ffi_type_uint64) ())
+
+(c-declare "void* get_ffi_type_char() { return &ffi_type_schar; }")
+(define-c (pointer void*) (get-ffi-type-char get_ffi_type_char) ())
+(c-declare "void* get_ffi_type_uchar() { return &ffi_type_uchar; }")
+(define-c (pointer void*) (get-ffi-type-uchar get_ffi_type_uchar) ())
+
+(c-declare "void* get_ffi_type_short() { return &ffi_type_sshort; }")
+(define-c (pointer void*) (get-ffi-type-short get_ffi_type_short) ())
+(c-declare "void* get_ffi_type_ushort() { return &ffi_type_ushort; }")
+(define-c (pointer void*) (get-ffi-type-ushort get_ffi_type_ushort) ())
+
+(c-declare "void* get_ffi_type_int() { return &ffi_type_sint; }")
+(define-c (pointer void*) (get-ffi-type-int get_ffi_type_int) ())
+(c-declare "void* get_ffi_type_uint() { return &ffi_type_uint; }")
+(define-c (pointer void*) (get-ffi-type-uint get_ffi_type_uint) ())
+
+(c-declare "void* get_ffi_type_long() { return &ffi_type_slong; }")
+(define-c (pointer void*) (get-ffi-type-long get_ffi_type_long) ())
+
+(c-declare "void* get_ffi_type_ulong() { return &ffi_type_ulong; }")
+(define-c (pointer void*) (get-ffi-type-ulong get_ffi_type_ulong) ())
+
+(c-declare "void* get_ffi_type_float() { return &ffi_type_float; }")
+(define-c (pointer void*) (get-ffi-type-float get_ffi_type_float) ())
+
+(c-declare "void* get_ffi_type_double() { return &ffi_type_double; }")
+(define-c (pointer void*) (get-ffi-type-double get_ffi_type_double) ())
+
+(c-declare "void* get_ffi_type_void() { return &ffi_type_void; }")
+(define-c (pointer void*) (get-ffi-type-void get_ffi_type_void) ())
 
 (c-declare "void* get_ffi_type_pointer() { return &ffi_type_pointer; }")
 (define-c (pointer void*) (get-ffi-type-pointer get_ffi_type_pointer) ())
