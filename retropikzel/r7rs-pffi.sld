@@ -34,7 +34,8 @@
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context)))
+              (scheme process-context)
+              (only (gambit) c-declare c-lambda c-define)))
     (gauche
       (import (scheme base)
               (scheme write)
@@ -112,17 +113,17 @@
           pffi-size-of
           pffi-shared-object-auto-load
           pffi-shared-object-load
-          pffi-pointer-null
-          pffi-pointer-null?
-          pffi-pointer-allocate
-          pffi-pointer?
-          pffi-pointer-free
-          pffi-pointer-set!
-          pffi-pointer-get
-          pffi-string->pointer
-          pffi-pointer->string
-          pffi-define
-          pffi-define-callback
+          ;pffi-pointer-null
+          ;pffi-pointer-null?
+          ;pffi-pointer-allocate
+          ;pffi-pointer?
+          ;pffi-pointer-free
+          ;pffi-pointer-set!
+          ;pffi-pointer-get
+          ;pffi-string->pointer
+          ;pffi-pointer->string
+          ;pffi-define
+          ;pffi-define-callback
           ;pffi-pointer-address
           ;pffi-pointer-dereference
           )

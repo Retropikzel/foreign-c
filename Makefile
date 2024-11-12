@@ -31,15 +31,15 @@ test-cyclone: clean
 	${CYCLONE} test.scm
 	./test
 
-GAMBIT_LIB=gsc -dynamic
-GAMBIT_CC=gsc -exe . -nopreload
+GAMBIT_LIB=gsc -:search=.
+GAMBIT_CC=gsc -exe ./ -nopreload
 test-gambit-podman-amd64: clean
-	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/gambit bash -c "cd /workdir && ${GAMBIT_LIB} retropikzel/r7rs-pffi.sld; echo $$?"
-	podman run --arch=amd64 run -it -v ${PWD}:/workdir schemers/gambit bash -c "cd /workdir && ${GAMBIT_CC} test.scm; echo $$?"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/gambit bash -c "cd /workdir && ${GAMBIT_LIB} retropikzel/r7rs-pffi; echo $$?"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/gambit bash -c "cd /workdir && ${GAMBIT_CC} test.scm; echo $$?"
 	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/gambit bash -c "cd /workdir && ./test -:search=.; echo $$?"
 
 test-gambit: clean
-	${GAMBIT_LIB} retropikzel/r7rs-pffi.sld; echo $$?
+	${GAMBIT_LIB} retropikzel/r7rs-pffi; echo $$?
 	${GAMBIT_CC} test.scm; echo $$?
 	./test -:search=.; echo $$?
 

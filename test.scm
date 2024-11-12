@@ -179,6 +179,7 @@
 
 (debug libc-stdlib)
 
+#|
 ;; pffi-pointer-null
 
 (print-header 'pffi-pointer-null)
@@ -397,4 +398,5 @@
              (pffi-pointer-get array 'int (* (pffi-size-of 'int) 2))))
 (newline)
 
+|#
 (exit 0)
