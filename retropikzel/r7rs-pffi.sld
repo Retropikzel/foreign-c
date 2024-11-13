@@ -63,6 +63,12 @@
               (scheme char)
               (scheme file)
               (scheme process-context)))
+    (larceny
+      (import (scheme base)
+              (scheme write)
+              (scheme char)
+              (scheme file)
+              (scheme process-context)))
     (mosh
       (import (scheme base)
               (scheme write)
@@ -108,11 +114,17 @@
               (scheme char)
               (scheme file)
               (scheme process-context)))
+    (ypsilon
+      (import (scheme base)
+              (scheme write)
+              (scheme char)
+              (scheme file)
+              (scheme process-context)))
     (else (error "Unsupported implementation")))
   (export pffi-init
-          pffi-size-of
-          pffi-shared-object-auto-load
-          pffi-shared-object-load
+          ;pffi-size-of
+          ;pffi-shared-object-auto-load
+          ;pffi-shared-object-load
           ;pffi-pointer-null
           ;pffi-pointer-null?
           ;pffi-pointer-allocate
@@ -136,12 +148,14 @@
     (gerbil (include "r7rs-pffi/gerbil.scm"))
     (guile (include "r7rs-pffi/guile.scm"))
     (kawa (include "r7rs-pffi/kawa.scm"))
+    (larceny (include "r7rs-pffi/larceny.scm"))
     (mosh (include "r7rs-pffi/mosh.scm"))
     (racket (include "r7rs-pffi/racket.scm"))
     (sagittarius (include "r7rs-pffi/sagittarius.scm"))
     (skint (include "r7rs-pffi/skint.scm"))
     (stklos (include "retropikzel/r7rs-pffi/stklos.scm"))
     (tr7 (include "retropikzel/r7rs-pffi/tr7.scm"))
+    (ypsilon (include "r7rs-pffi/ypsilon.scm"))
     (else #t))
   (cond-expand
     (cyclone (include "retropikzel/r7rs-pffi/main.scm"))

@@ -69,6 +69,13 @@ test-kawa-podman-amd64:
 test-kawa:
 	${KAWA} test.scm
 
+LARCENY=larceny -r7 -I .
+test-larceny-podman-amd64:
+	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/larceny:latest bash -c "cd /workdir && ${LARCENY} test.scm"
+
+test-larceny:
+	${LARCENY} test.scm
+
 MOSH=mosh --loadpath=.
 test-mosh-podman-amd64:
 	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/mosh:0 bash -c "cd /workdir && ${MOSH} test.scm"
@@ -101,6 +108,13 @@ test-stklos:
 	${STKLOS} test.scm
 
 test-tr7:
+	tr7i test.scm
+
+YPSILON=ypsilon --r7rs --loadpath=.
+test-ypsilon-podman-amd64:
+	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/ypsilon bash -c "cd /workdir && ${YPSILON} test.scm"
+
+test-ypsilon:
 	tr7i test.scm
 
 documentation:

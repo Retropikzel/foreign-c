@@ -52,4 +52,10 @@
           (else (error "Can not get size of unknown type" type)))))
 
 (define-macro (pffi-shared-object-load headers)
-  `(c-declare ,(string-append "#include <stdint.h>")))
+  `(c-declare "#include <stdint.h>"))
+
+#;(define-syntax pffi-shared-object-load
+  (syntax-rules ()
+    ((_ headers)
+    (c-declare "#include <stdint.h>"))))
+
