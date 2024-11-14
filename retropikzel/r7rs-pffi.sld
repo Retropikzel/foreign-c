@@ -28,7 +28,7 @@
               ;pffi-pointer-dereference
               )
       (include-shared "r7rs-pffi/r7rs-pffi-chibi"))
-    (chicken
+    (chicken-5
       (import (scheme base)
               (scheme write)
               (scheme char)
@@ -416,7 +416,7 @@
   (cond-expand
     (chibi (include "r7rs-pffi/chibi.scm"))
     (chicken (include "r7rs-pffi/chicken.scm"))
-    (cyclone (include "retropikzel/r7rs-pffi/cyclone.scm"))
+    (cyclone (include "r7rs-pffi/cyclone.scm"))
     (gambit (include "r7rs-pffi/gambit.scm"))
     (gauche (include "r7rs-pffi/gauche.scm"))
     (gerbil (include "r7rs-pffi/gerbil.scm"))
@@ -432,6 +432,5 @@
     (ypsilon (include "r7rs-pffi/ypsilon.scm"))
     (else #t))
   (cond-expand
-    (cyclone (include "retropikzel/r7rs-pffi/main.scm"))
     (stklos (include "retropikzel/r7rs-pffi/main.scm"))
     (else (include "r7rs-pffi/main.scm"))))

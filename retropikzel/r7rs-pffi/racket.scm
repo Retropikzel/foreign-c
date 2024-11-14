@@ -106,3 +106,7 @@
       (if (equal? type 'char)
         (integer->char r)
         r))))
+
+(define pffi-pointer-dereference
+  (lambda (pointer)
+    pointer))
