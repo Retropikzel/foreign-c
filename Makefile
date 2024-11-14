@@ -69,7 +69,7 @@ test-kawa-podman-amd64:
 test-kawa:
 	${KAWA} test.scm
 
-LARCENY=larceny -r7 -I .
+LARCENY=larceny -r7 -I . 
 test-larceny-podman-amd64:
 	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/larceny:latest bash -c "cd /workdir && ${LARCENY} test.scm"
 
@@ -115,7 +115,7 @@ test-ypsilon-podman-amd64:
 	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/ypsilon bash -c "cd /workdir && ${YPSILON} test.scm"
 
 test-ypsilon:
-	tr7i test.scm
+	${YPSILON} test.scm
 
 documentation:
 	cat README.md > docs/index.md

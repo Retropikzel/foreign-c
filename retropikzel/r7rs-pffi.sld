@@ -9,6 +9,24 @@
               (scheme process-context)
               (chibi ast)
               (chibi))
+      (export pffi-init
+              pffi-size-of
+              pffi-shared-object-auto-load
+              pffi-shared-object-load
+              pffi-pointer-null
+              pffi-pointer-null?
+              pffi-pointer-allocate
+              pffi-pointer?
+              pffi-pointer-free
+              pffi-pointer-set!
+              pffi-pointer-get
+              pffi-string->pointer
+              pffi-pointer->string
+              pffi-define
+              ;pffi-define-callback
+              ;pffi-pointer-address
+              ;pffi-pointer-dereference
+              )
       (include-shared "r7rs-pffi/r7rs-pffi-chibi"))
     (chicken
       (import (scheme base)
@@ -20,7 +38,25 @@
               (chicken locative)
               (chicken syntax)
               (chicken memory)
-              (chicken random)))
+              (chicken random))
+      (export pffi-init
+              pffi-size-of
+              pffi-shared-object-auto-load
+              pffi-shared-object-load
+              pffi-pointer-null
+              pffi-pointer-null?
+              pffi-pointer-allocate
+              pffi-pointer?
+              pffi-pointer-free
+              pffi-pointer-set!
+              pffi-pointer-get
+              pffi-string->pointer
+              pffi-pointer->string
+              pffi-define
+              pffi-define-callback
+              pffi-pointer-address
+              ;pffi-pointer-dereference
+              ))
     (cyclone
       (import (scheme base)
               (scheme write)
@@ -28,26 +64,98 @@
               (scheme file)
               (scheme process-context)
               (cyclone foreign)
-              (scheme cyclone primitives)))
+              (scheme cyclone primitives))
+      (export pffi-init
+              pffi-size-of
+              pffi-shared-object-auto-load
+              pffi-shared-object-load
+              pffi-pointer-null
+              pffi-pointer-null?
+              pffi-pointer-allocate
+              pffi-pointer?
+              pffi-pointer-free
+              pffi-pointer-set!
+              pffi-pointer-get
+              pffi-string->pointer
+              pffi-pointer->string
+              pffi-define
+              ;pffi-define-callback
+              ;pffi-pointer-address
+              ;pffi-pointer-dereference
+              ))
     (gambit
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
               (scheme process-context)
-              (only (gambit) c-declare c-lambda c-define)))
+              (only (gambit) c-declare c-lambda c-define))
+      (export pffi-init
+              ;pffi-size-of
+              ;pffi-shared-object-auto-load
+              ;pffi-shared-object-load
+              ;pffi-pointer-null
+              ;pffi-pointer-null?
+              ;pffi-pointer-allocate
+              ;pffi-pointer?
+              ;pffi-pointer-free
+              ;pffi-pointer-set!
+              ;pffi-pointer-get
+              ;pffi-string->pointer
+              ;pffi-pointer->string
+              ;pffi-define
+              ;pffi-define-callback
+              ;pffi-pointer-address
+              ;pffi-pointer-dereference
+              ))
     (gauche
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context)))
+              (scheme process-context))
+      (export pffi-init
+              ;pffi-size-of
+              ;pffi-shared-object-auto-load
+              ;pffi-shared-object-load
+              ;pffi-pointer-null
+              ;pffi-pointer-null?
+              ;pffi-pointer-allocate
+              ;pffi-pointer?
+              ;pffi-pointer-free
+              ;pffi-pointer-set!
+              ;pffi-pointer-get
+              ;pffi-string->pointer
+              ;pffi-pointer->string
+              ;pffi-define
+              ;pffi-define-callback
+              ;pffi-pointer-address
+              ;pffi-pointer-dereference
+              ))
     (gerbil
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context)))
+              (scheme process-context))
+      (export pffi-init
+              ;pffi-size-of
+              ;pffi-shared-object-auto-load
+              ;pffi-shared-object-load
+              ;pffi-pointer-null
+              ;pffi-pointer-null?
+              ;pffi-pointer-allocate
+              ;pffi-pointer?
+              ;pffi-pointer-free
+              ;pffi-pointer-set!
+              ;pffi-pointer-get
+              ;pffi-string->pointer
+              ;pffi-pointer->string
+              ;pffi-define
+              ;pffi-define-callback
+              ;pffi-pointer-address
+              ;pffi-pointer-dereference
+              ))
     (guile
       (import (scheme base)
               (scheme write)
@@ -56,26 +164,104 @@
               (scheme process-context)
               (rnrs bytevectors)
               (system foreign)
-              (system foreign-library)))
+              (system foreign-library))
+      (export pffi-init
+              pffi-size-of
+              pffi-shared-object-auto-load
+              pffi-shared-object-load
+              pffi-pointer-null
+              pffi-pointer-null?
+              pffi-pointer-allocate
+              pffi-pointer?
+              pffi-pointer-free
+              pffi-pointer-set!
+              pffi-pointer-get
+              pffi-string->pointer
+              pffi-pointer->string
+              pffi-define
+              pffi-define-callback
+              pffi-pointer-address
+              pffi-pointer-dereference))
     (kawa
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context)))
+              (scheme process-context))
+      (export pffi-init
+              pffi-size-of
+              pffi-shared-object-auto-load
+              pffi-shared-object-load
+              pffi-pointer-null
+              pffi-pointer-null?
+              pffi-pointer-allocate
+              pffi-pointer?
+              pffi-pointer-free
+              pffi-pointer-set!
+              pffi-pointer-get
+              pffi-string->pointer
+              pffi-pointer->string
+              pffi-define
+              ;pffi-define-callback
+              ;pffi-pointer-address
+              ;pffi-pointer-dereference
+              ))
     (larceny
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context)))
+              (scheme process-context)
+              (rename (primitives r5rs:require) (r5rs:require require))
+              (primitives std-ffi)
+              (primitives foreign-procedure)
+              (primitives foreign-file)
+              (primitives foreign-stdlib)
+              )
+      (export pffi-init
+              ;pffi-size-of
+              ;pffi-shared-object-auto-load
+              ;pffi-shared-object-load
+              ;pffi-pointer-null
+              ;pffi-pointer-null?
+              ;pffi-pointer-allocate
+              ;pffi-pointer?
+              ;pffi-pointer-free
+              ;pffi-pointer-set!
+              ;pffi-pointer-get
+              ;pffi-string->pointer
+              ;pffi-pointer->string
+              ;pffi-define
+              ;pffi-define-callback
+              ;pffi-pointer-address
+              ;pffi-pointer-dereference
+              )
+      )
     (mosh
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
               (scheme process-context)
-              (mosh ffi)))
+              (mosh ffi))
+      (export pffi-init
+              pffi-size-of
+              pffi-shared-object-auto-load
+              pffi-shared-object-load
+              pffi-pointer-null
+              pffi-pointer-null?
+              pffi-pointer-allocate
+              pffi-pointer?
+              pffi-pointer-free
+              pffi-pointer-set!
+              pffi-pointer-get
+              pffi-string->pointer
+              pffi-pointer->string
+              pffi-define
+              pffi-define-callback
+              ;pffi-pointer-address
+              ;pffi-pointer-dereference
+              ))
     (racket
       (import (scheme base)
               (scheme write)
@@ -86,7 +272,24 @@
               (ffi winapi)
               (compatibility mlist)
               (ffi unsafe)
-              (ffi vector)))
+              (ffi vector))
+      (export pffi-init
+              pffi-size-of
+              pffi-shared-object-auto-load
+              pffi-shared-object-load
+              pffi-pointer-null
+              pffi-pointer-null?
+              pffi-pointer-allocate
+              pffi-pointer?
+              pffi-pointer-free
+              pffi-pointer-set!
+              pffi-pointer-get
+              pffi-string->pointer
+              pffi-pointer->string
+              pffi-define
+              pffi-define-callback
+              pffi-pointer-address
+              pffi-pointer-dereference))
     (sagittarius
       (import (scheme base)
               (scheme write)
@@ -94,51 +297,122 @@
               (scheme file)
               (scheme process-context)
               (sagittarius ffi)
-              (sagittarius)))
+              (sagittarius))
+      (export pffi-init
+              pffi-size-of
+              pffi-shared-object-auto-load
+              pffi-shared-object-load
+              pffi-pointer-null
+              pffi-pointer-null?
+              pffi-pointer-allocate
+              pffi-pointer?
+              pffi-pointer-free
+              pffi-pointer-set!
+              pffi-pointer-get
+              pffi-string->pointer
+              pffi-pointer->string
+              pffi-define
+              pffi-define-callback
+              pffi-pointer-address
+              pffi-pointer-dereference))
     (skint
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context)))
+              (scheme process-context))
+      (export pffi-init
+              ;pffi-size-of
+              ;pffi-shared-object-auto-load
+              ;pffi-shared-object-load
+              ;pffi-pointer-null
+              ;pffi-pointer-null?
+              ;pffi-pointer-allocate
+              ;pffi-pointer?
+              ;pffi-pointer-free
+              ;pffi-pointer-set!
+              ;pffi-pointer-get
+              ;pffi-string->pointer
+              ;pffi-pointer->string
+              ;pffi-define
+              ;pffi-define-callback
+              ;pffi-pointer-address
+              ;pffi-pointer-dereference
+              ))
     (stklos
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
               (scheme process-context)
-              (stklos)))
+              (stklos))
+      (export pffi-init
+              pffi-size-of
+              pffi-shared-object-auto-load
+              pffi-shared-object-load
+              pffi-pointer-null
+              pffi-pointer-null?
+              pffi-pointer-allocate
+              pffi-pointer?
+              pffi-pointer-free
+              ;pffi-pointer-set!
+              ;pffi-pointer-get
+              ;pffi-string->pointer
+              ;pffi-pointer->string
+              ;pffi-define
+              ;pffi-define-callback
+              ;pffi-pointer-address
+              ;pffi-pointer-dereference
+              ))
     (tr7
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context)))
+              (scheme process-context))
+      (export pffi-init
+              ;pffi-size-of
+              ;pffi-shared-object-auto-load
+              ;pffi-shared-object-load
+              ;pffi-pointer-null
+              ;pffi-pointer-null?
+              ;pffi-pointer-allocate
+              ;pffi-pointer?
+              ;pffi-pointer-free
+              ;pffi-pointer-set!
+              ;pffi-pointer-get
+              ;pffi-string->pointer
+              ;pffi-pointer->string
+              ;pffi-define
+              ;pffi-define-callback
+              ;pffi-pointer-address
+              ;pffi-pointer-dereference
+              ))
     (ypsilon
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context)))
+              (scheme process-context))
+      (export ;pffi-init
+        ;pffi-size-of
+        ;pffi-shared-object-auto-load
+        ;pffi-shared-object-load
+        ;pffi-pointer-null
+        ;pffi-pointer-null?
+        ;pffi-pointer-allocate
+        ;pffi-pointer?
+        ;pffi-pointer-free
+        ;pffi-pointer-set!
+        ;pffi-pointer-get
+        ;pffi-string->pointer
+        ;pffi-pointer->string
+        ;pffi-define
+        ;pffi-define-callback
+        ;pffi-pointer-address
+        ;pffi-pointer-dereference
+        ))
     (else (error "Unsupported implementation")))
-  (export pffi-init
-          pffi-size-of
-          pffi-shared-object-auto-load
-          pffi-shared-object-load
-          pffi-pointer-null
-          pffi-pointer-null?
-          pffi-pointer-allocate
-          pffi-pointer?
-          pffi-pointer-free
-          pffi-pointer-set!
-          pffi-pointer-get
-          pffi-string->pointer
-          pffi-pointer->string
-          pffi-define
-          ;pffi-define-callback
-          ;pffi-pointer-address
-          pffi-pointer-dereference
-          )
   (cond-expand
     (chibi (include "r7rs-pffi/chibi.scm"))
     (chicken (include "r7rs-pffi/chicken.scm"))
@@ -154,7 +428,7 @@
     (sagittarius (include "r7rs-pffi/sagittarius.scm"))
     (skint (include "r7rs-pffi/skint.scm"))
     (stklos (include "retropikzel/r7rs-pffi/stklos.scm"))
-    (tr7 (include "retropikzel/r7rs-pffi/tr7.scm"))
+    (tr7 (include "r7rs-pffi/tr7.scm"))
     (ypsilon (include "r7rs-pffi/ypsilon.scm"))
     (else #t))
   (cond-expand

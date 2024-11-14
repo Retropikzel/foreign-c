@@ -21,6 +21,7 @@ pffi-define
 test/pffi-define
 size-of
 test/*
+test
 !test/*.scm
 retropikzel/pffi/*/*.c
 retropikzel/pffi/*/*.o*

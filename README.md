@@ -38,25 +38,25 @@ guarantees are being made just yet.
 
 ## Implementation table
 
-|                                 | Chibi | Chicken | Cyclone |  Gambit | Gauche | Gerbil | Guile | Kawa | Mosh | Racket | Sagittarius | Skint | STklos | tr7 |
-| ------------------------------- | ----- | ------- | ------- | ------- | ------ | ------ | ----- | ---- | ---- | ------ | ----------- | ----- | ------ | --- |
-| pffi-init                       | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       | X      |     |
-| pffi-size-of                    | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       | X      |     |
-| pffi-shared-object-auto-load    | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       | X      |     |
-| pffi-shared-object-load         | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       | X      |     |
-| pffi-pointer-null               | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       | X      |     |
-| pffi-pointer-null?              | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       | X      |     |
-| pffi-pointer-allocate           | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       | X      |     |
-| pffi-pointer?                   | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       | X      |     |
-| pffi-pointer-free               | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       | X      |     |
-| pffi-pointer-set!               | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       |        |     |
-| pffi-pointer-get                | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       |        |     |
-| pffi-string->pointer            | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       |        |     |
-| pffi-pointer->string            | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       |        |     |
-| pffi-define                     | X     | X       | X       |         |        |        | X     | X    | X    | X      | X           |       |        |     |
-| pffi-define-callback            |       | X       |         |         |        |        | X     |      | X    | X      | X           |       |        |     |
-| pffi-pointer-address            |       | X       |         |         |        |        | X     |      |      | X      | X           |       |        |     |
-| pffi-pointer-dereference        |       |         |         |         |        |        | X     |      |      | X      | X           |       |        |     |
+|                                 | Chibi | Chicken | Cyclone |  Gambit | Gauche | Gerbil | Guile | Kawa | Larceny | Mosh | Racket | Sagittarius | Skint | STklos | tr7 | Ypsilon |
+| ------------------------------- | ----- | ------- | ------- | ------- | ------ | ------ | ----- | ---- | ------- | ---- | ------ | ----------- | ----- | ------ | --- | ------- |
+| pffi-init                       | X     | X       | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      |     |         |
+| pffi-size-of                    | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
+| pffi-shared-object-auto-load    | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
+| pffi-shared-object-load         | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
+| pffi-pointer-null               | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
+| pffi-pointer-null?              | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
+| pffi-pointer-allocate           | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
+| pffi-pointer?                   | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
+| pffi-pointer-free               | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
+| pffi-pointer-set!               | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
+| pffi-pointer-get                | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
+| pffi-string->pointer            | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
+| pffi-pointer->string            | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
+| pffi-define                     | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
+| pffi-define-callback            |       | X       |         |         |        |        | X     |      |         | X    | X      | X           |       |        |     |         |
+| pffi-pointer-address            |       | X       |         |         |        |        | X     |      |         |      | X      | X           |       |        |     |         |
+| pffi-pointer-dereference        |       |         |         |         |        |        | X     |      |         |      | X      | X           |       |        |     |         |
 
 ### Usage notes
 
@@ -74,6 +74,10 @@ guarantees are being made just yet.
         - --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED
         - --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED
         - --enable-native-access=ALL-UNNAMED
+- Larceny
+    - Runs on 32 bit mode
+- Mosh
+    - FFI only works on x86_64
 - Racket
     - Needs [racket-r7rs](https://github.com/lexi-lambda/racket-r7rs)
 
@@ -87,12 +91,11 @@ guarantees are being made just yet.
     - Javascript side needs design
 - [MIT-Scheme](https://www.gnu.org/software/mit-scheme/)
 - [s7](https://scheme.fail://ccrma.stanford.edu/software/snd/snd/s7.html)
-- [Ypsilon](http://www.littlewingpinball.com/doc/en/ypsilon/)
-- [Larceny](https://larcenists.org/)
 - [Airship](https://gitlab.com/mbabich/airship-scheme)
 - [Other gambit targets](https://gambitscheme.org/)
   - Gambit compiles to different targets other than C too, for example Javascript. It would be cool
   and interesting to see if this FFI could also support some of those
+  - When LIPS and Biwascheme Javascript side is done then Gambit should be done too
 - [s48-r7rs](https://codeberg.org/prescheme/s48-r7rs)
 - [prescheme](https://codeberg.org/prescheme/prescheme)
 

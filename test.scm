@@ -53,6 +53,7 @@
 
 (pffi-init)
 
+#|
 ;; pffi-size-of
 
 (print-header 'pffi-size-of)
@@ -139,34 +140,57 @@
 (assert equal? (number? size-unsigned-int) #t)
 (assert = size-unsigned-int 4)
 
-(assert equal? (number? (pffi-size-of 'unsigned-int)) #t)
-(define size-long (pffi-size-of 'long))
-(debug size-long)
-(assert equal? (number? size-long) #t)
-(assert = size-long 8)
+(cond-expand
+  (larceny ;; Works on 32 bit mode
+    (assert equal? (number? (pffi-size-of 'long)) #t)
+    (define size-long (pffi-size-of 'long))
+    (debug size-long)
+    (assert equal? (number? size-long) #t)
+    (assert = size-long 4))
+  (else
+    (assert equal? (number? (pffi-size-of 'long)) #t)
+    (define size-long (pffi-size-of 'long))
+    (debug size-long)
+    (assert equal? (number? size-long) #t)
+    (assert = size-long 8)))
 
-(assert equal? (number? (pffi-size-of 'long)) #t)
-(define size-unsigned-long (pffi-size-of 'unsigned-long))
-(debug size-unsigned-long)
-(assert equal? (number? size-unsigned-long) #t)
-(assert = size-unsigned-long 8)
+(cond-expand
+  (larceny ;; Works on 32 bit mode
+    (assert equal? (number? (pffi-size-of 'unsigned-long)) #t)
+    (define size-unsigned-long (pffi-size-of 'unsigned-long))
+    (debug size-unsigned-long)
+    (assert equal? (number? size-unsigned-long) #t)
+    (assert = size-unsigned-long 4))
+  (else
+    (assert equal? (number? (pffi-size-of 'long)) #t)
+    (define size-unsigned-long (pffi-size-of 'unsigned-long))
+    (debug size-unsigned-long)
+    (assert equal? (number? size-unsigned-long) #t)
+    (assert = size-unsigned-long 8)))
 
-(assert equal? (number? (pffi-size-of 'unsigned-long)) #t)
+(assert equal? (number? (pffi-size-of 'float)) #t)
 (define size-float (pffi-size-of 'float))
 (debug size-float)
 (assert equal? (number? size-float) #t)
 (assert = size-float 4)
 
-(assert equal? (number? (pffi-size-of 'float)) #t)
+(assert equal? (number? (pffi-size-of 'double)) #t)
 (define size-double (pffi-size-of 'double))
 (debug size-double)
 (assert equal? (number? size-double) #t)
 (assert = size-double 8)
 
-(define size-pointer (pffi-size-of 'pointer))
-(debug size-pointer)
-(assert equal? (number? size-pointer) #t)
-(assert = size-pointer 8)
+(cond-expand
+  (larceny ;; Works on 32 bit mode
+    (define size-pointer (pffi-size-of 'pointer))
+    (debug size-pointer)
+    (assert equal? (number? size-pointer) #t)
+    (assert = size-pointer 4))
+  (else
+    (define size-pointer (pffi-size-of 'pointer))
+    (debug size-pointer)
+    (assert equal? (number? size-pointer) #t)
+    (assert = size-pointer 8)))
 
 ;; pffi-shared-object-auto-load
 
@@ -179,7 +203,6 @@
 
 (debug libc-stdlib)
 
-#|
 ;; pffi-pointer-null
 
 (print-header 'pffi-pointer-null)

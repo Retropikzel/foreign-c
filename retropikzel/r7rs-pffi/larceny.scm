@@ -1,1 +1,27 @@
+(require 'std-ffi)
+
 (define pffi-init (lambda () #t))
+
+;; FIXME
+(define pffi-size-of
+  (lambda (type)
+    (cond ((eq? type 'int8) 1)
+          ((eq? type 'uint8) 1)
+          ((eq? type 'int16) 2)
+          ((eq? type 'uint16) 2)
+          ((eq? type 'int32) 4)
+          ((eq? type 'uint32) 4)
+          ((eq? type 'int64) 8)
+          ((eq? type 'uint64) 8)
+          ((eq? type 'char) 1)
+          ((eq? type 'unsigned-char) 1)
+          ((eq? type 'short) 2)
+          ((eq? type 'unsigned-short) 2)
+          ((eq? type 'int) 4)
+          ((eq? type 'unsigned-int) 4)
+          ((eq? type 'long) 4)
+          ((eq? type 'unsigned-long) 4)
+          ((eq? type 'float) 4)
+          ((eq? type 'double) 8)
+          ((eq? type 'pointer) 4)
+          (else (error "Can not get size of unknown type" type)))))
