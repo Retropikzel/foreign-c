@@ -1,9 +1,5 @@
 (define pffi-init (lambda () #t))
 
-;(write (scheme-procedure-to-pointer (lambda () (display "Hello"))))
-;(newline)
-;(exit)
-
 (define pffi-size-of
   (lambda (type)
     (cond ((eq? type 'int8) (size-of-int8_t))
@@ -174,6 +170,11 @@
 
 (define make-c-function
   (lambda (shared-object return-type c-name argument-types)
+    (display "Argument types: ")
+    (write argument-types)
+    (newline)
+    (write (length argument-types))
+    (newline)
     (dlerror) ;; Clean all previous errors
     (let ((func (dlsym shared-object c-name))
           (maybe-dlerror (dlerror))
@@ -183,14 +184,14 @@
                             (pffi-size-of return-type)))))
       (when (not (pffi-pointer-null? maybe-dlerror))
         (error (pffi-pointer->string maybe-dlerror)))
-      (lambda (argument-1 . arguments)
+      (lambda arguments
         (internal-ffi-call (length argument-types)
                            (pffi-type->libffi-type return-type)
                            (map pffi-type->libffi-type argument-types)
                            func
                            return-value
                            (map argument->pointer
-                                (append (list argument-1) arguments)
+                                arguments
                                 argument-types))
         (cond ((equal? return-type 'pointer)
                return-value)
@@ -216,3 +217,7 @@
     ((pffi-define scheme-name return-type argument-types procedure)
      (define scheme-name
        (make-c-callback return-type argument-types procedure)))))
+
+(define pffi-pointer-dereference
+  (lambda (pointer)
+    pointer))

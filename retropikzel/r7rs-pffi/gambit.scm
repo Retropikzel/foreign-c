@@ -51,8 +51,8 @@
           ((eq? type 'pointer) (size-of-void*))
           (else (error "Can not get size of unknown type" type)))))
 
-(define-macro (pffi-shared-object-load headers)
-  `(c-declare "#include <stdint.h>"))
+(define-macro (pffi-shared-object-load header)
+  `(c-declare ,(string-append "#include <" header ">")))
 
 #;(define-syntax pffi-shared-object-load
   (syntax-rules ()
