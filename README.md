@@ -38,25 +38,25 @@ guarantees are being made just yet.
 
 ## Implementation table
 
-|                                 | Chibi | Chicken | Cyclone |  Gambit | Gauche | Gerbil | Guile | Kawa | Larceny | Mosh | Racket | Sagittarius | Skint | STklos | tr7 | Ypsilon |
-| ------------------------------- | ----- | ------- | ------- | ------- | ------ | ------ | ----- | ---- | ------- | ---- | ------ | ----------- | ----- | ------ | --- | ------- |
-| pffi-init                       | X     | X       | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      |     |         |
-| pffi-size-of                    | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
-| pffi-shared-object-auto-load    | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
-| pffi-shared-object-load         | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
-| pffi-pointer-null               | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
-| pffi-pointer-null?              | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
-| pffi-pointer-allocate           | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
-| pffi-pointer?                   | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
-| pffi-pointer-free               | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
-| pffi-pointer-set!               | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
-| pffi-pointer-get                | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
-| pffi-string->pointer            | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
-| pffi-pointer->string            | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
-| pffi-define                     | X     | X       | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
-| pffi-define-callback            |       | X       |         |         |        |        | X     |      |         | X    | X      | X           |       |        |     |         |
-| pffi-pointer-address            |       | X       |         |         |        |        | X     |      |         |      | X      | X           |       |        |     |         |
-| pffi-pointer-dereference        |       |         |         |         |        |        | X     |      |         |      | X      | X           |       |        |     |         |
+|                                 | Chibi | Chicken 5 | Cyclone |  Gambit | Gauche | Gerbil | Guile | Kawa | Larceny | Mosh | Racket | Sagittarius | Skint | STklos | tr7 | Ypsilon |
+| ------------------------------- | ----- | --------- | ------- | ------- | ------ | ------ | ----- | ---- | ------- | ---- | ------ | ----------- | ----- | ------ | --- | ------- |
+| pffi-init                       | X     | X         | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      |     |         |
+| pffi-size-of                    | X     | X         | X       | X       |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
+| pffi-shared-object-auto-load    | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
+| pffi-shared-object-load         | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
+| pffi-pointer-null               | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
+| pffi-pointer-null?              | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
+| pffi-pointer-allocate           | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
+| pffi-pointer?                   | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
+| pffi-pointer-free               | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
+| pffi-pointer-set!               | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
+| pffi-pointer-get                | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
+| pffi-string->pointer            | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
+| pffi-pointer->string            | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
+| pffi-define                     | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
+| pffi-define-callback            |       | X         |         |         |        |        | X     |      |         | X    | X      | X           |       |        |     |         |
+| pffi-pointer-address            |       | X         |         |         |        |        | X     |      |         |      | X      | X           |       |        |     |         |
+| pffi-pointer-dereference        |       |           |         |         |        |        | X     |      |         |      | X      | X           |       |        |     |         |
 
 ### Usage notes
 

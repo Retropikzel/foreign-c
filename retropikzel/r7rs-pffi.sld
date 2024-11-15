@@ -91,9 +91,9 @@
               (scheme process-context)
               (only (gambit) c-declare c-lambda c-define))
       (export pffi-init
-              ;pffi-size-of
-              ;pffi-shared-object-auto-load
-              ;pffi-shared-object-load
+              pffi-size-of
+              pffi-shared-object-auto-load
+              pffi-shared-object-load
               ;pffi-pointer-null
               ;pffi-pointer-null?
               ;pffi-pointer-allocate

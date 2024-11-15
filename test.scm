@@ -53,7 +53,6 @@
 
 (pffi-init)
 
-#|
 ;; pffi-size-of
 
 (print-header 'pffi-size-of)
@@ -203,6 +202,7 @@
 
 (debug libc-stdlib)
 
+#|
 ;; pffi-pointer-null
 
 (print-header 'pffi-pointer-null)
