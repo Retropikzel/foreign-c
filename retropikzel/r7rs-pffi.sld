@@ -204,8 +204,7 @@
               pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
-              ;pffi-pointer-dereference
-              ))
+              pffi-pointer-dereference))
     (larceny
       (import (scheme base)
               (scheme write)

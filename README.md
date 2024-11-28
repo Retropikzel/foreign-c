@@ -56,7 +56,7 @@ guarantees are being made just yet.
 | pffi-define                     | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
 | pffi-define-callback            |       | X         |         |         |        |        | X     |      |         | X    | X      | X           |       |        |     |         |
 | pffi-pointer-address            |       | X         |         |         |        |        | X     |      |         |      | X      | X           |       |        |     |         |
-| pffi-pointer-dereference        |       |           |         |         |        |        | X     |      |         |      | X      | X           |       |        |     |         |
+| pffi-pointer-dereference        |       |           |         |         |        |        | X     | X    |         |      | X      | X           |       |        |     |         |
 
 ### Usage notes
 

@@ -197,7 +197,3 @@
                      (invoke (pffi-type->native-type type) 'withByteAlignment 1)
                      offset)))
       r)))
-
-(define pffi-pointer-deref
-  (lambda (pointer)
-    (invoke pointer 'get (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 1) 0)))
