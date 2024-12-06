@@ -4,9 +4,13 @@ CHIBI=chibi-scheme -A .
 test-chibi-podman-amd64:
 	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/chicken bash -c "cd /workdir && ${CHIBI} test.scm"
 
-test-chibi:
+retropikzel/r7rs-pffi/r7rs-pffi-chibi.c:
 	chibi-ffi retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub
+
+retropikzel/r7rs-pffi/r7rs-pffi-chibi.so: retropikzel/r7rs-pffi/r7rs-pffi-chibi.c
 	${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so -fPIC -shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c -lchibi-scheme -lffi
+
+test-chibi:
 	${CHIBI} test.scm
 
 CHICKEN=csc -X r7rs -R r7rs
