@@ -28,7 +28,7 @@
               ;pffi-pointer-dereference
               )
       (include-shared "r7rs-pffi/r7rs-pffi-chibi"))
-    (chicken-5
+    (chicken
       (import (scheme base)
               (scheme write)
               (scheme char)

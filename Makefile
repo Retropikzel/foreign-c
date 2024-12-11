@@ -2,7 +2,9 @@ CC=gcc
 
 CHIBI=chibi-scheme -A .
 test-chibi-podman-amd64:
-	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/chicken bash -c "cd /workdir && ${CHIBI} test.scm"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chibi bash -c "cd /workdir && chibi-ffi retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chibi bash -c "cd /workdir && apt update && apt install -y build-essential libffi-dev && ${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so -fPIC -shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c -lchibi-scheme -lffi"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chibi bash -c "cd /workdir && ${CHIBI} test.scm"
 
 retropikzel/r7rs-pffi/r7rs-pffi-chibi.c:
 	chibi-ffi retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub
@@ -10,25 +12,37 @@ retropikzel/r7rs-pffi/r7rs-pffi-chibi.c:
 retropikzel/r7rs-pffi/r7rs-pffi-chibi.so: retropikzel/r7rs-pffi/r7rs-pffi-chibi.c
 	${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so -fPIC -shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c -lchibi-scheme -lffi
 
-test-chibi:
+test-chibi: retropikzel/r7rs-pffi/r7rs-pffi-chibi.so
 	${CHIBI} test.scm
 
-CHICKEN=csc -X r7rs -R r7rs
-CHICKEN_LIB=csc -X r7rs -R r7rs -include-path ./retropikzel -s -J
-test-chicken-podman-amd65: clean
+CHICKEN5=csc -X r7rs -R r7rs
+CHICKEN5_LIB=csc -X r7rs -R r7rs -include-path ./retropikzel -s -J
+test-chicken5-podman-amd65: clean
 	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
-	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/chicken bash -c "cd /workdir && ${CHICKEN_LIB} retropikzel.r7rs-pffi.sld"
-	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/chicken bash -c "cd /workdir && ${CHICKEN} test.scm && ./test"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:5 bash -c "cd /workdir && ${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:5 bash -c "cd /workdir && ${CHICKEN5} test.scm && ./test"
 
-test-chicken: clean
+test-chicken5: clean
 	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
-	${CHICKEN_LIB} retropikzel.r7rs-pffi.sld
-	${CHICKEN} test.scm && ./test
+	${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld
+	${CHICKEN5} test.scm && ./test
+
+CHICKEN6=csc
+CHICKEN6_LIB=csc -include-path ./retropikzel -s -J
+test-chicken6-podman-amd65: clean
+	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:6 bash -c "cd /workdir && ${CHICKEN6_LIB} retropikzel.r7rs-pffi.sld"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:6 bash -c "cd /workdir && ${CHICKEN6} test.scm && ./test"
+
+test-chicken6: clean
+	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
+	${CHICKEN6_LIB} retropikzel.r7rs-pffi.sld
+	${CHICKEN6} test.scm && ./test
 
 CYCLONE=cyclone -A .
 test-cyclone-podman-amd64: clean
-	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/cyclone bash -c "cd /workdir && ${CYCLONE} retropikzel/r7rs-pffi.sld"
-	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/cyclone bash -c "cd /workdir && ${CYCLONE} test.scm && ./test"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/cyclone bash -c "cd /workdir && ${CYCLONE} retropikzel/r7rs-pffi.sld"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/cyclone bash -c "cd /workdir && ${CYCLONE} test.scm && ./test"
 
 test-cyclone: clean
 	${CYCLONE} retropikzel/r7rs-pffi.sld
@@ -38,9 +52,9 @@ test-cyclone: clean
 GAMBIT_LIB=gsc -:search=.
 GAMBIT_CC=gsc -exe ./ -nopreload
 test-gambit-podman-amd64: clean
-	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/gambit bash -c "cd /workdir && ${GAMBIT_LIB} retropikzel/r7rs-pffi; echo $$?"
-	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/gambit bash -c "cd /workdir && ${GAMBIT_CC} test.scm; echo $$?"
-	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/gambit bash -c "cd /workdir && ./test -:search=.; echo $$?"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/gambit bash -c "cd /workdir && ${GAMBIT_LIB} retropikzel/r7rs-pffi; echo $$?"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/gambit bash -c "cd /workdir && ${GAMBIT_CC} test.scm; echo $$?"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/gambit bash -c "cd /workdir && ./test -:search=.; echo $$?"
 
 test-gambit: clean
 	${GAMBIT_LIB} retropikzel/r7rs-pffi; echo $$?
@@ -53,50 +67,50 @@ test-gauche:
 GERBIL_LIB=gxc -O
 GERBIL=GERBIL_LOADPATH=. gxi --lang r7rs
 test-gerbil-podman-amd64:
-	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/gerbil bash -c "cd /workdir && ${GERBIL_LIB} retropikzel/r7rs-pffi.sld"
-	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/gerbil bash -c "cd /workdir && ${GERBIL} test.scm"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/gerbil bash -c "cd /workdir && ${GERBIL_LIB} retropikzel/r7rs-pffi.sld"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/gerbil bash -c "cd /workdir && ${GERBIL} test.scm"
 
 test-gerbil:
 	gxi --lang r7rs test.scm
 
 GUILE=guile --r7rs --fresh-auto-compile -L .
 test-guile-podman-amd64:
-	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/guile bash -c "cd /workdir && ${GUILE} test.scm"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/guile bash -c "cd /workdir && ${GUILE} test.scm"
 
 test-guile:
 	${GUILE} test.scm
 
 KAWA=java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=.:*.sld
 test-kawa-podman-amd64:
-	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/kawa bash -c "cd /workdir && ${KAWA} test.scm"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/kawa bash -c "cd /workdir && ${KAWA} test.scm"
 
 test-kawa:
 	${KAWA} test.scm
 
 LARCENY=larceny -r7 -I . 
 test-larceny-podman-amd64:
-	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/larceny:latest bash -c "cd /workdir && ${LARCENY} test.scm"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/larceny:latest bash -c "cd /workdir && ${LARCENY} test.scm"
 
 test-larceny:
 	${LARCENY} test.scm
 
 MOSH=mosh --loadpath=.
 test-mosh-podman-amd64:
-	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/mosh:0 bash -c "cd /workdir && ${MOSH} test.scm"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/mosh:0 bash -c "cd /workdir && ${MOSH} test.scm"
 
 test-mosh:
 	${MOSH} test.scm
 
 SASH=sash -r7 -L . -L ./schubert
 test-sagittarius-podman-amd64:
-	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/sagittarius bash -c "cd /workdir && ${SASH} test.scm"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/sagittarius bash -c "cd /workdir && ${SASH} test.scm"
 
 test-sagittarius:
 	${SASH} test.scm
 
 RACKET=racket -I r7rs -S . -S ./schubert --script
 test-racket-podman-amd64:
-	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/racket bash -c "cd /workdir && ${RACKET} test.scm"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/racket bash -c "cd /workdir && ${RACKET} test.scm"
 
 test-racket:
 	${RACKET} test.scm
@@ -106,7 +120,7 @@ test-skint:
 
 STKLOS=stklos -A . -f
 test-stklos-podman-amd64:
-	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/stklos bash -c "cd /workdir && ${STKLOS} test.scm"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/stklos bash -c "cd /workdir && ${STKLOS} test.scm"
 
 test-stklos:
 	${STKLOS} test.scm
@@ -116,7 +130,7 @@ test-tr7:
 
 YPSILON=ypsilon --r7rs --loadpath=.
 test-ypsilon-podman-amd64:
-	podman run --arch=amd64 -it -v ${PWD}:/workdir schemers/ypsilon bash -c "cd /workdir && ${YPSILON} test.scm"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/ypsilon bash -c "cd /workdir && ${YPSILON} test.scm"
 
 test-ypsilon:
 	${YPSILON} test.scm
