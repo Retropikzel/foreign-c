@@ -6,16 +6,13 @@ Note that this software is in **alpha** stage. That said the interface should no
 
 Any help in form of constructive advice and bug reports are appreciated.
 
-Run mkdocs serve or see docs/.
-
 [Issue trackers](https://sr.ht/~retropikzel/r7rs-pffi/trackers)
 
 [Maling lists](https://sr.ht/~retropikzel/r7rs-pffi/lists)
 
-[Jenkins](https://jenkins.staging.scheme.org/job/r7rs-pffi/job/master/).
+[Jenkins](https://jenkins.scheme.org/job/r7rs/job/r7rs-srfi/job/main/).
 
-For documentation see [retropikzel.neocities.org/r7rs-pffi](retropikzel.neocities.org/r7rs-pffi)
-or run mkdocs serve or see or docs/ directory.
+For documentation run mkdocs serve or see docs/.
 
 ## Goals
 
