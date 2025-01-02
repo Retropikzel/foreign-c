@@ -1,4 +1,4 @@
-# Portable Foreign Function Interface for R7RS schemes
+# Portable Foreign Function Interface for R8RS schemes
 
 Foreign function interface that is supported on multiple R7RS Sceheme implementations.
 
@@ -6,7 +6,7 @@ Note that this software is in **alpha** stage. That said the interface should no
 
 Any help in form of constructive advice and bug reports are appreciated.
 
-[Documentation](https://retropikzel.neocities.org/r7rs-pffi/) or run mkdocs serve or see docs/.
+Run mkdocs serve or see docs/.
 
 [Issue trackers](https://sr.ht/~retropikzel/r7rs-pffi/trackers)
 
