@@ -1,4 +1,5 @@
 CC=gcc
+DOCKER=docker run -it -v ${PWD}:/workdir
 
 CHIBI=chibi-scheme -A .
 test-chibi-podman-amd64:
@@ -10,7 +11,13 @@ retropikzel/r7rs-pffi/r7rs-pffi-chibi.c:
 	chibi-ffi retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub
 
 retropikzel/r7rs-pffi/r7rs-pffi-chibi.so: retropikzel/r7rs-pffi/r7rs-pffi-chibi.c
-	${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so -fPIC -shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c -lchibi-scheme -lffi
+	${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so \
+		-fPIC \
+		-shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c \
+		-lchibi-scheme \
+		-lffi \
+		-L${HOME}/.scman/chibi/lib \
+		-I${HOME}/.scman/chibi/include
 
 test-chibi: retropikzel/r7rs-pffi/r7rs-pffi-chibi.so
 	${CHIBI} test.scm
@@ -87,9 +94,9 @@ test-kawa-podman-amd64:
 test-kawa:
 	${KAWA} test.scm
 
-LARCENY=larceny -r7 -I . 
-test-larceny-podman-amd64:
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/larceny:latest bash -c "cd /workdir && ${LARCENY} test.scm"
+LARCENY=larceny -r7 -I .
+test-larceny-docker:
+	${DOCKER} schemers/larceny:latest bash -c "cd /workdir && ${LARCENY} test.scm"
 
 test-larceny:
 	${LARCENY} test.scm

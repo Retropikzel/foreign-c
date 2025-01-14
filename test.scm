@@ -191,6 +191,144 @@
     (assert equal? (number? size-pointer) #t)
     (assert = size-pointer 8)))
 
+;; pffi-align-of
+
+(print-header 'pffi-align-of)
+
+(define align-int8 (pffi-align-of 'int8))
+(debug align-int8)
+(assert equal? (number? align-int8) #t)
+(assert = align-int8 1)
+
+(define align-uint8 (pffi-align-of 'uint8))
+(debug align-uint8)
+(assert equal? (number? align-uint8) #t)
+(assert = align-uint8 1)
+
+(assert equal? (number? (pffi-align-of 'uint8)) #t)
+(define align-int16 (pffi-align-of 'int16))
+(debug align-int16)
+(assert equal? (number? align-int16) #t)
+(assert = align-int16 2)
+
+(assert equal? (number? (pffi-align-of 'int16)) #t)
+(define align-uint16 (pffi-align-of 'uint16))
+(debug align-uint16)
+(assert equal? (number? align-uint16) #t)
+(assert = align-uint16 2)
+
+(assert equal? (number? (pffi-align-of 'uint16)) #t)
+(define align-int32 (pffi-align-of 'int32))
+(debug align-int32)
+(assert equal? (number? align-int32) #t)
+(assert = align-int32 4)
+
+(assert equal? (number? (pffi-align-of 'int32)) #t)
+(define align-uint32 (pffi-align-of 'uint32))
+(debug align-uint32)
+(assert equal? (number? align-uint32) #t)
+(assert = align-uint32 4)
+
+(assert equal? (number? (pffi-align-of 'uint32)) #t)
+(define align-int64 (pffi-align-of 'int64))
+(debug align-int64)
+(assert equal? (number? align-int64) #t)
+(assert = align-int64 8)
+
+(assert equal? (number? (pffi-align-of 'int64)) #t)
+(define align-uint64 (pffi-align-of 'uint64))
+(debug align-uint64)
+(assert equal? (number? align-uint64) #t)
+(assert = align-uint64 8)
+
+(assert equal? (number? (pffi-align-of 'uint64)) #t)
+(define align-char (pffi-align-of 'char))
+(debug align-char)
+(assert equal? (number? align-char) #t)
+(assert = align-char 1)
+
+(assert equal? (number? (pffi-align-of 'char)) #t)
+(define align-unsigned-char (pffi-align-of 'unsigned-char))
+(debug align-unsigned-char)
+(assert equal? (number? align-unsigned-char) #t)
+(assert = align-unsigned-char 1)
+
+(assert equal? (number? (pffi-align-of 'unsigned-char)) #t)
+(define align-short (pffi-align-of 'short))
+(debug align-short)
+(assert equal? (number? align-short) #t)
+(assert = align-short 2)
+
+(assert equal? (number? (pffi-align-of 'short)) #t)
+(define align-unsigned-short (pffi-align-of 'unsigned-short))
+(debug align-unsigned-short)
+(assert equal? (number? align-unsigned-short) #t)
+(assert = align-unsigned-short 2)
+
+(assert equal? (number? (pffi-align-of 'unsigned-short)) #t)
+(define align-int (pffi-align-of 'int))
+(debug align-int)
+(assert equal? (number? align-int) #t)
+(assert = align-int 4)
+
+(assert equal? (number? (pffi-align-of 'int)) #t)
+(define align-unsigned-int (pffi-align-of 'unsigned-int))
+(debug align-unsigned-int)
+(assert equal? (number? align-unsigned-int) #t)
+(assert = align-unsigned-int 4)
+
+(cond-expand
+  (larceny ;; Works on 32 bit mode
+    (assert equal? (number? (pffi-align-of 'long)) #t)
+    (define align-long (pffi-align-of 'long))
+    (debug align-long)
+    (assert equal? (number? align-long) #t)
+    (assert = align-long 4))
+  (else
+    (assert equal? (number? (pffi-align-of 'long)) #t)
+    (define align-long (pffi-align-of 'long))
+    (debug align-long)
+    (assert equal? (number? align-long) #t)
+    (assert = align-long 8)))
+
+(cond-expand
+  (larceny ;; Works on 32 bit mode
+    (assert equal? (number? (pffi-align-of 'unsigned-long)) #t)
+    (define align-unsigned-long (pffi-align-of 'unsigned-long))
+    (debug align-unsigned-long)
+    (assert equal? (number? align-unsigned-long) #t)
+    (assert = align-unsigned-long 4))
+  (else
+    (assert equal? (number? (pffi-align-of 'long)) #t)
+    (define align-unsigned-long (pffi-align-of 'unsigned-long))
+    (debug align-unsigned-long)
+    (assert equal? (number? align-unsigned-long) #t)
+    (assert = align-unsigned-long 8)))
+
+(assert equal? (number? (pffi-align-of 'float)) #t)
+(define align-float (pffi-align-of 'float))
+(debug align-float)
+(assert equal? (number? align-float) #t)
+(assert = align-float 4)
+
+(assert equal? (number? (pffi-align-of 'double)) #t)
+(define align-double (pffi-align-of 'double))
+(debug align-double)
+(assert equal? (number? align-double) #t)
+(assert = align-double 8)
+
+(cond-expand
+  (larceny ;; Works on 32 bit mode
+    (define align-pointer (pffi-align-of 'pointer))
+    (debug align-pointer)
+    (assert equal? (number? align-pointer) #t)
+    (assert = align-pointer 4))
+  (else
+    (define align-pointer (pffi-align-of 'pointer))
+    (debug align-pointer)
+    (assert equal? (number? align-pointer) #t)
+    (assert = align-pointer 8)))
+
 ;; pffi-shared-object-auto-load
 
 (print-header 'pffi-shared-object-auto-load)
@@ -202,7 +340,6 @@
 
 (debug libc-stdlib)
 
-#|
 ;; pffi-pointer-null
 
 (print-header 'pffi-pointer-null)
@@ -294,6 +431,24 @@
 (debug (pffi-pointer-get set-pointer 'double offset))
 (assert = (pffi-pointer-get set-pointer 'double offset) 1.5)
 
+; pffi-struct-allocate
+
+(define struct1 (pffi-struct-allocate 'test '((int . r) (int . g) (int . b))))
+(debug struct1)
+(debug (pffi-struct-size struct1))
+(assert = (pffi-struct-size struct1) 12)
+
+(define struct2 (pffi-struct-allocate 'test '((int8 . r) (int8 . g) (int . b))))
+(debug struct2)
+(debug (pffi-struct-size struct2))
+(assert = (pffi-struct-size struct2) 8)
+
+(define struct3 (pffi-struct-allocate 'test '((int8 . r) (int8 . g) (int . b))))
+(debug struct3)
+(debug (pffi-struct-size struct3))
+(assert = (pffi-struct-size struct3) 8)
+
+#|
 ;; pffi-string->pointer
 
 (print-header 'pffi-string->pointer)

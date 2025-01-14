@@ -11,6 +11,7 @@
               (chibi))
       (export pffi-init
               pffi-size-of
+              pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
               pffi-pointer-null
@@ -22,6 +23,9 @@
               pffi-pointer-get
               pffi-string->pointer
               pffi-pointer->string
+              pffi-struct-allocate
+              pffi-struct-size
+              pffi-struct-pointer
               pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -41,6 +45,7 @@
               (chicken random))
       (export pffi-init
               pffi-size-of
+              pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
               pffi-pointer-null
@@ -52,6 +57,9 @@
               pffi-pointer-get
               pffi-string->pointer
               pffi-pointer->string
+              pffi-struct-allocate
+              pffi-struct-size
+              pffi-struct-pointer
               pffi-define
               pffi-define-callback
               pffi-pointer-address
@@ -67,6 +75,7 @@
               (scheme cyclone primitives))
       (export pffi-init
               pffi-size-of
+              pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
               pffi-pointer-null
@@ -78,6 +87,9 @@
               pffi-pointer-get
               pffi-string->pointer
               pffi-pointer->string
+              pffi-struct-allocate
+              pffi-struct-size
+              pffi-struct-pointer
               pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -92,6 +104,7 @@
               (only (gambit) c-declare c-lambda c-define))
       (export pffi-init
               pffi-size-of
+              pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
               ;pffi-pointer-null
@@ -103,6 +116,9 @@
               ;pffi-pointer-get
               ;pffi-string->pointer
               ;pffi-pointer->string
+              pffi-struct-allocate
+              pffi-struct-size
+              pffi-struct-pointer
               ;pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -116,6 +132,7 @@
               (scheme process-context))
       (export pffi-init
               ;pffi-size-of
+              pffi-align-of
               ;pffi-shared-object-auto-load
               ;pffi-shared-object-load
               ;pffi-pointer-null
@@ -127,6 +144,9 @@
               ;pffi-pointer-get
               ;pffi-string->pointer
               ;pffi-pointer->string
+              pffi-struct-allocate
+              pffi-struct-size
+              pffi-struct-pointer
               ;pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -140,6 +160,7 @@
               (scheme process-context))
       (export pffi-init
               ;pffi-size-of
+              ;pffi-align-of
               ;pffi-shared-object-auto-load
               ;pffi-shared-object-load
               ;pffi-pointer-null
@@ -151,6 +172,9 @@
               ;pffi-pointer-get
               ;pffi-string->pointer
               ;pffi-pointer->string
+              pffi-struct-allocate
+              pffi-struct-size
+              pffi-struct-pointer
               ;pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -167,6 +191,7 @@
               (system foreign-library))
       (export pffi-init
               pffi-size-of
+              pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
               pffi-pointer-null
@@ -178,6 +203,9 @@
               pffi-pointer-get
               pffi-string->pointer
               pffi-pointer->string
+              pffi-struct-allocate
+              pffi-struct-size
+              pffi-struct-pointer
               pffi-define
               pffi-define-callback
               pffi-pointer-address
@@ -190,6 +218,7 @@
               (scheme process-context))
       (export pffi-init
               pffi-size-of
+              pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
               pffi-pointer-null
@@ -201,6 +230,9 @@
               pffi-pointer-get
               pffi-string->pointer
               pffi-pointer->string
+              pffi-struct-allocate
+              pffi-struct-size
+              pffi-struct-pointer
               pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -219,6 +251,7 @@
               )
       (export pffi-init
               ;pffi-size-of
+              ;pffi-align-of
               ;pffi-shared-object-auto-load
               ;pffi-shared-object-load
               ;pffi-pointer-null
@@ -230,6 +263,9 @@
               ;pffi-pointer-get
               ;pffi-string->pointer
               ;pffi-pointer->string
+              pffi-struct-allocate
+              pffi-struct-size
+              pffi-struct-pointer
               ;pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -245,6 +281,7 @@
               (mosh ffi))
       (export pffi-init
               pffi-size-of
+              pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
               pffi-pointer-null
@@ -256,6 +293,9 @@
               pffi-pointer-get
               pffi-string->pointer
               pffi-pointer->string
+              pffi-struct-allocate
+              pffi-struct-size
+              pffi-struct-pointer
               pffi-define
               pffi-define-callback
               ;pffi-pointer-address
@@ -274,6 +314,7 @@
               (ffi vector))
       (export pffi-init
               pffi-size-of
+              pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
               pffi-pointer-null
@@ -285,6 +326,9 @@
               pffi-pointer-get
               pffi-string->pointer
               pffi-pointer->string
+              pffi-struct-allocate
+              pffi-struct-size
+              pffi-struct-pointer
               pffi-define
               pffi-define-callback
               pffi-pointer-address
@@ -299,6 +343,7 @@
               (sagittarius))
       (export pffi-init
               pffi-size-of
+              pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
               pffi-pointer-null
@@ -310,6 +355,9 @@
               pffi-pointer-get
               pffi-string->pointer
               pffi-pointer->string
+              pffi-struct-allocate
+              pffi-struct-size
+              pffi-struct-pointer
               pffi-define
               pffi-define-callback
               pffi-pointer-address
@@ -322,6 +370,7 @@
               (scheme process-context))
       (export pffi-init
               ;pffi-size-of
+              ;pffi-align-of
               ;pffi-shared-object-auto-load
               ;pffi-shared-object-load
               ;pffi-pointer-null
@@ -333,6 +382,9 @@
               ;pffi-pointer-get
               ;pffi-string->pointer
               ;pffi-pointer->string
+              pffi-struct-allocate
+              pffi-struct-size
+              pffi-struct-pointer
               ;pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -347,6 +399,7 @@
               (stklos))
       (export pffi-init
               pffi-size-of
+              pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
               pffi-pointer-null
@@ -354,10 +407,13 @@
               pffi-pointer-allocate
               pffi-pointer?
               pffi-pointer-free
-              ;pffi-pointer-set!
+              pffi-pointer-set!
               ;pffi-pointer-get
               ;pffi-string->pointer
               ;pffi-pointer->string
+              pffi-struct-allocate
+              pffi-struct-size
+              pffi-struct-pointer
               ;pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -371,6 +427,7 @@
               (scheme process-context))
       (export pffi-init
               ;pffi-size-of
+              ;pffi-align-of
               ;pffi-shared-object-auto-load
               ;pffi-shared-object-load
               ;pffi-pointer-null
@@ -382,6 +439,9 @@
               ;pffi-pointer-get
               ;pffi-string->pointer
               ;pffi-pointer->string
+              pffi-struct-allocate
+              pffi-struct-size
+              pffi-struct-pointer
               ;pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -394,24 +454,29 @@
               (scheme file)
               (scheme process-context))
       (export ;pffi-init
-        ;pffi-size-of
-        ;pffi-shared-object-auto-load
-        ;pffi-shared-object-load
-        ;pffi-pointer-null
-        ;pffi-pointer-null?
-        ;pffi-pointer-allocate
-        ;pffi-pointer?
-        ;pffi-pointer-free
-        ;pffi-pointer-set!
-        ;pffi-pointer-get
-        ;pffi-string->pointer
-        ;pffi-pointer->string
-        ;pffi-define
-        ;pffi-define-callback
-        ;pffi-pointer-address
-        ;pffi-pointer-dereference
+              ;pffi-size-of
+              ;pffi-align-of
+              ;pffi-shared-object-auto-load
+              ;pffi-shared-object-load
+              ;pffi-pointer-null
+              ;pffi-pointer-null?
+              ;pffi-pointer-allocate
+              ;pffi-pointer?
+              ;pffi-pointer-free
+              ;pffi-pointer-set!
+              ;pffi-pointer-get
+              ;pffi-string->pointer
+              ;pffi-pointer->string
+              pffi-struct-allocate
+              pffi-struct-size
+              pffi-struct-pointer
+              ;pffi-define
+              ;pffi-define-callback
+              ;pffi-pointer-address
+              ;pffi-pointer-dereference
         ))
     (else (error "Unsupported implementation")))
+  (include "r7rs-pffi/struct.scm")
   (cond-expand
     (chibi (include "r7rs-pffi/chibi.scm"))
     (chicken (include "r7rs-pffi/chicken.scm"))
@@ -430,6 +495,4 @@
     (tr7 (include "r7rs-pffi/tr7.scm"))
     (ypsilon (include "r7rs-pffi/ypsilon.scm"))
     (else #t))
-  (cond-expand
-    (stklos (include "retropikzel/r7rs-pffi/main.scm"))
-    (else (include "r7rs-pffi/main.scm"))))
+  (include "r7rs-pffi/main.scm"))

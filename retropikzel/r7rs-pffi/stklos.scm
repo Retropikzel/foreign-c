@@ -107,14 +107,7 @@
   (lambda (pointer type offset value)
     (let ((null-pointer (pffi-pointer-null))
           (offset-address (cpointer-data pointer)))
-      (cpointer-data-set! null-pointer offset-address)
-      (display "HERE")
-      (newline)
-      (write null-pointer)
-      (newline)
-      (exit)
-    ;(error "Not implemented")
-    )))
+      (cpointer-data-set! null-pointer offset-address))))
 
 (define pffi-pointer-get
   (lambda (pointer type offset)
