@@ -433,6 +433,8 @@
 
 ; pffi-struct-allocate
 
+(print-header "pffi-struct")
+
 (define struct1 (pffi-struct-allocate 'test '((int . r) (int . g) (int . b))))
 (debug struct1)
 (debug (pffi-struct-size struct1))
@@ -447,6 +449,35 @@
 (debug struct3)
 (debug (pffi-struct-size struct3))
 (assert = (pffi-struct-size struct3) 8)
+
+(define struct4 (pffi-struct-allocate 'test '((int8 . r) (pointer . a) (int8 . g) (int . b))))
+(debug struct4)
+(debug (pffi-struct-size struct4))
+(assert = (pffi-struct-size struct4) 24)
+
+(define struct5 (pffi-struct-allocate 'test '((int8 . r) (char . b) (pointer . a) (int8 . g) (int . b))))
+(debug struct5)
+(debug (pffi-struct-size struct5))
+(assert = (pffi-struct-size struct5) 24)
+
+(define struct6 (pffi-struct-allocate 'test '((int8 . r)
+                                              (char . b)
+                                              (double . c)
+                                              (char bb)
+                                              (pointer . a)
+                                              (float . d)
+                                              (pointer . aa)
+                                              (int8 . g)
+                                              (pointer . aaa)
+                                              (int . bbb)
+                                              (int . bbbb)
+                                              (int . bbbb)
+                                              (double . c)
+                                              (float . d)
+                                              )))
+(debug struct6)
+(debug (pffi-struct-size struct6))
+(assert = (pffi-struct-size struct6) 96)
 
 #|
 ;; pffi-string->pointer
