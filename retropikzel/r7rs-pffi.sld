@@ -23,9 +23,11 @@
               pffi-pointer-get
               pffi-string->pointer
               pffi-pointer->string
-              pffi-struct-allocate
+              pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-get
+              pffi-struct-set!
               pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -57,9 +59,11 @@
               pffi-pointer-get
               pffi-string->pointer
               pffi-pointer->string
-              pffi-struct-allocate
+              pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-get
+              pffi-struct-set!
               pffi-define
               pffi-define-callback
               pffi-pointer-address
@@ -87,9 +91,11 @@
               pffi-pointer-get
               pffi-string->pointer
               pffi-pointer->string
-              pffi-struct-allocate
+              pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-get
+              pffi-struct-set!
               pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -116,9 +122,11 @@
               ;pffi-pointer-get
               ;pffi-string->pointer
               ;pffi-pointer->string
-              pffi-struct-allocate
+              pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-get
+              pffi-struct-set!
               ;pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -144,9 +152,11 @@
               ;pffi-pointer-get
               ;pffi-string->pointer
               ;pffi-pointer->string
-              pffi-struct-allocate
+              pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-get
+              pffi-struct-set!
               ;pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -172,9 +182,11 @@
               ;pffi-pointer-get
               ;pffi-string->pointer
               ;pffi-pointer->string
-              pffi-struct-allocate
+              pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-get
+              pffi-struct-set!
               ;pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -203,9 +215,11 @@
               pffi-pointer-get
               pffi-string->pointer
               pffi-pointer->string
-              pffi-struct-allocate
+              pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-get
+              pffi-struct-set!
               pffi-define
               pffi-define-callback
               pffi-pointer-address
@@ -230,9 +244,11 @@
               pffi-pointer-get
               pffi-string->pointer
               pffi-pointer->string
-              pffi-struct-allocate
+              pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-get
+              pffi-struct-set!
               pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -263,9 +279,11 @@
               ;pffi-pointer-get
               ;pffi-string->pointer
               ;pffi-pointer->string
-              pffi-struct-allocate
+              pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-get
+              pffi-struct-set!
               ;pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -293,9 +311,11 @@
               pffi-pointer-get
               pffi-string->pointer
               pffi-pointer->string
-              pffi-struct-allocate
+              pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-get
+              pffi-struct-set!
               pffi-define
               pffi-define-callback
               ;pffi-pointer-address
@@ -326,9 +346,11 @@
               pffi-pointer-get
               pffi-string->pointer
               pffi-pointer->string
-              pffi-struct-allocate
+              pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-get
+              pffi-struct-set!
               pffi-define
               pffi-define-callback
               pffi-pointer-address
@@ -355,9 +377,11 @@
               pffi-pointer-get
               pffi-string->pointer
               pffi-pointer->string
-              pffi-struct-allocate
+              pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-get
+              pffi-struct-set!
               pffi-define
               pffi-define-callback
               pffi-pointer-address
@@ -382,9 +406,11 @@
               ;pffi-pointer-get
               ;pffi-string->pointer
               ;pffi-pointer->string
-              pffi-struct-allocate
+              pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-get
+              pffi-struct-set!
               ;pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -411,9 +437,11 @@
               ;pffi-pointer-get
               ;pffi-string->pointer
               ;pffi-pointer->string
-              pffi-struct-allocate
+              pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-get
+              pffi-struct-set!
               ;pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -439,9 +467,11 @@
               ;pffi-pointer-get
               ;pffi-string->pointer
               ;pffi-pointer->string
-              pffi-struct-allocate
+              pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-get
+              pffi-struct-set!
               ;pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address
@@ -467,9 +497,11 @@
               ;pffi-pointer-get
               ;pffi-string->pointer
               ;pffi-pointer->string
-              pffi-struct-allocate
+              pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-get
+              pffi-struct-set!
               ;pffi-define
               ;pffi-define-callback
               ;pffi-pointer-address

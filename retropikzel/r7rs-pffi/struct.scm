@@ -1,5 +1,5 @@
 (define-record-type <pffi-struct>
-  (pffi-struct-make name size pointer members)
+  (struct-make name size pointer members)
   pffi-struct?
   (name pffi-struct-name)
   (size pffi-struct-size)
@@ -49,14 +49,38 @@
 
 (define pffi-word-size
   (cond-expand
-    (larceny 4) ; 32-bit system
+    (i386 4) ; 32-bit system
     (else 8))) ; 64-bit system
 
-(define (pffi-struct-allocate name members)
+(define (pffi-struct-make name members . pointer)
+  (for-each
+    (lambda (member)
+      (write member)
+      (newline)
+      (when (not (pair? member))
+        (error "All struct members must be pairs" (list name member)))
+      (when (not (symbol? (car member)))
+        (error "All struct member types must be symbols" (list name member)))
+      (when (not (symbol? (cdr member)))
+        (error "All struct member names must be symbols" (list name member))))
+    members)
   (let* ((size-and-offsets (calculate-struct-size-and-offsets members))
          (size (cdr (assoc 'size size-and-offsets)))
          (offsets (cdr (assoc 'offsets size-and-offsets)))
-         (pointer (pffi-pointer-allocate size)))
-    (write size-and-offsets)
-    (newline)
-    (pffi-struct-make name size pointer members)))
+         (pointer (if (null? pointer) (pffi-pointer-allocate size) (car pointer)))
+         (name (if (string? name) name (symbol->string name))))
+    (struct-make name size pointer offsets)))
+
+(define (pffi-struct-get struct member-name)
+  (when (not (assoc member-name (pffi-struct-members struct)))
+    (error "Struct has no such member" (list struct member-name)))
+  (let ((type (car (cdr (assoc member-name (pffi-struct-members struct)))))
+        (offset (car (cdr (cdr (assoc member-name (pffi-struct-members struct)))))))
+    (pffi-pointer-get (pffi-struct-pointer struct) type offset)))
+
+(define (pffi-struct-set! struct member-name value)
+  (when (not (assoc member-name (pffi-struct-members struct)))
+    (error "Struct has no such member" (list struct member-name)))
+  (let ((type (car (cdr (assoc member-name (pffi-struct-members struct)))))
+        (offset (car (cdr (cdr (assoc member-name (pffi-struct-members struct)))))))
+    (pffi-pointer-set! (pffi-struct-pointer struct) type offset value)))
