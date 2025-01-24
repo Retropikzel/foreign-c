@@ -9,7 +9,7 @@
 (define pffi-align-of
   (lambda (type)
     (cond-expand
-      (guile (alignof (pffi-type->native-type type)))
+      ;(guile (alignof (pffi-type->native-type type)))
       (else (pffi-size-of type)))))
 
 (define (round-to-next-modulo-of to-round roundee)
@@ -31,26 +31,20 @@
                              (begin
                                (set! size (+ size type-alignment))
                                (list name type (- size type-alignment)))
-                             (begin
-                               (set! size (+ (round-to-next-modulo-of size type-alignment)
-                                             type-alignment))
+                             (let ((next-alignment (round-to-next-modulo-of size type-alignment)))
+                               (set! size (+ next-alignment type-alignment))
                                (list name
                                      type
-                                     (round-to-next-modulo-of size type-alignment))))))
+                                     next-alignment)))))
                        members)))
     (list (cons 'size
                 (cond-expand
-                  (guile (sizeof (map pffi-type->native-type (map car members))))
+                  ;(guile (sizeof (map pffi-type->native-type (map car members))))
                   (else
                     (if (= (modulo size largest-member-size) 0)
                       size
                       (round-to-next-modulo-of size largest-member-size)))))
           (cons 'offsets offsets))))
-
-(define pffi-word-size
-  (cond-expand
-    (i386 4) ; 32-bit system
-    (else 8))) ; 64-bit system
 
 (define (pffi-struct-make name members . pointer)
   (for-each
@@ -71,11 +65,20 @@
          (name (if (string? name) name (symbol->string name))))
     (struct-make name size pointer offsets)))
 
+(define (pffi-struct-offset-get struct member-name)
+  (when (not (assoc member-name (pffi-struct-members struct)))
+    (error "Struct has no such member" (list struct member-name)))
+  (car (cdr (cdr (assoc member-name (pffi-struct-members struct))))))
+
 (define (pffi-struct-get struct member-name)
   (when (not (assoc member-name (pffi-struct-members struct)))
     (error "Struct has no such member" (list struct member-name)))
   (let ((type (car (cdr (assoc member-name (pffi-struct-members struct)))))
         (offset (car (cdr (cdr (assoc member-name (pffi-struct-members struct)))))))
+    (map display (list "type: " type
+                       ", offset: " offset
+                       ", value: " (pffi-pointer-get (pffi-struct-pointer struct) type offset)
+                       #\newline))
     (pffi-pointer-get (pffi-struct-pointer struct) type offset)))
 
 (define (pffi-struct-set! struct member-name value)

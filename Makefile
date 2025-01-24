@@ -1,7 +1,8 @@
+.PHONY=libtest.so
 CC=gcc
 DOCKER=docker run -it -v ${PWD}:/workdir
 
-libtest.so: test.c
+libtest.so: libtest.c
 	${CC} -o libtest.so -shared -fPIC libtest.c
 
 CHIBI=chibi-scheme -A .
@@ -10,7 +11,7 @@ test-chibi-podman-amd64: libtest.so
 	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chibi bash -c "cd /workdir && apt update && apt install -y build-essential libffi-dev && ${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so -fPIC -shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c -lchibi-scheme -lffi"
 	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chibi bash -c "cd /workdir && ${CHIBI} test.scm"
 
-retropikzel/r7rs-pffi/r7rs-pffi-chibi.c:
+retropikzel/r7rs-pffi/r7rs-pffi-chibi.c: retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub
 	chibi-ffi retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub
 
 retropikzel/r7rs-pffi/r7rs-pffi-chibi.so: retropikzel/r7rs-pffi/r7rs-pffi-chibi.c
@@ -20,13 +21,15 @@ retropikzel/r7rs-pffi/r7rs-pffi-chibi.so: retropikzel/r7rs-pffi/r7rs-pffi-chibi.
 		-lchibi-scheme \
 		-lffi \
 		-L${HOME}/.scman/chibi/lib \
-		-I${HOME}/.scman/chibi/include
+		-I${HOME}/.scman/chibi/include \
+		-L${HOME}/.scman/chibi-git/lib \
+		-I${HOME}/.scman/chibi-git/include
 
 test-chibi: retropikzel/r7rs-pffi/r7rs-pffi-chibi.so libtest.so
 	${CHIBI} test.scm
 
-CHICKEN5=csc -X r7rs -R r7rs
-CHICKEN5_LIB=csc -X r7rs -R r7rs -include-path ./retropikzel -s -J
+CHICKEN5=csc -X r7rs -R r7rs -I.
+CHICKEN5_LIB=csc -X r7rs -R r7rs -I. -include-path ./retropikzel -s -J
 test-chicken5-podman-amd65: clean libtest.so
 	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
 	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:5 bash -c "cd /workdir && ${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld"
@@ -37,19 +40,19 @@ test-chicken5: clean libtest.so
 	${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld
 	${CHICKEN5} test.scm && ./test
 
-CHICKEN6=csc
-CHICKEN6_LIB=csc -include-path ./retropikzel -s -J
+CHICKEN6=csc -I.
+CHICKEN6_LIB=csc -I. -include-path ./retropikzel -s -J
 test-chicken6-podman-amd65: clean libtest.so
 	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:6 bash -c "cd /workdir && ${CHICKEN6_LIB} retropikzel.r7rs-pffi.sld"
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:6 bash -c "cd /workdir && ${CHICKEN6} test.scm && ./test"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:6 bash -c "cd /workdir && ${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld"
+	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:6 bash -c "cd /workdir && ${CHICKEN5} test.scm && ./test"
 
 test-chicken6: clean libtest.so
 	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
-	${CHICKEN6_LIB} retropikzel.r7rs-pffi.sld
-	${CHICKEN6} test.scm && ./test
+	${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld
+	${CHICKEN5} test.scm && ./test
 
-CYCLONE=cyclone -A .
+CYCLONE=cyclone -COPT -I. -A .
 test-cyclone-podman-amd64: clean libtest.so
 	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/cyclone bash -c "cd /workdir && ${CYCLONE} retropikzel/r7rs-pffi.sld"
 	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/cyclone bash -c "cd /workdir && ${CYCLONE} test.scm && ./test"
@@ -75,13 +78,13 @@ test-gauche:
 	gosh -r7 -A . test.scm
 
 GERBIL_LIB=gxc -O
-GERBIL=GERBIL_LOADPATH=. gxi --lang r7rs
+GERBIL=GERBIL_LOADPATH=. gxc r7rs
 test-gerbil-podman-amd64: libtest.so
 	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/gerbil bash -c "cd /workdir && ${GERBIL_LIB} retropikzel/r7rs-pffi.sld"
 	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/gerbil bash -c "cd /workdir && ${GERBIL} test.scm"
 
 test-gerbil:
-	gxi --lang r7rs test.scm
+	${GERBIL} test.scm
 
 GUILE=guile --r7rs --fresh-auto-compile -L .
 test-guile-podman-amd64: libtest.so
@@ -155,7 +158,6 @@ tmp:
 
 clean:
 	@rm -rf docutmp
-	@rm -rf retropikzel/r7rs-pffi/*.c
 	@rm -rf retropikzel/r7rs-pffi/*.o*
 	@rm -rf retropikzel/r7rs-pffi/*.so
 	@rm -rf retropikzel/r7rs-pffi/*.meta
@@ -166,7 +168,7 @@ clean:
 	@rm -rf test/pffi-define
 	@rm -rf test/*gambit*
 	find . -name "*.link" -delete
-	find . -name "*.c" -delete
+	find . -name "*.c" -not -name "libtest.c" -delete
 	find . -name "*.o" -delete
 	find . -name "*.o[1-9]" -delete
 	find . -name "*.so" -delete
@@ -175,3 +177,5 @@ clean:
 	@rm -rf tmp
 	find . -name "core.1" -delete
 	find . -name "test@gambit*" -delete
+	rm -rf retropikzel/r7rs-pffi/r7rs-pffi-chibi.so
+	rm -rf retropikzel/r7rs-pffi/r7rs-pffi-chibi.c

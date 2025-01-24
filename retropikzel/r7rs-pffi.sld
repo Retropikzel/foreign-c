@@ -26,6 +26,8 @@
               pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-offset-get
+              pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
               pffi-define
@@ -34,7 +36,7 @@
               ;pffi-pointer-dereference
               )
       (include-shared "r7rs-pffi/r7rs-pffi-chibi"))
-    (chicken
+    (chicken5
       (import (scheme base)
               (scheme write)
               (scheme char)
@@ -62,12 +64,49 @@
               pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
               pffi-define
               pffi-define-callback
               pffi-pointer-address
-              ;pffi-pointer-dereference
+              pffi-pointer-dereference
+              ))
+     (chicken6
+      (import (scheme base)
+              (scheme write)
+              (scheme char)
+              (scheme file)
+              (scheme process-context)
+              (chicken foreign)
+              (chicken locative)
+              (chicken syntax)
+              (chicken memory)
+              (chicken random))
+      (export pffi-init
+              pffi-size-of
+              pffi-align-of
+              pffi-shared-object-auto-load
+              pffi-shared-object-load
+              pffi-pointer-null
+              pffi-pointer-null?
+              pffi-pointer-allocate
+              pffi-pointer?
+              pffi-pointer-free
+              pffi-pointer-set!
+              pffi-pointer-get
+              pffi-string->pointer
+              pffi-pointer->string
+              pffi-struct-make
+              pffi-struct-size
+              pffi-struct-pointer
+              pffi-struct-offset-get
+              pffi-struct-get
+              pffi-struct-set!
+              pffi-define
+              pffi-define-callback
+              pffi-pointer-address
+              pffi-pointer-dereference
               ))
     (cyclone
       (import (scheme base)
@@ -94,6 +133,7 @@
               pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
               pffi-define
@@ -125,6 +165,7 @@
               pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
               ;pffi-define
@@ -155,6 +196,7 @@
               pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
               ;pffi-define
@@ -185,6 +227,7 @@
               pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
               ;pffi-define
@@ -218,6 +261,7 @@
               pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
               pffi-define
@@ -247,6 +291,7 @@
               pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
               pffi-define
@@ -282,6 +327,7 @@
               pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
               ;pffi-define
@@ -314,6 +360,7 @@
               pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
               pffi-define
@@ -349,6 +396,7 @@
               pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
               pffi-define
@@ -380,6 +428,7 @@
               pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
               pffi-define
@@ -409,6 +458,7 @@
               pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
               ;pffi-define
@@ -440,6 +490,7 @@
               pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
               ;pffi-define
@@ -470,6 +521,7 @@
               pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
               ;pffi-define
@@ -500,6 +552,7 @@
               pffi-struct-make
               pffi-struct-size
               pffi-struct-pointer
+              pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
               ;pffi-define
@@ -511,7 +564,8 @@
   (include "r7rs-pffi/struct.scm")
   (cond-expand
     (chibi (include "r7rs-pffi/chibi.scm"))
-    (chicken (include "r7rs-pffi/chicken.scm"))
+    (chicken5 (include "r7rs-pffi/chicken.scm"))
+    (chicken6 (include "chicken6.scm"))
     (cyclone (include "r7rs-pffi/cyclone.scm"))
     (gambit (include "r7rs-pffi/gambit.scm"))
     (gauche (include "r7rs-pffi/gauche.scm"))

@@ -108,60 +108,60 @@
 (c-declare "void pointer_set_c_float(void* pointer, int offset, float value) { float* p = (float*)pointer; p[offset] = value; }")
 (define-c void (pointer-set-c-float! pointer_set_c_float) ((pointer void*) int float))
 
-(c-declare "void pointer_set_c_double(void* pointer, int offset, double value) { double* p = (double*)pointer; p[offset] = value; }")
+(c-declare "void pointer_set_c_double(void* pointer, int offset, double value) { *(double*)((char*)pointer + offset) = value; }")
 (define-c void (pointer-set-c-double! pointer_set_c_double) ((pointer void*) int double))
 
-(c-declare "void pointer_set_c_pointer(void* pointer, int offset, void* value) { void* p = &pointer + offset; p = value; }")
+(c-declare "void pointer_set_c_pointer(void* pointer, int offset, void* value) { char* p = (char*)pointer + offset; *(char**)p = value; }")
 (define-c void (pointer-set-c-pointer! pointer_set_c_pointer) ((pointer void*) int (maybe-null void*)))
 
 ;; pffi-pointer-get
-(c-declare "int8_t pointer_ref_c_int8_t(void* pointer, int offset) { int8_t* p = (int8_t*)pointer; return p[offset]; }")
+(c-declare "int8_t pointer_ref_c_int8_t(void* pointer, int offset) {  return *(int8_t*)((char*)pointer + offset); }")
 (define-c int8_t (pointer-ref-c-int8_t pointer_ref_c_int8_t) ((pointer void*) int))
-(c-declare "uint8_t pointer_ref_c_uint8_t(void* pointer, int offset) { uint8_t* p = (uint8_t*)pointer; return p[offset]; }")
+(c-declare "uint8_t pointer_ref_c_uint8_t(void* pointer, int offset) { return *(uint8_t*)((char*)pointer + offset); }")
 (define-c uint8_t (pointer-ref-c-uint8_t pointer_ref_c_uint8_t) ((pointer void*) int))
 
-(c-declare "int16_t pointer_ref_c_int16_t(void* pointer, int offset) { int16_t* p = (int16_t*)pointer; return p[offset]; }")
+(c-declare "int16_t pointer_ref_c_int16_t(void* pointer, int offset) { return *(int16_t*)((char*)pointer + offset); }")
 (define-c int16_t (pointer-ref-c-int16_t pointer_ref_c_int16_t) ((pointer void*) int))
-(c-declare "uint16_t pointer_ref_c_uint16_t(void* pointer, int offset) { uint16_t* p = (uint16_t*)pointer; return p[offset]; }")
+(c-declare "uint16_t pointer_ref_c_uint16_t(void* pointer, int offset) { return *(uint16_t*)((char*)pointer + offset); }")
 (define-c uint16_t (pointer-ref-c-uint16_t pointer_ref_c_uint16_t) ((pointer void*) int))
 
-(c-declare "int32_t pointer_ref_c_int32_t(void* pointer, int offset) { int32_t* p = (int32_t*)pointer; return p[offset]; }")
+(c-declare "int32_t pointer_ref_c_int32_t(void* pointer, int offset) { return *(int32_t*)((char*)pointer + offset); }")
 (define-c int32_t (pointer-ref-c-int32_t pointer_ref_c_int32_t) ((pointer void*) int))
-(c-declare "uint32_t pointer_ref_c_uint32_t(void* pointer, int offset) { uint32_t* p = (uint32_t*)pointer; return p[offset]; }")
+(c-declare "uint32_t pointer_ref_c_uint32_t(void* pointer, int offset) { return *(uint32_t*)((char*)pointer + offset); }")
 (define-c uint32_t (pointer-ref-c-uint32_t pointer_ref_c_uint32_t) ((pointer void*) int))
 
-(c-declare "int64_t pointer_ref_c_int64_t(void* pointer, int offset) { int64_t* p = (int64_t*)pointer; return p[offset]; }")
+(c-declare "int64_t pointer_ref_c_int64_t(void* pointer, int offset) { return *(int64_t*)((char*)pointer + offset); }")
 (define-c int64_t (pointer-ref-c-int64_t pointer_ref_c_int64_t) ((pointer void*) int))
-(c-declare "uint64_t pointer_ref_c_uint64_t(void* pointer, int offset) { uint64_t* p = (uint64_t*)pointer; return p[offset]; }")
+(c-declare "uint64_t pointer_ref_c_uint64_t(void* pointer, int offset) { return *(uint64_t*)((char*)pointer + offset); }")
 (define-c uint64_t (pointer-ref-c-uint64_t pointer_ref_c_uint64_t) ((pointer void*) int))
 
-(c-declare "char pointer_ref_c_char(void* pointer, int offset) { char* p = (char*)pointer; return p[offset]; }")
+(c-declare "char pointer_ref_c_char(void* pointer, int offset) { return *(char*)((char*)pointer + offset); }")
 (define-c char (pointer-ref-c-char pointer_ref_c_char) ((pointer void*) int))
-(c-declare "unsigned char pointer_ref_c_unsigned_char(void* pointer, int offset) { unsigned char* p = (unsigned char*)pointer; return p[offset]; }")
+(c-declare "unsigned char pointer_ref_c_unsigned_char(void* pointer, int offset) { return *(unsigned char*)((char*)pointer + offset); }")
 (define-c unsigned-char (pointer-ref-c-unsigned-char pointer_ref_c_unsigned_char) ((pointer void*) int))
 
-(c-declare "short pointer_ref_c_short(void* pointer, int offset) { short* p = (short*)pointer; return p[offset]; }")
+(c-declare "short pointer_ref_c_short(void* pointer, int offset) { return *(short*)((char*)pointer + offset); }")
 (define-c short (pointer-ref-c-short pointer_ref_c_short) ((pointer void*) int))
-(c-declare "unsigned short pointer_ref_c_unsigned_short(void* pointer, int offset) { unsigned short* p = (unsigned short*)pointer; return p[offset]; }")
+(c-declare "unsigned short pointer_ref_c_unsigned_short(void* pointer, int offset) { return *(unsigned short*)((char*)pointer + offset); }")
 (define-c unsigned-short (pointer-ref-c-unsigned-short pointer_ref_c_unsigned_short) ((pointer void*) int))
 
-(c-declare "int pointer_ref_c_int(void* pointer, int offset) { int* p = (int*)pointer; return p[offset]; }")
+(c-declare "int pointer_ref_c_int(void* pointer, int offset) { return *(int*)((char*)pointer + offset); }")
 (define-c int (pointer-ref-c-int pointer_ref_c_int) ((pointer void*) int))
-(c-declare "unsigned int pointer_ref_c_unsigned_int(void* pointer, int offset) { unsigned int* p = (unsigned int*)pointer; return p[offset]; }")
+(c-declare "unsigned int pointer_ref_c_unsigned_int(void* pointer, int offset) { return *(unsigned int*)((char*)pointer + offset); }")
 (define-c unsigned-int (pointer-ref-c-unsigned-int pointer_ref_c_unsigned_int) ((pointer void*) int))
 
-(c-declare "long pointer_ref_c_long(void* pointer, int offset) { long* p = (long*)pointer; return p[offset]; }")
+(c-declare "long pointer_ref_c_long(void* pointer, int offset) { return *(long*)((char*)pointer + offset); }")
 (define-c long (pointer-ref-c-long pointer_ref_c_long) ((pointer void*) long))
-(c-declare "unsigned long pointer_ref_c_unsigned_long(void* pointer, int offset) { unsigned long* p = (unsigned long*)pointer; return p[offset]; }")
+(c-declare "unsigned long pointer_ref_c_unsigned_long(void* pointer, int offset) { return *(unsigned long*)((char*)pointer + offset); }")
 (define-c unsigned-long (pointer-ref-c-unsigned-long pointer_ref_c_unsigned_long) ((pointer void*) int))
 
-(c-declare "float pointer_ref_c_float(void* pointer, int offset) { float* p = (float*)pointer; return p[offset]; }")
+(c-declare "float pointer_ref_c_float(void* pointer, int offset) { return *(float*)((char*)pointer + offset); }")
 (define-c float (pointer-ref-c-float pointer_ref_c_float) ((pointer void*) int))
 
-(c-declare "double pointer_ref_c_double(void* pointer, int offset) { double* p = (double*)pointer; return p[offset]; }")
+(c-declare "double pointer_ref_c_double(void* pointer, int offset) { return *(double*)((char*)pointer + offset); }")
 (define-c double (pointer-ref-c-double pointer_ref_c_double) ((pointer void*) int))
 
-(c-declare "void* pointer_ref_c_pointer(void* pointer, int offset) { void* p = &pointer + offset; return p;}")
+(c-declare "void* pointer_ref_c_pointer(void* pointer, int offset) { char* p = (char*)pointer + offset; return *(char**)p; }")
 (define-c (maybe-null void*) (pointer-ref-c-pointer pointer_ref_c_pointer) ((pointer void*) int))
 
 ;; pffi-string->pointer

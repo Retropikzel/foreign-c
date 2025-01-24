@@ -236,8 +236,8 @@
 
 (define-c pffi-pointer-pointer-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
-          "char* p = opaque_ptr(pointer) + obj_obj2int(offset);
-          *p = &opaque_ptr(value);
+          "uintptr_t* p = opaque_ptr(pointer) + obj_obj2int(offset);
+          *p = (uintptr_t)&opaque_ptr(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
 (define pffi-pointer-set!

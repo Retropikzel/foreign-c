@@ -47,12 +47,16 @@
     (define-macro
       (pffi-shared-object-auto-load headers additional-paths object-name additional-versions)
       `(pffi-shared-object-load ,(car headers))))
+  (cyclone
+    (define-syntax pffi-shared-object-auto-load
+      (syntax-rules ()
+        ((pffi-shared-object-auto-load headers additional-paths object-name additional-versions)
+         (pffi-shared-object-load headers)))))
   (else
     (define-syntax pffi-shared-object-auto-load
       (syntax-rules ()
         ((pffi-shared-object-auto-load headers additional-paths object-name additional-versions)
          (cond-expand
-           (cyclone (pffi-shared-object-load headers))
            (chicken (pffi-shared-object-load headers))
            (else
              (let* ((slash (cond-expand (windows (string #\\)) (else "/")))

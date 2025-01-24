@@ -4,15 +4,20 @@
         (scheme process-context)
         (retropikzel r7rs-pffi))
 
+(define header-count 1)
+
 (define print-header
   (lambda (title)
     (set-tag title)
     (display "=========================================")
     (newline)
+    (display header-count)
+    (display " ")
     (display title)
     (newline)
     (display "=========================================")
-    (newline)))
+    (newline)
+    (set! header-count (+ header-count 1))))
 
 (define count 0)
 (define assert-tag 'none)
@@ -140,7 +145,7 @@
 (assert = size-unsigned-int 4)
 
 (cond-expand
-  (larceny ;; Works on 32 bit mode
+  (i386
     (assert equal? (number? (pffi-size-of 'long)) #t)
     (define size-long (pffi-size-of 'long))
     (debug size-long)
@@ -154,7 +159,7 @@
     (assert = size-long 8)))
 
 (cond-expand
-  (larceny ;; Works on 32 bit mode
+  (i386
     (assert equal? (number? (pffi-size-of 'unsigned-long)) #t)
     (define size-unsigned-long (pffi-size-of 'unsigned-long))
     (debug size-unsigned-long)
@@ -180,7 +185,7 @@
 (assert = size-double 8)
 
 (cond-expand
-  (larceny ;; Works on 32 bit mode
+  (i386
     (define size-pointer (pffi-size-of 'pointer))
     (debug size-pointer)
     (assert equal? (number? size-pointer) #t)
@@ -278,7 +283,7 @@
 (assert = align-unsigned-int 4)
 
 (cond-expand
-  (larceny ;; Works on 32 bit mode
+  (i386
     (assert equal? (number? (pffi-align-of 'long)) #t)
     (define align-long (pffi-align-of 'long))
     (debug align-long)
@@ -292,7 +297,7 @@
     (assert = align-long 8)))
 
 (cond-expand
-  (larceny ;; Works on 32 bit mode
+  (i386
     (assert equal? (number? (pffi-align-of 'unsigned-long)) #t)
     (define align-unsigned-long (pffi-align-of 'unsigned-long))
     (debug align-unsigned-long)
@@ -318,7 +323,7 @@
 (assert = align-double 8)
 
 (cond-expand
-  (larceny ;; Works on 32 bit mode
+  (i386
     (define align-pointer (pffi-align-of 'pointer))
     (debug align-pointer)
     (assert equal? (number? align-pointer) #t)
@@ -342,8 +347,8 @@
 
 (define c-testlib
   (cond-expand
-    (windows (pffi-shared-object-auto-load (list "test.h") (list ".") "test" (list "")))
-    (else (pffi-shared-object-auto-load (list "test.h") (list ".") "test" (list "")))))
+    (windows (pffi-shared-object-auto-load (list "libtest.h") (list ".") "test" (list "")))
+    (else (pffi-shared-object-auto-load (list "libtest.h") (list ".") "test" (list "")))))
 
 (debug c-testlib)
 
@@ -398,7 +403,7 @@
 (print-header "pffi-pointer-set! and pffi-pointer-get 1/2")
 
 (define set-pointer (pffi-pointer-allocate 256))
-(define offset 50)
+(define offset 0)
 (define value 1)
 (debug set-pointer)
 (debug offset)
@@ -553,9 +558,10 @@
 (assert equal?
         (string? (pffi-pointer->string (pffi-pointer-get set-pointer 'pointer offset)))
         #t)
-(assert string=?
-        (pffi-pointer->string (pffi-pointer-get set-pointer 'pointer offset))
-        "FOOBAR")
+(debug (pffi-pointer->string (pffi-pointer-get set-pointer 'pointer offset)))
+(assert equal?
+        (string=? (pffi-pointer->string (pffi-pointer-get set-pointer 'pointer offset)) "FOOBAR")
+        #t)
 
 (define string-to-be-set "FOOBAR")
 (debug string-to-be-set)
@@ -577,7 +583,8 @@
 
 (print-header 'pffi-struct-get)
 
-(pffi-define c-test c-testlib 'test 'pointer (list 'pointer))
+(pffi-define c-init-struct c-testlib 'init_struct 'pointer (list 'pointer))
+(pffi-define c-check-offset c-testlib 'check_offset 'void (list 'int 'int))
 (define struct-test (pffi-struct-make 'test
                                           '((int8 . a)
                                             (char . b)
@@ -593,38 +600,53 @@
                                             (int . l)
                                             (double . m)
                                             (float . n))))
+(c-check-offset 1 (pffi-struct-offset-get struct-test 'a))
+(c-check-offset 2 (pffi-struct-offset-get struct-test 'b))
+(c-check-offset 3 (pffi-struct-offset-get struct-test 'c))
+(c-check-offset 4 (pffi-struct-offset-get struct-test 'd))
+(c-check-offset 5 (pffi-struct-offset-get struct-test 'e))
+(c-check-offset 6 (pffi-struct-offset-get struct-test 'f))
+(c-check-offset 7 (pffi-struct-offset-get struct-test 'g))
+(c-check-offset 8 (pffi-struct-offset-get struct-test 'h))
+(c-check-offset 9 (pffi-struct-offset-get struct-test 'i))
+(c-check-offset 10 (pffi-struct-offset-get struct-test 'j))
+(c-check-offset 11 (pffi-struct-offset-get struct-test 'k))
+(c-check-offset 12 (pffi-struct-offset-get struct-test 'l))
+(c-check-offset 13 (pffi-struct-offset-get struct-test 'm))
+(c-check-offset 14 (pffi-struct-offset-get struct-test 'n))
 (debug struct-test)
-(c-test (pffi-struct-pointer struct-test))
+(c-init-struct (pffi-struct-pointer struct-test))
 (debug struct-test)
 
 (debug (pffi-struct-get struct-test 'a))
 (assert = (pffi-struct-get struct-test 'a) 1)
 (debug (pffi-struct-get struct-test 'b))
 (assert char=? (pffi-struct-get struct-test 'b) #\b)
-;(debug (pffi-struct-get struct-test 'c)) ; FIXME
-;(assert = (pffi-struct-get struct-test 'c) 3) ; FIXME
+(debug (pffi-struct-get struct-test 'c))
+(assert = (pffi-struct-get struct-test 'c) 3.0)
 (debug (pffi-struct-get struct-test 'd))
 (assert char=? (pffi-struct-get struct-test 'd) #\d)
-;(debug (pffi-struct-get struct-test 'e)) ; FIXME
-;(debug (pffi-pointer-null? (pffi-struct-get struct-test 'e))) ; FIXME
-; (assert (lambda (p t) (pffi-pointer-null? p)) (pffi-struct-get struct-test 'e) #t) ; FIXME
+(debug (pffi-struct-get struct-test 'e))
+(debug (pffi-pointer-null? (pffi-struct-get struct-test 'e)))
+(assert equal? (pffi-pointer-null? (pffi-struct-get struct-test 'e)) #t)
 (debug (pffi-struct-get struct-test 'f))
 (assert = (pffi-struct-get struct-test 'f) 6.0)
-;(debug (pffi-struct-get struct-test 'g)) ; FIXME
-;(assert (lambda (p t) (string=? (pffi-pointer->string p) "foo")) (pffi-struct-get struct-test 'g) #t) ; FIXME
+(debug (pffi-struct-get struct-test 'g))
+(debug (pffi-pointer->string (pffi-struct-get struct-test 'g)))
+(assert equal? (string=? (pffi-pointer->string (pffi-struct-get struct-test 'g)) "FOOBAR")  #t)
 (debug (pffi-struct-get struct-test 'h))
 (assert = (pffi-struct-get struct-test 'h) 8)
-;(debug (pffi-struct-get struct-test 'i)) ; FIXME
-;(debug (pffi-pointer-null? (pffi-struct-get struct-test 'i))) ; FIXME
-; (assert (lambda (p t) (pffi-pointer-null? p)) (pffi-struct-get struct-test 'i) #t) ; FIXME
+(debug (pffi-struct-get struct-test 'i))
+(debug (pffi-pointer-null? (pffi-struct-get struct-test 'i)))
+(assert equal? (pffi-pointer-null? (pffi-struct-get struct-test 'i)) #t)
 (debug (pffi-struct-get struct-test 'j))
 (assert = (pffi-struct-get struct-test 'j) 10)
 (debug (pffi-struct-get struct-test 'k))
 (assert = (pffi-struct-get struct-test 'k) 11)
 (debug (pffi-struct-get struct-test 'l))
 (assert = (pffi-struct-get struct-test 'l) 12)
-;(debug (pffi-struct-get struct-test 'm)) ; FIXME
-;(assert = (pffi-struct-get struct-test 'm) 13) ; FIXME
+(debug (pffi-struct-get struct-test 'm))
+(assert = (pffi-struct-get struct-test 'm) 13)
 (debug (pffi-struct-get struct-test 'n))
 (assert = (pffi-struct-get struct-test 'n) 14)
 
@@ -717,7 +739,6 @@
 ;(assert = (pffi-struct-get struct-test2 'm) 13) ; FIXME
 (debug (pffi-struct-get struct-test2 'n))
 (assert = (pffi-struct-get struct-test2 'n) 14)
-#|
 ;; pffi-define-callback
 
 (print-header 'pffi-define-callback)
@@ -753,6 +774,5 @@
              (pffi-pointer-get array 'int (* (pffi-size-of 'int) 1))
              (pffi-pointer-get array 'int (* (pffi-size-of 'int) 2))))
 (newline)
-|#
 
 (exit 0)

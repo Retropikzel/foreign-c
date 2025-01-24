@@ -177,8 +177,8 @@
                    "C_return((void*)str);"))
 
 
-(pffi-define strncpy-pp #f 'strncpy 'pointer (list 'pointer 'pointer 'int))
-(pffi-define strlen #f 'strlen 'int (list 'pointer))
+;(pffi-define strncpy-pp #f 'strncpy 'pointer (list 'pointer 'pointer 'int))
+;(pffi-define strlen #f 'strlen 'int (list 'pointer))
 
 (define pffi-pointer->string
   (foreign-lambda* c-string

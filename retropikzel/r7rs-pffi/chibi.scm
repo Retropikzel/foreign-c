@@ -41,7 +41,8 @@
 
 (define pffi-pointer?
   (lambda (object)
-    (string=? (type-name (type-of object)) "Cpointer")))
+    (or (not object) ; #f is null on Chibi
+        (string=? (type-name (type-of object)) "Cpointer"))))
 
 (define pffi-pointer-allocate
   (lambda (size)
