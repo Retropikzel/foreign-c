@@ -87,9 +87,17 @@
   (lambda ()
     (empty-pointer)))
 
+(define (string->c-string s)
+  (let* ((bv (string->utf8 s))
+         (p  (allocate-pointer (+ (bytevector-length bv) 1))))
+    (do ((i 0 (+ i 1)))
+      ((= i (bytevector-length bv)) p)
+      (pointer-set-c-uint8! p i (bytevector-u8-ref bv i)))
+    p))
+
 (define pffi-string->pointer
   (lambda (string-content)
-    string-content))
+    (string->c-string string-content)))
 
 (define pffi-pointer->string
   (lambda (pointer)
@@ -140,7 +148,11 @@
           ((equal? type 'uint32) (pointer-ref-c-uint32_t pointer offset))
           ((equal? type 'int64) (pointer-ref-c-int64_t pointer offset))
           ((equal? type 'uint64) (pointer-ref-c-uint64_t pointer offset))
-          ((equal? type 'char) (integer->char (pointer-ref-c-char pointer offset)))
+          ((equal? type 'char)
+           (display "HERE: ")
+           (write pointer)
+           (newline)
+           (integer->char (pointer-ref-c-char pointer offset)))
           ((equal? type 'short) (pointer-ref-c-short pointer offset))
           ((equal? type 'unsigned-short) (pointer-ref-c-unsigned-short pointer offset))
           ((equal? type 'int) (pointer-ref-c-int pointer offset))

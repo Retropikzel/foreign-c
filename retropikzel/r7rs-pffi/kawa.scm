@@ -185,7 +185,7 @@
                     'reinterpret
                     (static-field java.lang.Integer 'MAX_VALUE))
             'set
-            (invoke (pffi-type->native-type type) 'withByteAlignment 1)
+            (invoke (pffi-type->native-type type) 'withByteAlignment (pffi-align-of type))
             offset
             value)))
 
@@ -194,6 +194,6 @@
     (let ((r (invoke (invoke pointer 'reinterpret
                              (static-field java.lang.Integer 'MAX_VALUE))
                      'get
-                     (invoke (pffi-type->native-type type) 'withByteAlignment 1)
+                     (invoke (pffi-type->native-type type) 'withByteAlignment (pffi-align-of type))
                      offset)))
       r)))

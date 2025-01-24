@@ -114,9 +114,12 @@ test-mosh-podman-amd64: libtest.so
 test-mosh: libtest.so
 	${MOSH} test.scm
 
-SASH=sash -r7 -L . -L ./schubert
+SASH=sash --clean-cache -r7 -L . -L ./schubert
 test-sagittarius-podman-amd64: libtest.so
 	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/sagittarius bash -c "cd /workdir && ${SASH} test.scm"
+
+test-sagittarius-docker: libtest.so
+	docker run -it -v ${PWD}:/workdir docker.io/schemers/sagittarius bash -c "cd /workdir && ${SASH} test.scm"
 
 test-sagittarius: libtest.so
 	${SASH} test.scm
