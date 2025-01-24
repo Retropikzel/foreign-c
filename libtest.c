@@ -182,7 +182,7 @@ EXPORT int test_check(struct test* test) {
     assert(test->n == 14);
 }
 
-EXPORT struct test* test_n1ew(struct test* test) {
+EXPORT struct test* test_new(struct test* test) {
     print_offsets();
     struct test* t = malloc(sizeof(struct test));
     t->a = 1;
