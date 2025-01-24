@@ -646,9 +646,9 @@
 (debug (pffi-struct-get struct-test 'l))
 (assert = (pffi-struct-get struct-test 'l) 12)
 (debug (pffi-struct-get struct-test 'm))
-(assert = (pffi-struct-get struct-test 'm) 13)
+(assert = (pffi-struct-get struct-test 'm) 13.0)
 (debug (pffi-struct-get struct-test 'n))
-(assert = (pffi-struct-get struct-test 'n) 14)
+(assert = (pffi-struct-get struct-test 'n) 14.0)
 
 ;; pffi-struct-set!
 
@@ -672,7 +672,7 @@
                                             (float . n))))
 (pffi-struct-set! struct-test1 'a 1)
 (pffi-struct-set! struct-test1 'b #\b)
-;(pffi-struct-set! struct-test1 'c 3) ;FIXME
+(pffi-struct-set! struct-test1 'c 3.0)
 (pffi-struct-set! struct-test1 'd #\d)
 (pffi-struct-set! struct-test1 'e (pffi-pointer-null))
 (pffi-struct-set! struct-test1 'f 6.0)
@@ -682,13 +682,13 @@
 (pffi-struct-set! struct-test1 'j 10)
 (pffi-struct-set! struct-test1 'k 11)
 (pffi-struct-set! struct-test1 'l 12)
-;(pffi-struct-set! struct-test1 'm 13) ;FIXME
-;(pffi-struct-set! struct-test1 'n 14) ;FIXME
+(pffi-struct-set! struct-test1 'm 13.0)
+(pffi-struct-set! struct-test1 'n 14.0)
 (c-test-check (pffi-struct-pointer struct-test1))
 
 ;; pffi-struct-make with pointer
 
-(print-header 'pffi-struct-pointer-set!)
+(print-header "pffi-struct-make with pointer")
 
 (pffi-define c-test-new c-testlib 'test_new 'pointer (list))
 (define struct-test2 (pffi-struct-make 'test
@@ -713,32 +713,33 @@
 (assert = (pffi-struct-get struct-test2 'a) 1)
 (debug (pffi-struct-get struct-test2 'b))
 (assert char=? (pffi-struct-get struct-test2 'b) #\b)
-;(debug (pffi-struct-get struct-test2 'c)) ; FIXME
-;(assert = (pffi-struct-get struct-test2 'c) 3) ; FIXME
+(debug (pffi-struct-get struct-test2 'c))
+(assert = (pffi-struct-get struct-test2 'c) 3)
 (debug (pffi-struct-get struct-test2 'd))
 (assert char=? (pffi-struct-get struct-test2 'd) #\d)
-;(debug (pffi-struct-get struct-test2 'e)) ; FIXME
-;(debug (pffi-pointer-null? (pffi-struct-get struct-test2 'e))) ; FIXME
-; (assert (lambda (p t) (pffi-pointer-null? p)) (pffi-struct-get struct-test2 'e) #t) ; FIXME
+(debug (pffi-struct-get struct-test2 'e))
+(debug (pffi-pointer-null? (pffi-struct-get struct-test2 'e)))
+(assert equal? (pffi-pointer-null? (pffi-struct-get struct-test2 'e)) #t)
 (debug (pffi-struct-get struct-test2 'f))
 (assert = (pffi-struct-get struct-test2 'f) 6.0)
-;(debug (pffi-struct-get struct-test2 'g)) ; FIXME
-;(assert (lambda (p t) (string=? (pffi-pointer->string p) "foo")) (pffi-struct-get struct-test2 'g) #t) ; FIXME
+(debug (pffi-pointer->string (pffi-struct-get struct-test2 'g)))
+(assert equal? (string=? (pffi-pointer->string (pffi-struct-get struct-test2 'g)) "FOOBAR") #t)
 (debug (pffi-struct-get struct-test2 'h))
 (assert = (pffi-struct-get struct-test2 'h) 8)
-;(debug (pffi-struct-get struct-test2 'i)) ; FIXME
-;(debug (pffi-pointer-null? (pffi-struct-get struct-test2 'i))) ; FIXME
-; (assert (lambda (p t) (pffi-pointer-null? p)) (pffi-struct-get struct-test2 'i) #t) ; FIXME
+(debug (pffi-struct-get struct-test2 'i))
+(debug (pffi-pointer-null? (pffi-struct-get struct-test2 'i)))
+(assert (lambda (p t) (pffi-pointer-null? p)) (pffi-struct-get struct-test2 'i) #t)
 (debug (pffi-struct-get struct-test2 'j))
 (assert = (pffi-struct-get struct-test2 'j) 10)
 (debug (pffi-struct-get struct-test2 'k))
 (assert = (pffi-struct-get struct-test2 'k) 11)
 (debug (pffi-struct-get struct-test2 'l))
 (assert = (pffi-struct-get struct-test2 'l) 12)
-;(debug (pffi-struct-get struct-test2 'm)) ; FIXME
-;(assert = (pffi-struct-get struct-test2 'm) 13) ; FIXME
+(debug (pffi-struct-get struct-test2 'm))
+(assert = (pffi-struct-get struct-test2 'm) 13.0)
 (debug (pffi-struct-get struct-test2 'n))
-(assert = (pffi-struct-get struct-test2 'n) 14)
+(assert = (pffi-struct-get struct-test2 'n) 14.0)
+
 ;; pffi-define-callback
 
 (print-header 'pffi-define-callback)
