@@ -17,10 +17,9 @@ Any help in form of constructive advice and bug reports are appreciated.
 - [Status](#status)
 - [Implementation status](#implementation-status)
 - [Implementation table](#implementation-table)
-- [Usage notes](#usage-notes)
+- [Other Implementations](#other-implementations)
 - [Design](#design)
 - [Documentation](#documentation)
-
 
 ## Goals
 
@@ -45,7 +44,6 @@ guarantees are being made just yet.
 Due to supporting many different Scheme implementations, different parts of this software are in
 different stage. As a whole it is still in **alpha** stage. That said the interface should not be
 changing anymore and support for some implementations are in **beta**.
-
 
 ## Implementation status
 
@@ -93,7 +91,29 @@ Usage recommended.
 | pffi-define                     | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
 | pffi-define-callback            |       | X         |         |         |        |        | X     |      |         | X    | X      | X           |       |        |     |         |
 
-## Usage notes
+##  Other implementations
+
+- [LIPS](https://lips.js.org/)
+    - Will work on nodejs by using some C FFI library from npm
+    - Javascript side needs design
+- [Biwascheme](https://www.biwascheme.org/)
+    - Will work on nodejs by using some C FFI library from npm
+    - Javascript side needs design
+- [MIT-Scheme](https://www.gnu.org/software/mit-scheme/)
+- [s7](https://scheme.fail://ccrma.stanford.edu/software/snd/snd/s7.html)
+- [Airship](https://gitlab.com/mbabich/airship-scheme)
+- [Other gambit targets](https://gambitscheme.org/)
+  - Gambit compiles to different targets other than C too, for example Javascript. It would be cool
+  and interesting to see if this FFI could also support some of those
+  - When LIPS and Biwascheme Javascript side is done then Gambit should be done too
+- [s48-r7rs](https://codeberg.org/prescheme/s48-r7rs)
+- [prescheme](https://codeberg.org/prescheme/prescheme)
+- [Loko](https://scheme.fail/)
+    - Desires no C interop, I can respect that
+
+## Documentation
+
+### Usage notes
 
 - Chibi
     - Install libffi-dev
@@ -115,25 +135,3 @@ Usage recommended.
     - FFI only works on x86_64
 - Racket
     - Needs [racket-r7rs](https://github.com/lexi-lambda/racket-r7rs)
-
-##  <a name="design"></a>Design/exploration/waiting for implementation features
-
-- [LIPS](https://lips.js.org/)
-    - Will work on nodejs by using some C FFI library from npm
-    - Javascript side needs design
-- [Biwascheme](https://www.biwascheme.org/)
-    - Will work on nodejs by using some C FFI library from npm
-    - Javascript side needs design
-- [MIT-Scheme](https://www.gnu.org/software/mit-scheme/)
-- [s7](https://scheme.fail://ccrma.stanford.edu/software/snd/snd/s7.html)
-- [Airship](https://gitlab.com/mbabich/airship-scheme)
-- [Other gambit targets](https://gambitscheme.org/)
-  - Gambit compiles to different targets other than C too, for example Javascript. It would be cool
-  and interesting to see if this FFI could also support some of those
-  - When LIPS and Biwascheme Javascript side is done then Gambit should be done too
-- [s48-r7rs](https://codeberg.org/prescheme/s48-r7rs)
-- [prescheme](https://codeberg.org/prescheme/prescheme)
-- [Loko](https://scheme.fail/)
-    - Desires no C interop, I can respect that
-
-## Documentation
