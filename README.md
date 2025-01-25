@@ -2,7 +2,8 @@
 
 Foreign function interface that is supported on multiple R7RS Sceheme implementations.
 
-Note that this software is in **alpha** stage. That said the interface should not be changing anymore.
+Notice that due to supporting many different Scheme implementations, some parts of this software
+are still in **alpha** stage.  That said the interface should not be changing anymore.
 
 Any help in form of constructive advice and bug reports are appreciated.
 
