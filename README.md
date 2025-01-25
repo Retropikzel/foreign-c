@@ -166,9 +166,8 @@ pffi-init
 Always call this first, on most implementation it does nothing but some implementations might need
 initialisation run.
 
-#### pffi-size-of
-
-pffi-size-of type -> number
+#### pffi-size-of \
+type -> number
 
 Returns the size of the type.
 
