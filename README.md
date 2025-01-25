@@ -54,6 +54,7 @@ Usage recommended.
 
 ## Implementation table
 
+<div style="font-size: 4;">
 
 |                                 | Chibi | Chicken 5 | Cyclone |  Gambit | Gauche | Gerbil | Guile | Kawa | Larceny | Mosh | Racket | Sagittarius | Skint | STklos | tr7 | Ypsilon |
 | ------------------------------- | ----- | --------- | ------- | ------- | ------ | ------ | ----- | ---- | ------- | ---- | ------ | ----------- | ----- | ------ | --- | ------- |
@@ -78,6 +79,8 @@ Usage recommended.
 | pffi-struct-set!                | X     | X         | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      | X   | X       |
 | pffi-define                     | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
 | pffi-define-callback            |       | X         |         |         |        |        | X     |      |         | X    | X      | X           |       |        |     |         |
+
+</div>
 
 ### Usage notes
 
