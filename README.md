@@ -56,6 +56,12 @@ guarantees are being made just yet.
     <td>Ypsilon</td>
 </tr>
 
+<tr>
+    <td>pffi-init</td>
+    <td><input type="checkbox"checked/></td>
+    | X     | X         | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      |     |         |
+</tr>
+
 </table>
 
 
