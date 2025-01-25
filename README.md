@@ -168,7 +168,7 @@ initialisation run.
 
 #### pffi-size-of
 
-**pffi-size-of** type -> number
+pffi-size-of type -> number
 
 Returns the size of the type.
 
