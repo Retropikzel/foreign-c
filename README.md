@@ -38,6 +38,7 @@ guarantees are being made just yet.
 
 <table>
 <tr>
+    <td></td>
     <td>Chibi</td>
     <td>Chicken 5</td>
     <td>Cyclone</td>
