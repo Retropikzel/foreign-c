@@ -2,9 +2,6 @@
 
 Foreign function interface that is supported on multiple R7RS Sceheme implementations.
 
-Notice that due to supporting many different Scheme implementations, some parts of this software
-are still in **alpha** stage.  That said the interface should not be changing anymore.
-
 Any help in form of constructive advice and bug reports are appreciated.
 
 [Issue trackers](https://sr.ht/~retropikzel/r7rs-pffi/trackers)
@@ -34,6 +31,11 @@ For documentation run mkdocs serve or see docs/.
 
 Currently the interface of the library is in okay shape. It propably will not change much but no
 guarantees are being made just yet.
+
+Due to supporting many different Scheme implementations, different parts of this software are in
+different stage. As a whole it is still in **alpha** stage. That said the interface should not be
+changing anymore and support for some implementations are in **beta**.
+
 
 ## Implementation status
 
