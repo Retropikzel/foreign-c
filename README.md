@@ -18,7 +18,6 @@ Any help in form of constructive advice and bug reports are appreciated.
 - [Implementation status](#implementation-status)
 - [Implementation table](#implementation-table)
 - [Other Implementations](#other-implementations)
-- [Design](#design)
 - [Documentation](#documentation)
 
 ## Goals
