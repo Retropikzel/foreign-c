@@ -295,7 +295,7 @@
               pffi-struct-get
               pffi-struct-set!
               pffi-define
-              ;pffi-define-callback
+              pffi-define-callback
               ;pffi-pointer-address
               pffi-pointer-dereference))
     (larceny
