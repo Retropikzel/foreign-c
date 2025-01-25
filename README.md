@@ -196,7 +196,7 @@ Headers is a list of strings needed to be included, for example
 
 Path is the full path of the shared object without any "lib" prefix or ".so/.dll" suffix. For example:
 
-      "curl"
+    "curl"
 
 ### pffi-pointer-null
 
