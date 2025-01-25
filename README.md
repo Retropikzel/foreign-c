@@ -159,14 +159,12 @@ Types are given as symbols, for example 'int8 or 'pointer.
 - double
 - pointer
 
-#### pffi-init
-
-pffi-init
+**pffi-init**
 
 Always call this first, on most implementation it does nothing but some implementations might need
 initialisation run.
 
-#### pffi-size-of type -> number
+**pffi-size-of** type -> number
 
 Returns the size of the type.
 
