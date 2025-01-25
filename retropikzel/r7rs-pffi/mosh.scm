@@ -2,16 +2,16 @@
 
 (define pffi-size-of
   (lambda (type)
-    (cond ((eq? type 'int8) 1) ; FIXME
-          ((eq? type 'uint8) 1) ; FIXME
-          ((eq? type 'int16) 2) ; FIXME
-          ((eq? type 'uint16) 2) ;FIXME
-          ((eq? type 'int32) 4) ; FIXME
-          ((eq? type 'uint32) 4) ; FIXME
-          ((eq? type 'int64) 8) ; FIXME
-          ((eq? type 'uint64) 8) ; FIXME
-          ((eq? type 'char) size-of-bool)
-          ((eq? type 'unsigned-char) size-of-bool)
+    (cond ((eq? type 'int8) 1)
+          ((eq? type 'uint8) 1)
+          ((eq? type 'int16) 2)
+          ((eq? type 'uint16) 2)
+          ((eq? type 'int32) 4)
+          ((eq? type 'uint32) 4)
+          ((eq? type 'int64) 8)
+          ((eq? type 'uint64) 8)
+          ((eq? type 'char) 1)
+          ((eq? type 'unsigned-char) 1)
           ((eq? type 'short) size-of-short)
           ((eq? type 'unsigned-short) size-of-unsigned-short)
           ((eq? type 'int) size-of-int)
@@ -59,11 +59,11 @@
           ((equal? type 'uint64) (pointer-set-c-uint64! pointer offset value))
           ((equal? type 'char) (pointer-set-c-char! pointer offset (char->integer value)))
           ((equal? type 'short) (pointer-set-c-short! pointer offset value))
-          ((equal? type 'unsigned-short) (pointer-set-c-short! pointer offset value)) ;; FIXME
+          ((equal? type 'unsigned-short) (pointer-set-c-short! pointer offset value))
           ((equal? type 'int) (pointer-set-c-int! pointer offset value))
-          ((equal? type 'unsigned-int) (pointer-set-c-int! pointer offset value)) ;; FIXME
+          ((equal? type 'unsigned-int) (pointer-set-c-int! pointer offset value))
           ((equal? type 'long) (pointer-set-c-long! pointer offset value))
-          ((equal? type 'unsigned-long) (pointer-set-c-long! pointer offset value)) ;; FIXME
+          ((equal? type 'unsigned-long) (pointer-set-c-long! pointer offset value))
           ((equal? type 'float) (pointer-set-c-float! pointer offset value))
           ((equal? type 'double) (pointer-set-c-double! pointer offset value))
           ((equal? type 'void) (pointer-set-c-pointer! pointer offset value))
@@ -100,6 +100,7 @@
           (pffi-pointer-set! pointer 'char (* index (pffi-size-of 'char)) c)
           (set! index (+ index 1)))
         string-content)
+      (pffi-pointer-set! pointer 'char (* index (pffi-size-of 'char)) #\null)
       pointer)))
 
 (define pffi-pointer->string

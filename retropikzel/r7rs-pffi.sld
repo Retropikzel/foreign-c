@@ -561,7 +561,6 @@
               ;pffi-pointer-dereference
         ))
     (else (error "Unsupported implementation")))
-  (include "r7rs-pffi/struct.scm")
   (cond-expand
     (chibi (include "r7rs-pffi/chibi.scm"))
     (chicken5 (include "r7rs-pffi/chicken.scm"))
@@ -581,4 +580,5 @@
     (tr7 (include "r7rs-pffi/tr7.scm"))
     (ypsilon (include "r7rs-pffi/ypsilon.scm"))
     (else #t))
+  (include "r7rs-pffi/struct.scm")
   (include "r7rs-pffi/main.scm"))

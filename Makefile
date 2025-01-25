@@ -124,6 +124,9 @@ MOSH=mosh --loadpath=.
 test-mosh-podman-amd64: libtest.so
 	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/mosh:0 bash -c "cd /workdir && ${MOSH} test.scm"
 
+test-mosh-docker: libtest.so
+	docker run -it -v ${PWD}:/workdir docker.io/schemers/mosh:0 bash -c "cd /workdir && ${MOSH} test.scm"
+
 test-mosh: libtest.so
 	${MOSH} test.scm
 

@@ -36,8 +36,29 @@ guarantees are being made just yet.
 
 ## Implementation table
 
-|                                 | Chibi | Chicken 5 | Cyclone |  Gambit | Gauche | Gerbil | Guile | Kawa | Larceny | Mosh | Racket | Sagittarius | Skint | STklos | tr7 | Ypsilon |
-| ------------------------------- | ----- | --------- | ------- | ------- | ------ | ------ | ----- | ---- | ------- | ---- | ------ | ----------- | ----- | ------ | --- | ------- |
+<table>
+<tr>
+    <td>Chibi</td>
+    <td>Chicken 5</td>
+    <td>Cyclone</td>
+    <td>Gambit</td>
+    <td>Gauhe</td>
+    <td>Gerbil</td>
+    <td>Guile</td>
+    <td>Kawa</td>
+    <td>Larceny</td>
+    <td>Mosh</td>
+    <td>Racket</td>
+    <td>Sagittarius</td>
+    <td>Skint</td>
+    <td>STklos</td>
+    <td>tr7</td>
+    <td>Ypsilon</td>
+</tr>
+
+</table>
+
+
 | pffi-init                       | X     | X         | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      |     |         |
 | pffi-size-of                    | X     | X         | X       | X       |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
 | pffi-shared-object-auto-load    | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       | X      |     |         |
@@ -51,6 +72,7 @@ guarantees are being made just yet.
 | pffi-pointer-get                | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
 | pffi-string->pointer            | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
 | pffi-pointer->string            | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
+| pffi-struct-make               |
 | pffi-define                     | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
 | pffi-define-callback            |       | X         |         |         |        |        | X     |      |         | X    | X      | X           |       |        |     |         |
 | pffi-pointer-address            |       | X         |         |         |        |        | X     |      |         |      | X      | X           |       |        |     |         |
