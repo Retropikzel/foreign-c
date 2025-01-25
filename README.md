@@ -54,7 +54,7 @@ Usage recommended.
 
 ## Implementation table
 
-<div style="font-size: 4;">
+<div style="font-size: 8px;">
 
 |                                 | Chibi | Chicken 5 | Cyclone |  Gambit | Gauche | Gerbil | Guile | Kawa | Larceny | Mosh | Racket | Sagittarius | Skint | STklos | tr7 | Ypsilon |
 | ------------------------------- | ----- | --------- | ------- | ------- | ------ | ------ | ----- | ---- | ------- | ---- | ------ | ----------- | ----- | ------ | --- | ------- |
