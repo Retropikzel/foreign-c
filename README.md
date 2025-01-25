@@ -19,6 +19,8 @@ Any help in form of constructive advice and bug reports are appreciated.
 - [Implementation table](#implementation-table)
 - [Other Implementations](#other-implementations)
 - [Documentation](#documentation)
+    - [Usage notes](#usage-notes)
+    - [Reference](#reference)
 
 ## Goals
 
@@ -130,3 +132,7 @@ Usage recommended.
         - --enable-native-access=ALL-UNNAMED
 - Racket
     - Needs [racket-r7rs](https://github.com/lexi-lambda/racket-r7rs)
+
+### Reference
+
+#### pffi-init
