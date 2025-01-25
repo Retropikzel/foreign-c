@@ -135,4 +135,56 @@ Usage recommended.
 
 ### Reference
 
+#### Types
+
+Types are given as symbols, for example 'int8 or 'pointer.
+
+- int8
+- uint8
+- int16
+- uint16
+- int32
+- uint32
+- int64
+- uint64
+- char
+- unsigned-char
+- short
+- unsigned-short
+- int
+- unsigned-int
+- long
+- unsigned-long
+- float
+- double
+- pointer
+
 #### pffi-init
+
+Always call this first, on most implementation it does nothing but some implementations might need
+initialisation run.
+
+#### pffi-size-of type
+
+
+              pffi-align-of
+              pffi-shared-object-auto-load
+              pffi-shared-object-load
+              pffi-pointer-null
+              pffi-pointer-null?
+              pffi-pointer-allocate
+              pffi-pointer?
+              pffi-pointer-free
+              pffi-pointer-set!
+              pffi-pointer-get
+              pffi-string->pointer
+              pffi-pointer->string
+              pffi-struct-make
+              pffi-struct-size
+              pffi-struct-pointer
+              pffi-struct-offset-get
+              pffi-struct-offset-get
+              pffi-struct-get
+              pffi-struct-set!
+              pffi-define
+              pffi-define-callback
