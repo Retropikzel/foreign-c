@@ -158,6 +158,8 @@ Types are given as symbols, for example 'int8 or 'pointer.
 - float
 - double
 - pointer
+- callback
+    - Callback function
 
 #### Procedures and macros
 
