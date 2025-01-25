@@ -168,8 +168,7 @@ Types are given as symbols, for example 'int8 or 'pointer.
 
 Some of these are procedures and some macros, it might also change implementation to implementation.
 
-<a name="pffi-init"></a>
-**pffi-init**
+<a name="pffi-init">**pffi-init**</a>
 
 Always call this first, on most implementation it does nothing but some implementations might need
 initialisation run.
