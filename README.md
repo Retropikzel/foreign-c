@@ -23,7 +23,6 @@ Any help in form of constructive advice and bug reports are appreciated.
     - [Reference](#reference)
     - [Types](#types)
     - [Procedures and macros](#procedures-and-macros)
-        - [pffi-init](#pffi-init)
 
 ## Goals
 
@@ -168,12 +167,12 @@ Types are given as symbols, for example 'int8 or 'pointer.
 
 Some of these are procedures and some macros, it might also change implementation to implementation.
 
-<a name="pffi-init">**pffi-init**</a>
+##### **pffi-init**
 
 Always call this first, on most implementation it does nothing but some implementations might need
 initialisation run.
 
-**pffi-size-of** type -> number
+##### **pffi-size-of** type -> number
 
 Returns the size of the type.
 
