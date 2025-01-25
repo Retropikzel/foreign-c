@@ -27,7 +27,6 @@
               pffi-struct-size
               pffi-struct-pointer
               pffi-struct-offset-get
-              pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
               pffi-define

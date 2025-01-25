@@ -168,27 +168,201 @@ initialisation run.
 
 #### pffi-size-of
 
-**pffi-size-of** type
+**pffi-size-of** type -> number
+
+Returns the size of the type.
 
 
-              pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
-              pffi-pointer-null
-              pffi-pointer-null?
-              pffi-pointer-allocate
-              pffi-pointer?
-              pffi-pointer-free
-              pffi-pointer-set!
-              pffi-pointer-get
-              pffi-string->pointer
-              pffi-pointer->string
-              pffi-struct-make
-              pffi-struct-size
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
-              pffi-define
-              pffi-define-callback
+#### pffi-align-of
+
+**pffi-align-of** type -> number
+
+Returns the align of the type.
+
+#### pffi-shared-object-auto-load
+
+TODO
+
+#### pffi-shared-object-load
+
+**pffi-shared-object-load** headers path
+
+It is recommended to use the pffi-shared-object-auto-load instead of this
+directly.
+
+Headers is a list of strings needed to be included, for example
+
+    (list "curl/curl.h")
+
+Path is the full path of the shared object without any "lib" prefix or ".so/.dll" suffix. For example:
+
+      "curl"
+
+### pffi-pointer-null
+
+**pffi-pointer-null** -> pointer
+
+Returns a new NULL pointer.
+
+#### pffi-pointer-null?
+
+**pffi-pointer-null?** pointer -> boolean
+
+Returns #t if given pointer is null pointer, #f otherwise.
+
+### pffi-pointer-allocate
+
+**pffi-pointer-allocate** size -> pointer
+
+Returns newly allocated pointer of given size.
+
+### pffi-pointer?
+
+**pffi-pointer?** object -> boolean
+
+Returns #t if given object is pointer, #f otherwise.
+
+
+### pffi-pointer-free
+
+**pffi-pointer-free** pointer
+
+Frees given pointer.
+
+### pffi-pointer-set!
+
+**pffi-pointer-set!** pointer type offset value
+
+Sets the value on a pointer on given offset. For example:
+
+    (define p (pffi-pointer-allocate 128))
+    (pffi-pointer-set! p 'int 64 100)
+
+Would set the offset of 64, on pointer p to value 100.
+
+### pffi-pointer-get
+
+**pffi-pointer-get** pointer type offset -> object
+
+Gets the value from a pointer on given offset. For example:
+
+    (define p (pffi-pointer-allocate 128))
+    (pffi-pointer-set! p 'int 64 100)
+    (pffi-pointer-get p 'int 64)
+    > 100
+
+### pffi-string->pointer
+
+**pffi-string->pointer** string -> pointer
+
+Makes pointer out of a given string.
+
+### pffi-pointer->string
+
+**pffi-pointer->string** pointer -> string
+
+Makes string out of a given pointer.
+
+### pffi-struct-make
+
+**pffi-struct-make** name members . pointer -> pffi-struct
+
+Creates a new pffi-struct and allocates pointer for it. The members argument is a list of member
+names and types. For example:
+
+    (define s (pffi-struct-make 'test '((int . r) (int . g) (int . b))))
+
+### pffi-struct-size
+
+**pffi-struct-size** pffi-struct -> number
+
+Returns the size of a given pffi-struct. For example:
+
+    (define s (pffi-struct-make 'test '((int . r) (int . g) (int . b))))
+    (pffi-struct-size s)
+    > 12
+
+### pffi-struct-pointer
+
+**pffi-struct-pointer** pffi-struct -> pointer
+
+Returns the pointer that holds the struct content. You need to use this when passing a struct as
+a pointer to foreign functions.
+
+    (define s (pffi-struct-make 'test '((int . r) (int . g) (int . b))))
+    (pffi-struct-pointer s)
+
+### pffi-struct-offset-get
+
+**pffi-struct-offset-get** member-name -> number
+
+Returns the offset of a struct member with given name.
+
+### pffi-struct-get
+
+**pffi-struct-get** pffi-struct member-name -> object
+
+Returns the value of the givens struct member.
+
+### pffi-struct-set!
+
+**pffi-struct-set!** pffi-struct member-name value
+
+Sets the value of the givens struct member. It is up to you to make sure that the type of value is
+correct.
+
+### pffi-define
+
+**pffi-define** scheme-name shared-object c-name return-type argument-types
+
+Defines a new foreign function to be used from Scheme code. For example:
+
+    (define libc-stdlib
+        (cond-expand
+            (windows (pffi-shared-object-auto-load (list "stdlib.h") (list) "ucrtbase" (list "")))
+            (else (pffi-shared-object-auto-load (list "stdlib.h") (list) "c" (list "" ".6")))))
+    (pffi-define c-puts libc-stdlib 'puts 'int (list 'pointer))
+    (c-puts "Message brought to you by FFI!")
+
+### pffi-define-callback
+
+**pffi-define-callback** scheme-name return-type argument-types procedure
+
+Defines a new Sceme function to be used as callback to C code. For example:
+
+    ; Load the shared library
+    (define libc-stdlib
+        (cond-expand
+            (windows (pffi-shared-object-auto-load (list "stdlib.h") (list) "ucrtbase" (list "")))
+            (else (pffi-shared-object-auto-load (list "stdlib.h") (list) "c" (list "" ".6")))))
+
+    ; Define C function that takes a callback
+    (pffi-define qsort libc-stdlib 'qsort 'void (list 'pointer 'int 'int 'callback))
+
+    ; Define our callback
+    (pffi-define-callback compare
+                          'int
+                          (list 'pointer 'pointer)
+                          (lambda (pointer-a pointer-b)
+                            (let ((a (pffi-pointer-get pointer-a 'int 0))
+                                  (b (pffi-pointer-get pointer-b 'int 0)))
+                              (cond ((> a b) 1)
+                                    ((= a b) 0)
+                                    ((< a b) -1)))))
+
+    ; Create new array of ints to be sorted
+    (define array (pffi-pointer-allocate (* (pffi-size-of 'int) 3)))
+    (pffi-pointer-set! array 'int (* (pffi-size-of 'int) 0) 3)
+    (pffi-pointer-set! array 'int (* (pffi-size-of 'int) 1) 2)
+    (pffi-pointer-set! array 'int (* (pffi-size-of 'int) 2) 1)
+
+    (display array)
+    (newline)
+    ;> (3 2 1)
+
+    ; Sort the array
+    (qsort array 3 (pffi-size-of 'int) compare)
+
+    (display array)
+    (newline)
+    ;> (1 2 3)
