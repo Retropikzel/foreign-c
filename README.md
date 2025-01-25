@@ -128,9 +128,5 @@ Usage recommended.
         - --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED
         - --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED
         - --enable-native-access=ALL-UNNAMED
-- Larceny
-    - Runs on 32 bit mode
-- Mosh
-    - FFI only works on x86_64
 - Racket
     - Needs [racket-r7rs](https://github.com/lexi-lambda/racket-r7rs)
