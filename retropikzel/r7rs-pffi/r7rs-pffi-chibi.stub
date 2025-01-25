@@ -240,8 +240,6 @@
 (c-declare
   "void internal_ffi_call(unsigned int nargs, void* rtype, void** atypes, void* fn, void* rvalue, void* avalues) {
     ffi_prep_cif(&cif, FFI_DEFAULT_ABI, nargs, (ffi_type*)rtype, (ffi_type**)atypes);
-    char* s = \"MORO\";
-    void* values[] = {&s};
     ffi_call(&cif, FFI_FN(fn), rvalue, &avalues);
   }")
 (define-c void
@@ -254,11 +252,11 @@
             (array void*)))
 
 (c-declare
-  "void* scheme_procedure_to_pointer(void* proc) {
-    /*if(sexp_procedurep(proc) == 1) {
+  "void* scheme_procedure_to_pointer(sexp proc) {
+    if(sexp_procedurep(proc) == 1) {
       puts(\"ITS A PROCEDURE\");
-    }*/
-    return proc;
+    }
+    return proc->var;
   }")
 
 (define-c void* (scheme-procedure-to-pointer scheme_procedure_to_pointer) (sexp))

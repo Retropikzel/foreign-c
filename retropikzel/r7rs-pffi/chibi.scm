@@ -194,9 +194,7 @@
                            (map argument->pointer
                                 arguments
                                 argument-types))
-        (cond ((equal? return-type 'pointer)
-               return-value)
-              ((not (equal? return-type 'void))
+        (cond ((not (equal? return-type 'void))
                (pffi-pointer-get return-value return-type 0)))))))
 
 (define-syntax pffi-define
@@ -211,7 +209,7 @@
 
 (define make-c-callback
   (lambda (return-type argument-types procedure)
-    procedure))
+    (scheme-procedure-to-pointer procedure)))
 
 (define-syntax pffi-define-callback
   (syntax-rules ()

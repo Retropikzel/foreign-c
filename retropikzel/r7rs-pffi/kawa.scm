@@ -28,7 +28,6 @@
            (java.lang.Char value))
           (else value))))
 
-
 (define pffi-type->native-type
   (lambda (type)
     (cond
@@ -89,8 +88,6 @@
              (append result (list count))
              (looper (+ count 1) (append result (list count)))))))
       (looper from (list)))))
-
-
 
 (define-syntax pffi-define-callback
   (syntax-rules ()
@@ -185,7 +182,7 @@
                     'reinterpret
                     (static-field java.lang.Integer 'MAX_VALUE))
             'set
-            (invoke (pffi-type->native-type type) 'withByteAlignment (pffi-align-of type))
+            (invoke (pffi-type->native-type type) 'withByteAlignment 1)
             offset
             value)))
 
@@ -194,6 +191,6 @@
     (let ((r (invoke (invoke pointer 'reinterpret
                              (static-field java.lang.Integer 'MAX_VALUE))
                      'get
-                     (invoke (pffi-type->native-type type) 'withByteAlignment (pffi-align-of type))
+                     (invoke (pffi-type->native-type type) 'withByteAlignment 1)
                      offset)))
       r)))

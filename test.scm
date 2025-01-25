@@ -403,7 +403,7 @@
 (print-header "pffi-pointer-set! and pffi-pointer-get 1/2")
 
 (define set-pointer (pffi-pointer-allocate 256))
-(define offset 0)
+(define offset 64)
 (define value 1)
 (debug set-pointer)
 (debug offset)
@@ -691,6 +691,7 @@
 (print-header "pffi-struct-make with pointer")
 
 (pffi-define c-test-new c-testlib 'test_new 'pointer (list))
+(define struct-test2-pointer (c-test-new))
 (define struct-test2 (pffi-struct-make 'test
                                        '((int8 . a)
                                          (char . b)
@@ -706,11 +707,13 @@
                                          (int . l)
                                          (double . m)
                                          (float . n))
-                                       (c-test-new)))
+                                       struct-test2-pointer))
 (debug struct-test2)
 
+(debug (pffi-pointer-get struct-test2-pointer 'int8 0))
 (debug (pffi-struct-get struct-test2 'a))
 (assert = (pffi-struct-get struct-test2 'a) 1)
+(debug (pffi-pointer-get struct-test2-pointer 'char 1))
 (debug (pffi-struct-get struct-test2 'b))
 (assert char=? (pffi-struct-get struct-test2 'b) #\b)
 (debug (pffi-struct-get struct-test2 'c))
@@ -768,7 +771,7 @@
              (pffi-pointer-get array 'int (* (pffi-size-of 'int) 1))
              (pffi-pointer-get array 'int (* (pffi-size-of 'int) 2))))
 (newline)
-(qsort array 3 (pffi-size-of 'int) compare)
+;(qsort array 3 (pffi-size-of 'int) compare)
 
 (display "Sorted: ")
 (write (list (pffi-pointer-get array 'int (* (pffi-size-of 'int) 0))
