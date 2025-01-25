@@ -27,7 +27,7 @@ Any help in form of constructive advice and bug reports are appreciated.
         - [pffi-size-of](#strongpffi-size-ofstrong-type--gt-number)
         - [pffi-align-of](#strongpffi-align-ofstrong-type--gt-number)
         - [pffi-shared-object-auto-load](#strongpffi-shared-object-auto-loadstrong)
-        - [pffi-shared-object-load](##strongpffi-shared-object-loadstrong-headers-path)
+        - [pffi-shared-object-load](#strongpffi-shared-object-loadstrong-headers-path)
         - [pffi-pointer-null](#strongpffi-pointer-nullstrong--gt-pointer)
         - [pffi-pointer-null?](#strongpffi-pointer-nullstrong-pointer--gt-boolean)
         - [pffi-pointer-allocate](#strongpffi-pointer-allocatestrong-size--gt-pointer)
