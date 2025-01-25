@@ -59,7 +59,7 @@ guarantees are being made just yet.
 
 <tr>
     <td>pffi-init</td>
-    <td><input type="checkbox"checked/></td>
+    <td>&check;</td>
     | X     | X         | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      |     |         |
 </tr>
 
