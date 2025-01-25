@@ -51,12 +51,12 @@ guarantees are being made just yet.
 | pffi-pointer-get                | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
 | pffi-string->pointer            | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
 | pffi-pointer->string            | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
-| pffi-struct-make                | X     |
-| pffi-struct-size                | X     |
-| pffi-struct-pointer             | X     |
-| pffi-struct-offset-get          | X     |
-| pffi-struct-get                 | X     |
-| pffi-struct-set!                | X     |
+| pffi-struct-make                | X     | X         | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      | X   | X       |
+| pffi-struct-size                | X     | X         | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      | X   | X       |
+| pffi-struct-pointer             | X     | X         | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      | X   | X       |
+| pffi-struct-offset-get          | X     | X         | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      | X   | X       |
+| pffi-struct-get                 | X     | X         | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      | X   | X       |
+| pffi-struct-set!                | X     | X         | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      | X   | X       |
 | pffi-define                     | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
 | pffi-define-callback            | X     | X         |         |         |        |        | X     |      |         | X    | X      | X           |       |        |     |         |
 | pffi-pointer-address            | X     | X         |         |         |        |        | X     |      |         |      | X      | X           |       |        |     |         |
