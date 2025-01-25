@@ -21,6 +21,8 @@ Any help in form of constructive advice and bug reports are appreciated.
 - [Documentation](#documentation)
     - [Usage notes](#usage-notes)
     - [Reference](#reference)
+    - [Types](#types)
+    - [Procedures and macros](#procedures-and-macros)
 
 ## Goals
 
