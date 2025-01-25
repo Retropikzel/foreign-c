@@ -161,10 +161,14 @@ Types are given as symbols, for example 'int8 or 'pointer.
 
 #### pffi-init
 
+**pffi-init**
+
 Always call this first, on most implementation it does nothing but some implementations might need
 initialisation run.
 
-#### pffi-size-of type
+#### pffi-size-of
+
+**pffi-size-of** type
 
 
               pffi-align-of
