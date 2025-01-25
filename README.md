@@ -20,6 +20,7 @@ For documentation run mkdocs serve or see docs/.
 - Same interface on all implementations
   - Some things that are procedures on one implementation are macros on other,
   but they must behave the same
+- Stability and being boring after 1.0.0 is reached
 
 ## Non goals
 
