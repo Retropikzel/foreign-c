@@ -256,7 +256,6 @@
     if(sexp_procedurep(proc) == 1) {
       puts(\"ITS A PROCEDURE\");
     }
-    return proc->var;
+    return proc->source;
   }")
-
 (define-c void* (scheme-procedure-to-pointer scheme_procedure_to_pointer) (sexp))
