@@ -10,7 +10,17 @@ Any help in form of constructive advice and bug reports are appreciated.
 
 [Jenkins](https://jenkins.scheme.org/job/r7rs/job/r7rs-srfi/job/main/).
 
-For documentation run mkdocs serve or see docs/.
+## Table of contents
+
+- [Goals](#goals)
+- [Non Goals](#nongoals)
+- [Status](#status)
+- [Implementation status](#implementationstatus)
+- [Implementation table](#implementationtable)
+- [Usage notes](#usagenotes)
+- [Design](#design)
+- [Documentation](#documentation)
+
 
 ## Goals
 
@@ -83,7 +93,7 @@ Usage recommended.
 | pffi-define                     | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
 | pffi-define-callback            |       | X         |         |         |        |        | X     |      |         | X    | X      | X           |       |        |     |         |
 
-### Usage notes
+## Usage notes
 
 - Chibi
     - Install libffi-dev
@@ -106,7 +116,7 @@ Usage recommended.
 - Racket
     - Needs [racket-r7rs](https://github.com/lexi-lambda/racket-r7rs)
 
-### Design/exploration/waiting for implementation features
+## Design/exploration/waiting for implementation features
 
 - [LIPS](https://lips.js.org/)
     - Will work on nodejs by using some C FFI library from npm
@@ -123,8 +133,7 @@ Usage recommended.
   - When LIPS and Biwascheme Javascript side is done then Gambit should be done too
 - [s48-r7rs](https://codeberg.org/prescheme/s48-r7rs)
 - [prescheme](https://codeberg.org/prescheme/prescheme)
-
-### Will/can not be supported
-
 - [Loko](https://scheme.fail/)
     - Desires no C interop, I can respect that
+
+## <a name="documentation"></a>Documentation
