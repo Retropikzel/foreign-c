@@ -13,11 +13,11 @@ Any help in form of constructive advice and bug reports are appreciated.
 ## Table of contents
 
 - [Goals](#goals)
-- [Non Goals](#nongoals)
+- [Non Goals](#non-goals)
 - [Status](#status)
-- [Implementation status](#implementationstatus)
-- [Implementation table](#implementationtable)
-- [Usage notes](#usagenotes)
+- [Implementation status](#implementation-status)
+- [Implementation table](#implementation-table)
+- [Usage notes](#usage-notes)
 - [Design](#design)
 - [Documentation](#documentation)
 
@@ -116,7 +116,7 @@ Usage recommended.
 - Racket
     - Needs [racket-r7rs](https://github.com/lexi-lambda/racket-r7rs)
 
-## Design/exploration/waiting for implementation features
+##  <a name="design"></a>Design/exploration/waiting for implementation features
 
 - [LIPS](https://lips.js.org/)
     - Will work on nodejs by using some C FFI library from npm
