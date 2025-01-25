@@ -771,7 +771,7 @@
              (pffi-pointer-get array 'int (* (pffi-size-of 'int) 1))
              (pffi-pointer-get array 'int (* (pffi-size-of 'int) 2))))
 (newline)
-;(qsort array 3 (pffi-size-of 'int) compare)
+(qsort array 3 (pffi-size-of 'int) compare)
 
 (display "Sorted: ")
 (write (list (pffi-pointer-get array 'int (* (pffi-size-of 'int) 0))
