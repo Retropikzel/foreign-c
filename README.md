@@ -34,7 +34,26 @@ For documentation run mkdocs serve or see docs/.
 Currently the interface of the library is in okay shape. It propably will not change much but no
 guarantees are being made just yet.
 
+## Implementation status
+
+### Alpha
+
+Anything not in beta or done, not recommended to use.
+
+### Beta
+
+Usage can be started but might still be quite buggy.
+
+- Guile
+- Sagittarius
+- Racket
+
+### Done
+
+Usage recommended.
+
 ## Implementation table
+
 
 |                                 | Chibi | Chicken 5 | Cyclone |  Gambit | Gauche | Gerbil | Guile | Kawa | Larceny | Mosh | Racket | Sagittarius | Skint | STklos | tr7 | Ypsilon |
 | ------------------------------- | ----- | --------- | ------- | ------- | ------ | ------ | ----- | ---- | ------- | ---- | ------ | ----------- | ----- | ------ | --- | ------- |
@@ -58,9 +77,7 @@ guarantees are being made just yet.
 | pffi-struct-get                 | X     | X         | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      | X   | X       |
 | pffi-struct-set!                | X     | X         | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      | X   | X       |
 | pffi-define                     | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
-| pffi-define-callback            | X     | X         |         |         |        |        | X     |      |         | X    | X      | X           |       |        |     |         |
-| pffi-pointer-address            | X     | X         |         |         |        |        | X     |      |         |      | X      | X           |       |        |     |         |
-| pffi-pointer-dereference        | X     |           |         |         |        |        | X     | X    |         |      | X      | X           |       |        |     |         |
+| pffi-define-callback            |       | X         |         |         |        |        | X     |      |         | X    | X      | X           |       |        |     |         |
 
 ### Usage notes
 

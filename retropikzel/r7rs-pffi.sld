@@ -32,8 +32,6 @@
               pffi-struct-set!
               pffi-define
               pffi-define-callback
-              ;pffi-pointer-address
-              ;pffi-pointer-dereference
               )
       (include-shared "r7rs-pffi/r7rs-pffi-chibi"))
     (chicken5
@@ -68,10 +66,7 @@
               pffi-struct-get
               pffi-struct-set!
               pffi-define
-              pffi-define-callback
-              pffi-pointer-address
-              pffi-pointer-dereference
-              ))
+              pffi-define-callback))
      (chicken6
       (import (scheme base)
               (scheme write)
@@ -104,10 +99,7 @@
               pffi-struct-get
               pffi-struct-set!
               pffi-define
-              pffi-define-callback
-              pffi-pointer-address
-              pffi-pointer-dereference
-              ))
+              pffi-define-callback))
     (cyclone
       (import (scheme base)
               (scheme write)
@@ -138,8 +130,6 @@
               pffi-struct-set!
               pffi-define
               ;pffi-define-callback
-              ;pffi-pointer-address
-              ;pffi-pointer-dereference
               ))
     (gambit
       (import (scheme base)
@@ -170,8 +160,6 @@
               pffi-struct-set!
               ;pffi-define
               ;pffi-define-callback
-              ;pffi-pointer-address
-              ;pffi-pointer-dereference
               ))
     (gauche
       (import (scheme base)
@@ -201,8 +189,6 @@
               pffi-struct-set!
               ;pffi-define
               ;pffi-define-callback
-              ;pffi-pointer-address
-              ;pffi-pointer-dereference
               ))
     (gerbil
       (import (scheme base)
@@ -232,8 +218,6 @@
               pffi-struct-set!
               ;pffi-define
               ;pffi-define-callback
-              ;pffi-pointer-address
-              ;pffi-pointer-dereference
               ))
     (guile
       (import (scheme base)
@@ -266,8 +250,7 @@
               pffi-struct-set!
               pffi-define
               pffi-define-callback
-              pffi-pointer-address
-              pffi-pointer-dereference))
+              ))
     (kawa
       (import (scheme base)
               (scheme write)
@@ -296,8 +279,7 @@
               pffi-struct-set!
               pffi-define
               pffi-define-callback
-              ;pffi-pointer-address
-              pffi-pointer-dereference))
+              ))
     (larceny
       (import (scheme base)
               (scheme write)
@@ -332,10 +314,7 @@
               pffi-struct-set!
               ;pffi-define
               ;pffi-define-callback
-              ;pffi-pointer-address
-              ;pffi-pointer-dereference
-              )
-      )
+              ))
     (mosh
       (import (scheme base)
               (scheme write)
@@ -364,10 +343,7 @@
               pffi-struct-get
               pffi-struct-set!
               pffi-define
-              pffi-define-callback
-              ;pffi-pointer-address
-              ;pffi-pointer-dereference
-              ))
+              pffi-define-callback))
     (racket
       (import (scheme base)
               (scheme write)
@@ -400,9 +376,7 @@
               pffi-struct-get
               pffi-struct-set!
               pffi-define
-              pffi-define-callback
-              pffi-pointer-address
-              pffi-pointer-dereference))
+              pffi-define-callback))
     (sagittarius
       (import (scheme base)
               (scheme write)
@@ -432,9 +406,7 @@
               pffi-struct-get
               pffi-struct-set!
               pffi-define
-              pffi-define-callback
-              pffi-pointer-address
-              pffi-pointer-dereference))
+              pffi-define-callback))
     (skint
       (import (scheme base)
               (scheme write)
@@ -463,8 +435,6 @@
               pffi-struct-set!
               ;pffi-define
               ;pffi-define-callback
-              ;pffi-pointer-address
-              ;pffi-pointer-dereference
               ))
     (stklos
       (import (scheme base)
@@ -495,8 +465,6 @@
               pffi-struct-set!
               ;pffi-define
               ;pffi-define-callback
-              ;pffi-pointer-address
-              ;pffi-pointer-dereference
               ))
     (tr7
       (import (scheme base)
@@ -526,8 +494,6 @@
               pffi-struct-set!
               ;pffi-define
               ;pffi-define-callback
-              ;pffi-pointer-address
-              ;pffi-pointer-dereference
               ))
     (ypsilon
       (import (scheme base)
@@ -557,8 +523,6 @@
               pffi-struct-set!
               ;pffi-define
               ;pffi-define-callback
-              ;pffi-pointer-address
-              ;pffi-pointer-dereference
         ))
     (else (error "Unsupported implementation")))
   (cond-expand
