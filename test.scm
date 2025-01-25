@@ -496,6 +496,7 @@
 
 (define string-pointer (pffi-string->pointer "Hello world"))
 (debug string-pointer)
+(debug (pffi-pointer->string string-pointer))
 (assert equal? (pffi-pointer? string-pointer) #t)
 (assert equal? (pffi-pointer-null? string-pointer) #f)
 (debug (pffi-pointer-get string-pointer 'char 0))
@@ -766,17 +767,18 @@
 (write compare)
 (newline)
 
-(display "Unsorted: ")
-(write (list (pffi-pointer-get array 'int (* (pffi-size-of 'int) 0))
+(define unsorted (list (pffi-pointer-get array 'int (* (pffi-size-of 'int) 0))
              (pffi-pointer-get array 'int (* (pffi-size-of 'int) 1))
              (pffi-pointer-get array 'int (* (pffi-size-of 'int) 2))))
-(newline)
+(debug unsorted)
+(assert equal? unsorted (list 3 2 1))
+
 (qsort array 3 (pffi-size-of 'int) compare)
 
-(display "Sorted: ")
-(write (list (pffi-pointer-get array 'int (* (pffi-size-of 'int) 0))
+(define sorted (list (pffi-pointer-get array 'int (* (pffi-size-of 'int) 0))
              (pffi-pointer-get array 'int (* (pffi-size-of 'int) 1))
              (pffi-pointer-get array 'int (* (pffi-size-of 'int) 2))))
-(newline)
+(debug sorted)
+(assert equal? sorted (list 1 2 3))
 
 (exit 0)

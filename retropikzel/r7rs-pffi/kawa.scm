@@ -31,16 +31,16 @@
 (define pffi-type->native-type
   (lambda (type)
     (cond
-      ((equal? type 'int8) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 1))
-      ((equal? type 'uint8) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 1))
+      ((equal? type 'int8) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_BYTE) 'withByteAlignment 1))
+      ((equal? type 'uint8) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_BYTE) 'withByteAlignment 1))
       ((equal? type 'int16) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 2))
       ((equal? type 'uint16) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 2))
       ((equal? type 'int32) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
       ((equal? type 'uint32) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
       ((equal? type 'int64) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 8))
       ((equal? type 'uint64) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 8))
-      ((equal? type 'char) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_CHAR) 'withByteAlignment 1))
-      ((equal? type 'unsigned-char) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_CHAR) 'withByteAlignment 1))
+      ((equal? type 'char) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_BYTE) 'withByteAlignment 1))
+      ((equal? type 'unsigned-char) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_BYTE) 'withByteAlignment 1))
       ((equal? type 'short) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_SHORT) 'withByteAlignment 2))
       ((equal? type 'unsigned-short) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_SHORT) 'withByteAlignment 2))
       ((equal? type 'int) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
@@ -51,7 +51,7 @@
       ((equal? type 'double) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_DOUBLE) 'withByteAlignment 8))
       ((equal? type 'pointer) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
       ((equal? type 'void) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 1))
-      ((equal? type 'callback) (static-field java.lang.foreign.ValueLayout 'ADDRESS))
+      ((equal? type 'callback) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
       (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
 (define pffi-pointer?
@@ -130,7 +130,7 @@
 
 (define pffi-pointer-allocate
   (lambda (size)
-    (invoke (invoke arena 'allocate size 1) 'reinterpret (static-field java.lang.Integer 'MAX_VALUE))))
+    (invoke (invoke arena 'allocate size 1) 'reinterpret size)))
 
 (define pffi-pointer-address
   (lambda (pointer)
@@ -146,7 +146,9 @@
 
 (define pffi-string->pointer
   (lambda (string-content)
-    (invoke (invoke arena 'allocateFrom string-content) 'reinterpret (static-field java.lang.Integer 'MAX_VALUE))))
+    (let ((size (+ (invoke string-content 'length) 1)))
+      (invoke (invoke arena 'allocateFrom (invoke string-content 'toString))
+              'reinterpret size))))
 
 (define pffi-pointer->string
   (lambda (pointer)
@@ -178,19 +180,20 @@
 
 (define pffi-pointer-set!
   (lambda (pointer type offset value)
-    (invoke (invoke pointer
-                    'reinterpret
-                    (static-field java.lang.Integer 'MAX_VALUE))
+    (invoke (invoke pointer 'reinterpret (static-field java.lang.Integer 'MAX_VALUE))
             'set
-            (invoke (pffi-type->native-type type) 'withByteAlignment 1)
+            (pffi-type->native-type type)
             offset
-            value)))
+            (if (equal? type 'char)
+              (char->integer value)
+              value))))
 
 (define pffi-pointer-get
   (lambda (pointer type offset)
-    (let ((r (invoke (invoke pointer 'reinterpret
-                             (static-field java.lang.Integer 'MAX_VALUE))
+    (let ((r (invoke (invoke pointer 'reinterpret (static-field java.lang.Integer 'MAX_VALUE))
                      'get
-                     (invoke (pffi-type->native-type type) 'withByteAlignment 1)
+                     (pffi-type->native-type type)
                      offset)))
-      r)))
+      (if (equal? type 'char)
+        (integer->char r)
+        r))))

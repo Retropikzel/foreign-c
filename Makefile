@@ -35,6 +35,11 @@ test-chicken5-podman-amd65: clean libtest.so
 	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:5 bash -c "cd /workdir && ${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld"
 	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:5 bash -c "cd /workdir && ${CHICKEN5} test.scm && ./test"
 
+test-chicken5-docker: clean libtest.so
+	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
+	docker run -it -v ${PWD}:/workdir docker.io/schemers/chicken:5 bash -c "cd /workdir && ${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld"
+	docker run -it -v ${PWD}:/workdir docker.io/schemers/chicken:5 bash -c "cd /workdir && ${CHICKEN5} test.scm && ./test"
+
 test-chicken5: clean libtest.so
 	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
 	${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld
@@ -47,10 +52,15 @@ test-chicken6-podman-amd65: clean libtest.so
 	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:6 bash -c "cd /workdir && ${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld"
 	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:6 bash -c "cd /workdir && ${CHICKEN5} test.scm && ./test"
 
+test-chicken6-docker: clean libtest.so
+	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
+	docker run -it -v ${PWD}:/workdir docker.io/schemers/chicken:6 bash -c "cd /workdir && ${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld"
+	docker run -it -v ${PWD}:/workdir docker.io/schemers/chicken:6 bash -c "cd /workdir && ${CHICKEN5} test.scm && ./test"
+
 test-chicken6: clean libtest.so
 	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
-	${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld
-	${CHICKEN5} test.scm && ./test
+	${CHICKEN6_LIB} retropikzel.r7rs-pffi.sld
+	${CHICKEN6} test.scm && ./test
 
 CYCLONE=cyclone -COPT -I. -A .
 test-cyclone-podman-amd64: clean libtest.so
@@ -96,6 +106,9 @@ test-guile: libtest.so
 KAWA=java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=.:*.sld
 test-kawa-podman-amd64: libtest.so
 	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/kawa bash -c "cd /workdir && ${KAWA} test.scm"
+
+test-kawa-docker: libtest.so
+	docker run -it -v ${PWD}:/workdir docker.io/schemers/kawa bash -c "cd /workdir && ${KAWA} test.scm"
 
 test-kawa: libtest.so
 	${KAWA} test.scm
