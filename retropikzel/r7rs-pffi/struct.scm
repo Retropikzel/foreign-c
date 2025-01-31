@@ -47,7 +47,8 @@
                       (round-to-next-modulo-of size largest-member-size)))))
           (cons 'offsets offsets))))
 
-(define (pffi-struct-make name members . pointer)
+(define pffi-struct-make
+  (lambda (name members . pointer)
   (for-each
     (lambda (member)
       (when (not (pair? member))
@@ -62,7 +63,7 @@
          (offsets (cdr (assoc 'offsets size-and-offsets)))
          (pointer (if (null? pointer) (pffi-pointer-allocate size) (car pointer)))
          (name (if (string? name) name (symbol->string name))))
-    (struct-make name size pointer offsets)))
+    (struct-make name size pointer offsets))))
 
 (define (pffi-struct-offset-get struct member-name)
   (when (not (assoc member-name (pffi-struct-members struct)))

@@ -1,5 +1,5 @@
 (cond-expand
-  ((or chicken5 chicken6)
+  ((or chicken-5 chicken-6)
    (define-syntax pffi-init
      (er-macro-transformer
        (lambda (expr rename compare)

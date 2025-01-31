@@ -24,8 +24,10 @@ retropikzel/r7rs-pffi/r7rs-pffi-chibi.so: retropikzel/r7rs-pffi/r7rs-pffi-chibi.
 test-chibi: retropikzel/r7rs-pffi/r7rs-pffi-chibi.so libtest.so
 	${CHIBI} test.scm
 
-CHICKEN5=csc -X r7rs -R r7rs -I.
-CHICKEN5_LIB=csc -X r7rs -R r7rs -I. -include-path ./retropikzel -s -J
+CHICKEN5=SCMC=csc CSCFLAGS="-I. " compile-r7rs main.scm
+#CHICKEN5=csc -X r7rs -R r7rs -uses scheme.base -I.
+#CHICKEN5_LIB=csc -X r7rs -R r7rs -uses r7rs -I. -include-path ./retropikzel -s -J
+#CHICKEN5_LIB=csc -X r7rs -R r7rs -uses r7rs -unit retropikzel.r7rs-pffi -include-path ./retropikzel -s -J
 test-chicken5-podman-amd65: clean libtest.so
 	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
 	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:5 bash -c "cd /workdir && ${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld"
@@ -37,9 +39,10 @@ test-chicken5-docker: clean libtest.so
 	docker run -it -v ${PWD}:/workdir docker.io/schemers/chicken:5 bash -c "cd /workdir && ${CHICKEN5} test.scm && ./test"
 
 test-chicken5: clean libtest.so
-	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
-	${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld
-	${CHICKEN5} test.scm && ./test
+	#cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
+	#${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld
+	${CHICKEN5} test.scm
+	./test
 
 CHICKEN6=csc -I.
 CHICKEN6_LIB=csc -I. -include-path ./retropikzel -s -J

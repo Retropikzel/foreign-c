@@ -33,7 +33,7 @@
               pffi-define
               pffi-define-callback)
       (include-shared "r7rs-pffi/r7rs-pffi-chibi"))
-    (chicken5
+    (chicken-5
       (import (scheme base)
               (scheme write)
               (scheme char)
@@ -458,7 +458,7 @@
               pffi-pointer?
               pffi-pointer-free
               pffi-pointer-set!
-              ;pffi-pointer-get
+              pffi-pointer-get
               ;pffi-string->pointer
               ;pffi-pointer->string
               pffi-struct-make
@@ -531,8 +531,8 @@
     (else (error "Unsupported implementation")))
   (cond-expand
     (chibi (include "r7rs-pffi/chibi.scm"))
-    (chicken5 (include "r7rs-pffi/chicken.scm"))
-    (chicken6 (include "chicken6.scm"))
+    (chicken-5 (include "r7rs-pffi/chicken5.scm"))
+    (chicken-6 (include "chicken6.scm"))
     (cyclone (include "r7rs-pffi/cyclone.scm"))
     (gambit (include "r7rs-pffi/gambit.scm"))
     (gauche (include "r7rs-pffi/gauche.scm"))
@@ -548,5 +548,9 @@
     (tr7 (include "r7rs-pffi/tr7.scm"))
     (ypsilon (include "r7rs-pffi/ypsilon.scm"))
     (else #t))
-  (include "r7rs-pffi/struct.scm")
-  (include "r7rs-pffi/main.scm"))
+  (cond-expand
+    (stklos (include "retropikzel/r7rs-pffi/struct.scm")) ; FIXME temporarily for stklos 2.10
+    (else (include "r7rs-pffi/struct.scm")))
+  (cond-expand
+    (stklos (include "retropikzel/r7rs-pffi/main.scm")) ; FIXME temporarily for stklos 2.10
+    (else (include "r7rs-pffi/main.scm"))))

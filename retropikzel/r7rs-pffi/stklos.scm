@@ -21,6 +21,7 @@
           ((equal? type 'pointer) :pointer)
           ((equal? type 'string) :string)
           ((equal? type 'void) :void)
+          ((equal? type 'struct) :void)
           (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
 (define pffi-pointer?
@@ -39,8 +40,7 @@
 
 (define pffi-define-callback
   (lambda ()
-    (error "Not implemented")
-    ))
+    (error "Not implemented")))
 
 ; If youre reading this, this is just a temp hack. Dont judge me :D
 (define pffi-size-of
@@ -76,7 +76,7 @@
   (lambda ()
     (let ((p (allocate-bytes 0)))
       (free-bytes p)
-       p)))
+      p)))
 
 (define pffi-string->pointer
   (lambda (string-content)
@@ -103,9 +103,7 @@
 
 (define pffi-pointer-set!
   (lambda (pointer type offset value)
-    (let ((null-pointer (pffi-pointer-null))
-          (offset-address (cpointer-data pointer)))
-      (cpointer-data-set! null-pointer offset-address))))
+    (error "Not implemented")))
 
 (define pffi-pointer-get
   (lambda (pointer type offset)

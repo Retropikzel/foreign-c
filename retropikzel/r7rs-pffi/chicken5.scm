@@ -1,5 +1,5 @@
 
-(define pffi-type->native-type
+(define pffi-type->native-type ; Chicken has this procedure in three places
   (lambda (type)
     (cond ((equal? type 'int8) 'byte)
           ((equal? type 'uint8) 'unsigned-byte)
@@ -22,6 +22,7 @@
           ((equal? type 'pointer) 'c-pointer)
           ((equal? type 'void) 'void)
           ((equal? type 'callback) 'c-pointer)
+          ((equal? type 'struct) 'c-pointer)
           (else (error "pffi-type->native-type -- No such pffi type" type)))) )
 
 (define pffi-pointer?
@@ -31,7 +32,7 @@
 (define-syntax pffi-define
   (er-macro-transformer
     (lambda (expr rename compare)
-      (let* ((pffi-type->native-type
+      (let* ((pffi-type->native-type ; Chicken has this procedure in three places
                (lambda (type)
                  (cond ((equal? type 'int8) 'byte)
                        ((equal? type 'uint8) 'unsigned-byte)
@@ -54,6 +55,7 @@
                        ((equal? type 'pointer) 'c-pointer)
                        ((equal? type 'void) 'void)
                        ((equal? type 'callback) 'c-pointer)
+                       ((equal? type 'struct) 'c-pointer)
                        (else (error "pffi-type->native-type -- No such pffi type" type)))))
              (scheme-name (car (cdr expr)))
              (c-name (symbol->string (car (cdr (car (cdr (cdr (cdr expr))))))))
@@ -72,7 +74,7 @@
 (define-syntax pffi-define-callback
   (er-macro-transformer
     (lambda (expr rename compare)
-      (let* ((pffi-type->native-type
+      (let* ((pffi-type->native-type ; Chicken has this procedure in three places
                (lambda (type)
                  (cond ((equal? type 'int8) 'byte)
                        ((equal? type 'uint8) 'unsigned-byte)
@@ -95,6 +97,7 @@
                        ((equal? type 'pointer) 'c-pointer)
                        ((equal? type 'void) 'void)
                        ((equal? type 'callback) 'c-pointer)
+                       ((equal? type 'struct) 'c-pointer)
                        (else (error "pffi-type->native-type -- No such pffi type" type)))))
              (scheme-name (car (cdr expr)))
              (return-type (pffi-type->native-type (car (cdr (car (cdr (cdr expr)))))))
@@ -246,5 +249,5 @@
 
 (define pffi-struct-dereference
   (lambda (struct)
-    (pffi-struct-pointer struct)))
+    (pffi-pointer-address (pffi-struct-pointer struct))))
 
