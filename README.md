@@ -141,7 +141,7 @@ Usage recommended.
 ### Usage notes
 
 - Chibi
-    - Install libffi-dev
+    - Install libffi-dev libc-dev
     - Build with:
       - chibi-ffi retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub
       - ${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so -fPIC -shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c -lchibi-scheme -lffi
@@ -189,10 +189,15 @@ Types are given as symbols, for example 'int8 or 'pointer.
 
 Some of these are procedures and some macros, it might also change implementation to implementation.
 
-##### **pffi-init**
+##### **pffi-init** [options]
 
 Always call this first, on most implementation it does nothing but some implementations might need
 initialisation run.
+
+Options:
+
+- debug?
+    - If set to true library will output debug logs
 
 ##### **pffi-size-of** type -> number
 
@@ -202,11 +207,31 @@ Returns the size of the type.
 
 Returns the align of the type.
 
-##### **pffi-shared-object-auto-load**
+##### **pffi-shared-object-auto-load** headers shared-object-name [options] -> object
 
-TODO
+Load given shared object automatically searching many predefined paths.
 
-##### **pffi-shared-object-load** headers path
+Takes as argument a list of C headers, these are for the compiler ones. And an shared-object name,
+used by the dynamic FFI's. The name of the shared object should not contain suffix like .so or
+.dll. Nor should it contain any prefix like "lib".
+
+Additional options argument can be provided, which should be a list of lists starting with a
+keyword. The options are:
+
+- additional-versions
+    - Search for additional versions of shared object, given shared object "c" and additional
+    versions ".6" ".7" on linux the files "libc", "libc.6", "libc.7" are searched for.
+- additional-paths
+    - Give additional paths to search shared objects for
+
+Example:
+
+    (define libc-stdlib
+      (cond-expand
+        (windows (pffi-shared-object-auto-load (list "stdlib.h") "ucrtbase"))
+        (else (pffi-shared-object-auto-load (list "stdlib.h") "c" '((additional-versions (".6")))))))
+
+##### **pffi-shared-object-load** headers path [options]
 
 It is recommended to use the pffi-shared-object-auto-load instead of this
 directly.
@@ -218,6 +243,12 @@ Headers is a list of strings needed to be included, for example
 Path is the full path of the shared object without any "lib" prefix or ".so/.dll" suffix. For example:
 
     "curl"
+
+
+Options:
+
+- versions
+    - List of different versions of library to try, for example (list ".0" ".1")
 
 ##### **pffi-pointer-null** -> pointer
 

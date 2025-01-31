@@ -1,7 +1,5 @@
 (c-declare "#include <stdint.h>")
 
-(define pffi-init (lambda () #t))
-
 ;(c-declare "int size_of_int8() { return sizeof(int8_t);}")
 ;(define size-of-int8 (c-lambda () int "__return(sizeof(int8_t));"))
 ;(define int8-size ((c-lambda () int "__return(sizeof(int8_t));")))

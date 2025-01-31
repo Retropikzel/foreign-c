@@ -1,3 +1,26 @@
+(define debug? #f)
+(define (debug msg value)
+  (display "[R7RS-PFFI DEBUG] ")
+  (display msg)
+  (display ": ")
+  (write value)
+  (newline))
+
+(cond-expand
+  ((or chicken5 chicken6)
+    (define-syntax pffi-init
+      (er-macro-transformer
+        (lambda (expr rename compare)
+          '(import (chicken foreign)
+                   (chicken memory))))))
+  (else
+    (define (pffi-init . options)
+      (when (and (assoc 'debug? (car options))
+                 (cdr (assoc 'debug? (car options))))
+        (set! debug? #t))
+      #t)))
+
+;(when (not debug?) (set! debug (lambda (msg value) #t)))
 
 (define pffi-types
   '(int8
@@ -45,21 +68,32 @@
 (cond-expand
   (gambit
     (define-macro
-      (pffi-shared-object-auto-load headers additional-paths object-name additional-versions)
+      (pffi-shared-object-auto-load headers object-name options)
       `(pffi-shared-object-load ,(car headers))))
   (cyclone
     (define-syntax pffi-shared-object-auto-load
       (syntax-rules ()
-        ((pffi-shared-object-auto-load headers additional-paths object-name additional-versions)
+        ((pffi-shared-object-auto-load headers object-name)
+         (pffi-shared-object-auto-load headers object-name (list)))
+        ((pffi-shared-object-auto-load headers object-name options)
          (pffi-shared-object-load headers)))))
   (else
     (define-syntax pffi-shared-object-auto-load
       (syntax-rules ()
-        ((pffi-shared-object-auto-load headers additional-paths object-name additional-versions)
+        ((pffi-shared-object-auto-load headers object-name)
+         (pffi-shared-object-auto-load headers object-name (list)))
+        ((pffi-shared-object-auto-load headers object-name options)
          (cond-expand
            (chicken (pffi-shared-object-load headers))
            (else
-             (let* ((slash (cond-expand (windows (string #\\)) (else "/")))
+             (debug "Options given" options)
+             (let* ((additional-paths (if (assoc 'additional-paths options)
+                                        (cadr (assoc 'additional-paths options))
+                                        (list)))
+                    (additional-versions (if (assoc 'additional-versions options)
+                                           (cadr (assoc 'additional-versions options))
+                                           (list)))
+                    (slash (cond-expand (windows (string #\\)) (else "/")))
                     (auto-load-paths
                       (cond-expand
                         (windows
@@ -131,8 +165,11 @@
                         (windows ".dll")
                         (else ".so")))
                     (shared-object #f))
+               (debug "Auto load paths" paths)
+               (debug "Auto load versions" versions)
                (for-each
                  (lambda (path)
+                   (debug "Checking path" path)
                    (for-each
                      (lambda (version)
                        (let ((library-path (string-append path
@@ -140,9 +177,17 @@
                                                           platform-lib-prefix
                                                           object-name
                                                           platform-file-extension
-                                                          version)))
-                         (if (file-exists? library-path)
-                           (set! shared-object library-path))))
+                                                          version))
+                             (library-path-without-suffixes (string-append path
+                                                                           slash
+                                                                           platform-lib-prefix
+                                                                           object-name)))
+                         (debug "Checking if library exists in" library-path)
+                         (when (file-exists? library-path)
+                           (debug "Library exists, setting to be loaded" library-path)
+                           (cond-expand
+                             (racket (set! shared-object library-path-without-suffixes))
+                             (else (set! shared-object library-path))))))
                      versions))
                  paths)
                (if (not shared-object)

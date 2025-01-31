@@ -1,9 +1,3 @@
-(define-syntax pffi-init
-  (er-macro-transformer
-    (lambda (expr rename compare)
-      '(import (chicken foreign)
-               (chicken memory)))))
-
 (define pffi-type->native-type
   (lambda (type)
     (cond ((equal? type 'int8) 'byte)

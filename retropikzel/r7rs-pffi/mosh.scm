@@ -1,5 +1,3 @@
-(define pffi-init (lambda () #t))
-
 (define pffi-size-of
   (lambda (type)
     (cond ((eq? type 'int8) 1)

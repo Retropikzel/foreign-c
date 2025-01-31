@@ -1,5 +1,3 @@
-(define pffi-init (lambda () #t))
-
 (define pffi-type->native-type
   (lambda (type)
     (cond ((equal? type 'int8) _int8)
@@ -76,8 +74,11 @@
     (string-copy (cast pointer _pointer _string))))
 
 (define pffi-shared-object-load
-  (lambda (header path)
-    (ffi-lib path)))
+  (lambda (header path . options)
+    (if (and (not (null? options))
+             (assoc 'versions (car options)))
+      (ffi-lib path (mlist->list (append (cadr (assoc 'versions (car options))) (list #f))))
+      (ffi-lib path))))
 
 (define pffi-pointer-free
   (lambda (pointer)

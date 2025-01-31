@@ -16,14 +16,9 @@ retropikzel/r7rs-pffi/r7rs-pffi-chibi.c: retropikzel/r7rs-pffi/r7rs-pffi-chibi.s
 
 retropikzel/r7rs-pffi/r7rs-pffi-chibi.so: retropikzel/r7rs-pffi/r7rs-pffi-chibi.c
 	${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so \
+		retropikzel/r7rs-pffi/r7rs-pffi-chibi.c \
 		-fPIC \
-		-shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c \
-		-lchibi-scheme \
-		-lffi \
-		-L${HOME}/.scman/chibi/lib \
-		-I${HOME}/.scman/chibi/include \
-		-L${HOME}/.scman/chibi-git/lib \
-		-I${HOME}/.scman/chibi-git/include
+		-lffi
 
 test-chibi: retropikzel/r7rs-pffi/r7rs-pffi-chibi.so libtest.so
 	${CHIBI} test.scm

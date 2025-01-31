@@ -1,5 +1,3 @@
-(define pffi-init (lambda () #t))
-
 (define pffi-type->native-type
   (lambda (type)
     (error "Not defined")))

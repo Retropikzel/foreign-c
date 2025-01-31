@@ -2,8 +2,6 @@
 (define method-handle-lookup (invoke-static java.lang.invoke.MethodHandles 'lookup))
 (define native-linker (invoke-static java.lang.foreign.Linker 'nativeLinker))
 
-(define pffi-init (lambda () #t))
-
 (define value->object
   (lambda (value type)
     (cond ((equal? type 'byte)
@@ -133,10 +131,6 @@
     (invoke (invoke arena 'allocate size 1) 'reinterpret size)))
 
 (define pffi-pointer-address
-  (lambda (pointer)
-    (invoke pointer 'get (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 1) 0)))
-
-(define pffi-pointer-dereference
   (lambda (pointer)
     (invoke pointer 'get (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 1) 0)))
 

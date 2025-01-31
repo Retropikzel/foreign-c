@@ -1,7 +1,5 @@
 (require 'std-ffi)
 
-(define pffi-init (lambda () #t))
-
 ;; FIXME
 (define pffi-size-of
   (lambda (type)
