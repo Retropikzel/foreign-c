@@ -29,9 +29,9 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-struct-dereference
               pffi-define
-              pffi-define-callback
-              )
+              pffi-define-callback)
       (include-shared "r7rs-pffi/r7rs-pffi-chibi"))
     (chicken5
       (import (scheme base)
@@ -248,8 +248,7 @@
               pffi-struct-get
               pffi-struct-set!
               pffi-define
-              pffi-define-callback
-              ))
+              pffi-define-callback))
     (kawa
       (import (scheme base)
               (scheme write)
@@ -276,6 +275,7 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-struct-dereference
               pffi-define
               pffi-define-callback
               ))
@@ -374,6 +374,7 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-struct-dereference
               pffi-define
               pffi-define-callback))
     (sagittarius
@@ -404,6 +405,7 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-struct-dereference
               pffi-define
               pffi-define-callback))
     (skint

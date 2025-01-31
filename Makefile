@@ -18,7 +18,8 @@ retropikzel/r7rs-pffi/r7rs-pffi-chibi.so: retropikzel/r7rs-pffi/r7rs-pffi-chibi.
 	${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so \
 		retropikzel/r7rs-pffi/r7rs-pffi-chibi.c \
 		-fPIC \
-		-lffi
+		-lffi \
+		-shared
 
 test-chibi: retropikzel/r7rs-pffi/r7rs-pffi-chibi.so libtest.so
 	${CHIBI} test.scm

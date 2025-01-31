@@ -215,6 +215,6 @@
      (define scheme-name
        (make-c-callback return-type argument-types procedure)))))
 
-(define pffi-pointer-dereference
-  (lambda (pointer)
-    pointer))
+(define pffi-struct-dereference
+  (lambda (struct)
+    (pffi-struct-pointer struct)))

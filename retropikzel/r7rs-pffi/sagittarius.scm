@@ -22,6 +22,7 @@
           ((equal? type 'string) 'string)
           ((equal? type 'void) 'void)
           ((equal? type 'callback) 'callback)
+          ((equal? type 'struct) 'void*)
           (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
 (define pffi-pointer?
@@ -77,9 +78,9 @@
   (lambda (pointer)
     (address pointer)))
 
-(define pffi-pointer-dereference
-  (lambda (pointer)
-    (deref pointer 0)))
+(define pffi-struct-dereference
+  (lambda (struct)
+    (deref (pffi-struct-pointer struct) 0)))
 
 (define pffi-pointer-null
   (lambda ()

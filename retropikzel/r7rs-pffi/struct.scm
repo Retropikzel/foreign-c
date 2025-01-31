@@ -50,8 +50,6 @@
 (define (pffi-struct-make name members . pointer)
   (for-each
     (lambda (member)
-      (write member)
-      (newline)
       (when (not (pair? member))
         (error "All struct members must be pairs" (list name member)))
       (when (not (symbol? (car member)))

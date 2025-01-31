@@ -113,6 +113,7 @@ Usage recommended.
 | pffi-struct-offset-get          | X     | X         | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      | X   | X       |
 | pffi-struct-get                 | X     | X         | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      | X   | X       |
 | pffi-struct-set!                | X     | X         | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      | X   | X       |
+| pffi-struct-dereference         |       |           |         |         |        |        |       |      |         |      |        | X           |       |        |     |         |
 | pffi-define                     | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
 | pffi-define-callback            |       | X         |         |         |        |        | X     |      |         | X    | X      | X           |       |        |     |         |
 

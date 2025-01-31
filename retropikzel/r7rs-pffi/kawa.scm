@@ -50,6 +50,7 @@
       ((equal? type 'pointer) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
       ((equal? type 'void) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 1))
       ((equal? type 'callback) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
+      ((equal? type 'struct) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
       (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
 (define pffi-pointer?
@@ -191,3 +192,13 @@
       (if (equal? type 'char)
         (integer->char r)
         r))))
+
+(define pffi-struct-dereference
+  (lambda (struct)
+    ;; WIP
+    (pffi-struct-pointer struct)
+    #;(invoke (pffi-struct-pointer struct) 'reinterpret (static-field java.lang.Integer 'MAX_VALUE))
+    #;(invoke (pffi-struct-pointer struct)
+            'get
+            (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 1)
+            0)))
