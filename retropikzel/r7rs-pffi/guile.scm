@@ -21,6 +21,7 @@
           ((equal? type 'pointer) '*)
           ((equal? type 'void) void)
           ((equal? type 'callback) '*)
+          ((equal? type 'struct) '*)
           (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
 (define pffi-pointer?
@@ -55,10 +56,6 @@
 (define pffi-pointer-address
   (lambda (pointer)
     (pointer-address pointer)))
-
-(define pffi-pointer-dereference
-  (lambda (pointer)
-    (dereference-pointer pointer)))
 
 (define pffi-pointer-null
   (lambda ()
@@ -130,3 +127,7 @@
             ((equal? type 'double) (bytevector-ieee-double-ref p offset (native-endianness)))
             ((equal? type 'pointer) (make-pointer (bytevector-sint-ref p offset (native-endianness) (pffi-size-of type))))
             ((equal? type 'string) (pffi-pointer->string (make-pointer (bytevector-sint-ref p offset (native-endianness) (pffi-size-of type)))))))))
+
+(define pffi-struct-dereference
+  (lambda (struct)
+    (dereference-pointer (pffi-struct-pointer struct))))

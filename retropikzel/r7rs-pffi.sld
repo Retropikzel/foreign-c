@@ -64,6 +64,7 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-struct-dereference
               pffi-define
               pffi-define-callback))
      (chicken6
@@ -247,6 +248,7 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-struct-dereference
               pffi-define
               pffi-define-callback))
     (kawa
@@ -341,6 +343,7 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-struct-dereference
               pffi-define
               pffi-define-callback))
     (racket

@@ -1,26 +1,13 @@
-(define debug? #f)
-(define (debug msg value)
-  (display "[R7RS-PFFI DEBUG] ")
-  (display msg)
-  (display ": ")
-  (write value)
-  (newline))
-
 (cond-expand
   ((or chicken5 chicken6)
-    (define-syntax pffi-init
-      (er-macro-transformer
-        (lambda (expr rename compare)
-          '(import (chicken foreign)
-                   (chicken memory))))))
+   (define-syntax pffi-init
+     (er-macro-transformer
+       (lambda (expr rename compare)
+         '(import (chicken foreign)
+                  (chicken memory))))))
   (else
-    (define (pffi-init . options)
-      (when (and (assoc 'debug? (car options))
-                 (cdr (assoc 'debug? (car options))))
-        (set! debug? #t))
-      #t)))
-
-;(when (not debug?) (set! debug (lambda (msg value) #t)))
+    (define pffi-init
+      (lambda () (+ 1 1)))))
 
 (define pffi-types
   '(int8
@@ -62,9 +49,6 @@
       (for-each splitter str-l)
       res)))
 
-
-(define auto-load-versions (list ""))
-
 (cond-expand
   (gambit
     (define-macro
@@ -86,7 +70,6 @@
          (cond-expand
            (chicken (pffi-shared-object-load headers))
            (else
-             (debug "Options given" options)
              (let* ((additional-paths (if (assoc 'additional-paths options)
                                         (cadr (assoc 'additional-paths options))
                                         (list)))
@@ -149,45 +132,48 @@
                               "/usr/lib"
                               "/usr/lib64"
                               ; NetBSD
-                              "/usr/pkg/lib"
-                              )))))
-                    (auto-load-versions (list))
+                              "/usr/pkg/lib")))))
+                    (auto-load-versions (list ""))
                     (paths (append auto-load-paths additional-paths))
                     (versions (append auto-load-versions additional-versions))
                     (platform-lib-prefix
                       (cond-expand
-                        (racket (if (equal? (system-type 'os) 'windows) "" "lib"))
+                        ;(racket (if (equal? (system-type 'os) 'windows) "" "lib"))
                         (windows "")
                         (else "lib")))
                     (platform-file-extension
                       (cond-expand
-                        (racket (if (equal? (system-type 'os) 'windows) ".dll" ".so"))
+                        ;(racket (if (equal? (system-type 'os) 'windows) ".dll" ".so"))
                         (windows ".dll")
                         (else ".so")))
                     (shared-object #f))
-               (debug "Auto load paths" paths)
-               (debug "Auto load versions" versions)
                (for-each
                  (lambda (path)
-                   (debug "Checking path" path)
                    (for-each
                      (lambda (version)
-                       (let ((library-path (string-append path
-                                                          slash
-                                                          platform-lib-prefix
-                                                          object-name
-                                                          platform-file-extension
-                                                          version))
-                             (library-path-without-suffixes (string-append path
-                                                                           slash
-                                                                           platform-lib-prefix
-                                                                           object-name)))
-                         (debug "Checking if library exists in" library-path)
+                       (let ((library-path
+                               (string-append path
+                                              slash
+                                              platform-lib-prefix
+                                              object-name
+                                              platform-file-extension
+                                              (if (string=? version "")
+                                                ""
+                                                (string-append
+                                                  (cond-expand (windows ".") ; FIXME
+                                                               (else "."))
+                                                  version))))
+                               (library-path-without-suffixes (string-append path
+                                                                             slash
+                                                                             platform-lib-prefix
+                                                                             object-name)))
                          (when (file-exists? library-path)
-                           (debug "Library exists, setting to be loaded" library-path)
-                           (cond-expand
-                             (racket (set! shared-object library-path-without-suffixes))
-                             (else (set! shared-object library-path))))))
+                           (set! shared-object
+                             (cond-expand (racket library-path-without-suffixes)
+                                          (else library-path)))
+                           (display "Shared object is now: ")
+                           (display shared-object)
+                           (newline))))
                      versions))
                  paths)
                (if (not shared-object)

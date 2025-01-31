@@ -129,6 +129,7 @@
           ((equal? type 'string) 'char*)
           ((equal? type 'void) 'void)
           ((equal? type 'callback) 'void*)
+          ((equal? type 'struct) 'void*)
           (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
 (define-syntax pffi-define
@@ -147,3 +148,7 @@
        (make-c-callback (pffi-type->native-type return-type)
                         (map pffi-type->native-type argument-types)
                         procedure)))))
+
+(define pffi-struct-dereference
+  (lambda (struct)
+    (pffi-struct-pointer struct)))

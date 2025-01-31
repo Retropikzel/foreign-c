@@ -340,15 +340,15 @@
 
 (define libc-stdlib
   (cond-expand
-    (windows (pffi-shared-object-auto-load (list "stdlib.h") (list) "ucrtbase" (list "")))
-    (else (pffi-shared-object-auto-load (list "stdlib.h") (list) "c" (list "" ".6")))))
+    (windows (pffi-shared-object-auto-load (list "stdlib.h") "ucrtbase"))
+    (else (pffi-shared-object-auto-load (list "stdlib.h") "c" '((additional-versions ("0" "6")))))))
 
 (debug libc-stdlib)
 
 (define c-testlib
   (cond-expand
-    (windows (pffi-shared-object-auto-load (list "libtest.h") (list ".") "test" (list "")))
-    (else (pffi-shared-object-auto-load (list "libtest.h") (list ".") "test" (list "")))))
+    (windows (pffi-shared-object-auto-load (list "libtest.h") "test" '((additional-paths (".")))))
+    (else (pffi-shared-object-auto-load (list "libtest.h")  "test" '((additional-paths (".")))))))
 
 (debug c-testlib)
 

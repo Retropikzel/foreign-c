@@ -145,10 +145,6 @@
   (lambda (pointer)
     (pointer->address pointer)))
 
-(define pffi-pointer-dereference
-  (lambda (pointer)
-    (pointer->address pointer)))
-
 (define pffi-pointer-null
   (lambda ()
     (address->pointer 0)))
@@ -247,4 +243,8 @@
       ((equal? type 'float) (pointer-f32-ref (pointer+ pointer offset)))
       ((equal? type 'double) (pointer-f64-ref (pointer+ pointer offset)))
       ((equal? type 'pointer) (address->pointer (pointer-u64-ref (pointer+ pointer offset)))))))
+
+(define pffi-struct-dereference
+  (lambda (struct)
+    (pffi-struct-pointer struct)))
 

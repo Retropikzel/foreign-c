@@ -113,7 +113,7 @@ Usage recommended.
 | pffi-struct-offset-get          | X     | X         | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      | X   | X       |
 | pffi-struct-get                 | X     | X         | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      | X   | X       |
 | pffi-struct-set!                | X     | X         | X       | X       | X      | X      | X     | X    | X       | X    | X      | X           | X     | X      | X   | X       |
-| pffi-struct-dereference         |       |           |         |         |        |        |       |      |         |      |        | X           |       |        |     |         |
+| pffi-struct-dereference         |       | X         |         |         |        |        | X     |      |         | X    | X      | X           |       |        |     |         |
 | pffi-define                     | X     | X         | X       |         |        |        | X     | X    |         | X    | X      | X           |       |        |     |         |
 | pffi-define-callback            |       | X         |         |         |        |        | X     |      |         | X    | X      | X           |       |        |     |         |
 
@@ -126,14 +126,19 @@ Usage recommended.
     - Will work on nodejs by using some C FFI library from npm
     - Javascript side needs design
 - [MIT-Scheme](https://www.gnu.org/software/mit-scheme/)
+    - Need to study the implementation more
 - [s7](https://scheme.fail://ccrma.stanford.edu/software/snd/snd/s7.html)
+    - Propably does not need FFI?
 - [Airship](https://gitlab.com/mbabich/airship-scheme)
+    - Need to study the implementation more
 - [Other gambit targets](https://gambitscheme.org/)
   - Gambit compiles to different targets other than C too, for example Javascript. It would be cool
   and interesting to see if this FFI could also support some of those
   - When LIPS and Biwascheme Javascript side is done then Gambit should be done too
 - [s48-r7rs](https://codeberg.org/prescheme/s48-r7rs)
+    - Need to study the implementation more
 - [prescheme](https://codeberg.org/prescheme/prescheme)
+    - Need to study the implementation more
 - [Loko](https://scheme.fail/)
     - Desires no C interop, I can respect that
 
@@ -142,7 +147,7 @@ Usage recommended.
 ### Usage notes
 
 - Chibi
-    - Install libffi-dev libc-dev
+    - Install libffi-dev
     - Build with:
       - chibi-ffi retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub
       - ${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so -fPIC -shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c -lchibi-scheme -lffi
@@ -190,15 +195,10 @@ Types are given as symbols, for example 'int8 or 'pointer.
 
 Some of these are procedures and some macros, it might also change implementation to implementation.
 
-##### **pffi-init** [options]
+##### **pffi-init**
 
 Always call this first, on most implementation it does nothing but some implementations might need
 initialisation run.
-
-Options:
-
-- debug?
-    - If set to true library will output debug logs
 
 ##### **pffi-size-of** type -> number
 
