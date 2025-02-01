@@ -20,6 +20,7 @@
           ((equal? type 'double) double)
           ((equal? type 'pointer) opaque)
           ((equal? type 'void) c-void)
+          ((equal? type 'struct) 'c-pointer)
           (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
 (define pffi-pointer?
@@ -51,6 +52,7 @@
                        ((equal? type 'double) 'double)
                        ((equal? type 'pointer) 'c-pointer)
                        ((equal? type 'void) 'void)
+                       ((equal? type 'struct) 'c-pointer)
                        (else (error "pffi-type->native-type -- No such pffi type" type)))))
              (scheme-name (car (cdr expr)))
              (c-name (symbol->string (car (cdr (car (cdr (cdr (cdr expr))))))))
@@ -258,8 +260,7 @@
       ((equal? type 'unsigned-long) (pffi-pointer-unsigned-long-set! pointer offset value))
       ((equal? type 'float) (pffi-pointer-float-set! pointer offset value))
       ((equal? type 'double) (pffi-pointer-double-set! pointer offset value))
-      ((equal? type 'pointer) (pffi-pointer-pointer-set! pointer offset value))
-      )))
+      ((equal? type 'pointer) (pffi-pointer-pointer-set! pointer offset value)))))
 
 (define-c pffi-pointer-int8-get
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
@@ -373,5 +374,4 @@
       ((equal? type 'unsigned-long) (pffi-pointer-unsigned-long-get pointer offset))
       ((equal? type 'float) (pffi-pointer-float-get pointer offset))
       ((equal? type 'double) (pffi-pointer-double-get pointer offset))
-      ((equal? type 'pointer) (pffi-pointer-pointer-get pointer offset))
-    )))
+      ((equal? type 'pointer) (pffi-pointer-pointer-get pointer offset)))))

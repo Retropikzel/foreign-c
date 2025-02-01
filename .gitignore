@@ -4,6 +4,7 @@ docuptmp
 *.log
 *.c
 !libtest.c
+*.a
 *.so
 *.o
 *.so

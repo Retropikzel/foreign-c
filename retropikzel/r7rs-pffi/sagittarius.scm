@@ -100,7 +100,7 @@
 
 (define pffi-pointer->string
   (lambda (pointer)
-      (pointer->string pointer)))
+    (pointer->string pointer)))
 
 (define pffi-shared-object-load
   (lambda (headers path)

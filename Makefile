@@ -1,9 +1,17 @@
 .PHONY=libtest.so
 CC=gcc
 DOCKER=docker run -it -v ${PWD}:/workdir
+DOCKER_INIT=apt-get update \
+			&& apt-get install -y git make \
+			&& git clone https://git.sr.ht/~retropikzel/compile-r7rs \
+			&& cd compile-r7rs && make install
 
 libtest.so: libtest.c
 	${CC} -o libtest.so -shared -fPIC libtest.c
+
+libtest.a: libtest.c
+	${CC} -fPIC -c libtest.c
+	ar rcs libtest.a libtest.o
 
 CHIBI=chibi-scheme -A .
 test-chibi-podman-amd64: libtest.so
@@ -24,21 +32,21 @@ retropikzel/r7rs-pffi/r7rs-pffi-chibi.so: retropikzel/r7rs-pffi/r7rs-pffi-chibi.
 test-chibi: retropikzel/r7rs-pffi/r7rs-pffi-chibi.so libtest.so
 	${CHIBI} test.scm
 
-CHICKEN5=SCMC=csc CSCFLAGS="-I. " compile-r7rs main.scm
+CHICKEN5=SCMC=csc CSCFLAGS='-I. -L. -L -ltest' compile-r7rs -I . main.scm
 #CHICKEN5=csc -X r7rs -R r7rs -uses scheme.base -I.
 #CHICKEN5_LIB=csc -X r7rs -R r7rs -uses r7rs -I. -include-path ./retropikzel -s -J
 #CHICKEN5_LIB=csc -X r7rs -R r7rs -uses r7rs -unit retropikzel.r7rs-pffi -include-path ./retropikzel -s -J
-test-chicken5-podman-amd65: clean libtest.so
-	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:5 bash -c "cd /workdir && ${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld"
+test-chicken5-podman-amd65: clean libtest.a
+	#cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
+	#podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:5 bash -c "cd /workdir && ${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld"
 	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:5 bash -c "cd /workdir && ${CHICKEN5} test.scm && ./test"
 
-test-chicken5-docker: clean libtest.so
-	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
-	docker run -it -v ${PWD}:/workdir docker.io/schemers/chicken:5 bash -c "cd /workdir && ${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld"
-	docker run -it -v ${PWD}:/workdir docker.io/schemers/chicken:5 bash -c "cd /workdir && ${CHICKEN5} test.scm && ./test"
+test-chicken5-docker: clean libtest.a
+	#cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
+	#docker run -it -v ${PWD}:/workdir docker.io/schemers/chicken:5 bash -c "cd /workdir && ${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld"
+	${DOCKER} schemers/chicken:5 bash -c "${DOCKER_INIT} && cd /workdir && ${CHICKEN5} test.scm && ./test"
 
-test-chicken5: clean libtest.so
+test-chicken5: clean libtest.a
 	#cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
 	#${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld
 	${CHICKEN5} test.scm

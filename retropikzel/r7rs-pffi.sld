@@ -128,6 +128,7 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              ;pffi-struct-dereference
               pffi-define
               ;pffi-define-callback
               ))
