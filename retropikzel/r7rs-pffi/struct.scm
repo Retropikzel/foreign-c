@@ -1,8 +1,8 @@
 
 (define-record-type <pffi-struct>
-  (struct-make name size pointer members)
+  (struct-make c-type size pointer members)
   pffi-struct?
-  (name pffi-struct-name)
+  (c-type pffi-struct-c-type)
   (size pffi-struct-size)
   (pointer pffi-struct-pointer)
   (members pffi-struct-members))
@@ -48,22 +48,22 @@
           (cons 'offsets offsets))))
 
 (define pffi-struct-make
-  (lambda (name members . pointer)
+  (lambda (c-type members . pointer)
   (for-each
     (lambda (member)
       (when (not (pair? member))
-        (error "All struct members must be pairs" (list name member)))
+        (error "All struct members must be pairs" (list c-type member)))
       (when (not (symbol? (car member)))
-        (error "All struct member types must be symbols" (list name member)))
+        (error "All struct member types must be symbols" (list c-type member)))
       (when (not (symbol? (cdr member)))
-        (error "All struct member names must be symbols" (list name member))))
+        (error "All struct member names must be symbols" (list c-type member))))
     members)
   (let* ((size-and-offsets (calculate-struct-size-and-offsets members))
          (size (cdr (assoc 'size size-and-offsets)))
          (offsets (cdr (assoc 'offsets size-and-offsets)))
          (pointer (if (null? pointer) (pffi-pointer-allocate size) (car pointer)))
-         (name (if (string? name) name (symbol->string name))))
-    (struct-make name size pointer offsets))))
+         (c-typr (if (string? c-type) c-type (symbol->string c-type))))
+    (struct-make c-type size pointer offsets))))
 
 (define (pffi-struct-offset-get struct member-name)
   (when (not (assoc member-name (pffi-struct-members struct)))

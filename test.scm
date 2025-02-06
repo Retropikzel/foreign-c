@@ -781,4 +781,45 @@
 (debug sorted)
 (assert equal? sorted (list 1 2 3))
 
+;; pffi-struct-dereference
+
+(print-header 'pffi-struct-dereference)
+
+
+;; pffi-struct-set!
+
+(print-header 'pffi-struct-set!)
+
+(pffi-define c-test-check-by-value c-testlib 'test_check_by_value 'int (list 'struct))
+(define struct-test3 (pffi-struct-make 'test
+                                          '((int8 . a)
+                                            (char . b)
+                                            (double . c)
+                                            (char . d)
+                                            (pointer . e)
+                                            (float . f)
+                                            (pointer . g)
+                                            (int8 . h)
+                                            (pointer . i)
+                                            (int . j)
+                                            (int . k)
+                                            (int . l)
+                                            (double . m)
+                                            (float . n))))
+(pffi-struct-set! struct-test3 'a 1)
+(pffi-struct-set! struct-test3 'b #\b)
+(pffi-struct-set! struct-test3 'c 3.0)
+(pffi-struct-set! struct-test3 'd #\d)
+(pffi-struct-set! struct-test3 'e (pffi-pointer-null))
+(pffi-struct-set! struct-test3 'f 6.0)
+(pffi-struct-set! struct-test3 'g (pffi-string->pointer "foo"))
+(pffi-struct-set! struct-test3 'h 8)
+(pffi-struct-set! struct-test3 'i (pffi-pointer-null))
+(pffi-struct-set! struct-test3 'j 10)
+(pffi-struct-set! struct-test3 'k 11)
+(pffi-struct-set! struct-test3 'l 12)
+(pffi-struct-set! struct-test3 'm 13.0)
+(pffi-struct-set! struct-test3 'n 14.0)
+(c-test-check-by-value (pffi-struct-dereference struct-test3))
+
 (exit 0)
