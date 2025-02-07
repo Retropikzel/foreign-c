@@ -160,7 +160,7 @@
                                               (if (string=? version "")
                                                 ""
                                                 (string-append
-                                                  (cond-expand (windows ".") ; FIXME
+                                                  (cond-expand (windows "-")
                                                                (else "."))
                                                   version))))
                                (library-path-without-suffixes (string-append path
