@@ -135,7 +135,7 @@
                               "/usr/pkg/lib")))))
                     (auto-load-versions (list ""))
                     (paths (append auto-load-paths additional-paths))
-                    (versions (append auto-load-versions additional-versions))
+                    (versions (append additional-versions auto-load-versions))
                     (platform-lib-prefix
                       (cond-expand
                         ;(racket (if (equal? (system-type 'os) 'windows) "" "lib"))
@@ -167,13 +167,11 @@
                                                                              slash
                                                                              platform-lib-prefix
                                                                              object-name)))
-                         (when (file-exists? library-path)
+                         (when (and (not shared-object)
+                                    (file-exists? library-path))
                            (set! shared-object
                              (cond-expand (racket library-path-without-suffixes)
-                                          (else library-path)))
-                           (display "Shared object is now: ")
-                           (display shared-object)
-                           (newline))))
+                                          (else library-path))))))
                      versions))
                  paths)
                (if (not shared-object)
@@ -182,4 +180,6 @@
                               (cons 'paths paths)
                               (cons 'platform-file-extension platform-file-extension)
                               (cons 'versions versions)))
-                 (pffi-shared-object-load headers shared-object))))))))))
+                 (pffi-shared-object-load headers
+                                          shared-object
+                                          `((additional-versions ,versions))))))))))))

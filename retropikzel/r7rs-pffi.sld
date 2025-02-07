@@ -52,6 +52,7 @@
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
+              pffi-pointer-address
               pffi-pointer?
               pffi-pointer-free
               pffi-pointer-set!
@@ -237,6 +238,7 @@
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
+              pffi-pointer-address
               pffi-pointer?
               pffi-pointer-free
               pffi-pointer-set!
@@ -366,6 +368,7 @@
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
+              pffi-pointer-address
               pffi-pointer?
               pffi-pointer-free
               pffi-pointer-set!
@@ -397,6 +400,7 @@
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
+              pffi-pointer-address
               pffi-pointer?
               pffi-pointer-free
               pffi-pointer-set!

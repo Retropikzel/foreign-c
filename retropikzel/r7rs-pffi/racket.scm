@@ -77,8 +77,10 @@
 (define pffi-shared-object-load
   (lambda (header path . options)
     (if (and (not (null? options))
-             (assoc 'versions (car options)))
-      (ffi-lib path (mlist->list (append (cadr (assoc 'versions (car options))) (list #f))))
+             (assoc 'additional-versions (car options)))
+      (ffi-lib path (mlist->list (append (cadr (assoc 'additional-versions
+                                                      (car options)))
+                                         (list #f))))
       (ffi-lib path))))
 
 (define pffi-pointer-free
