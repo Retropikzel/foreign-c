@@ -146,7 +146,8 @@
                         ;(racket (if (equal? (system-type 'os) 'windows) ".dll" ".so"))
                         (windows ".dll")
                         (else ".so")))
-                    (shared-object #f))
+                    (shared-object #f)
+                    (searched-paths (list)))
                (for-each
                  (lambda (path)
                    (for-each
@@ -156,17 +157,23 @@
                                               slash
                                               platform-lib-prefix
                                               object-name
-                                              platform-file-extension
+                                              (cond-expand
+                                                (windows "")
+                                                (else platform-file-extension))
                                               (if (string=? version "")
                                                 ""
                                                 (string-append
                                                   (cond-expand (windows "-")
                                                                (else "."))
-                                                  version))))
+                                                  version))
+                                              (cond-expand
+                                                (windows platform-file-extension)
+                                                (else ""))))
                                (library-path-without-suffixes (string-append path
                                                                              slash
                                                                              platform-lib-prefix
                                                                              object-name)))
+                         (set! searched-paths (append searched-paths (list library-path)))
                          (when (and (not shared-object)
                                     (file-exists? library-path))
                            (set! shared-object
@@ -175,11 +182,17 @@
                      versions))
                  paths)
                (if (not shared-object)
-                 (error "Could not load shared object"
-                        (list (cons 'object object-name)
-                              (cons 'paths paths)
-                              (cons 'platform-file-extension platform-file-extension)
-                              (cons 'versions versions)))
+                 (begin
+                   (display "Could not load shared object: ")
+                   (write (list (cons 'object object-name)
+                                (cons 'paths paths)
+                                (cons 'platform-file-extension platform-file-extension)
+                                (cons 'versions versions)))
+                   (newline)
+                   (display "Searched paths: ")
+                   (write searched-paths)
+                   (newline)
+                   (exit 1))
                  (pffi-shared-object-load headers
                                           shared-object
                                           `((additional-versions ,versions))))))))))))
