@@ -95,8 +95,8 @@ test-gerbil:
 	${GERBIL} test.scm
 
 GUILE=guile --r7rs --fresh-auto-compile -L .
-test-guile-podman-amd64: libtest.so
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/guile bash -c "cd /workdir && ${GUILE} test.scm"
+test-guile-docker: libtest.so
+	${DOCKER} schemers/guile:head bash -c "cd /workdir && ${GUILE} test.scm"
 
 test-guile: libtest.so
 	${GUILE} test.scm

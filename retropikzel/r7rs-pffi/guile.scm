@@ -70,7 +70,7 @@
     (pointer->string pointer)))
 
 (define pffi-shared-object-load
-  (lambda (header path)
+  (lambda (header path . options)
     (load-foreign-library path)))
 
 (define pffi-pointer-free
