@@ -12,59 +12,66 @@ pipeline {
     }
 
     stages {
-        stage('Chicken') {
+        stage('Chibi') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make test-chicken'
+                    sh 'make test-chibi-docker'
+                }
+            }
+        }
+        stage('Chicken-5') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh 'make test-chicken-5-docker'
                 }
             }
         }
         stage('Cyclone') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make test-cyclone'
+                    sh 'make test-cyclone-docker'
                 }
             }
         }
         stage('Gambit') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make test-gambit'
+                    sh 'make test-gambit-docker'
                 }
             }
         }
         stage('Guile') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make test-guile'
+                    sh 'make test-guile-docker'
                 }
             }
         }
         stage('Sagittarius') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make test-sagittarius'
+                    sh 'make test-sagittarius-docer'
                 }
             }
         }
         stage('Racket') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make test-racket'
+                    sh 'make test-racket-docker'
                 }
             }
         }
         stage('Kawa') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make test-kawa'
+                    sh 'make test-kawa-docker'
                 }
             }
         }
         stage('STklos') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make test-stklos'
+                    sh 'make test-stklos-docker'
                 }
             }
         }
