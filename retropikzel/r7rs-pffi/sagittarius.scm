@@ -103,7 +103,7 @@
     (pointer->string pointer)))
 
 (define pffi-shared-object-load
-  (lambda (headers path)
+  (lambda (headers path . options)
     (open-shared-library path)))
 
 (define pffi-pointer-free

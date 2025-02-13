@@ -150,7 +150,7 @@
     (invoke (invoke pointer 'reinterpret (static-field java.lang.Integer 'MAX_VALUE)) 'getString 0)))
 
 (define pffi-shared-object-load
-  (lambda (header path)
+  (lambda (header path . options)
     (let* ((library-file (make java.io.File path))
            (file-name (invoke library-file 'getName))
            (library-parent-folder (make java.io.File (invoke library-file 'getParent)))

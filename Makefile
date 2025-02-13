@@ -1,10 +1,7 @@
 .PHONY=libtest.so
 CC=gcc
 DOCKER=docker run -it -v ${PWD}:/workdir
-DOCKER_INIT=apt-get update \
-			&& apt-get install -y git make \
-			&& git clone https://git.sr.ht/~retropikzel/compile-r7rs \
-			&& cd compile-r7rs && make install
+DOCKER_INIT=cd /workdir && make clean &&
 
 libtest.so: libtest.c
 	${CC} -o libtest.so -shared -fPIC libtest.c
@@ -14,10 +11,12 @@ libtest.a: libtest.c
 	ar rcs libtest.a libtest.o
 
 CHIBI=chibi-scheme -A .
-test-chibi-podman-amd64: libtest.so
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chibi bash -c "cd /workdir && chibi-ffi retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub"
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chibi bash -c "cd /workdir && apt update && apt install -y build-essential libffi-dev && ${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so -fPIC -shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c -lchibi-scheme -lffi"
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chibi bash -c "cd /workdir && ${CHIBI} test.scm"
+test-chibi-docker:
+	docker build -f Dockerfile --build-arg SCHEME=chibi --tag=r7rs-pffi-chibi .
+	${DOCKER} r7rs-pffi-chibi bash -c \
+		"${DOCKER_INIT} chibi-ffi retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub \
+		&& ${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so -fPIC -shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c -lchibi-scheme -lffi \
+		&& ${CHIBI} test.scm"
 
 retropikzel/r7rs-pffi/r7rs-pffi-chibi.c: retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub
 	chibi-ffi retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub
@@ -33,27 +32,19 @@ test-chibi: retropikzel/r7rs-pffi/r7rs-pffi-chibi.so libtest.so
 	${CHIBI} test.scm
 
 CHICKEN5=SCMC=csc CSC_FLAGS='-I. -L. -L -ltest' compile-r7rs -I . main.scm
-test-chicken-5-podman-amd65: clean libtest.a
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:5 bash -c "cd /workdir && ${CHICKEN5} test.scm && ./test"
-
-test-chicken-5-docker: clean libtest.a
-	${DOCKER} schemers/chicken:5 bash -c "${DOCKER_INIT} && cd /workdir && ${CHICKEN5} test.scm && ./test"
+test-chicken-5-docker:
+	docker build --build-arg SCHEME=chicken:5 -f Dockerfile --tag=r7rs-pffi-chicken-5 .
+	${DOCKER} r7rs-pffi-chicken-5 bash -c "${DOCKER_INIT} ${CHICKEN5} test.scm && ./test"
 
 test-chicken-5: clean libtest.a
 	${CHICKEN5} test.scm
 	./test
 
-CHICKEN6=csc -I.
-CHICKEN6_LIB=csc -I. -include-path ./retropikzel -s -J
-test-chicken-6-podman-amd65: clean libtest.so
+CHICKEN6=SCMC=csc CSC_FLAGS='-I. -L. -L -ltest' compile-r7rs -I . main.scm
+test-chicken-6-docker:
+	docker build --build-arg SCHEME=chicken:6 -f Dockerfile --tag=r7rs-pffi-chicken-6 .
 	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:6 bash -c "cd /workdir && ${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld"
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/chicken:6 bash -c "cd /workdir && ${CHICKEN5} test.scm && ./test"
-
-test-chicken-6-docker: clean libtest.so
-	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
-	docker run -it -v ${PWD}:/workdir docker.io/schemers/chicken:6 bash -c "cd /workdir && ${CHICKEN5_LIB} retropikzel.r7rs-pffi.sld"
-	docker run -it -v ${PWD}:/workdir docker.io/schemers/chicken:6 bash -c "cd /workdir && ${CHICKEN5} test.scm && ./test"
+	${DOCKER} r7rs-pffi-chicken-6 bash -c "${DOCKER_INIT} ${CHICKEN6} test.scm && ./test"
 
 test-chicken-6: clean libtest.so
 	cp retropikzel/r7rs-pffi.sld retropikzel.r7rs-pffi.sld
@@ -61,9 +52,9 @@ test-chicken-6: clean libtest.so
 	${CHICKEN6} test.scm && ./test
 
 CYCLONE=cyclone -COPT -I. -A .
-test-cyclone-podman-amd64: clean libtest.so
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/cyclone bash -c "cd /workdir && ${CYCLONE} retropikzel/r7rs-pffi.sld"
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/cyclone bash -c "cd /workdir && ${CYCLONE} test.scm && ./test"
+test-cyclone-docker:
+	docker build --build-arg SCHEME=cyclone -f Dockerfile --tag=r7rs-pffi-cyclone .
+	${DOCKER} r7rs-pffi-cyclone bash -c "${DOCKER_INIT} ${CYCLONE} retropikzel/r7rs-pffi.sld && ${CYCLONE} test.scm && ./test"
 
 test-cyclone: clean libtest.so
 	${CYCLONE} retropikzel/r7rs-pffi.sld
@@ -72,10 +63,9 @@ test-cyclone: clean libtest.so
 
 GAMBIT_LIB=gsc -:search=.
 GAMBIT_CC=gsc -exe ./ -nopreload
-test-gambit-podman-amd64: clean libtest.so
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/gambit bash -c "cd /workdir && ${GAMBIT_LIB} retropikzel/r7rs-pffi; echo $$?"
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/gambit bash -c "cd /workdir && ${GAMBIT_CC} test.scm; echo $$?"
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/gambit bash -c "cd /workdir && ./test -:search=.; echo $$?"
+test-gambit-docker:
+	docker build --build-arg SCHEME=gambit -f Dockerfile --tag=r7rs-pffi-gambit .
+	${DOCKER} r7rs-pffi-gambit bash -c "${DOCKER_INIT} ${GAMBIT_LIB} retropikzel/r7rs-pffi; echo $$? && ${GAMBIT_CC} test.scm; echo $$? && ./test -:search=.; echo $$?"
 
 test-gambit: clean libtest.so
 	${GAMBIT_LIB} retropikzel/r7rs-pffi; echo $$?
@@ -87,80 +77,89 @@ test-gauche:
 
 GERBIL_LIB=gxc -O
 GERBIL=GERBIL_LOADPATH=. gxc r7rs
-test-gerbil-podman-amd64: libtest.so
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/gerbil bash -c "cd /workdir && ${GERBIL_LIB} retropikzel/r7rs-pffi.sld"
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/gerbil bash -c "cd /workdir && ${GERBIL} test.scm"
+test-gerbil-docker:
+	docker build --build-arg SCHEME=gerbil -f Dockerfile --tag=r7rs-pffi-gerbil .
+	${DOCKER} r7rs-pffi-gerbil bash -c "${DOCKER_INIT} ${GERBIL_LIB} retropikzel/r7rs-pffi.sld && ${GERBIL} test.scm"
 
 test-gerbil:
 	${GERBIL} test.scm
 
 GUILE=guile --r7rs --fresh-auto-compile -L .
-test-guile-docker: libtest.so
-	${DOCKER} schemers/guile:head bash -c "cd /workdir && ${GUILE} test.scm"
+test-guile-docker:
+	docker build --build-arg SCHEME=guile:head -f Dockerfile --tag=r7rs-pffi-guile .
+	${DOCKER} r7rs-pffi-guile bash -c "${DOCKER_INIT} ${GUILE} test.scm"
 
 test-guile: libtest.so
 	${GUILE} test.scm
 
 KAWA=java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=.:*.sld
-test-kawa-podman-amd64: libtest.so
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/kawa bash -c "cd /workdir && ${KAWA} test.scm"
-
-test-kawa-docker: libtest.so
-	docker run -it -v ${PWD}:/workdir docker.io/schemers/kawa bash -c "cd /workdir && ${KAWA} test.scm"
+test-kawa-docker:
+	docker build --build-arg SCHEME=kawa -f Dockerfile --tag=r7rs-pffi-kawa .
+	${DOCKER} r7rs-pffi-kawa bash -c "${DOCKER_INIT} ${KAWA} test.scm"
 
 test-kawa: libtest.so
 	${KAWA} test.scm
 
 LARCENY=larceny -r7 -I .
-test-larceny-docker: libtest.so
-	${DOCKER} schemers/larceny:latest bash -c "cd /workdir && ${LARCENY} test.scm"
+test-larceny-docker:
+	docker build --build-arg SCHEME=larceny -f Dockerfile --tag=r7rs-pffi-larceny .
+	${DOCKER} r7rs-pffi-larceny bash -c "${DOCKER_INIT} ${LARCENY} test.scm"
 
 test-larceny: libtest.so
 	${LARCENY} test.scm
 
 MOSH=mosh --loadpath=.
-test-mosh-podman-amd64: libtest.so
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/mosh:0 bash -c "cd /workdir && ${MOSH} test.scm"
-
-test-mosh-docker: libtest.so
-	docker run -it -v ${PWD}:/workdir docker.io/schemers/mosh:0 bash -c "cd /workdir && ${MOSH} test.scm"
+test-mosh-docker:
+	docker build --build-arg SCHEME=mosh -f Dockerfile --tag=r7rs-pffi-mosh .
+	${DOCKER} r7rs-pffi-mosh bash -c "${DOCKER_INIT} ${MOSH} test.scm"
 
 test-mosh: libtest.so
 	${MOSH} test.scm
 
-SASH=sash --clean-cache -r7 -L . -L ./schubert
-test-sagittarius-podman-amd64: libtest.so
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/sagittarius bash -c "cd /workdir && ${SASH} test.scm"
-
-test-sagittarius-docker: libtest.so
-	docker run -it -v ${PWD}:/workdir docker.io/schemers/sagittarius bash -c "cd /workdir && ${SASH} test.scm"
+SASH=sash --clean-cache -r7 -L .
+test-sagittarius-docker:
+	docker build --build-arg SCHEME=sagittarius -f Dockerfile --tag=r7rs-pffi-sagittarius .
+	${DOCKER} r7rs-pffi-sagittarius bash -c "${DOCKER_INIT} ${SASH} test.scm"
 
 test-sagittarius: libtest.so
 	${SASH} test.scm
 
-RACKET=racket -I r7rs -S . -S ./schubert --script
-test-racket-podman-amd64: libtest.so
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/racket bash -c "cd /workdir && ${RACKET} test.scm"
+RACKET=racket -I r7rs -S . --script
+test-racket-docker:
+	docker build --build-arg SCHEME=racket -f Dockerfile --tag=r7rs-pffi-racket .
+	${DOCKER} r7rs-pffi-racket bash -c "${DOCKER_INIT} ${RACKET} test.scm"
 
 test-racket: libtest.so
 	${RACKET} test.scm
 
+SKINT=skint
+test-skint-docker:
+	docker build --build-arg SCHEME=skint:head -f Dockerfile --tag=r7rs-pffi-skint .
+	${DOCKER} r7rs-pffi-skint bash -c "${DOCKER_INIT} ${SKINT} test.scm"
+
 test-skint: libtest.so
-	skint test.scm
+	${SKINT} test.scm
 
 STKLOS=stklos -A . -f
-test-stklos-podman-amd64: libtest.so
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/stklos bash -c "cd /workdir && ${STKLOS} test.scm"
+test-stklos-docker:
+	docker build --build-arg SCHEME=stklos:head -f Dockerfile --tag=r7rs-pffi-stklos .
+	${DOCKER} r7rs-pffi-stklos bash -c "${DOCKER_INIT} ${STKLOS} test.scm"
 
 test-stklos: libtest.so
 	${STKLOS} test.scm
 
+TR7=tr7i
+test-tr7-docker:
+	docker build --build-arg SCHEME=tr7:head -f Dockerfile --tag=r7rs-pffi-tr7 .
+	${DOCKER} r7rs-pffi-tr7 bash -c "${DOCKER_INIT} ${TR7} test.scm"
+
 test-tr7: libtest.so
-	tr7i test.scm
+	${TR7} test.scm
 
 YPSILON=ypsilon --r7rs --sitelib=. --top-level-program
-test-ypsilon-podman-amd64: libtest.so
-	podman run --arch=amd64 -it -v ${PWD}:/workdir docker.io/schemers/ypsilon bash -c "cd /workdir && ${YPSILON} test.scm"
+test-ypsilon-docker:
+	docker build --build-arg SCHEME=ypsilon -f Dockerfile --tag=r7rs-pffi-ypsilon .
+	${DOCKER} r7rs-pffi-ypsilon bash -c "${DOCKER_INIT} ${YPSILON} test.scm"
 
 test-ypsilon: libtest.so
 	${YPSILON} test.scm
@@ -168,7 +167,6 @@ test-ypsilon: libtest.so
 documentation:
 	cat README.md > docs/index.md
 	mkdocs build
-
 
 tmp:
 	mkdir -p tmp

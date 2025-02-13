@@ -22,7 +22,7 @@
           (else (error "Can not get size of unknown type" type)))))
 
 (define pffi-shared-object-load
-  (lambda (headers path)
+  (lambda (headers path . options)
     (let ((shared-object (dlopen path RTLD-NOW))
           (maybe-error (dlerror)))
       (when (not (pffi-pointer-null? maybe-error))

@@ -22,7 +22,7 @@
           (else (error "Can not get size of unknown type" type)))))
 
 (define pffi-shared-object-load
-  (lambda (header path)
+  (lambda (header path . options)
     (open-shared-library path)))
 
 (define pffi-pointer-null
