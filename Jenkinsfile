@@ -7,9 +7,6 @@ pipeline {
         }
     }
 
-    environment {
-        DOCKER=docker run -v ${PWD}:/workdir
-    }
 
     options {
             buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
@@ -45,6 +42,9 @@ pipeline {
             }
         }
         stage('Guile') {
+             environment {
+                DOCKER=docker run -v ${PWD}:/workdir
+            }
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make test-guile-docker'
