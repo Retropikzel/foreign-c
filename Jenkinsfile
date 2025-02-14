@@ -7,7 +7,6 @@ pipeline {
         }
     }
 
-
     options {
             buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
     }
@@ -16,63 +15,63 @@ pipeline {
         stage('Chibi') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make DOCKER=docker run -v ${PWD}:/workdir test-chibi-docker'
+                    sh 'make test-chibi-docker-jenkins-jenkins'
                 }
             }
         }
         stage('Chicken-5') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make DOCKER=docker run -v ${PWD}:/workdir test-chicken-5-docker'
+                    sh 'make test-chicken-5-docker-jenkins'
                 }
             }
         }
         stage('Cyclone') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make DOCKER=docker run -v ${PWD}:/workdir test-cyclone-docker'
+                    sh 'make test-cyclone-docker-jenkins'
                 }
             }
         }
         stage('Gambit') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make DOCKER=docker run -v ${PWD}:/workdir test-gambit-docker'
+                    sh 'make test-gambit-docker-jenkins'
                 }
             }
         }
         stage('Guile') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make DOCKER=docker run -v ${PWD}:/workdir test-guile-docker'
+                    sh 'make test-guile-docker-jenkins'
                 }
             }
         }
         stage('Sagittarius') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make DOCKER=docker run -v ${PWD}:/workdir test-sagittarius-docer'
+                    sh 'make test-sagittarius-docker-jenkins'
                 }
             }
         }
         stage('Racket') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make DOCKER=docker run -v ${PWD}:/workdir test-racket-docker'
+                    sh 'make test-racket-docker-jenkins'
                 }
             }
         }
         stage('Kawa') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make DOCKER=docker run -v ${PWD}:/workdir test-kawa-docker'
+                    sh 'make test-kawa-docker-jenkins'
                 }
             }
         }
         stage('STklos') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make DOCKER=docker run -v ${PWD}:/workdir test-stklos-docker'
+                    sh 'make test-stklos-docker-jenkins'
                 }
             }
         }
