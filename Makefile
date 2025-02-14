@@ -191,6 +191,6 @@ clean:
 	@rm -rf test
 	@rm -rf tmp
 	find . -name "core.1" -delete
-	find . -name "test@gambit*" -delete
+	find . -name "*@gambit*" -delete
 	rm -rf retropikzel/r7rs-pffi/r7rs-pffi-chibi.so
 	rm -rf retropikzel/r7rs-pffi/r7rs-pffi-chibi.c
