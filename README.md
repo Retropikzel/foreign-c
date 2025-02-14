@@ -4,6 +4,8 @@ Foreign function interface that is supported on multiple R7RS Sceheme implementa
 
 Any help in form of constructive advice and bug reports are appreciated.
 
+[Project](https://todo.sr.ht/~retropikzel/r7rs-pffi)
+
 [Issue trackers](https://sr.ht/~retropikzel/r7rs-pffi/trackers)
 
 [Maling lists](https://sr.ht/~retropikzel/r7rs-pffi/lists)
