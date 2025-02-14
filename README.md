@@ -10,7 +10,7 @@ Any help in form of constructive advice and bug reports are appreciated.
 
 [Maling lists](https://sr.ht/~retropikzel/r7rs-pffi/lists)
 
-[Jenkins](https://jenkins.scheme.org/job/r7rs/job/r7rs-srfi/job/main/)
+[Jenkins](https://jenkins.scheme.org/job/r7rs_pffi/job/r7rs-pffi/)
 
 ## Table of contents
 
