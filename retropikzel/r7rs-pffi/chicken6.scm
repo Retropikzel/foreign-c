@@ -113,7 +113,7 @@
                                  (begin ,@ procedure-body))
                 (define ,scheme-name (location external_123456789)))))))
 
-(define pffi-size-of
+(define size-of-type
   (lambda (type)
     (cond ((equal? type 'int8) (foreign-value "sizeof(int8_t)" int))
           ((equal? type 'uint8) (foreign-value "sizeof(uint8_t)" int))
@@ -134,7 +134,7 @@
           ((equal? type 'float) (foreign-value "sizeof(float)" int))
           ((equal? type 'double) (foreign-value "sizeof(double)" int))
           ((equal? type 'pointer) (foreign-value "sizeof(void*)" int))
-          (else (error "pffi-size-of -- No such pffi type" type)))))
+          (else #f)))))
 
 (define pffi-pointer-allocate
   (lambda (size)

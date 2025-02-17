@@ -11,7 +11,7 @@
   (lambda (type)
     (cond-expand
       ;(guile (alignof (pffi-type->native-type type)))
-      (else (pffi-size-of type)))))
+      (else (size-of-type type)))))
 
 (define (round-to-next-modulo-of to-round roundee)
   (if (= (floor-remainder to-round roundee) 0)
@@ -25,8 +25,8 @@
                          (let* ((name (cdr member))
                                 (type (car member))
                                 (type-alignment (pffi-align-of type)))
-                           (when (> (pffi-size-of type) largest-member-size)
-                             (set! largest-member-size (pffi-size-of type)))
+                           (when (> (size-of-type type) largest-member-size)
+                             (set! largest-member-size (size-of-type type)))
                            (if (or (= size 0)
                                    (= (floor-remainder size type-alignment) 0))
                              (begin

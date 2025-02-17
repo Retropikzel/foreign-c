@@ -47,7 +47,7 @@
                         (map pffi-type->native-type argument-types)
                         procedure)))))
 
-(define pffi-size-of
+(define size-of-type
   (lambda (type)
     (cond ((eq? type 'int8) size-of-int8_t)
           ((eq? type 'uint8) size-of-uint8_t)
@@ -68,7 +68,8 @@
           ((eq? type 'float) size-of-float)
           ((eq? type 'double) size-of-double)
           ((eq? type 'pointer) size-of-void*)
-          (else (error "Can not get size of unknown type" type)))))
+          ((eq? type 'string) size-of-void*)
+          (else #f))))
 
 (define pffi-pointer-allocate
   (lambda (size)

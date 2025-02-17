@@ -2,4 +2,8 @@
 ;; You can store it in a file that you may then pass to any 'guix' command
 ;; that accepts a '--manifest' (or '-m') option.
 
-(specifications->manifest (list "gcc-toolchain"))
+(specifications->manifest (list "gcc-toolchain"
+                                "guile-next"
+                                "racket"
+                                "chicken"
+                                "stklos"))

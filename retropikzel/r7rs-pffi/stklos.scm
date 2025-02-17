@@ -43,7 +43,7 @@
     (error "Not implemented")))
 
 ; If youre reading this, this is just a temp hack. Dont judge me :D
-(define pffi-size-of
+(define size-of-type
   (lambda (type)
     (cond
       ((equal? type 'int8) 1)

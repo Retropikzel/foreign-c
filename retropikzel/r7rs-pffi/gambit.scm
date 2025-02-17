@@ -26,7 +26,7 @@
 (define size-of-void* (c-lambda () int "___return(sizeof(void*));"))
 
 
-(define pffi-size-of
+(define size-of-type
   (lambda (type)
     (cond ((eq? type 'int8) (size-of-int8_t))
           ((eq? type 'uint8) (size-of-uint8_t))

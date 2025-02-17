@@ -7,7 +7,15 @@
                   (chicken memory))))))
   (else
     (define pffi-init
-      (lambda () (+ 1 1)))))
+      (lambda () #t))))
+
+(define (pffi-type? object) (if (equal? (size-of-type object) #f) #f #t))
+
+(define (pffi-size-of object)
+  (cond ((pffi-struct? object) (pffi-struct-size object))
+        ((pffi-union? object) (pffi-union-size object))
+        ((pffi-type? object) (size-of-type object))
+        (else (error "Not pffi-struct, pffi-enum of pffi-type" object))))
 
 (define pffi-types
   '(int8

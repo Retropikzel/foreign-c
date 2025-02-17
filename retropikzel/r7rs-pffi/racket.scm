@@ -45,7 +45,7 @@
                                          (mlist->list (map pffi-type->native-type argument-types))
                                          (pffi-type->native-type return-type)))))))
 
-(define pffi-size-of
+(define size-of-type
   (lambda (type)
     (ctype-sizeof (pffi-type->native-type type))))
 

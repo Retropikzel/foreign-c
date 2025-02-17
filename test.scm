@@ -58,6 +58,57 @@
 
 (pffi-init)
 
+;; pffi-type?
+
+(print-header 'pffi-type?)
+
+(debug (pffi-type? 'int8))
+(assert equal? (pffi-type? 'int8) #t)
+(debug (pffi-type? 'uint8))
+(assert equal? (pffi-type? 'uint8) #t)
+(debug (pffi-type? 'int16))
+(assert equal? (pffi-type? 'int16) #t)
+(debug (pffi-type? 'uint16))
+(assert equal? (pffi-type? 'uint16) #t)
+(debug (pffi-type? 'int32))
+(assert equal? (pffi-type? 'int32) #t)
+(debug (pffi-type? 'uint32))
+(assert equal? (pffi-type? 'uint32) #t)
+(debug (pffi-type? 'int64))
+(assert equal? (pffi-type? 'int64) #t)
+(debug (pffi-type? 'uint64))
+(assert equal? (pffi-type? 'uint64) #t)
+(debug (pffi-type? 'char))
+(assert equal? (pffi-type? 'char) #t)
+(debug (pffi-type? 'unsigned-char))
+(assert equal? (pffi-type? 'unsigned-char) #t)
+(debug (pffi-type? 'short))
+(assert equal? (pffi-type? 'short) #t)
+(debug (pffi-type? 'unsigned-short))
+(assert equal? (pffi-type? 'unsigned-short) #t)
+(debug (pffi-type? 'int))
+(assert equal? (pffi-type? 'int) #t)
+(debug (pffi-type? 'unsigned-int))
+(assert equal? (pffi-type? 'unsigned-int) #t)
+(debug (pffi-type? 'long))
+(assert equal? (pffi-type? 'long) #t)
+(debug (pffi-type? 'unsigned-long))
+(assert equal? (pffi-type? 'unsigned-long) #t)
+(debug (pffi-type? 'float))
+(assert equal? (pffi-type? 'float) #t)
+(debug (pffi-type? 'double))
+(assert equal? (pffi-type? 'double) #t)
+(debug (pffi-type? 'string))
+(assert equal? (pffi-type? 'string) #t)
+(debug (pffi-type? 'pointer))
+(assert equal? (pffi-type? 'pointer) #t)
+(debug (pffi-type? 'void))
+(assert equal? (pffi-type? 'void) #t)
+(debug (pffi-type? 'callback))
+(assert equal? (pffi-type? 'callback) #t)
+
+(pffi-init)
+
 ;; pffi-size-of
 
 (print-header 'pffi-size-of)
@@ -449,28 +500,28 @@
 
 (define struct1 (pffi-struct-make 'test '((int . r) (int . g) (int . b))))
 (debug struct1)
-(debug (pffi-struct-size struct1))
-(assert = (pffi-struct-size struct1) 12)
+(debug (pffi-size-of struct1))
+(assert = (pffi-size-of struct1) 12)
 
 (define struct2 (pffi-struct-make 'test '((int8 . r) (int8 . g) (int . b))))
 (debug struct2)
-(debug (pffi-struct-size struct2))
-(assert = (pffi-struct-size struct2) 8)
+(debug (pffi-size-of struct2))
+(assert = (pffi-size-of struct2) 8)
 
 (define struct3 (pffi-struct-make 'test '((int8 . r) (int8 . g) (int . b))))
 (debug struct3)
-(debug (pffi-struct-size struct3))
-(assert = (pffi-struct-size struct3) 8)
+(debug (pffi-size-of struct3))
+(assert = (pffi-size-of struct3) 8)
 
 (define struct4 (pffi-struct-make 'test '((int8 . r) (pointer . a) (int8 . g) (int . b))))
 (debug struct4)
-(debug (pffi-struct-size struct4))
-(assert = (pffi-struct-size struct4) 24)
+(debug (pffi-size-of struct4))
+(assert = (pffi-size-of struct4) 24)
 
 (define struct5 (pffi-struct-make 'test '((int8 . r) (char . b) (pointer . a) (int8 . g) (int . b))))
 (debug struct5)
-(debug (pffi-struct-size struct5))
-(assert = (pffi-struct-size struct5) 24)
+(debug (pffi-size-of struct5))
+(assert = (pffi-size-of struct5) 24)
 
 (define struct6 (pffi-struct-make 'test '((int8 . a)
                                           (char . b)
@@ -487,8 +538,8 @@
                                           (double . m)
                                           (float . n))))
 (debug struct6)
-(debug (pffi-struct-size struct6))
-(assert = (pffi-struct-size struct6) 96)
+(debug (pffi-size-of struct6))
+(assert = (pffi-size-of struct6) 96)
 
 ;; pffi-string->pointer
 

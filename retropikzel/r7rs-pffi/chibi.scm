@@ -1,4 +1,4 @@
-(define pffi-size-of
+(define size-of-type
   (lambda (type)
     (cond ((eq? type 'int8) (size-of-int8_t))
           ((eq? type 'uint8) (size-of-uint8_t))
@@ -19,7 +19,7 @@
           ((eq? type 'float) (size-of-float))
           ((eq? type 'double) (size-of-double))
           ((eq? type 'pointer) (size-of-pointer))
-          (else (error "Can not get size of unknown type" type)))))
+          ((eq? type 'string) (size-of-pointer)))))
 
 (define pffi-shared-object-load
   (lambda (headers path . options)
@@ -163,7 +163,7 @@
            value)
           ((procedure? value)
            (scheme-procedure-to-pointer value))
-          (else (let ((pointer (pffi-pointer-allocate (pffi-size-of type))))
+          (else (let ((pointer (pffi-pointer-allocate (size-of-type type))))
                   (pffi-pointer-set! pointer type 0 value)
                   pointer)))))
 
@@ -180,7 +180,7 @@
           (return-value (pffi-pointer-allocate
                           (if (equal? return-type 'void)
                             0
-                            (pffi-size-of return-type)))))
+                            (size-of-type return-type)))))
       (when (not (pffi-pointer-null? maybe-dlerror))
         (error (pffi-pointer->string maybe-dlerror)))
       (lambda arguments

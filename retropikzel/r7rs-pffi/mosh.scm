@@ -1,4 +1,4 @@
-(define pffi-size-of
+(define size-of-type
   (lambda (type)
     (cond ((eq? type 'int8) 1)
           ((eq? type 'uint8) 1)
@@ -95,10 +95,10 @@
           (index 0))
       (string-for-each
         (lambda (c)
-          (pffi-pointer-set! pointer 'char (* index (pffi-size-of 'char)) c)
+          (pffi-pointer-set! pointer 'char (* index (size-of-type 'char)) c)
           (set! index (+ index 1)))
         string-content)
-      (pffi-pointer-set! pointer 'char (* index (pffi-size-of 'char)) #\null)
+      (pffi-pointer-set! pointer 'char (* index (size-of-type 'char)) #\null)
       pointer)))
 
 (define pffi-pointer->string

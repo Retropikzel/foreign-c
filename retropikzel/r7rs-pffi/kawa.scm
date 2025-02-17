@@ -123,7 +123,7 @@
                   method-handle)))
          (invoke native-linker 'upcallStub method-handle function-descriptor arena))))))
 
-(define pffi-size-of
+(define size-of-type
   (lambda (type)
     (invoke (pffi-type->native-type type) 'byteAlignment)))
 

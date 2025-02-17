@@ -45,7 +45,7 @@
                            procedure
                            (map pffi-type->native-type argument-types))))))
 
-(define pffi-size-of
+(define size-of-type
   (lambda (type)
     (sizeof (pffi-type->native-type type))))
 
@@ -96,14 +96,14 @@
             ((equal? type 'char) (bytevector-s8-set! p offset (char->integer value)))
             ((equal? type 'short) (bytevector-s8-set! p offset value))
             ((equal? type 'unsigned-short) (bytevector-u8-set! p offset value))
-            ((equal? type 'int) (bytevector-sint-set! p offset value (native-endianness) (pffi-size-of type)))
-            ((equal? type 'unsigned-int) (bytevector-uint-set! p offset value (native-endianness) (pffi-size-of type)))
+            ((equal? type 'int) (bytevector-sint-set! p offset value (native-endianness) (size-of-type type)))
+            ((equal? type 'unsigned-int) (bytevector-uint-set! p offset value (native-endianness) (size-of-type type)))
             ((equal? type 'long) (bytevector-s64-set! p offset value (native-endianness)))
             ((equal? type 'unsigned-long) (bytevector-u64-set! p offset value (native-endianness)))
             ((equal? type 'float) (bytevector-ieee-single-set! p offset value (native-endianness)))
             ((equal? type 'double) (bytevector-ieee-double-set! p offset value (native-endianness)))
-            ((equal? type 'pointer) (bytevector-sint-set! p offset (pointer-address value) (native-endianness) (pffi-size-of type)))
-            ((equal? type 'string) (bytevector-sint-set! p offset (pointer-address (pffi-string->pointer value)) (native-endianness) (pffi-size-of type)))))))
+            ((equal? type 'pointer) (bytevector-sint-set! p offset (pointer-address value) (native-endianness) (size-of-type type)))
+            ((equal? type 'string) (bytevector-sint-set! p offset (pointer-address (pffi-string->pointer value)) (native-endianness) (size-of-type type)))))))
 
 (define pffi-pointer-get
   (lambda (pointer type offset)
@@ -119,14 +119,14 @@
             ((equal? type 'char) (integer->char (bytevector-s8-ref p offset)))
             ((equal? type 'short) (bytevector-s8-ref p offset))
             ((equal? type 'unsigned-short) (bytevector-u8-ref p offset))
-            ((equal? type 'int) (bytevector-sint-ref p offset (native-endianness) (pffi-size-of type)))
-            ((equal? type 'unsigned-int) (bytevector-uint-ref p offset (native-endianness) (pffi-size-of type)))
+            ((equal? type 'int) (bytevector-sint-ref p offset (native-endianness) (size-of-type type)))
+            ((equal? type 'unsigned-int) (bytevector-uint-ref p offset (native-endianness) (size-of-type type)))
             ((equal? type 'long) (bytevector-s64-ref p offset (native-endianness)))
             ((equal? type 'unsigned-long) (bytevector-u64-ref p offset (native-endianness)))
             ((equal? type 'float) (bytevector-ieee-single-ref p offset (native-endianness)))
             ((equal? type 'double) (bytevector-ieee-double-ref p offset (native-endianness)))
-            ((equal? type 'pointer) (make-pointer (bytevector-sint-ref p offset (native-endianness) (pffi-size-of type))))
-            ((equal? type 'string) (pffi-pointer->string (make-pointer (bytevector-sint-ref p offset (native-endianness) (pffi-size-of type)))))))))
+            ((equal? type 'pointer) (make-pointer (bytevector-sint-ref p offset (native-endianness) (size-of-type type))))
+            ((equal? type 'string) (pffi-pointer->string (make-pointer (bytevector-sint-ref p offset (native-endianness) (size-of-type type)))))))))
 
 (define pffi-struct-dereference
   (lambda (struct)

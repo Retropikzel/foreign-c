@@ -11,7 +11,7 @@
     ((pffi-define scheme-name shared-object c-name return-type argument-types)
      (error "Not defined"))))
 
-(define pffi-size-of
+(define size-of-type
   (lambda (type)
     (error "Not defined")))
 

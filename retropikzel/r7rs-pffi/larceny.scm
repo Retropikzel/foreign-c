@@ -1,7 +1,7 @@
 (require 'std-ffi)
 
 ;; FIXME
-(define pffi-size-of
+(define size-of-type
   (lambda (type)
     (cond ((eq? type 'int8) 1)
           ((eq? type 'uint8) 1)

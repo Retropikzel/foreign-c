@@ -71,7 +71,7 @@
   (lambda (scheme-name return-type argument-types procedure)
     (error "pffi-define-callback not yet implemented on Cyclone")))
 
-(define pffi-size-of
+(define size-of-type
   (lambda (type)
     (cond ((equal? type 'int8) (c-value "sizeof(int8_t)" int))
           ((equal? type 'uint8) (c-value "sizeof(uint8_t)" int))
@@ -91,8 +91,7 @@
           ((equal? type 'unsigned-long) (c-value "sizeof(unsigned long)" int))
           ((equal? type 'float) (c-value "sizeof(float)" int))
           ((equal? type 'double) (c-value "sizeof(double)" int))
-          ((equal? type 'pointer) (c-value "sizeof(void*)" int))
-          (else (error "pffi-size-of -- No such pffi type" type)))))
+          ((equal? type 'pointer) (c-value "sizeof(void*)" int)))))
 
 (define-c pffi-pointer-allocate
           "(void *data, int argc, closure _, object k, object size)"

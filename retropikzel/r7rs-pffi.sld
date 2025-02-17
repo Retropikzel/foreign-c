@@ -11,6 +11,7 @@
               (chibi))
       (export pffi-init
               pffi-size-of
+              pffi-type?
               pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
@@ -24,7 +25,6 @@
               pffi-string->pointer
               pffi-pointer->string
               pffi-struct-make
-              pffi-struct-size
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
@@ -46,6 +46,7 @@
               (chicken random))
       (export pffi-init
               pffi-size-of
+              pffi-type?
               pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
@@ -60,7 +61,6 @@
               pffi-string->pointer
               pffi-pointer->string
               pffi-struct-make
-              pffi-struct-size
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
@@ -81,6 +81,7 @@
               (chicken random))
       (export pffi-init
               pffi-size-of
+              pffi-type?
               pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
@@ -94,7 +95,6 @@
               pffi-string->pointer
               pffi-pointer->string
               pffi-struct-make
-              pffi-struct-size
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
@@ -111,6 +111,7 @@
               (scheme cyclone primitives))
       (export pffi-init
               pffi-size-of
+              pffi-type?
               pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
@@ -124,7 +125,6 @@
               pffi-string->pointer
               pffi-pointer->string
               pffi-struct-make
-              pffi-struct-size
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
@@ -142,6 +142,7 @@
               (only (gambit) c-declare c-lambda c-define))
       (export pffi-init
               pffi-size-of
+              pffi-type?
               pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
@@ -155,7 +156,6 @@
               ;pffi-string->pointer
               ;pffi-pointer->string
               pffi-struct-make
-              pffi-struct-size
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
@@ -171,6 +171,7 @@
               (scheme process-context))
       (export pffi-init
               ;pffi-size-of
+              pffi-type?
               pffi-align-of
               ;pffi-shared-object-auto-load
               ;pffi-shared-object-load
@@ -184,7 +185,6 @@
               ;pffi-string->pointer
               ;pffi-pointer->string
               pffi-struct-make
-              pffi-struct-size
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
@@ -200,6 +200,7 @@
               (scheme process-context))
       (export pffi-init
               ;pffi-size-of
+              pffi-type?
               ;pffi-align-of
               ;pffi-shared-object-auto-load
               ;pffi-shared-object-load
@@ -213,7 +214,6 @@
               ;pffi-string->pointer
               ;pffi-pointer->string
               pffi-struct-make
-              pffi-struct-size
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
@@ -232,6 +232,7 @@
               (system foreign-library))
       (export pffi-init
               pffi-size-of
+              pffi-type?
               pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
@@ -246,7 +247,6 @@
               pffi-string->pointer
               pffi-pointer->string
               pffi-struct-make
-              pffi-struct-size
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
@@ -262,6 +262,7 @@
               (scheme process-context))
       (export pffi-init
               pffi-size-of
+              pffi-type?
               pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
@@ -275,7 +276,6 @@
               pffi-string->pointer
               pffi-pointer->string
               pffi-struct-make
-              pffi-struct-size
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
@@ -298,6 +298,7 @@
               )
       (export pffi-init
               ;pffi-size-of
+              pffi-type?
               ;pffi-align-of
               ;pffi-shared-object-auto-load
               ;pffi-shared-object-load
@@ -311,7 +312,6 @@
               ;pffi-string->pointer
               ;pffi-pointer->string
               pffi-struct-make
-              pffi-struct-size
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
@@ -328,6 +328,7 @@
               (mosh ffi))
       (export pffi-init
               pffi-size-of
+              pffi-type?
               pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
@@ -341,7 +342,6 @@
               pffi-string->pointer
               pffi-pointer->string
               pffi-struct-make
-              pffi-struct-size
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
@@ -362,6 +362,7 @@
               (ffi vector))
       (export pffi-init
               pffi-size-of
+              pffi-type?
               pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
@@ -376,7 +377,6 @@
               pffi-string->pointer
               pffi-pointer->string
               pffi-struct-make
-              pffi-struct-size
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
@@ -394,6 +394,7 @@
               (sagittarius))
       (export pffi-init
               pffi-size-of
+              pffi-type?
               pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
@@ -408,7 +409,6 @@
               pffi-string->pointer
               pffi-pointer->string
               pffi-struct-make
-              pffi-struct-size
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
@@ -424,6 +424,7 @@
               (scheme process-context))
       (export pffi-init
               ;pffi-size-of
+              pffi-type?
               ;pffi-align-of
               ;pffi-shared-object-auto-load
               ;pffi-shared-object-load
@@ -437,7 +438,6 @@
               ;pffi-string->pointer
               ;pffi-pointer->string
               pffi-struct-make
-              pffi-struct-size
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
@@ -454,6 +454,7 @@
               (stklos))
       (export pffi-init
               pffi-size-of
+              pffi-type?
               pffi-align-of
               pffi-shared-object-auto-load
               pffi-shared-object-load
@@ -467,7 +468,6 @@
               ;pffi-string->pointer
               ;pffi-pointer->string
               pffi-struct-make
-              pffi-struct-size
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
@@ -483,6 +483,7 @@
               (scheme process-context))
       (export pffi-init
               ;pffi-size-of
+              pffi-type?
               ;pffi-align-of
               ;pffi-shared-object-auto-load
               ;pffi-shared-object-load
@@ -496,7 +497,6 @@
               ;pffi-string->pointer
               ;pffi-pointer->string
               pffi-struct-make
-              pffi-struct-size
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
@@ -512,6 +512,7 @@
               (scheme process-context))
       (export ;pffi-init
               ;pffi-size-of
+              pffi-type?
               ;pffi-align-of
               ;pffi-shared-object-auto-load
               ;pffi-shared-object-load
@@ -525,7 +526,6 @@
               ;pffi-string->pointer
               ;pffi-pointer->string
               pffi-struct-make
-              pffi-struct-size
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
@@ -556,6 +556,9 @@
   (cond-expand
     (stklos (include "retropikzel/r7rs-pffi/struct.scm")) ; FIXME temporarily for stklos 2.10
     (else (include "r7rs-pffi/struct.scm")))
+  (cond-expand
+    (stklos (include "retropikzel/r7rs-pffi/union.scm")) ; FIXME temporarily for stklos 2.10
+    (else (include "r7rs-pffi/union.scm")))
   (cond-expand
     (stklos (include "retropikzel/r7rs-pffi/main.scm")) ; FIXME temporarily for stklos 2.10
     (else (include "r7rs-pffi/main.scm"))))
