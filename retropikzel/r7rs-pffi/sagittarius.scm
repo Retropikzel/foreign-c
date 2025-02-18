@@ -23,7 +23,7 @@
           ((equal? type 'void) 'void)
           ((equal? type 'callback) 'callback)
           ((equal? type 'struct) 'void*)
-          (else (error "pffi-type->native-type -- No such pffi type" type)))))
+          (else #f))))
 
 (define pffi-pointer?
   (lambda (object)
@@ -68,7 +68,9 @@
           ((eq? type 'float) size-of-float)
           ((eq? type 'double) size-of-double)
           ((eq? type 'pointer) size-of-void*)
+          ((eq? type 'void) 0)
           ((eq? type 'string) size-of-void*)
+          ((eq? type 'callback) size-of-void*)
           (else #f))))
 
 (define pffi-pointer-allocate

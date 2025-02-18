@@ -9,7 +9,10 @@
     (define pffi-init
       (lambda () #t))))
 
-(define (pffi-type? object) (if (equal? (size-of-type object) #f) #f #t))
+(define (pffi-type? object)
+  (if (equal? (size-of-type object) #f)
+    #f
+    #t))
 
 (define (pffi-size-of object)
   (cond ((pffi-struct? object) (pffi-struct-size object))

@@ -48,10 +48,11 @@
       ((equal? type 'float) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_FLOAT) 'withByteAlignment 4))
       ((equal? type 'double) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_DOUBLE) 'withByteAlignment 8))
       ((equal? type 'pointer) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
+      ((equal? type 'string) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
       ((equal? type 'void) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 1))
       ((equal? type 'callback) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
       ((equal? type 'struct) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
-      (else (error "pffi-type->native-type -- No such pffi type" type)))))
+      (else #f))))
 
 (define pffi-pointer?
   (lambda (object)
@@ -125,7 +126,10 @@
 
 (define size-of-type
   (lambda (type)
-    (invoke (pffi-type->native-type type) 'byteAlignment)))
+    (let ((native-type (pffi-type->native-type type)))
+      (if native-type
+        (invoke native-type 'byteAlignment)
+        #f))))
 
 (define pffi-pointer-allocate
   (lambda (size)

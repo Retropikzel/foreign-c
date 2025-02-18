@@ -19,7 +19,10 @@
           ((eq? type 'float) size-of-float)
           ((eq? type 'double) size-of-double)
           ((eq? type 'pointer) size-of-pointer)
-          (else (error "Can not get size of unknown type" type)))))
+          ((eq? type 'string) size-of-pointer)
+          ((eq? type 'callback) size-of-pointer)
+          ((eq? type 'void) 0)
+          (else #f))))
 
 (define pffi-shared-object-load
   (lambda (header path . options)

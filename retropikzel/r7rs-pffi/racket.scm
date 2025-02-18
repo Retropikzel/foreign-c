@@ -21,8 +21,9 @@
           ((equal? type 'pointer) _pointer)
           ((equal? type 'void) _void)
           ((equal? type 'callback) _pointer)
+          ((equal? type 'string) _pointer)
           ((equal? type 'struct) _pointer)
-          (else (error "pffi-type->native-type -- No such pffi type" type)))))
+          (else #f))))
 
 (define pffi-pointer?
   (lambda (object)
@@ -47,7 +48,10 @@
 
 (define size-of-type
   (lambda (type)
-    (ctype-sizeof (pffi-type->native-type type))))
+    (let ((native-type (pffi-type->native-type type)))
+      (if native-type
+        (ctype-sizeof native-type)
+        #f))))
 
 (define pffi-pointer-allocate
   (lambda (size)
