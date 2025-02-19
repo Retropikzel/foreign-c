@@ -137,7 +137,7 @@
 
 (define pffi-pointer-address
   (lambda (pointer)
-    (invoke pointer 'get (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 1) 0)))
+    (invoke pointer 'address)))
 
 (define pffi-pointer-null
   (lambda ()

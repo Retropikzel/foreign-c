@@ -61,6 +61,9 @@
 (c-declare "void* pointer_allocate(int size) { return malloc(size); }")
 (define-c (maybe-null void*) (pointer-allocate pointer_allocate) (int))
 
+(c-declare "int pointer_address(void* pointer) { return (int)&pointer; }")
+(define-c int (pointer-address pointer_address) ((maybe-null void*)))
+
 (c-declare "void pointer_free(void* pointer) { free(pointer); }")
 (define-c void (pointer-free pointer_free) ((maybe-null void*)))
 

@@ -3,7 +3,13 @@
 ;; that accepts a '--manifest' (or '-m') option.
 
 (specifications->manifest (list "gcc-toolchain"
-                                "guile-next"
-                                "racket"
+                                "libffi"
+                                "chibi-scheme"
                                 "chicken"
-                                "stklos"))
+                                "guile-next"
+                                "gambit-c"
+                                "gerbil"
+                                "racket"
+                                "mosh"
+                                "stklos"
+                                "openjdk"))

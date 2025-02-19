@@ -19,7 +19,11 @@
           ((eq? type 'float) (size-of-float))
           ((eq? type 'double) (size-of-double))
           ((eq? type 'pointer) (size-of-pointer))
-          ((eq? type 'string) (size-of-pointer)))))
+          ((eq? type 'string) (size-of-pointer))
+          ((eq? type 'struct) (size-of-pointer))
+          ((eq? type 'callback) (size-of-pointer))
+          ((eq? type 'void) 0)
+          (else #f))))
 
 (define pffi-shared-object-load
   (lambda (headers path . options)
@@ -45,6 +49,10 @@
 (define pffi-pointer-allocate
   (lambda (size)
     (pointer-allocate size)))
+
+(define pffi-pointer-address
+  (lambda (pointer)
+    (pointer-address pointer)))
 
 (define pffi-pointer-free
   (lambda (pointer)
@@ -217,4 +225,4 @@
 
 (define pffi-struct-dereference
   (lambda (struct)
-    (pffi-struct-pointer struct)))
+    (pffi-pointer-address (pffi-struct-pointer struct))))

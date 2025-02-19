@@ -85,7 +85,11 @@
                                         (cadr (assoc 'additional-paths options))
                                         (list)))
                     (additional-versions (if (assoc 'additional-versions options)
-                                           (cadr (assoc 'additional-versions options))
+                                           (map (lambda (version)
+                                                  (if (number? version)
+                                                    (number->string version)
+                                                    version))
+                                             (cadr (assoc 'additional-versions options)))
                                            (list)))
                     (slash (cond-expand (windows (string #\\)) (else "/")))
                     (auto-load-paths

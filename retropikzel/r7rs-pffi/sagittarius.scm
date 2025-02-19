@@ -19,10 +19,10 @@
           ((equal? type 'float) 'float)
           ((equal? type 'double) 'double)
           ((equal? type 'pointer) 'void*)
-          ((equal? type 'string) 'string)
+          ((equal? type 'string) 'void*)
           ((equal? type 'void) 'void)
           ((equal? type 'callback) 'callback)
-          ((equal? type 'struct) 'void*)
+          ((equal? type 'struct) 'char*)
           (else #f))))
 
 (define pffi-pointer?
@@ -79,7 +79,7 @@
 
 (define pffi-pointer-address
   (lambda (pointer)
-    (address pointer)))
+    (pointer-address pointer)))
 
 (define pffi-struct-dereference
   (lambda (struct)

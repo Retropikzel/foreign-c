@@ -118,7 +118,7 @@ test-mosh: libtest.so
 
 SASH=sash --clean-cache -r7 -L .
 test-sagittarius-docker:
-	docker build --build-arg SCHEME=sagittarius -f Dockerfile --tag=r7rs-pffi-sagittarius .
+	docker build --build-arg SCHEME=sagittarius:head -f Dockerfile --tag=r7rs-pffi-sagittarius .
 	${DOCKER} r7rs-pffi-sagittarius bash -c "${DOCKER_INIT} ${SASH} test.scm"
 
 test-sagittarius: libtest.so

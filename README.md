@@ -21,7 +21,11 @@ Any help in form of constructive advice and bug reports are appreciated.
 - [Implementation table](#implementation-table)
 - [Other Implementations](#other-implementations)
 - [Documentation](#documentation)
-    - [Usage notes](#usage-notes)
+    - [Usage](#usage)
+        - [Chibi](#usage_chibi)
+        - [Chicken](#usage_chicken)
+        - [Racket](#usage_racket)
+        - [Kawa](#usage_kawa)
     - [Reference](#reference)
     - [Types](#types)
     - [Procedures and macros](#procedures-and-macros)
@@ -128,26 +132,41 @@ changing anymore and some implementations are in **beta**.
 
 ## Documentation
 
-### Usage Chibi
+### Usage <a name="#usage"></a>
 
-- Chibi
-    - Install libffi-dev
-    - Build with:
-      - chibi-ffi retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub
-      - ${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so -fPIC -shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c -lchibi-scheme -lffi
+#### Chibi <a name="#usage_chibi"></a>
 
-### Usage Chicken
-- Chicken 5
-    - Needs [r7rs egg](https://wiki.call-cc.org/eggref/5/r7rs)
-- Kawa
-    - Needs at least Java version 22
-    - Needs jvm flags:
-        - --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED
-        - --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED
-        - --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED
-        - --enable-native-access=ALL-UNNAMED
-- Racket
-    - Needs [racket-r7rs](https://github.com/lexi-lambda/racket-r7rs)
+Needs libffi-dev, on Debina/Ubuntu/Mint install with:
+
+    apt install libffi-dev
+
+Build with:
+
+    chibi-ffi retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub
+    gcc -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so -fPIC -shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c -lchibi-scheme -lffi
+
+#### Chicken <a name="#usage_chicken"></a>
+
+Needs [r7rs egg](https://wiki.call-cc.org/eggref/5/r7rs), install with:
+
+    chicken-install r7rs
+
+#### Racket <a name="#usage_racker"></a>
+
+Needs [racket-r7rs](https://github.com/lexi-lambda/racket-r7rs), install with:
+
+    raco pkg install --auto r7rs
+
+#### Kawa <a name="#usage_kawa"></a>
+
+Kawa Needs at least Java version 22
+
+Needs jvm flags:
+
+- --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED
+- --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED
+- --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED
+- --enable-native-access=ALL-UNNAMED
 
 ### Reference
 
@@ -208,6 +227,7 @@ keyword. The options are:
 - additional-versions
     - Search for additional versions of shared object, given shared object "c" and additional
     versions "6" "7" on linux the files "libc", "libc.6", "libc.7" are searched for.
+    - Can be either numbers or strings
 - additional-paths
     - Give additional paths to search shared objects for
 
