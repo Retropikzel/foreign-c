@@ -63,151 +63,142 @@
 (cond-expand
   (gambit
     (define-macro
-      (pffi-shared-object-auto-load headers object-name options)
+      (pffi-shared-object-auto-load headers object-name . options)
       `(pffi-shared-object-load ,(car headers))))
-  (cyclone
-    (define-syntax pffi-shared-object-auto-load
-      (syntax-rules ()
-        ((pffi-shared-object-auto-load headers object-name)
-         (pffi-shared-object-auto-load headers object-name (list)))
-        ((pffi-shared-object-auto-load headers object-name options)
-         (pffi-shared-object-load headers)))))
   (else
-    (define-syntax pffi-shared-object-auto-load
-      (syntax-rules ()
-        ((pffi-shared-object-auto-load headers object-name)
-         (pffi-shared-object-auto-load headers object-name (list)))
-        ((pffi-shared-object-auto-load headers object-name options)
-         (cond-expand
-           (chicken (pffi-shared-object-load headers))
-           (else
-             (let* ((additional-paths (if (assoc 'additional-paths options)
-                                        (cadr (assoc 'additional-paths options))
-                                        (list)))
-                    (additional-versions (if (assoc 'additional-versions options)
-                                           (map (lambda (version)
-                                                  (if (number? version)
-                                                    (number->string version)
-                                                    version))
-                                             (cadr (assoc 'additional-versions options)))
-                                           (list)))
-                    (slash (cond-expand (windows (string #\\)) (else "/")))
-                    (auto-load-paths
-                      (cond-expand
-                        (windows
-                          (append
-                            (if (get-environment-variable "SYSTEM")
-                              (list (get-environment-variable "SYSTEM"))
-                              (list))
-                            (if (get-environment-variable "WINDIR")
-                              (list (get-environment-variable "WINDIR"))
-                              (list))
-                            (if (get-environment-variable "WINEDLLDIR0")
-                              (list (get-environment-variable "WINEDLLDIR0"))
-                              (list))
-                            (if (get-environment-variable "SystemRoot")
-                              (list (string-append
-                                      (get-environment-variable "SystemRoot")
-                                      slash
-                                      "system32"))
-                              (list))
-                            (list ".")
-                            (if (get-environment-variable "PATH")
-                              (string-split (get-environment-variable "PATH") #\;)
-                              (list))
-                            (if (get-environment-variable "PWD")
-                              (list (get-environment-variable "PWD"))
-                              (list))))
-                        (else
-                          (append
-                            ; Guix
-                            (list (if (get-environment-variable "GUIX_ENVIRONMENT")
-                                    (string-append (get-environment-variable "GUIX_ENVIRONMENT") slash "lib")
-                                    "")
-                                  "/run/current-system/profile/lib")
-                            ; Debian
-                            (if (get-environment-variable "LD_LIBRARY_PATH")
-                              (string-split (get-environment-variable "LD_LIBRARY_PATH") #\:)
-                              (list))
-                            (list
-                              ;;; x86-64
-                              ; Debian
-                              "/lib/x86_64-linux-gnu"
-                              "/usr/lib/x86_64-linux-gnu"
-                              "/usr/local/lib"
-                              ; Fedora/Alpine
-                              "/usr/lib"
-                              "/usr/lib64"
-                              ;;; aarch64
-                              ; Debian
-                              "/lib/aarch64-linux-gnu"
-                              "/usr/lib/aarch64-linux-gnu"
-                              "/usr/local/lib"
-                              ; Fedora/Alpine
-                              "/usr/lib"
-                              "/usr/lib64"
-                              ; NetBSD
-                              "/usr/pkg/lib")))))
-                    (auto-load-versions (list ""))
-                    (paths (append auto-load-paths additional-paths))
-                    (versions (append additional-versions auto-load-versions))
-                    (platform-lib-prefix
-                      (cond-expand
-                        ;(racket (if (equal? (system-type 'os) 'windows) "" "lib"))
-                        (windows "")
-                        (else "lib")))
-                    (platform-file-extension
-                      (cond-expand
-                        ;(racket (if (equal? (system-type 'os) 'windows) ".dll" ".so"))
-                        (windows ".dll")
-                        (else ".so")))
-                    (shared-object #f)
-                    (searched-paths (list)))
-               (for-each
-                 (lambda (path)
-                   (for-each
-                     (lambda (version)
-                       (let ((library-path
-                               (string-append path
-                                              slash
-                                              platform-lib-prefix
-                                              object-name
-                                              (cond-expand
-                                                (windows "")
-                                                (else platform-file-extension))
-                                              (if (string=? version "")
-                                                ""
-                                                (string-append
-                                                  (cond-expand (windows "-")
-                                                               (else "."))
-                                                  version))
-                                              (cond-expand
-                                                (windows platform-file-extension)
-                                                (else ""))))
-                               (library-path-without-suffixes (string-append path
-                                                                             slash
-                                                                             platform-lib-prefix
-                                                                             object-name)))
-                         (set! searched-paths (append searched-paths (list library-path)))
-                         (when (and (not shared-object)
-                                    (file-exists? library-path))
-                           (set! shared-object
-                             (cond-expand (racket library-path-without-suffixes)
-                                          (else library-path))))))
-                     versions))
-                 paths)
-               (if (not shared-object)
-                 (begin
-                   (display "Could not load shared object: ")
-                   (write (list (cons 'object object-name)
-                                (cons 'paths paths)
-                                (cons 'platform-file-extension platform-file-extension)
-                                (cons 'versions versions)))
-                   (newline)
-                   (display "Searched paths: ")
-                   (write searched-paths)
-                   (newline)
-                   (exit 1))
-                 (pffi-shared-object-load headers
-                                          shared-object
-                                          `((additional-versions ,versions))))))))))))
+    (define pffi-shared-object-auto-load
+      (lambda (headers object-name . options)
+        (cond-expand
+          (chicken (pffi-shared-object-load headers))
+          (cyclone (pffi-shared-object-load headers))
+          (else
+            (let* ((additional-paths (if (assoc 'additional-paths options)
+                                       (cdr (assoc 'additional-paths options))
+                                       (list)))
+                   (additional-versions (if (assoc 'additional-versions options)
+                                          (map (lambda (version)
+                                                 (if (number? version)
+                                                   (number->string version)
+                                                   version))
+                                               (cdr (assoc 'additional-versions options)))
+                                          (list)))
+                   (slash (cond-expand (windows (string #\\)) (else "/")))
+                   (auto-load-paths
+                     (cond-expand
+                       (windows
+                         (append
+                           (if (get-environment-variable "SYSTEM")
+                             (list (get-environment-variable "SYSTEM"))
+                             (list))
+                           (if (get-environment-variable "WINDIR")
+                             (list (get-environment-variable "WINDIR"))
+                             (list))
+                           (if (get-environment-variable "WINEDLLDIR0")
+                             (list (get-environment-variable "WINEDLLDIR0"))
+                             (list))
+                           (if (get-environment-variable "SystemRoot")
+                             (list (string-append
+                                     (get-environment-variable "SystemRoot")
+                                     slash
+                                     "system32"))
+                             (list))
+                           (list ".")
+                           (if (get-environment-variable "PATH")
+                             (string-split (get-environment-variable "PATH") #\;)
+                             (list))
+                           (if (get-environment-variable "PWD")
+                             (list (get-environment-variable "PWD"))
+                             (list))))
+                       (else
+                         (append
+                           ; Guix
+                           (list (if (get-environment-variable "GUIX_ENVIRONMENT")
+                                   (string-append (get-environment-variable "GUIX_ENVIRONMENT") slash "lib")
+                                   "")
+                                 "/run/current-system/profile/lib")
+                           ; Debian
+                           (if (get-environment-variable "LD_LIBRARY_PATH")
+                             (string-split (get-environment-variable "LD_LIBRARY_PATH") #\:)
+                             (list))
+                           (list
+                             ;;; x86-64
+                             ; Debian
+                             "/lib/x86_64-linux-gnu"
+                             "/usr/lib/x86_64-linux-gnu"
+                             "/usr/local/lib"
+                             ; Fedora/Alpine
+                             "/usr/lib"
+                             "/usr/lib64"
+                             ;;; aarch64
+                             ; Debian
+                             "/lib/aarch64-linux-gnu"
+                             "/usr/lib/aarch64-linux-gnu"
+                             "/usr/local/lib"
+                             ; Fedora/Alpine
+                             "/usr/lib"
+                             "/usr/lib64"
+                             ; NetBSD
+                             "/usr/pkg/lib")))))
+                   (auto-load-versions (list ""))
+                   (paths (append auto-load-paths additional-paths))
+                   (versions (append additional-versions auto-load-versions))
+                   (platform-lib-prefix
+                     (cond-expand
+                       ;(racket (if (equal? (system-type 'os) 'windows) "" "lib"))
+                       (windows "")
+                       (else "lib")))
+                   (platform-file-extension
+                     (cond-expand
+                       ;(racket (if (equal? (system-type 'os) 'windows) ".dll" ".so"))
+                       (windows ".dll")
+                       (else ".so")))
+                   (shared-object #f)
+                   (searched-paths (list)))
+              (for-each
+                (lambda (path)
+                  (for-each
+                    (lambda (version)
+                      (let ((library-path
+                              (string-append path
+                                             slash
+                                             platform-lib-prefix
+                                             object-name
+                                             (cond-expand
+                                               (windows "")
+                                               (else platform-file-extension))
+                                             (if (string=? version "")
+                                               ""
+                                               (string-append
+                                                 (cond-expand (windows "-")
+                                                              (else "."))
+                                                 version))
+                                             (cond-expand
+                                               (windows platform-file-extension)
+                                               (else ""))))
+                            (library-path-without-suffixes (string-append path
+                                                                          slash
+                                                                          platform-lib-prefix
+                                                                          object-name)))
+                        (set! searched-paths (append searched-paths (list library-path)))
+                        (when (and (not shared-object)
+                                   (file-exists? library-path))
+                          (set! shared-object
+                            (cond-expand (racket library-path-without-suffixes)
+                                         (else library-path))))))
+                    versions))
+                paths)
+              (if (not shared-object)
+                (begin
+                  (display "Could not load shared object: ")
+                  (write (list (cons 'object object-name)
+                               (cons 'paths paths)
+                               (cons 'platform-file-extension platform-file-extension)
+                               (cons 'versions versions)))
+                  (newline)
+                  (display "Searched paths: ")
+                  (write searched-paths)
+                  (newline)
+                  (exit 1))
+                (pffi-shared-object-load headers
+                                         shared-object
+                                         `((additional-versions ,versions)))))))))))

@@ -221,7 +221,7 @@ Takes as argument a list of C headers, these are for the compiler ones. And an s
 used by the dynamic FFI's. The name of the shared object should not contain suffix like .so or
 .dll. Nor should it contain any prefix like "lib".
 
-Additional options argument can be provided, which should be a list of lists starting with a
+Additional options argument can be provided, theys should be a pair with a
 keyword. The options are:
 
 - additional-versions
@@ -236,7 +236,11 @@ Example:
     (define libc-stdlib
       (cond-expand
         (windows (pffi-shared-object-auto-load (list "stdlib.h") "ucrtbase"))
-        (else (pffi-shared-object-auto-load (list "stdlib.h") "c" '((additional-versions ("6")))))))
+        (else (pffi-shared-object-auto-load (list "stdlib.h")
+                                            "c"
+                                            '(additional-versions . ("6"))
+                                            '(additional-search-paths . ("."))))))
+
 
 ##### **pffi-shared-object-load** headers path [options]
 

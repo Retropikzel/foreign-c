@@ -2,7 +2,7 @@
         (scheme write)
         (scheme char)
         (scheme process-context)
-        (retropikzel r7rs-pffi))
+        (retropikzel pffi))
 
 (define header-count 1)
 
@@ -392,14 +392,20 @@
 (define libc-stdlib
   (cond-expand
     (windows (pffi-shared-object-auto-load (list "stdlib.h") "ucrtbase"))
-    (else (pffi-shared-object-auto-load (list "stdlib.h") "c" '((additional-versions ("0" "6")))))))
+    (else (pffi-shared-object-auto-load (list "stdlib.h")
+                                        "c"
+                                        '(additional-versions . ("0" "6"))))))
 
 (debug libc-stdlib)
 
 (define c-testlib
   (cond-expand
-    (windows (pffi-shared-object-auto-load (list "libtest.h") "test" '((additional-paths (".")))))
-    (else (pffi-shared-object-auto-load (list "libtest.h")  "test" '((additional-paths (".")))))))
+    (windows (pffi-shared-object-auto-load (list "libtest.h")
+                                           "test"
+                                           '(additional-paths . ("."))))
+    (else (pffi-shared-object-auto-load (list "libtest.h")
+                                        "test"
+                                        '(additional-paths . ("."))))))
 
 (debug c-testlib)
 

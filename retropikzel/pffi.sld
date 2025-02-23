@@ -1,5 +1,5 @@
 (define-library
-  (retropikzel r7rs-pffi)
+  (retropikzel pffi)
   (cond-expand
     (chibi
       (import (scheme base)
