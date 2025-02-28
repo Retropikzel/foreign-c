@@ -13,7 +13,7 @@ pipeline {
 
     stages {
         {{#script-implementations}}
-        stage('{{.}}') {
+        stage('{{.}} script') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make SCHEME={{.}} test-script-docker'
@@ -22,7 +22,7 @@ pipeline {
         }
         {{/script-implementations}}
         {{#compiler-implementations}}
-        stage('{{.}}') {
+        stage('{{.}} compile') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make SCHEME={{.}} test-compile-docker'

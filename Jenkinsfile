@@ -12,161 +12,91 @@ pipeline {
     }
 
     stages {
-        stage('chibi') {
+        stage('chibi script') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make SCHEME=chibi test-script-docker'
                 }
             }
         }
-        stage('chicken') {
+        stage('chicken script') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make SCHEME=chicken test-script-docker'
                 }
             }
         }
-        stage('cyclone') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make SCHEME=cyclone test-script-docker'
-                }
-            }
-        }
-        stage('gambit') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make SCHEME=gambit test-script-docker'
-                }
-            }
-        }
-        stage('gauche') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make SCHEME=gauche test-script-docker'
-                }
-            }
-        }
-        stage('gerbil') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make SCHEME=gerbil test-script-docker'
-                }
-            }
-        }
-        stage('guile') {
+        stage('guile script') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make SCHEME=guile test-script-docker'
                 }
             }
         }
-        stage('kawa') {
+        stage('kawa script') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make SCHEME=kawa test-script-docker'
                 }
             }
         }
-        stage('mosh') {
+        stage('mosh script') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make SCHEME=mosh test-script-docker'
                 }
             }
         }
-        stage('racket') {
+        stage('racket script') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make SCHEME=racket test-script-docker'
                 }
             }
         }
-        stage('racket-wine') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make SCHEME=racket-wine test-script-docker'
-                }
-            }
-        }
-        stage('sagittarius') {
+        stage('sagittarius script') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make SCHEME=sagittarius test-script-docker'
                 }
             }
         }
-        stage('stklos') {
+        stage('stklos script') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make SCHEME=stklos test-script-docker'
                 }
             }
         }
-        stage('skint') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make SCHEME=skint test-script-docker'
-                }
-            }
-        }
-        stage('tr7i') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make SCHEME=tr7i test-script-docker'
-                }
-            }
-        }
-        stage('ypsilon') {
+        stage('ypsilon script') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make SCHEME=ypsilon test-script-docker'
                 }
             }
         }
-        stage('chicken') {
+        stage('chicken compile') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make SCHEME=chicken test-compile-docker'
                 }
             }
         }
-        stage('cyclone') {
+        stage('cyclone compile') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make SCHEME=cyclone test-compile-docker'
                 }
             }
         }
-        stage('gambit') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make SCHEME=gambit test-compile-docker'
-                }
-            }
-        }
-        stage('gauche') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make SCHEME=gauche test-compile-docker'
-                }
-            }
-        }
-        stage('gerbil') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make SCHEME=gerbil test-compile-docker'
-                }
-            }
-        }
-        stage('kawa') {
+        stage('kawa compile') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make SCHEME=kawa test-compile-docker'
                 }
             }
         }
-        stage('racket') {
+        stage('racket compile') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     sh 'make SCHEME=racket test-compile-docker'
