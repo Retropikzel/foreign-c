@@ -47,7 +47,6 @@ test-chibi-docker:
 		&& ${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so -fPIC -shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c -lchibi-scheme -lffi \
 		&& ${CHIBI} test.scm"
 
-
 test-chibi: retropikzel/r7rs-pffi/r7rs-pffi-chibi.so libtest.so
 	${CHIBI} test.scm
 
