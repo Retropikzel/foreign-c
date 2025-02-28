@@ -1,2 +1,2 @@
 FROM debian:trixie
-RUN apt update && apt install -y docker.io make bash curl zip unzip openjdk-22-jdk
+RUN apt update && apt install -y docker.io make bash curl zip unzip openjdk-22-jdk build-essential
