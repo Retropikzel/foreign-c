@@ -32,4 +32,4 @@ retropikzel/pffi/*/compiled
 tmp
 dockerfiles/build
 .scheme_testrunner
-snow
+core

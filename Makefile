@@ -3,6 +3,9 @@ CC=gcc
 DOCKER=docker run -it -v ${PWD}:/workdir
 DOCKER_INIT=cd /workdir && make clean &&
 
+jenkinsfile:
+	gosh -r7 -I ./snow build.scm
+
 libtest.so: libtest.c
 	${CC} -o libtest.so -shared -fPIC libtest.c
 
@@ -13,8 +16,18 @@ libtest.a: libtest.c
 test-script: libtest.so
 	SCHEME=${SCHEME} script-r7rs -I . test.scm
 
+test-script-docker:
+	sudo docker build -f dockerfiles/test . --build-arg SCHEME=${SCHEME} --tag=pffi-${SCHEME}
+	sudo docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && make libtest.so && SCHEME=${SCHEME} script-r7rs -I . test.scm"
+
 test-compile: libtest.so libtest.a
+	SCHEME=${SCHEME} compile-r7rs-library retropikzel/pffi.sld
 	SCHEME=${SCHEME} compile-r7rs -I . test.scm && ./test
+
+test-compile-docker: libtest.so libtest.a
+	sudo docker build -f dockerfiles/test . --build-arg SCHEME=${SCHEME} --tag=pffi-${SCHEME}
+	sudo docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && SCHEME=${SCHEME} compile-r7rs-library retropikzel/pffi.sld"
+	sudo docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && SCHEME=${SCHEME} compile-r7rs -I . test.scm && ./test"
 
 CHIBI=chibi-scheme -A .
 test-chibi-docker:
@@ -194,6 +207,7 @@ clean:
 	find . -name "*.o[1-9]" -delete
 	find . -name "*.so" -delete
 	find . -name "*.a" -delete
+	find . -name "*.class" -delete
 	@rm -rf test
 	@rm -rf tmp
 	find . -name "core.1" -delete
