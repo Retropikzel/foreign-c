@@ -3,7 +3,15 @@ CC=gcc
 DOCKER=docker run -it -v ${PWD}:/workdir
 DOCKER_INIT=cd /workdir && make clean &&
 
-build: libstest.so libtest.a
+all: chibi
+
+chibi:
+	chibi-ffi retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub
+	${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so \
+		retropikzel/r7rs-pffi/r7rs-pffi-chibi.c \
+		-fPIC \
+		-lffi \
+		-shared
 
 jenkinsfile:
 	gosh -r7 -I ./snow build.scm
@@ -20,7 +28,7 @@ test-script: libtest.so
 
 test-script-docker:
 	docker build -f dockerfiles/test . --build-arg SCHEME=${SCHEME} --tag=pffi-${SCHEME}
-	docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && make libtest.so && SCHEME=${SCHEME} script-r7rs -I . test.scm"
+	docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && SCHEME=${SCHEME} script-r7rs -I . test.scm"
 
 test-compile: libtest.so libtest.a
 	SCHEME=${SCHEME} compile-r7rs-library retropikzel/pffi.sld
@@ -29,7 +37,7 @@ test-compile: libtest.so libtest.a
 test-compile-docker: libtest.so libtest.a
 	docker build -f dockerfiles/test . --build-arg SCHEME=${SCHEME} --tag=pffi-${SCHEME}
 	docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && SCHEME=${SCHEME} compile-r7rs-library retropikzel/pffi.sld"
-	docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && make libtest.so libtest.a && SCHEME=${SCHEME} compile-r7rs -I . test.scm && ./test"
+	docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && SCHEME=${SCHEME} compile-r7rs -I . test.scm && ./test"
 
 CHIBI=chibi-scheme -A .
 test-chibi-docker:
@@ -39,15 +47,6 @@ test-chibi-docker:
 		&& ${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so -fPIC -shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c -lchibi-scheme -lffi \
 		&& ${CHIBI} test.scm"
 
-retropikzel/r7rs-pffi/r7rs-pffi-chibi.c: retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub
-	chibi-ffi retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub
-
-retropikzel/r7rs-pffi/r7rs-pffi-chibi.so: retropikzel/r7rs-pffi/r7rs-pffi-chibi.c
-	${CC} -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so \
-		retropikzel/r7rs-pffi/r7rs-pffi-chibi.c \
-		-fPIC \
-		-lffi \
-		-shared
 
 test-chibi: retropikzel/r7rs-pffi/r7rs-pffi-chibi.so libtest.so
 	${CHIBI} test.scm
