@@ -12,6 +12,25 @@ pipeline {
     }
 
     stages {
+        stage('Build test libraries') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh 'make libstest.so libtest.a'
+                }
+            }
+        }
+        stage('Build Chibi libraries') {
+            agent {
+                dockerfile {
+                    filename 'dockerfiles/build-chibi'
+                }
+            }
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh 'make cbibi'
+                }
+            }
+        }
         stage('chibi script') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
