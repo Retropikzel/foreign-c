@@ -108,6 +108,13 @@ pipeline {
                 }
             }
         }
+        stage('gambit compile') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh 'make SCHEME=gambit test-compile-docker'
+                }
+            }
+        }
         stage('kawa compile') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {

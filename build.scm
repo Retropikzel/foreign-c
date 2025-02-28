@@ -41,7 +41,7 @@
  (define compiler-implementations
   (vector "chicken"
           "cyclone"
-          ;"gambit"
+          "gambit"
           ;"gauche"
           ;"gerbil"
           "kawa"
