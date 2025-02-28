@@ -20,33 +20,33 @@
 (define script-implementations
   (vector "chibi"
           "chicken"
-          "cyclone"
-          "gambit"
-          "gauche"
-          ;"gauche-wine" TODO
-          "gerbil"
+          ;"cyclone"
+          ;"gambit"
+          ;"gauche"
+          ;"gauche-wine"
+          ;"gerbil"
           "guile"
           "kawa"
-          ;"meevax" TODO
+          ;"meevax"
           "mosh"
           "racket"
-          "racket-wine"
+          ;"racket-wine"
           "sagittarius"
-          ;"sagittarius-wine" TODO
+          ;"sagittarius-wine"
           "stklos"
-          "skint"
-          "tr7i"
+          ;"skint"
+          ;"tr7i"
           "ypsilon"))
 
  (define compiler-implementations
   (vector "chicken"
           "cyclone"
-          "gambit"
-          "gauche"
-          "gerbil"
+          ;"gambit"
+          ;"gauche"
+          ;"gerbil"
           "kawa"
           "racket"
-          ;"racket-wine" TODO
+          ;"racket-wine"
           ))
 
 ;; Jenkinsfile
