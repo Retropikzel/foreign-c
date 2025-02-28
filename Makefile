@@ -10,6 +10,12 @@ libtest.a: libtest.c
 	${CC} -fPIC -c libtest.c
 	ar rcs libtest.a libtest.o
 
+test-script: libtest.so
+	SCHEME=${SCHEME} script-r7rs -I . test.scm
+
+test-compile: libtest.so libtest.a
+	SCHEME=${SCHEME} compile-r7rs -I . test.scm && ./test
+
 CHIBI=chibi-scheme -A .
 test-chibi-docker:
 	docker build -f Dockerfile --build-arg SCHEME=chibi --tag=r7rs-pffi-chibi .
