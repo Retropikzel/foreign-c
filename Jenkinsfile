@@ -15,7 +15,7 @@ pipeline {
         stage('Build test libraries') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make libstest.so libtest.a'
+                    sh 'make libtest.so libtest.a'
                 }
             }
         }
