@@ -30,9 +30,11 @@ test-script-docker:
 	docker build -f dockerfiles/test . --build-arg SCHEME=${SCHEME} --tag=pffi-${SCHEME}
 	docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && SCHEME=${SCHEME} script-r7rs -I . test.scm"
 
-test-compile: libtest.so libtest.a
+test-compile-library: libtest.so libtest.a
 	SCHEME=${SCHEME} compile-r7rs-library retropikzel/pffi.sld
-	SCHEME=${SCHEME} compile-r7rs -I . test.scm && ./test
+
+test-compile: test-compile-library
+	SCHEME=${SCHEME} CFLAGS="-I." LDFLAGS="-ltest" compile-r7rs -I . test.scm && ./test
 
 test-compile-docker: libtest.so libtest.a
 	docker build -f dockerfiles/test . --build-arg SCHEME=${SCHEME} --tag=pffi-${SCHEME}
