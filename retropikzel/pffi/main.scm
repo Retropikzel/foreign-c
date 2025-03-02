@@ -4,10 +4,10 @@
      (er-macro-transformer
        (lambda (expr rename compare)
          '(import (chicken foreign)
-                  (chicken memory))))))
+                  (chicken memory))
+         #t))))
   (else
-    (define pffi-init
-      (lambda () #t))))
+    (define (pffi-init) #t)))
 
 (define (pffi-type? object)
   (if (equal? (size-of-type object) #f)

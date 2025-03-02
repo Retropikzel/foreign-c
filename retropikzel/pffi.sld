@@ -30,10 +30,12 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
-              pffi-struct-dereference
               pffi-define
-              pffi-define-callback)
-      (include-shared "r7rs-pffi/r7rs-pffi-chibi"))
+              pffi-define-callback
+              scheme-procedure-to-pointer
+
+              )
+      (include-shared "pffi/pffi-chibi"))
     (chicken-5
       (import (scheme base)
               (scheme write)
@@ -66,10 +68,9 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
-              pffi-struct-dereference
               pffi-define
               pffi-define-callback))
-     (chicken6
+    (chicken6
       (import (scheme base)
               (scheme write)
               (scheme char)
@@ -130,7 +131,6 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
-              ;pffi-struct-dereference
               pffi-define
               ;pffi-define-callback
               ))
@@ -169,7 +169,8 @@
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context))
+              (scheme process-context)
+              (gauche base))
       (export pffi-init
               ;pffi-size-of
               pffi-type?
@@ -252,7 +253,6 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
-              pffi-struct-dereference
               pffi-define
               pffi-define-callback))
     (kawa
@@ -282,7 +282,6 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
-              pffi-struct-dereference
               pffi-define
               pffi-define-callback
               ))
@@ -348,7 +347,6 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
-              pffi-struct-dereference
               pffi-define
               pffi-define-callback))
     (racket
@@ -383,7 +381,6 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
-              pffi-struct-dereference
               pffi-define
               pffi-define-callback))
     (sagittarius
@@ -415,7 +412,6 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
-              pffi-struct-dereference
               pffi-define
               pffi-define-callback))
     (skint
@@ -513,54 +509,48 @@
               (scheme file)
               (scheme process-context))
       (export ;pffi-init
-              ;pffi-size-of
-              pffi-type?
-              ;pffi-align-of
-              ;pffi-shared-object-auto-load
-              ;pffi-shared-object-load
-              ;pffi-pointer-null
-              ;pffi-pointer-null?
-              ;pffi-pointer-allocate
-              ;pffi-pointer?
-              ;pffi-pointer-free
-              ;pffi-pointer-set!
-              ;pffi-pointer-get
-              ;pffi-string->pointer
-              ;pffi-pointer->string
-              pffi-struct-make
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
-              ;pffi-define
-              ;pffi-define-callback
+        ;pffi-size-of
+        pffi-type?
+        ;pffi-align-of
+        ;pffi-shared-object-auto-load
+        ;pffi-shared-object-load
+        ;pffi-pointer-null
+        ;pffi-pointer-null?
+        ;pffi-pointer-allocate
+        ;pffi-pointer?
+        ;pffi-pointer-free
+        ;pffi-pointer-set!
+        ;pffi-pointer-get
+        ;pffi-string->pointer
+        ;pffi-pointer->string
+        pffi-struct-make
+        pffi-struct-pointer
+        pffi-struct-offset-get
+        pffi-struct-get
+        pffi-struct-set!
+        ;pffi-define
+        ;pffi-define-callback
         ))
     (else (error "Unsupported implementation")))
   (cond-expand
-    (chibi (include "r7rs-pffi/chibi.scm"))
-    (chicken-5 (include "r7rs-pffi/chicken5.scm"))
+    (chibi (include "pffi/chibi.scm"))
+    (chicken-5 (include "pffi/chicken5.scm"))
     (chicken-6 (include "chicken6.scm"))
-    (cyclone (include "r7rs-pffi/cyclone.scm"))
-    (gambit (include "r7rs-pffi/gambit.scm"))
-    (gauche (include "r7rs-pffi/gauche.scm"))
-    (gerbil (include "r7rs-pffi/gerbil.scm"))
-    (guile (include "r7rs-pffi/guile.scm"))
-    (kawa (include "r7rs-pffi/kawa.scm"))
-    (larceny (include "r7rs-pffi/larceny.scm"))
-    (mosh (include "r7rs-pffi/mosh.scm"))
-    (racket (include "r7rs-pffi/racket.scm"))
-    (sagittarius (include "r7rs-pffi/sagittarius.scm"))
-    (skint (include "r7rs-pffi/skint.scm"))
-    (stklos (include "retropikzel/r7rs-pffi/stklos.scm"))
-    (tr7 (include "r7rs-pffi/tr7.scm"))
-    (ypsilon (include "r7rs-pffi/ypsilon.scm"))
+    (cyclone (include "pffi/cyclone.scm"))
+    (gambit (include "pffi/gambit.scm"))
+    (gauche (include "pffi/gauche.scm"))
+    (gerbil (include "pffi/gerbil.scm"))
+    (guile (include "pffi/guile.scm"))
+    (kawa (include "pffi/kawa.scm"))
+    (larceny (include "pffi/larceny.scm"))
+    (mosh (include "pffi/mosh.scm"))
+    (racket (include "pffi/racket.scm"))
+    (sagittarius (include "pffi/sagittarius.scm"))
+    (skint (include "pffi/skint.scm"))
+    (stklos (include "pffi/stklos.scm"))
+    (tr7 (include "pffi/tr7.scm"))
+    (ypsilon (include "pffi/ypsilon.scm"))
     (else #t))
-  (cond-expand
-    (stklos (include "retropikzel/r7rs-pffi/struct.scm")) ; FIXME temporarily for stklos 2.10
-    (else (include "r7rs-pffi/struct.scm")))
-  (cond-expand
-    (stklos (include "retropikzel/r7rs-pffi/union.scm")) ; FIXME temporarily for stklos 2.10
-    (else (include "r7rs-pffi/union.scm")))
-  (cond-expand
-    (stklos (include "retropikzel/r7rs-pffi/main.scm")) ; FIXME temporarily for stklos 2.10
-    (else (include "r7rs-pffi/main.scm"))))
+  (include "pffi/shared/struct.scm")
+  (include "pffi/shared/union.scm")
+  (include "pffi/shared/main.scm"))

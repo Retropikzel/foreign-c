@@ -81,10 +81,6 @@
   (lambda (pointer)
     (pointer-address pointer)))
 
-(define pffi-struct-dereference
-  (lambda (struct)
-    (deref (pffi-struct-pointer struct) 0)))
-
 (define pffi-pointer-null
   (lambda ()
     (empty-pointer)))

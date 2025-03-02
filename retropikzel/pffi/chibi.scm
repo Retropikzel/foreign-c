@@ -177,11 +177,6 @@
 
 (define make-c-function
   (lambda (shared-object return-type c-name argument-types)
-    (display "Argument types: ")
-    (write argument-types)
-    (newline)
-    (write (length argument-types))
-    (newline)
     (dlerror) ;; Clean all previous errors
     (let ((func (dlsym shared-object c-name))
           (maybe-dlerror (dlerror))
@@ -212,7 +207,6 @@
                         (symbol->string c-name)
                         argument-types)))))
 
-
 (define make-c-callback
   (lambda (return-type argument-types procedure)
     (scheme-procedure-to-pointer procedure)))
@@ -222,7 +216,3 @@
     ((pffi-define scheme-name return-type argument-types procedure)
      (define scheme-name
        (make-c-callback return-type argument-types procedure)))))
-
-(define pffi-struct-dereference
-  (lambda (struct)
-    (pffi-pointer-address (pffi-struct-pointer struct))))

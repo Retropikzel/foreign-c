@@ -61,7 +61,7 @@
 (c-declare "void* pointer_allocate(int size) { return malloc(size); }")
 (define-c (maybe-null void*) (pointer-allocate pointer_allocate) (int))
 
-(c-declare "int pointer_address(void* pointer) { return (int)&pointer; }")
+(c-declare "int pointer_address(void* pointer) { return (intptr_t)&pointer; }")
 (define-c int (pointer-address pointer_address) ((maybe-null void*)))
 
 (c-declare "void pointer_free(void* pointer) { free(pointer); }")
@@ -257,8 +257,9 @@
 (c-declare
   "void* scheme_procedure_to_pointer(sexp proc) {
     if(sexp_procedurep(proc) == 1) {
-      puts(\"ITS A PROCEDURE\");
+      sexp debug1 = sexp_procedure_code(proc);
+      printf(\"HERE: %u\\n\", sexp_bytecode_length(debug1));
     }
-    return (void*)proc; //FIXME
+    return (void*)proc;
   }")
 (define-c void* (scheme-procedure-to-pointer scheme_procedure_to_pointer) (sexp))
