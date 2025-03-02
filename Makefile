@@ -14,8 +14,8 @@ chibi:
 		-shared
 
 gauche:
-	#${CC} -Werror -g3 -o retropikzel/pffi/pffi-gauche.so \ src/pffi-gauche.c \ -fPIC \ -lffi \ -shared \ -I./include
-	gauche-package
+	CFLAGS="-I./include" gauche-package compile \
+		--verbose --srcdir=src retropikzel-pffi-gauche gauche.c gauchelib.scm
 
 jenkinsfile:
 	gosh -r7 -I ./snow build.scm
@@ -48,26 +48,22 @@ test-compile-docker: libtest.so libtest.a
 	docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && SCHEME=${SCHEME} compile-r7rs -I . test.scm && ./test"
 
 clean:
-	@rm -rf docutmp
-	@rm -rf retropikzel/r7rs-pffi/*.o*
-	@rm -rf retropikzel/r7rs-pffi/*.so
-	@rm -rf retropikzel/r7rs-pffi/*.meta
-	@rm -rf retropikzel/r7rs-pffi/retropikzel.*
-	@rm -rf retropikzel/r7rs-pffi/compiled
+	@rm -rf retropikzel/pffi/*.o*
+	@rm -rf retropikzel/pffi/*.so
+	@rm -rf retropikzel/pffi/*.meta
+	@rm -rf retropikzel/pffi/retropikzel.*
+	@rm -rf retropikzel/pffi/compiled
 	@rm -rf retropikzel.*
 	find . -name "*.meta" -delete
 	@rm -rf test/pffi-define
 	@rm -rf test/*gambit*
 	find . -name "*.link" -delete
-	find . -name "*.c" -not -name "libtest.c" -and -not -name "pffi-gauche.c" -delete
+	#find . -name "*.c" -not -name "libtest.c" -and -not -name "pffi-gauche.c" -delete
 	find . -name "*.o" -delete
 	find . -name "*.o[1-9]" -delete
 	find . -name "*.so" -delete
 	find . -name "*.a" -delete
 	find . -name "*.class" -delete
 	@rm -rf test
-	@rm -rf tmp
 	find . -name "core.1" -delete
 	find . -name "*@gambit*" -delete
-	rm -rf retropikzel/r7rs-pffi/r7rs-pffi-chibi.so
-	rm -rf retropikzel/r7rs-pffi/r7rs-pffi-chibi.c

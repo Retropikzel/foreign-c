@@ -170,9 +170,11 @@
               (scheme char)
               (scheme file)
               (scheme process-context)
-              (gauche base))
+              (gauche base)
+              (retropikzel pffi gauche))
       (export pffi-init
               ;pffi-size-of
+              spigot-calculate-pi
               pffi-type?
               pffi-align-of
               ;pffi-shared-object-auto-load
@@ -549,8 +551,7 @@
     (skint (include "pffi/skint.scm"))
     (stklos (include "pffi/stklos.scm"))
     (tr7 (include "pffi/tr7.scm"))
-    (ypsilon (include "pffi/ypsilon.scm"))
-    (else #t))
+    (ypsilon (include "pffi/ypsilon.scm")))
   (include "pffi/shared/struct.scm")
   (include "pffi/shared/union.scm")
   (include "pffi/shared/main.scm"))
