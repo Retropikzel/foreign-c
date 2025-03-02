@@ -14,12 +14,8 @@ chibi:
 		-shared
 
 gauche:
-	${CC} -Werror -g3 -o retropikzel/pffi/pffi-gauche.so \
-		src/pffi-gauche.c \
-		-fPIC \
-		-lffi \
-		-shared \
-		-I./include
+	#${CC} -Werror -g3 -o retropikzel/pffi/pffi-gauche.so \ src/pffi-gauche.c \ -fPIC \ -lffi \ -shared \ -I./include
+	gauche-package
 
 jenkinsfile:
 	gosh -r7 -I ./snow build.scm
@@ -27,7 +23,7 @@ jenkinsfile:
 libtest.o: src/libtest.c
 	${CC} -o libtest.o -fPIC -c src/libtest.c -I./include
 
-libtest.so: libtest.c
+libtest.so: src/libtest.c
 	${CC} -o libtest.so -shared -fPIC src/libtest.c -I./include
 
 libtest.a: libtest.o src/libtest.c
