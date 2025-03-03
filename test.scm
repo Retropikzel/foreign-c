@@ -57,10 +57,7 @@
 (print-header 'pffi-init)
 
 (pffi-init)
-(write (spigot-calculate-pi 10))
-(newline)
 
-(exit 0)
 ;; pffi-type?
 
 (print-header 'pffi-type?)

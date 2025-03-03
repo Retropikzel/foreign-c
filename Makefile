@@ -6,7 +6,7 @@ DOCKER_INIT=cd /workdir && make clean &&
 all: chibi
 
 chibi:
-	chibi-ffi src/chibi.stub && mv src/chibi.c src/pffi-chibi.c
+	chibi-ffi src/pffi-chibi.stub
 	${CC} -Werror -g3 -o retropikzel/pffi/pffi-chibi.so \
 		src/pffi-chibi.c \
 		-fPIC \
@@ -15,7 +15,7 @@ chibi:
 
 gauche:
 	CFLAGS="-I./include" gauche-package compile \
-		--verbose --srcdir=src retropikzel-pffi-gauche gauche.c gauchelib.scm
+		--verbose --srcdir=src retropikzel-pffi-gauche pffi-gauche.c gauchelib.scm
 
 jenkinsfile:
 	gosh -r7 -I ./snow build.scm

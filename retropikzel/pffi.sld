@@ -173,17 +173,16 @@
               (gauche base)
               (retropikzel pffi gauche))
       (export pffi-init
-              ;pffi-size-of
-              spigot-calculate-pi
+              pffi-size-of
               pffi-type?
               pffi-align-of
-              ;pffi-shared-object-auto-load
-              ;pffi-shared-object-load
-              ;pffi-pointer-null
-              ;pffi-pointer-null?
-              ;pffi-pointer-allocate
-              ;pffi-pointer?
-              ;pffi-pointer-free
+              pffi-shared-object-auto-load
+              pffi-shared-object-load
+              pffi-pointer-null
+              pffi-pointer-null?
+              pffi-pointer-allocate
+              pffi-pointer?
+              pffi-pointer-free
               ;pffi-pointer-set!
               ;pffi-pointer-get
               ;pffi-string->pointer
