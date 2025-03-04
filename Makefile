@@ -3,19 +3,20 @@ CC=gcc
 DOCKER=docker run -it -v ${PWD}:/workdir
 DOCKER_INIT=cd /workdir && make clean &&
 
-all: chibi
+all: chibi gauche libtest.so libtest.o libtest.a
 
 chibi:
-	chibi-ffi src/pffi-chibi.stub
-	${CC} -Werror -g3 -o retropikzel/pffi/pffi-chibi.so \
-		src/pffi-chibi.c \
+	chibi-ffi src/chibi/pffi.stub
+	${CC} -g3 -o retropikzel/pffi/chibi-pffi.so \
+		src/chibi/pffi.c \
 		-fPIC \
 		-lffi \
 		-shared
 
 gauche:
-	CFLAGS="-I./include" gauche-package compile \
-		--verbose --srcdir=src retropikzel-pffi-gauche pffi-gauche.c gauchelib.scm
+	CFLAGS="-I. -Werror -Wall -g3 -lffi" \
+		gauche-package compile \
+		--verbose --srcdir=src/gauche retropikzel-pffi-gauche pffi.c gauchelib.scm
 
 jenkinsfile:
 	gosh -r7 -I ./snow build.scm
@@ -58,7 +59,7 @@ clean:
 	@rm -rf test/pffi-define
 	@rm -rf test/*gambit*
 	find . -name "*.link" -delete
-	#find . -name "*.c" -not -name "libtest.c" -and -not -name "pffi-gauche.c" -delete
+	#find . -name "*.c" -not -name "libtest.c" -and -not -name "pffi.c" -delete
 	find . -name "*.o" -delete
 	find . -name "*.o[1-9]" -delete
 	find . -name "*.so" -delete

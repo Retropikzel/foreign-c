@@ -33,9 +33,8 @@
               pffi-define
               pffi-define-callback
               scheme-procedure-to-pointer
-
               )
-      (include-shared "pffi/pffi-chibi"))
+      (include-shared "pffi/chibi-pffi"))
     (chicken-5
       (import (scheme base)
               (scheme write)
@@ -183,16 +182,16 @@
               pffi-pointer-allocate
               pffi-pointer?
               pffi-pointer-free
-              ;pffi-pointer-set!
-              ;pffi-pointer-get
-              ;pffi-string->pointer
-              ;pffi-pointer->string
+              pffi-pointer-set!
+              pffi-pointer-get
+              pffi-string->pointer
+              pffi-pointer->string
               pffi-struct-make
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
-              ;pffi-define
+              pffi-define
               ;pffi-define-callback
               ))
     (gerbil

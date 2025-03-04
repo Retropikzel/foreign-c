@@ -176,9 +176,9 @@
                   pointer)))))
 
 (define make-c-function
-  (lambda (shared-object return-type c-name argument-types)
+  (lambda (shared-object c-name return-type argument-types)
     (dlerror) ;; Clean all previous errors
-    (let ((func (dlsym shared-object c-name))
+    (let ((c-function (dlsym shared-object c-name))
           (maybe-dlerror (dlerror))
           (return-value (pffi-pointer-allocate
                           (if (equal? return-type 'void)
@@ -188,13 +188,13 @@
         (error (pffi-pointer->string maybe-dlerror)))
       (lambda arguments
         (internal-ffi-call (length argument-types)
-                           (pffi-type->libffi-type return-type)
-                           (map pffi-type->libffi-type argument-types)
-                           func
-                           return-value
-                           (map argument->pointer
-                                arguments
-                                argument-types))
+                  (pffi-type->libffi-type return-type)
+                  (map pffi-type->libffi-type argument-types)
+                  c-function
+                  return-value
+                  (map argument->pointer
+                       arguments
+                       argument-types))
         (cond ((not (equal? return-type 'void))
                (pffi-pointer-get return-value return-type 0)))))))
 
@@ -203,8 +203,8 @@
     ((pffi-define scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
        (make-c-function shared-object
-                        return-type
                         (symbol->string c-name)
+                        return-type
                         argument-types)))))
 
 (define make-c-callback
