@@ -140,37 +140,33 @@
 
 (define pffi-type->libffi-type
   (lambda (type)
-    (cond
-      ((equal? type 'int8_t) (get-ffi-type-int8))
-      ((equal? type 'uint8_t) (get-ffi-type-uint8))
-      ((equal? type 'int16_t) (get-ffi-type-int16))
-      ((equal? type 'uint16_t) (get-ffi-type-uint16))
-      ((equal? type 'int32_t) (get-ffi-type-int32))
-      ((equal? type 'uint32_t) (get-ffi-type-uint32))
-      ((equal? type 'int64_t) (get-ffi-type-int64))
-      ((equal? type 'uint64_t) (get-ffi-type-uint64))
-      ((equal? type 'char) (get-ffi-type-char))
-      ((equal? type 'unsigned-char) (get-ffi-type-uchar))
-      ((equal? type 'bool) (get-ffi-type-int8))
-      ((equal? type 'short) (get-ffi-type-short))
-      ((equal? type 'unsigned-short) (get-ffi-type-ushort))
-      ((equal? type 'int) (get-ffi-type-int))
-      ((equal? type 'unsigned-int) (get-ffi-type-uint))
-      ((equal? type 'long) (get-ffi-type-long))
-      ((equal? type 'unsigned-long) (get-ffi-type-ulong))
-      ((equal? type 'float) (get-ffi-type-float))
-      ((equal? type 'double) (get-ffi-type-double))
-      ((equal? type 'void) (get-ffi-type-void))
-      ((equal? type 'pointer) (get-ffi-type-pointer))
-      ((equal? type 'callback) (get-ffi-type-pointer))
-      )))
+    (cond ((equal? type 'int8_t) (get-ffi-type-int8))
+          ((equal? type 'uint8_t) (get-ffi-type-uint8))
+          ((equal? type 'int16_t) (get-ffi-type-int16))
+          ((equal? type 'uint16_t) (get-ffi-type-uint16))
+          ((equal? type 'int32_t) (get-ffi-type-int32))
+          ((equal? type 'uint32_t) (get-ffi-type-uint32))
+          ((equal? type 'int64_t) (get-ffi-type-int64))
+          ((equal? type 'uint64_t) (get-ffi-type-uint64))
+          ((equal? type 'char) (get-ffi-type-char))
+          ((equal? type 'unsigned-char) (get-ffi-type-uchar))
+          ((equal? type 'bool) (get-ffi-type-int8))
+          ((equal? type 'short) (get-ffi-type-short))
+          ((equal? type 'unsigned-short) (get-ffi-type-ushort))
+          ((equal? type 'int) (get-ffi-type-int))
+          ((equal? type 'unsigned-int) (get-ffi-type-uint))
+          ((equal? type 'long) (get-ffi-type-long))
+          ((equal? type 'unsigned-long) (get-ffi-type-ulong))
+          ((equal? type 'float) (get-ffi-type-float))
+          ((equal? type 'double) (get-ffi-type-double))
+          ((equal? type 'void) (get-ffi-type-void))
+          ((equal? type 'pointer) (get-ffi-type-pointer))
+          ((equal? type 'callback) (get-ffi-type-pointer)))))
 
 (define argument->pointer
   (lambda (value type)
-    (cond ((pffi-pointer? value)
-           value)
-          ((procedure? value)
-           (scheme-procedure-to-pointer value))
+    (cond ((pffi-pointer? value) value)
+          ((procedure? value) (scheme-procedure-to-pointer value))
           (else (let ((pointer (pffi-pointer-allocate (size-of-type type))))
                   (pffi-pointer-set! pointer type 0 value)
                   pointer)))))
@@ -179,24 +175,24 @@
   (lambda (shared-object c-name return-type argument-types)
     (dlerror) ;; Clean all previous errors
     (let ((c-function (dlsym shared-object c-name))
-          (maybe-dlerror (dlerror))
-          (return-value (pffi-pointer-allocate
-                          (if (equal? return-type 'void)
-                            0
-                            (size-of-type return-type)))))
+          (maybe-dlerror (dlerror)))
       (when (not (pffi-pointer-null? maybe-dlerror))
         (error (pffi-pointer->string maybe-dlerror)))
       (lambda arguments
-        (internal-ffi-call (length argument-types)
-                  (pffi-type->libffi-type return-type)
-                  (map pffi-type->libffi-type argument-types)
-                  c-function
-                  return-value
-                  (map argument->pointer
-                       arguments
-                       argument-types))
-        (cond ((not (equal? return-type 'void))
-               (pffi-pointer-get return-value return-type 0)))))))
+        (let ((return-value (pffi-pointer-allocate
+                              (if (equal? return-type 'void)
+                                0
+                                (size-of-type return-type)))))
+          (internal-ffi-call (length argument-types)
+                             (pffi-type->libffi-type return-type)
+                             (map pffi-type->libffi-type argument-types)
+                             c-function
+                             return-value
+                             (map argument->pointer
+                                  arguments
+                                  argument-types))
+          (cond ((not (equal? return-type 'void))
+                 (pffi-pointer-get return-value return-type 0))))))))
 
 (define-syntax pffi-define
   (syntax-rules ()

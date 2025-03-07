@@ -642,8 +642,16 @@
 (print-header 'pffi-define)
 
 (pffi-define c-puts libc-stdlib 'puts 'int (list 'pointer))
-(define chars-written (c-puts (pffi-string->pointer "Hello from testing, I am C function puts")))
-(assert = chars-written 41)
+(debug c-puts)
+(define chars-written (c-puts (pffi-string->pointer "puts: Hello from testing, I am C function puts")))
+(debug chars-written)
+(assert = chars-written 47)
+
+(pffi-define c-abs libc-stdlib 'abs 'int (list 'int))
+(debug c-abs)
+(define absoluted (c-abs -2))
+(debug absoluted)
+(assert = absoluted 2)
 
 (pffi-define c-atoi libc-stdlib 'atoi 'int (list 'pointer))
 (assert = (c-atoi (pffi-string->pointer "100")) 100)

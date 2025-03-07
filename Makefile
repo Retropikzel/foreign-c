@@ -14,9 +14,13 @@ chibi:
 		-shared
 
 gauche:
-	CFLAGS="-I. -Werror -Wall -g3 -lffi" \
 		gauche-package compile \
-		--verbose --srcdir=src/gauche retropikzel-pffi-gauche pffi.c gauchelib.scm
+		--verbose \
+		--srcdir=src/gauche \
+		--cc=${CC} \
+		--cflags="-I." \
+		--libs=-lffi \
+		retropikzel-pffi-gauche pffi.c gauchelib.scm
 
 jenkinsfile:
 	gosh -r7 -I ./snow build.scm
