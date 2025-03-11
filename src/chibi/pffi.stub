@@ -49,23 +49,32 @@
 
 ;; pffi-shape-object-load
 (define-c-const int (RTLD-NOW "RTLD_NOW"))
-(define-c (maybe-null void*) dlopen (string int))
-(define-c (maybe-null void*) dlerror ())
+(define-c (maybe-null pointer void*) dlopen (string int))
+(define-c (maybe-null pointer void*) dlerror ())
 
 (c-declare "void* pointer_null() { return NULL; }")
-(define-c (maybe-null void*) (pointer-null pointer_null) ())
+(define-c (pointer void*) (pointer-null pointer_null) ())
 
 (c-declare "int is_pointer_null(void* pointer) { if(pointer == NULL) { return 1; } else { return 0; }; }")
-(define-c bool (is-pointer-null is_pointer_null) ((maybe-null void*)))
+(define-c bool (is-pointer-null is_pointer_null) ((maybe-null pointer void*)))
 
 (c-declare "void* pointer_allocate(int size) { return malloc(size); }")
-(define-c (maybe-null void*) (pointer-allocate pointer_allocate) (int))
+(define-c (maybe-null pointer void*) (pointer-allocate pointer_allocate) (int))
+
+(c-declare "sexp is_pointer(struct sexp_struct* object) {
+           if(sexp_cpointerp(object)) {
+              return SEXP_TRUE;
+           } else {
+              return SEXP_FALSE;
+           }
+           }")
+(define-c sexp (pointer? is_pointer) (sexp))
 
 (c-declare "int pointer_address(void* pointer) { return (intptr_t)&pointer; }")
-(define-c int (pointer-address pointer_address) ((maybe-null void*)))
+(define-c int (pointer-address pointer_address) ((maybe-null pointer void*)))
 
 (c-declare "void pointer_free(void* pointer) { free(pointer); }")
-(define-c void (pointer-free pointer_free) ((maybe-null void*)))
+(define-c void (pointer-free pointer_free) ((maybe-null pointer void*)))
 
 ;; pffi-pointer-set!
 (c-declare "void pointer_set_c_int8_t(void* pointer, int offset, int8_t value) { *(int8_t*)((char*)pointer + offset) = value; }")
@@ -115,7 +124,7 @@
 (define-c void (pointer-set-c-double! pointer_set_c_double) ((pointer void*) int double))
 
 (c-declare "void pointer_set_c_pointer(void* pointer, int offset, void* value) { char* p = (char*)pointer + offset; *(char**)p = value; }")
-(define-c void (pointer-set-c-pointer! pointer_set_c_pointer) ((pointer void*) int (maybe-null void*)))
+(define-c void (pointer-set-c-pointer! pointer_set_c_pointer) ((pointer void*) int (maybe-null pointer void*)))
 
 ;; pffi-pointer-get
 (c-declare "int8_t pointer_ref_c_int8_t(void* pointer, int offset) { return *(int8_t*)((char*)pointer + offset); }")
@@ -165,20 +174,20 @@
 (define-c double (pointer-ref-c-double pointer_ref_c_double) ((pointer void*) int))
 
 (c-declare "void* pointer_ref_c_pointer(void* pointer, int offset) { char* p = (char*)pointer + offset; return *(char**)p; }")
-(define-c (maybe-null void*) (pointer-ref-c-pointer pointer_ref_c_pointer) ((pointer void*) int))
+(define-c (maybe-null pointer void*) (pointer-ref-c-pointer pointer_ref_c_pointer) ((pointer void*) int))
 
 ;; pffi-string->pointer
 (c-declare "void* string_to_pointer(char* string) { return (void*)string; }")
-(define-c (maybe-null void*) (string-to-pointer string_to_pointer) (string))
+(define-c (maybe-null pointer void*) (string-to-pointer string_to_pointer) (string))
 
 ;; pffi-pointer->string
 (c-declare "char* pointer_to_string(void* pointer) { return (char*)pointer; }")
-(define-c string (pointer-to-string pointer_to_string) ((maybe-null void*)))
+(define-c string (pointer-to-string pointer_to_string) ((maybe-null pointer void*)))
 
 ;; pffi-define
 
 (c-declare "ffi_cif cif;")
-(define-c (pointer void*) dlsym ((maybe-null void*) string))
+(define-c (pointer void*) dlsym ((maybe-null pointer void*) string))
 
 (c-declare "void* get_ffi_type_int8() { return &ffi_type_sint8; }")
 (define-c (pointer void*) (get-ffi-type-int8 get_ffi_type_int8) ())
@@ -241,14 +250,19 @@
   }")
 (define-c int (internal-ffi-prep-cif internal_ffi_prep_cif) (unsigned-int (pointer void*) (array void*)))
 (c-declare
-  "void internal_ffi_call(unsigned int nargs, void* rtype, void** atypes, void* fn, void* rvalue, void* avalues[]) {
+  "void internal_ffi_call(unsigned int nargs, void* rtype, void** atypes, void* fn, void* rvalue, struct sexp_struct* avalues[]) {
     ffi_prep_cif(&cif, FFI_DEFAULT_ABI, nargs, (ffi_type*)rtype, (ffi_type**)atypes);
     void* c_avalues[nargs];
     for(int i = 0; i < nargs; i++) {
         if(atypes[i] == &ffi_type_pointer) {
-          c_avalues[i] = &avalues[i];
+          if(sexp_booleanp(avalues[i])) {
+            void* p = NULL;
+            c_avalues[i] = &p;
+          } else {
+            c_avalues[i] = &sexp_cpointer_value(avalues[i]);
+          }
         } else {
-          c_avalues[i] = avalues[i];
+          c_avalues[i] = sexp_cpointer_value(avalues[i]);
         }
     }
     ffi_call(&cif, FFI_FN(fn), rvalue, c_avalues);
@@ -260,7 +274,7 @@
             (array void*)
             (pointer void*)
             (pointer void*)
-            (array void*)))
+            (array sexp)))
 
 (c-declare
   "void* scheme_procedure_to_pointer(sexp proc) {

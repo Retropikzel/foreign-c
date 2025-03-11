@@ -43,8 +43,8 @@
 
 (define pffi-pointer?
   (lambda (object)
-    (or (not object) ; #f is null on Chibi
-        (string=? (type-name (type-of object)) "Cpointer"))))
+    (or (equal? object #f) ; False can be null pointer
+    (pointer? object))))
 
 (define pffi-pointer-allocate
   (lambda (size)
@@ -140,14 +140,14 @@
 
 (define pffi-type->libffi-type
   (lambda (type)
-    (cond ((equal? type 'int8_t) (get-ffi-type-int8))
-          ((equal? type 'uint8_t) (get-ffi-type-uint8))
-          ((equal? type 'int16_t) (get-ffi-type-int16))
-          ((equal? type 'uint16_t) (get-ffi-type-uint16))
-          ((equal? type 'int32_t) (get-ffi-type-int32))
-          ((equal? type 'uint32_t) (get-ffi-type-uint32))
-          ((equal? type 'int64_t) (get-ffi-type-int64))
-          ((equal? type 'uint64_t) (get-ffi-type-uint64))
+    (cond ((equal? type 'int8) (get-ffi-type-int8))
+          ((equal? type 'uint8) (get-ffi-type-uint8))
+          ((equal? type 'int16) (get-ffi-type-int16))
+          ((equal? type 'uint16) (get-ffi-type-uint16))
+          ((equal? type 'int32) (get-ffi-type-int32))
+          ((equal? type 'uint32) (get-ffi-type-uint32))
+          ((equal? type 'int64) (get-ffi-type-int64))
+          ((equal? type 'uint64) (get-ffi-type-uint64))
           ((equal? type 'char) (get-ffi-type-char))
           ((equal? type 'unsigned-char) (get-ffi-type-uchar))
           ((equal? type 'bool) (get-ffi-type-int8))
@@ -183,6 +183,12 @@
                               (if (equal? return-type 'void)
                                 0
                                 (size-of-type return-type)))))
+          (display "Calling function: ")
+          (display c-name)
+          (newline)
+          (display "With arguments: ")
+          (display arguments)
+          (newline)
           (internal-ffi-call (length argument-types)
                              (pffi-type->libffi-type return-type)
                              (map pffi-type->libffi-type argument-types)
@@ -192,6 +198,12 @@
                                   arguments
                                   argument-types))
           (cond ((not (equal? return-type 'void))
+                 (display "Return value pointer: ")
+                 (write return-value)
+                 (newline)
+                 (display "Return value: ")
+                 (write (pffi-pointer-get return-value return-type 0))
+                 (newline)
                  (pffi-pointer-get return-value return-type 0))))))))
 
 (define-syntax pffi-define
