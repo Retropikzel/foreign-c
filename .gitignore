@@ -37,3 +37,4 @@ tmp
 dockerfiles/build
 .scheme_testrunner
 core
+testfile.test
