@@ -12,7 +12,7 @@
                        pffi-pointer->string
                        pffi-define))
 (select-module retropikzel.pffi.gauche)
-(dynamic-load "retropikzel-pffi-gauche")
+(dynamic-load "retropikzel/pffi/retropikzel-pffi-gauche")
 
 (define size-of-type
   (lambda (type)
@@ -160,6 +160,9 @@
                               (if (equal? return-type 'void)
                                 0
                                 (size-of-type return-type)))))
+          (display "Calling function: ")
+          (display c-name)
+          (newline)
           (internal-ffi-call (length argument-types)
                              (pffi-type->libffi-type return-type)
                              (map pffi-type->libffi-type argument-types)

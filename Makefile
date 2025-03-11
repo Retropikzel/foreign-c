@@ -21,6 +21,7 @@ gauche:
 		--cflags="-I." \
 		--libs=-lffi \
 		retropikzel-pffi-gauche pffi.c gauchelib.scm
+		mv retropikzel-pffi-gauche.so retropikzel/pffi/
 
 jenkinsfile:
 	gosh -r7 -I ./snow build.scm
