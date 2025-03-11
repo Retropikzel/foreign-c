@@ -241,9 +241,17 @@
   }")
 (define-c int (internal-ffi-prep-cif internal_ffi_prep_cif) (unsigned-int (pointer void*) (array void*)))
 (c-declare
-  "void internal_ffi_call(unsigned int nargs, void* rtype, void** atypes, void* fn, void* rvalue, void* avalues) {
+  "void internal_ffi_call(unsigned int nargs, void* rtype, void** atypes, void* fn, void* rvalue, void* avalues[]) {
     ffi_prep_cif(&cif, FFI_DEFAULT_ABI, nargs, (ffi_type*)rtype, (ffi_type**)atypes);
-    ffi_call(&cif, FFI_FN(fn), rvalue, &avalues);
+    void* c_avalues[nargs];
+    for(int i = 0; i < nargs; i++) {
+        if(atypes[i] == &ffi_type_pointer) {
+          c_avalues[i] = &avalues[i];
+        } else {
+          c_avalues[i] = avalues[i];
+        }
+    }
+    ffi_call(&cif, FFI_FN(fn), rvalue, c_avalues);
   }")
 (define-c void
           (internal-ffi-call internal_ffi_call)
