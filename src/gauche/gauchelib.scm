@@ -27,6 +27,7 @@
  (define-cproc pointer-null () pointer_null)
  (define-cproc pointer-null? (pointer) is_pointer_null)
  (define-cproc pointer-allocate (size::<int>) pointer_allocate)
+ (define-cproc pointer-address (object) pointer_address)
  (define-cproc pointer? (pointer) is_pointer)
  (define-cproc pointer-free (pointer) pointer_free)
 

@@ -4,6 +4,7 @@
                        pffi-pointer-null
                        pffi-pointer-null?
                        pffi-pointer-allocate
+                       pffi-pointer-address
                        pffi-pointer?
                        pffi-pointer-free
                        pffi-pointer-set!
@@ -54,6 +55,10 @@
 (define pffi-pointer-allocate
   (lambda (size)
     (pointer-allocate size)))
+
+(define pffi-pointer-address
+  (lambda (object)
+    (pointer-address object)))
 
 (define pffi-pointer?
   (lambda (pointer)

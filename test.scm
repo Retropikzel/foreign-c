@@ -444,8 +444,9 @@
 (debug test-pointer1)
 (debug (pffi-pointer? test-pointer1))
 (assert equal? (pffi-pointer? test-pointer1) #t)
-;(debug (pffi-pointer-address test-pointer1))
-;(assert equal? (number? (pffi-pointer-address test-pointer1)) #t)
+(debug (pffi-pointer-address test-pointer1))
+(assert equal? (number? (pffi-pointer-address test-pointer1)) #t)
+(assert equal? (> (pffi-pointer-address test-pointer1) 0) #t)
 
 ;; pffi-pointer?
 
