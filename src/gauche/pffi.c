@@ -507,7 +507,6 @@ ScmObj pointer_to_string(ScmObj pointer) {
     if(SCM_FOREIGN_POINTER_P(pointer)) {
         void* p = SCM_FOREIGN_POINTER_REF(void*, pointer);
         void* string = (char*)p;
-        printf("Pointer to string: %s\n", string);
         return Scm_MakeString(string, -1, -1, 0);
     } else {
         Scm_Error("Not a pointer: %S", pointer);
@@ -666,25 +665,10 @@ ScmObj internal_ffi_call(ScmObj nargs, ScmObj rtype, ScmObj atypes, ScmObj fn, S
     for(int i = 0; i < avalues_length; i++) {
         ScmObj item = Scm_ListRef(avalues, i, SCM_UNDEFINED);
         void* pp = SCM_FOREIGN_POINTER_REF(void*, item);
-        printf("DEBUG1: %i\n", i);
         char* list_p = (char*)c_avalues + (sizeof(void) * i);
-        /*
-        if(c_atypes[i] == &ffi_type_pointer) {
-            c_avalues[i] = &pp;
-            printf("DEBUG2: %i\n", &c_avalues[i]);
-            printf("DEBUG2.1: %i\n", &pp);
-        } else {
-            printf("DEBUG2: %i\n", *(int*)pp);
-            c_avalues[i] = pp;
-        }
-        */
         c_avalues[i] = pp;
     }
-    printf("HERE2\n");
-    printf("DEBUG3.1: %i\n", &c_rvalue);
     ffi_call(&cif, FFI_FN(c_fn), c_rvalue, c_avalues);
-    printf("DEBUG3.2: %i\n", &c_rvalue);
-    printf("HERE3\n");
 
     return SCM_UNDEFINED;
 }

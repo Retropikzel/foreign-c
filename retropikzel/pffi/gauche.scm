@@ -148,8 +148,7 @@
 
 (define argument->pointer
   (lambda (value type)
-    (cond ;((pffi-pointer? value) value)
-          ((procedure? value) (scheme-procedure-to-pointer value))
+    (cond ((procedure? value) (scheme-procedure-to-pointer value))
           (else (let ((pointer (pffi-pointer-allocate (size-of-type type))))
                   (pffi-pointer-set! pointer type 0 value)
                   pointer)))))
@@ -166,23 +165,6 @@
                               (if (equal? return-type 'void)
                                 0
                                 (size-of-type return-type)))))
-          (display "Calling function: ")
-          (display c-name)
-          (newline)
-          (display "Return type: ")
-          (write (pffi-type->libffi-type return-type))
-          (newline)
-          (display "Argument types: ")
-          (write (map pffi-type->libffi-type argument-types))
-          (newline)
-          (display "Size of return type: ")
-          (write (size-of-type return-type))
-          (newline)
-          (display "Argument pointers: ")
-          (write (map argument->pointer
-                      arguments
-                      argument-types))
-          (newline)
           (internal-ffi-call (length argument-types)
                              (pffi-type->libffi-type return-type)
                              (map pffi-type->libffi-type argument-types)
@@ -191,13 +173,7 @@
                              (map argument->pointer
                                   arguments
                                   argument-types))
-          (display "Return value pointer: ")
-          (write return-value)
-          (newline)
           (cond ((not (equal? return-type 'void))
-                 (display "Return value: ")
-                 (write (pffi-pointer-get return-value return-type 0))
-                 (newline)
                  (pffi-pointer-get return-value return-type 0))))))))
 
 (define-syntax pffi-define

@@ -183,12 +183,6 @@
                               (if (equal? return-type 'void)
                                 0
                                 (size-of-type return-type)))))
-          (display "Calling function: ")
-          (display c-name)
-          (newline)
-          (display "With arguments: ")
-          (display arguments)
-          (newline)
           (internal-ffi-call (length argument-types)
                              (pffi-type->libffi-type return-type)
                              (map pffi-type->libffi-type argument-types)
@@ -198,12 +192,6 @@
                                   arguments
                                   argument-types))
           (cond ((not (equal? return-type 'void))
-                 (display "Return value pointer: ")
-                 (write return-value)
-                 (newline)
-                 (display "Return value: ")
-                 (write (pffi-pointer-get return-value return-type 0))
-                 (newline)
                  (pffi-pointer-get return-value return-type 0))))))))
 
 (define-syntax pffi-define
