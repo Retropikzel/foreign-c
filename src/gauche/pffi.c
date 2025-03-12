@@ -655,8 +655,8 @@ ScmObj internal_ffi_call(ScmObj nargs, ScmObj rtype, ScmObj atypes, ScmObj fn, S
     int atypes_length = (int)Scm_Length(atypes);
     ffi_type* c_atypes[atypes_length];
     for(int i = 0; i < atypes_length; i++) {
+        c_atypes[i] = SCM_FOREIGN_POINTER_REF(ffi_type*, Scm_ListRef(atypes, i, SCM_UNDEFINED));
     }
-    printf("DEBUG666\n");
     int prep_status = ffi_prep_cif(&cif, FFI_DEFAULT_ABI, c_nargs, c_rtype, c_atypes);
 
     void* c_fn = SCM_FOREIGN_POINTER_REF(void*, fn);
@@ -664,11 +664,11 @@ ScmObj internal_ffi_call(ScmObj nargs, ScmObj rtype, ScmObj atypes, ScmObj fn, S
     int avalues_length = (int)Scm_Length(avalues);
     void* c_avalues[avalues_length];
     for(int i = 0; i < avalues_length; i++) {
-        c_atypes[i] = SCM_FOREIGN_POINTER_REF(ffi_type*, Scm_ListRef(atypes, i, SCM_UNDEFINED));
         ScmObj item = Scm_ListRef(avalues, i, SCM_UNDEFINED);
         void* pp = SCM_FOREIGN_POINTER_REF(void*, item);
         printf("DEBUG1: %i\n", i);
         char* list_p = (char*)c_avalues + (sizeof(void) * i);
+        /*
         if(c_atypes[i] == &ffi_type_pointer) {
             c_avalues[i] = &pp;
             printf("DEBUG2: %i\n", &c_avalues[i]);
@@ -677,6 +677,8 @@ ScmObj internal_ffi_call(ScmObj nargs, ScmObj rtype, ScmObj atypes, ScmObj fn, S
             printf("DEBUG2: %i\n", *(int*)pp);
             c_avalues[i] = pp;
         }
+        */
+        c_avalues[i] = pp;
     }
     printf("HERE2\n");
     printf("DEBUG3.1: %i\n", &c_rvalue);
