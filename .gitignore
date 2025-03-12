@@ -3,7 +3,7 @@
 !include/libtest.h
 *.c
 !src/libtest.c
-!src/pffi-gauche.c
+!src/gauche/pffi.c
 *.swp
 *.swo
 docuptmp
