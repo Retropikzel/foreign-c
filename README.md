@@ -1,5 +1,6 @@
 ---
 title: Portable Foreign Function Interface for R7RS Documentation
+version: 0.6.0
 ---
 
 # Portable Foreign Function Interface for R7RS
@@ -35,7 +36,7 @@ conforming to some specification.
         - [Chicken](#usage-chicken)
         - [Racket](#usage-racket)
         - [Kawa](#usage-kawa)
-    - [Reference](#reference)
+- [Reference](#reference)
     - [Types](#types)
     - [Procedures and macros](#procedures-and-macros)
         - [pffi-init](#pffi-init)
@@ -176,8 +177,7 @@ Needs libffi-dev, on Debina/Ubuntu/Mint install with:
 
 Build with:
 
-    chibi-ffi retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub
-    gcc -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so -fPIC -shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c -lchibi-scheme -lffi
+    make chibi
 
 #### Chicken
 <a name="usage-chicken"></a>
@@ -200,15 +200,15 @@ Kawa Needs at least Java version 22
 
 Needs jvm flags:
 
-- --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED
-- --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED
-- --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED
-- --enable-native-access=ALL-UNNAMED
+- \--add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED
+- \--add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED
+- \--add-exports java.base/jdk.internal.foreign=ALL-UNNAMED
+- \--enable-native-access=ALL-UNNAMED
 
-### Reference
+## Reference
 <a name="reference"></a>
 
-#### Types
+### Types
 <a name="types"></a>
 
 Types are given as symbols, for example 'int8 or 'pointer.
@@ -235,29 +235,33 @@ Types are given as symbols, for example 'int8 or 'pointer.
 - callback
     - Callback function
 
-#### Procedures and macros
+### Procedures and macros
 <a name="procedures-and-macros"></a>
 
 Some of these are procedures and some macros, it might also change implementation to implementation.
 
-##### **pffi-init**
-<a name="pffi-init"></a>
+#### pffi-init <a name="pffi-init"></a>
+
+**pffi-init**
 
 Always call this first, on most implementation it does nothing but some implementations might need
 initialisation run.
 
-##### **pffi-size-of** object -> number
-<a name="pffi-size-of"></a>
+#### pffi-size-of <a name="pffi-size-of"></a>
+
+**pffi-size-of** object -> number
 
 Returns the size of the pffi-struct, pffi-enum or pffi-type.
 
-##### **pffi-align-of** type -> number
-<a name="pffi-align-of"></a>
+#### pffi-align-of <a name="pffi-align-of"></a>
+
+**pffi-align-of** type -> number
 
 Returns the align of the type.
 
-##### **pffi-shared-object-auto-load** headers shared-object-name [options] -> object
-<a name="pffi-shared-object-auto-load"></a>
+#### pffi-shared-object-auto-load <a name="pffi-shared-object-auto-load"></a>
+
+**pffi-shared-object-auto-load** headers shared-object-name [options] -> object
 
 Load given shared object automatically searching many predefined paths.
 
@@ -286,8 +290,9 @@ Example:
                                             '(additional-search-paths . ("."))))))
 
 
-##### **pffi-shared-object-load** headers path [options]
-<a name="pffi-shared-object-load"></a>
+#### pffi-shared-object-load <a name="pffi-shared-object-load"></a>
+
+**pffi-shared-object-load** headers path [options]
 
 It is recommended to use the pffi-shared-object-auto-load instead of this
 directly.
@@ -306,38 +311,45 @@ Options:
 - additional-versions
     - List of different versions of library to try, for example (list ".0" ".1")
 
-##### **pffi-pointer-null** -> pointer
-<a name="pffi-pointer-null"></a>
+#### pffi-pointer-null <a name="pffi-pointer-null"></a>
+
+**pffi-pointer-null** -> pointer
 
 Returns a new NULL pointer.
 
-##### **pffi-pointer-null?** pointer -> boolean
-<a name="pffi-pointer-null?"></a>
+#### pffi-pointer-null?  <a name="pffi-pointer-null?"></a>
+
+**pffi-pointer-null?** pointer -> boolean
 
 Returns #t if given pointer is null pointer, #f otherwise.
 
-##### **pffi-pointer-allocate** size -> pointer
-<a name="pffi-pointer-allocate"></a>
+#### pffi-pointer-allocate <a name="pffi-pointer-allocate"></a>
+
+**pffi-pointer-allocate** size -> pointer
 
 Returns newly allocated pointer of given size.
 
-##### **pffi-pointer-address** pointer -> number
-<a name="pffi-pointer-address"></a>
+#### pffi-pointer-address <a name="pffi-pointer-address"></a>
+
+**pffi-pointer-address** pointer -> number
 
 Returns the address of given pointer as number.
 
-##### **pffi-pointer?** object -> boolean
-<a name="pffi-pointer?"></a>
+#### pffi-pointer? <a name="pffi-pointer?"></a>
+
+**pffi-pointer?** object -> boolean
 
 Returns #t if given object is pointer, #f otherwise.
 
-##### **pffi-pointer-free** pointer
-<a name="pffi-pointer-free"></a>
+#### pffi-pointer-free <a name="pffi-pointer-free"></a>
+
+**pffi-pointer-free** pointer
 
 Frees given pointer.
 
-##### **pffi-pointer-set!** pointer type offset value
-<a name="pffi-pointer-set!"></a>
+#### pffi-pointer-set! <a name="pffi-pointer-set!"></a>
+
+**pffi-pointer-set!** pointer type offset value
 
 Sets the value on a pointer on given offset. For example:
 
@@ -346,8 +358,9 @@ Sets the value on a pointer on given offset. For example:
 
 Would set the offset of 64, on pointer p to value 100.
 
-##### **pffi-pointer-get** pointer type offset -> object
-<a name="pffi-pointer-get"></a>
+#### pffi-pointer-get <a name="pffi-pointer-get"></a>
+
+**pffi-pointer-get** pointer type offset -> object
 
 Gets the value from a pointer on given offset. For example:
 
@@ -356,18 +369,21 @@ Gets the value from a pointer on given offset. For example:
     (pffi-pointer-get p 'int 64)
     > 100
 
-##### **pffi-string->pointer** string -> pointer
-<a name="pffi-string-to-pointer"></a>
+#### pffi-string->pointer <a name="pffi-string-to-pointer"></a>
+
+**pffi-string->pointer** string -> pointer
 
 Makes pointer out of a given string.
 
-##### **pffi-pointer->string** pointer -> string
-<a name="pffi-pointer-to-string"></a>
+#### pffi-pointer->string <a name="pffi-pointer-to-string"></a>
+
+**pffi-pointer->string** pointer -> string
 
 Makes string out of a given pointer.
 
-##### **pffi-struct-make** c-type members . pointer -> pffi-struct
-<a name="pffi-struct-make"></a>
+#### pffi-struct-make <a name="pffi-struct-make"></a>
+
+**pffi-struct-make** c-type members . pointer -> pffi-struct
 
 Creates a new pffi-struct and allocates pointer for it. The members argument is a list of member
 names and types. For example:
@@ -377,8 +393,9 @@ names and types. For example:
 
 C-type argument can be symbol or a string.
 
-##### **pffi-struct-pointer** pffi-struct -> pointer
-<a name="pffi-struct-pointer"></a>
+#### pffi-struct-pointer <a name="pffi-struct-pointer"></a>
+
+**pffi-struct-pointer** pffi-struct -> pointer
 
 Returns the pointer that holds the struct content. You need to use this when passing a struct as
 a pointer to foreign functions.
@@ -386,24 +403,28 @@ a pointer to foreign functions.
     (define s (pffi-struct-make 'test '((int . r) (int . g) (int . b))))
     (pffi-struct-pointer s)
 
-##### **pffi-struct-offset-get** member-name -> number
-<a name="pffi-struct-offset-get"></a>
+#### pffi-struct-offset-get <a name="pffi-struct-offset-get"></a>
+
+**pffi-struct-offset-get** member-name -> number
 
 Returns the offset of a struct member with given name.
 
-##### **pffi-struct-get** pffi-struct member-name -> object
-<a name="pffi-struct-get"></a>
+#### pffi-struct-get <a name="pffi-struct-get"></a>
+
+**pffi-struct-get** pffi-struct member-name -> object
 
 Returns the value of the givens struct member.
 
-##### **pffi-struct-set!** pffi-struct member-name value
-<a name="pffi-struct-set!"></a>
+#### pffi-struct-set! <a name="pffi-struct-set!"></a>
+
+**pffi-struct-set!** pffi-struct member-name value
 
 Sets the value of the givens struct member. It is up to you to make sure that the type of value is
 correct.
 
-##### **pffi-define** scheme-name shared-object c-name return-type argument-types
-<a name="pffi-define"></a>
+#### pffi-define <a name="pffi-define"></a>
+
+**pffi-define** scheme-name shared-object c-name return-type argument-types
 
 Defines a new foreign function to be used from Scheme code. For example:
 
@@ -414,8 +435,9 @@ Defines a new foreign function to be used from Scheme code. For example:
     (pffi-define c-puts libc-stdlib 'puts 'int (list 'pointer))
     (c-puts "Message brought to you by FFI!")
 
-##### **pffi-define-callback** scheme-name return-type argument-types procedure
-<a name="pffi-define-callback"></a>
+#### pffi-define-callback <a name="pffi-define-callback"></a>
+
+**pffi-define-callback** scheme-name return-type argument-types procedure
 
 Defines a new Sceme function to be used as callback to C code. For example:
 

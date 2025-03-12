@@ -2,6 +2,7 @@
 CC=gcc
 DOCKER=docker run -it -v ${PWD}:/workdir
 DOCKER_INIT=cd /workdir && make clean &&
+VERSION=$(shell grep "version:" README.md | awk '{split\($0,a\); print a[2];}')
 
 all: chibi gauche libtest.so libtest.o libtest.a
 
@@ -11,7 +12,6 @@ docs:
 	pandoc --standalone \
 		--template templates/documentation.html README.md \
 		> documentation/R7RS-PFFI.html
-	#pandoc -s --pdf-engine=weasyprint -o documentation/R7RS-PFFI.pdf README.md
 	pandoc -t html5 \
 		--pdf-engine=weasyprint \
 		--css templates/css/pdf-documentation.css \
