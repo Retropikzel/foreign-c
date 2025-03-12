@@ -1,9 +1,22 @@
-.PHONY=libtest.o libtest.so libtest.a
+.PHONY=libtest.o libtest.so libtest.a documentation
 CC=gcc
 DOCKER=docker run -it -v ${PWD}:/workdir
 DOCKER_INIT=cd /workdir && make clean &&
 
 all: chibi gauche libtest.so libtest.o libtest.a
+
+# apt-get install pandoc weasyprint
+docs:
+	mkdir -p documentation
+	pandoc --standalone \
+		--template templates/documentation.html README.md \
+		> documentation/R7RS-PFFI.html
+	#pandoc -s --pdf-engine=weasyprint -o documentation/R7RS-PFFI.pdf README.md
+	pandoc -t html5 \
+		--pdf-engine=weasyprint \
+		--css templates/css/pdf-documentation.css \
+		-o documentation/R7RS-PFFI.pdf \
+		README.md
 
 chibi:
 	chibi-ffi src/chibi/pffi.stub
@@ -46,7 +59,8 @@ test-compile-library: libtest.so libtest.a libtest.o
 	SCHEME=${SCHEME} compile-r7rs-library retropikzel/pffi.sld
 
 test-compile: test-compile-library
-	SCHEME=${SCHEME} CFLAGS="-I./include" LDFLAGS="-ltest" compile-r7rs -I . test.scm && ./test
+	SCHEME=${SCHEME} CFLAGS="-I./include -L." LDFLAGS="-ltest libtest.o" compile-r7rs -I . test.scm
+	./test
 
 test-compile-docker: libtest.so libtest.a
 	docker build -f dockerfiles/test . --build-arg SCHEME=${SCHEME} --tag=pffi-${SCHEME}

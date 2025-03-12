@@ -1,8 +1,12 @@
-# Portable Foreign Function Interface for R7RS schemes
+---
+title: Portable Foreign Function Interface for R7RS Documentation
+---
 
-Foreign function interface that is supported on multiple R7RS Sceheme implementations.
+# Portable Foreign Function Interface for R7RS
 
-Any help in form of constructive advice and bug reports are appreciated.
+Portable foreign function interface for R7RS. It is portable in the sense that
+it supports multiple implementations, as opposed to being portable by
+conforming to some specification.
 
 [Project](https://todo.sr.ht/~retropikzel/r7rs-pffi)
 
@@ -14,44 +18,55 @@ Any help in form of constructive advice and bug reports are appreciated.
 
 ## Table of contents
 
+<nav>
+
 - [Goals](#goals)
 - [Non Goals](#non-goals)
 - [Status](#status)
-- [Implementation status](#implementation-status)
+    - [Current caveats](#current-caveats)
 - [Implementation table](#implementation-table)
-- [Other Implementations](#other-implementations)
+    - [Beta](#beta)
+    - [Alpha](#alpha)
+    - [Not started](#not-started)
+    - [Other](#other)
 - [Documentation](#documentation)
     - [Usage](#usage)
-        - [Chibi](#usage_chibi)
-        - [Chicken](#usage_chicken)
-        - [Racket](#usage_racket)
-        - [Kawa](#usage_kawa)
+        - [Chibi](#usage-chibi)
+        - [Chicken](#usage-chicken)
+        - [Racket](#usage-racket)
+        - [Kawa](#usage-kawa)
     - [Reference](#reference)
     - [Types](#types)
     - [Procedures and macros](#procedures-and-macros)
-        - [pffi-init](#strongpffi-initstrong)
-        - [pffi-size-of](#strongpffi-size-ofstrong-type--gt-number)
-        - [pffi-align-of](#strongpffi-align-ofstrong-type--gt-number)
-        - [pffi-shared-object-auto-load](#strongpffi-shared-object-auto-loadstrong)
-        - [pffi-shared-object-load](#strongpffi-shared-object-loadstrong-headers-path)
-        - [pffi-pointer-null](#strongpffi-pointer-nullstrong--gt-pointer)
-        - [pffi-pointer-null?](#strongpffi-pointer-nullstrong-pointer--gt-boolean)
-        - [pffi-pointer-allocate](#strongpffi-pointer-allocatestrong-size--gt-pointer)
-        - [pffi-pointer?](#strongpffi-pointerstrong-object--gt-boolean)
-        - [pffi-pointer-free](#strongpffi-pointer-freestrong-pointer)
-        - [pffi-pointer-set!](#strongpffi-pointer-setstrong-pointer-type-offset-value)
-        - [pffi-pointer-get](#strongpffi-pointer-getstrong-pointer-type-offset--gt-object)
-        - [pffi-string->pointer](#strongpffi-string-gtpointerstrong-string--gt-pointer)
-        - [pffi-pointer->string](#strongpffi-pointer-gtstringstrong-pointer--gt-string)
-        - [pffi-struct-make](#strongpffi-struct-makestrong-name-members--pointer--gt-pffi-struct)
-        - [pffi-struct-pointer](#strongpffi-struct-pointerstrong-pffi-struct--gt-pointer)
-        - [pffi-struct-offset-get](#strongpffi-struct-offset-getstrong-member-name--gt-number)
-        - [pffi-struct-get](#strongpffi-struct-getstrong-pffi-struct-member-name--gt-object)
-        - [pffi-struct-set!](#strongpffi-struct-setstrong-pffi-struct-member-name-value)
-        - [pffi-define](#strongpffi-definestrong-scheme-name-shared-object-c-name-return-type-argument-types)
-        - [pffi-define-callback](#strongpffi-define-callbackstrong-scheme-name-return-type-argument-types-procedure)
+        - [pffi-init](#pffi-init)
+        - [pffi-size-of](#pffi-size-of)
+        - [pffi-align-of](#pffi-align-of)
+        - [pffi-shared-object-auto-load](#pffi-shared-object-auto-load)
+        - [pffi-shared-object-load](#pffi-shared-object-load)
+        - [pffi-pointer-null](#pffi-pointer-null)
+        - [pffi-pointer-null?](#pffi-pointer-null?)
+        - [pffi-pointer-allocate](#pffi-pointer-allocate)
+        - [pffi-pointer-address](#pffi-pointer-address)
+        - [pffi-pointer?](#pffi-pointer?)
+        - [pffi-pointer-free](#pffi-pointer-free)
+        - [pffi-pointer-set!](#pffi-pointer-set!)
+        - [pffi-pointer-get](#pffi-pointer-get)
+        - [pffi-string->pointer](#pffi-string-to-pointer)
+        - [pffi-pointer->string](#pffi-pointer-to-string)
+        - [pffi-struct-make](#pffi-struct-make)
+        - [pffi-struct-pointer](#pffi-struct-pointer)
+        - [pffi-struct-offset-get](#pffi-struct-offset-get)
+        - [pffi-struct-get](#pffi-struct-get)
+        - [pffi-struct-set!](#pffi-struct-set!)
+        - [pffi-define](#pffi-define)
+        - [pffi-define-callback](#pffi-define-callback)
+
+</nav>
+
+<main>
 
 ## Goals
+<a name="goals"></a>
 
 - Support only R7RS implementations
 - Same interface on all implementations
@@ -60,6 +75,7 @@ Any help in form of constructive advice and bug reports are appreciated.
 - Stability and being boring after 1.0.0 is reached
 
 ## Non goals
+<a name="non-goals"></a>
 
 - To have every possible FFI feature
 - Compiling of used library C code at any point
@@ -67,6 +83,7 @@ Any help in form of constructive advice and bug reports are appreciated.
     - The pffi library itself may require compilation on installation
 
 ## Status
+<a name="status"></a>
 
 Currently the interface of the library is in okay shape. It propably will not change much but no
 guarantees are being made just yet.
@@ -76,16 +93,20 @@ different stage. As a whole it is still in **alpha** stage. That said the interf
 changing anymore and some implementations are in **beta**.
 
 ### Current caveats
+<a name="current-caveats"></a>
 
 - No way to pass structs by value
 - Most implementations are missing callback support
 
 ## Implementation table
+<a name="implementation-table"></a>
 
 ### Beta
+<a name="beta"></a>
+
 
 |              | pffi-init | pffi-size-of | pffi-shared-object-auto-load | pffi-shared-object-load | pffi-pointer-null | pffi-pointer-null? | pffi-pointer-allocate | pffi-pointer-address | pffi-pointer? | pffi-pointer-free | pffi-pointer-set! | pffi-pointer-get | pffi-string->pointer | pffi-pointer->string | pffi-struct-make | pffi-struct-pointer | pffi-struct-offset-get | pffi-struct-get | pffi-struct-set! | pffi-define | pffi-define-callback |
-|--------------|-----------|--------------|------------------------------|-------------------------|-------------------|--------------------|-----------------------|----------------------|---------------|-------------------|-------------------|------------------|----------------------|----------------------|------------------|---------------------|------------------------|-----------------|------------------|-------------|----------------------|
+|--------------|:---------:|:------------:|:----------------------------:|:-----------------------:|:-----------------:|:------------------:|:---------------------:|:--------------------:|:-------------:|:-----------------:|:-----------------:|:----------------:|:--------------------:|:--------------------:|:----------------:|:-------------------:|:----------------------:|:---------------:|:----------------:|:-----------:|:--------------------:|
 | Chibi        | X         | X            | X                            | X                       | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           |                      |
 | Gauche       | X         | X            | X                            | X                       | X                 | X                  | X                     |                      | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           |                      |
 | Guile        | X         | X            | X                            | X                       | X                 | X                  | X                     |                      | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
@@ -93,10 +114,12 @@ changing anymore and some implementations are in **beta**.
 | Racket       | X         | X            | X                            | X                       | X                 | X                  | X                     |                      | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
 | Saggittarius | X         | X            | X                            | X                       | X                 | X                  | X                     |                      | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
 
+
 ### Alpha
+<a name="alpha"></a>
 
 |              | pffi-init | pffi-size-of | pffi-shared-object-auto-load | pffi-shared-object-load | pffi-pointer-null | pffi-pointer-null? | pffi-pointer-allocate | pffi-pointer-address | pffi-pointer? | pffi-pointer-free | pffi-pointer-set! | pffi-pointer-get | pffi-string->pointer | pffi-pointer->string | pffi-struct-make | pffi-struct-pointer | pffi-struct-offset-get | pffi-struct-get | pffi-struct-set! | pffi-define | pffi-define-callback |
-|--------------|-----------|--------------|------------------------------|-------------------------|-------------------|--------------------|-----------------------|----------------------|---------------|-------------------|-------------------|------------------|----------------------|----------------------|------------------|---------------------|------------------------|-----------------|------------------|-------------|----------------------|
+|--------------|:---------:|:------------:|:----------------------------:|:-----------------------:|:-----------------:|:------------------:|:---------------------:|:--------------------:|:-------------:|:-----------------:|:-----------------:|:----------------:|:--------------------:|:--------------------:|:----------------:|:-------------------:|:----------------------:|:---------------:|:----------------:|:-----------:|:--------------------:|
 | Chicken-5    | X         | X            | X                            | X                       | X                 | X                  | X                     |                      | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
 | Cyclone      | X         | X            | X                            | X                       | X                 | X                  | X                     |                      | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           |                      |
 | Gambit       | X         | X            |                              |                         |                   |                    |                       | X                    |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
@@ -109,6 +132,7 @@ changing anymore and some implementations are in **beta**.
 | Ypsilon      |           |              |                              |                         |                   |                    |                       |                      |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
 
 ###  Not started
+<a name="not-started"></a>
 
 - [LIPS](https://lips.js.org/)
     - Will work on nodejs by using some C FFI library from npm
@@ -130,6 +154,7 @@ changing anymore and some implementations are in **beta**.
     - Need to study the implementation more
 
 ### Other
+<a name="other"></a>
 
 - [s7](https://scheme.fail://ccrma.stanford.edu/software/snd/snd/s7.html)
     - Propably does not need FFI as it is embeddable only
@@ -137,10 +162,13 @@ changing anymore and some implementations are in **beta**.
     - Desires no C interop, I can respect that
 
 ## Documentation
+<a name="documentation"></a>
 
-### Usage <a name="#usage"></a>
+### Usage
+<a name="usage"></a>
 
-#### Chibi <a name="#usage_chibi"></a>
+#### Chibi
+<a name="usage-chibi"></a>
 
 Needs libffi-dev, on Debina/Ubuntu/Mint install with:
 
@@ -151,19 +179,22 @@ Build with:
     chibi-ffi retropikzel/r7rs-pffi/r7rs-pffi-chibi.stub
     gcc -o retropikzel/r7rs-pffi/r7rs-pffi-chibi.so -fPIC -shared retropikzel/r7rs-pffi/r7rs-pffi-chibi.c -lchibi-scheme -lffi
 
-#### Chicken <a name="#usage_chicken"></a>
+#### Chicken
+<a name="usage-chicken"></a>
 
 Needs [r7rs egg](https://wiki.call-cc.org/eggref/5/r7rs), install with:
 
     chicken-install r7rs
 
-#### Racket <a name="#usage_racker"></a>
+#### Racket
+<a name="usage-racket"></a>
 
 Needs [racket-r7rs](https://github.com/lexi-lambda/racket-r7rs), install with:
 
     raco pkg install --auto r7rs
 
-#### Kawa <a name="#usage_kawa"></a>
+#### Kawa
+<a name="usage-kawa"></a>
 
 Kawa Needs at least Java version 22
 
@@ -175,8 +206,10 @@ Needs jvm flags:
 - --enable-native-access=ALL-UNNAMED
 
 ### Reference
+<a name="reference"></a>
 
 #### Types
+<a name="types"></a>
 
 Types are given as symbols, for example 'int8 or 'pointer.
 
@@ -203,23 +236,28 @@ Types are given as symbols, for example 'int8 or 'pointer.
     - Callback function
 
 #### Procedures and macros
+<a name="procedures-and-macros"></a>
 
 Some of these are procedures and some macros, it might also change implementation to implementation.
 
 ##### **pffi-init**
+<a name="pffi-init"></a>
 
 Always call this first, on most implementation it does nothing but some implementations might need
 initialisation run.
 
 ##### **pffi-size-of** object -> number
+<a name="pffi-size-of"></a>
 
 Returns the size of the pffi-struct, pffi-enum or pffi-type.
 
 ##### **pffi-align-of** type -> number
+<a name="pffi-align-of"></a>
 
 Returns the align of the type.
 
 ##### **pffi-shared-object-auto-load** headers shared-object-name [options] -> object
+<a name="pffi-shared-object-auto-load"></a>
 
 Load given shared object automatically searching many predefined paths.
 
@@ -249,6 +287,7 @@ Example:
 
 
 ##### **pffi-shared-object-load** headers path [options]
+<a name="pffi-shared-object-load"></a>
 
 It is recommended to use the pffi-shared-object-auto-load instead of this
 directly.
@@ -268,26 +307,37 @@ Options:
     - List of different versions of library to try, for example (list ".0" ".1")
 
 ##### **pffi-pointer-null** -> pointer
+<a name="pffi-pointer-null"></a>
 
 Returns a new NULL pointer.
 
 ##### **pffi-pointer-null?** pointer -> boolean
+<a name="pffi-pointer-null?"></a>
 
 Returns #t if given pointer is null pointer, #f otherwise.
 
 ##### **pffi-pointer-allocate** size -> pointer
+<a name="pffi-pointer-allocate"></a>
 
 Returns newly allocated pointer of given size.
 
+##### **pffi-pointer-address** pointer -> number
+<a name="pffi-pointer-address"></a>
+
+Returns the address of given pointer as number.
+
 ##### **pffi-pointer?** object -> boolean
+<a name="pffi-pointer?"></a>
 
 Returns #t if given object is pointer, #f otherwise.
 
 ##### **pffi-pointer-free** pointer
+<a name="pffi-pointer-free"></a>
 
 Frees given pointer.
 
 ##### **pffi-pointer-set!** pointer type offset value
+<a name="pffi-pointer-set!"></a>
 
 Sets the value on a pointer on given offset. For example:
 
@@ -297,6 +347,7 @@ Sets the value on a pointer on given offset. For example:
 Would set the offset of 64, on pointer p to value 100.
 
 ##### **pffi-pointer-get** pointer type offset -> object
+<a name="pffi-pointer-get"></a>
 
 Gets the value from a pointer on given offset. For example:
 
@@ -306,14 +357,17 @@ Gets the value from a pointer on given offset. For example:
     > 100
 
 ##### **pffi-string->pointer** string -> pointer
+<a name="pffi-string-to-pointer"></a>
 
 Makes pointer out of a given string.
 
 ##### **pffi-pointer->string** pointer -> string
+<a name="pffi-pointer-to-string"></a>
 
 Makes string out of a given pointer.
 
 ##### **pffi-struct-make** c-type members . pointer -> pffi-struct
+<a name="pffi-struct-make"></a>
 
 Creates a new pffi-struct and allocates pointer for it. The members argument is a list of member
 names and types. For example:
@@ -324,6 +378,7 @@ names and types. For example:
 C-type argument can be symbol or a string.
 
 ##### **pffi-struct-pointer** pffi-struct -> pointer
+<a name="pffi-struct-pointer"></a>
 
 Returns the pointer that holds the struct content. You need to use this when passing a struct as
 a pointer to foreign functions.
@@ -332,19 +387,23 @@ a pointer to foreign functions.
     (pffi-struct-pointer s)
 
 ##### **pffi-struct-offset-get** member-name -> number
+<a name="pffi-struct-offset-get"></a>
 
 Returns the offset of a struct member with given name.
 
 ##### **pffi-struct-get** pffi-struct member-name -> object
+<a name="pffi-struct-get"></a>
 
 Returns the value of the givens struct member.
 
 ##### **pffi-struct-set!** pffi-struct member-name value
+<a name="pffi-struct-set!"></a>
 
 Sets the value of the givens struct member. It is up to you to make sure that the type of value is
 correct.
 
 ##### **pffi-define** scheme-name shared-object c-name return-type argument-types
+<a name="pffi-define"></a>
 
 Defines a new foreign function to be used from Scheme code. For example:
 
@@ -356,6 +415,7 @@ Defines a new foreign function to be used from Scheme code. For example:
     (c-puts "Message brought to you by FFI!")
 
 ##### **pffi-define-callback** scheme-name return-type argument-types procedure
+<a name="pffi-define-callback"></a>
 
 Defines a new Sceme function to be used as callback to C code. For example:
 
@@ -395,3 +455,5 @@ Defines a new Sceme function to be used as callback to C code. For example:
     (display array)
     (newline)
     ;> (1 2 3)
+
+</main>
