@@ -684,8 +684,6 @@
                                                (lambda () (read-line)))
                          "Hello world") #t)
 
-(exit 0)
-
 ;; pffi-struct-get
 
 (print-header 'pffi-struct-get)
