@@ -75,6 +75,11 @@ Due to supporting many different Scheme implementations, different parts of this
 different stage. As a whole it is still in **alpha** stage. That said the interface should not be
 changing anymore and some implementations are in **beta**.
 
+### Current caveats
+
+- No way to pass structs by value
+- Most implementations are missing callback support
+
 ## Implementation table
 
 ### Beta
