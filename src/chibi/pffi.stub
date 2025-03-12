@@ -70,8 +70,10 @@
            }")
 (define-c sexp (pointer? is_pointer) (sexp))
 
-(c-declare "int pointer_address(void* pointer) { return (intptr_t)&pointer; }")
-(define-c int (pointer-address pointer_address) ((maybe-null pointer void*)))
+(c-declare "intptr_t pointer_address(struct sexp_struct* pointer) {
+            return (intptr_t)&sexp_cpointer_value(pointer);
+           }")
+(define-c uint32_t (pointer-address pointer_address) (sexp))
 
 (c-declare "void pointer_free(void* pointer) { free(pointer); }")
 (define-c void (pointer-free pointer_free) ((maybe-null pointer void*)))
