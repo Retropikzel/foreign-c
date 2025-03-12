@@ -89,7 +89,7 @@
       (cpointer->string pointer))))
 
 (define pffi-shared-object-load
-  (lambda (header path)
+  (lambda (header path options)
     path))
 
 (define pffi-pointer-free
