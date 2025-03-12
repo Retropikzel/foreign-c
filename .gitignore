@@ -19,6 +19,7 @@ docuptmp
 *.link
 *.dep
 *.zo
+*.class
 old
 retropikzel.*
 import
