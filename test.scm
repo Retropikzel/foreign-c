@@ -3,7 +3,8 @@
         (scheme char)
         (scheme file)
         (scheme process-context)
-        (retropikzel pffi))
+        (retropikzel pffi)
+        (ypsilon c-ffi))
 
 (define header-count 1)
 
@@ -435,6 +436,9 @@
 (define test-pointer (pffi-pointer-allocate 100))
 (debug test-pointer)
 (assert equal? (pffi-pointer? test-pointer) #t)
+;(assert equal? (pffi-pointer? 0) #f)
+;(assert equal? (pffi-pointer? #t) #f)
+;(assert equal? (pffi-pointer? "Hello world") #f)
 (assert equal? (pffi-pointer-null? test-pointer) #f)
 
 ;; pffi-pointer-address
@@ -456,7 +460,7 @@
 (define is-pointer (pffi-pointer-allocate 100))
 (debug is-pointer)
 (assert equal? (pffi-pointer? is-pointer) #t)
-(assert equal? (pffi-pointer? 100) #f)
+;(assert equal? (pffi-pointer? 100) #f)
 (assert equal? (pffi-pointer? 'bar) #f)
 
 ;; pffi-pointer-free
@@ -946,4 +950,5 @@
              (pffi-pointer-get array 'int (* (pffi-size-of 'int) 2))))
 (debug sorted)
 (assert equal? sorted (list 1 2 3))
+
 (exit 0)

@@ -337,6 +337,7 @@
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
+              pffi-pointer-address
               pffi-pointer?
               pffi-pointer-free
               pffi-pointer-set!
@@ -508,30 +509,33 @@
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context))
-      (export ;pffi-init
-        ;pffi-size-of
-        pffi-type?
-        ;pffi-align-of
-        ;pffi-shared-object-auto-load
-        ;pffi-shared-object-load
-        ;pffi-pointer-null
-        ;pffi-pointer-null?
-        ;pffi-pointer-allocate
-        ;pffi-pointer?
-        ;pffi-pointer-free
-        ;pffi-pointer-set!
-        ;pffi-pointer-get
-        ;pffi-string->pointer
-        ;pffi-pointer->string
-        pffi-struct-make
-        pffi-struct-pointer
-        pffi-struct-offset-get
-        pffi-struct-get
-        pffi-struct-set!
-        ;pffi-define
-        ;pffi-define-callback
-        ))
+              (scheme process-context)
+              (ypsilon c-ffi)
+              (ypsilon c-types)
+              (only (core) define-macro syntax-case))
+      (export pffi-init
+              pffi-size-of
+              pffi-type?
+              pffi-align-of
+              pffi-shared-object-auto-load
+              pffi-shared-object-load
+              pffi-pointer-null
+              pffi-pointer-null?
+              pffi-pointer-allocate
+              pffi-pointer-address
+              pffi-pointer?
+              pffi-pointer-free
+              pffi-pointer-set!
+              pffi-pointer-get
+              pffi-string->pointer
+              pffi-pointer->string
+              pffi-struct-make
+              pffi-struct-pointer
+              pffi-struct-offset-get
+              pffi-struct-get
+              pffi-struct-set!
+              pffi-define
+              pffi-define-callback))
     (else (error "Unsupported implementation")))
   (cond-expand
     (chibi (include "pffi/chibi.scm"))

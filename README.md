@@ -98,6 +98,8 @@ changing anymore and some implementations are in **beta**.
 
 - No way to pass structs by value
 - Most implementations are missing callback support
+- Always pass arguments to pffi functions/macros as (list 1 2 3) and not '(1 2 3)
+- Always pass pffi-define-callback procedure as lambda on place
 
 ## Implementation table
 <a name="implementation-table"></a>
@@ -115,6 +117,7 @@ changing anymore and some implementations are in **beta**.
 | Kawa         | X         | X            | X                            | X                       | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
 | Racket       | X         | X            | X                            | X                       | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
 | Saggittarius | X         | X            | X                            | X                       | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
+| Ypsilon      | X         | X            | X                            | X                       | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
 
 
 ### Alpha
@@ -130,7 +133,6 @@ changing anymore and some implementations are in **beta**.
 | Skint        | X         |              |                              |                         |                   |                    |                       |                      |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
 | Stklos       | X         | X            | X                            | X                       | X                 | X                  | X                     |                      | X             | X                 |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
 | tr7          |           |              |                              |                         |                   |                    |                       |                      |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
-| Ypsilon      |           |              |                              |                         |                   |                    |                       |                      |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
 
 ###  Not started
 <a name="not-started"></a>
