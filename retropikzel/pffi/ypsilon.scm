@@ -44,10 +44,9 @@
   (lambda (pointer)
     (c-free pointer)))
 
-; FIXME I dont know where to else get null :D
 (define pffi-pointer-null
   (lambda ()
-    (c-malloc 999999999999999999999999999999999999999999999999999999999999)))
+    0))
 
 (define pffi-pointer-null?
   (lambda (pointer)

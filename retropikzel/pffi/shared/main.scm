@@ -6,7 +6,7 @@
          '(import (chicken foreign)
                   (chicken memory))
          #t))))
-  (ypsilon
+  #;(ypsilon
     (define-syntax pffi-init
       (lambda (x)
         (syntax-case x ()
