@@ -1,10 +1,5 @@
 (c-declare "#include <stdint.h>")
 
-;(c-declare "int size_of_int8() { return sizeof(int8_t);}")
-;(define size-of-int8 (c-lambda () int "__return(sizeof(int8_t));"))
-;(define int8-size ((c-lambda () int "__return(sizeof(int8_t));")))
-;(define int8-size (c-lambda () int "__return(1);"))
-
 (define size-of-int8_t (c-lambda () int "___return(sizeof(int8_t));"))
 (define size-of-uint8_t (c-lambda () int "___return(sizeof(uint8_t));"))
 (define size-of-int16_t (c-lambda () int "___return(sizeof(int16_t));"))
@@ -26,7 +21,7 @@
 (define size-of-void* (c-lambda () int "___return(sizeof(void*));"))
 
 
-(define size-of-type
+#;(define size-of-type
   (lambda (type)
     (cond ((eq? type 'int8) (size-of-int8_t))
           ((eq? type 'uint8) (size-of-uint8_t))
@@ -49,8 +44,11 @@
           ((eq? type 'pointer) (size-of-void*))
           (else (error "Can not get size of unknown type" type)))))
 
-(define-macro (pffi-shared-object-load header)
-  `(c-declare ,(string-append "#include <" header ">")))
+#;(define-macro (pffi-shared-object-load headers)
+  `@,(map (lambda (header)
+            '(c-declare ,(string-append "#include <" header ">")))
+          headers))
+
 
 #;(define-syntax pffi-shared-object-load
   (syntax-rules ()

@@ -66,7 +66,7 @@
   (gambit
     (define-macro
       (pffi-shared-object-auto-load headers object-name options)
-      `(pffi-shared-object-load ,(car headers))))
+      `(pffi-shared-object-load headers)))
 
   ((or chicken cyclone)
    (define-syntax pffi-shared-object-auto-load

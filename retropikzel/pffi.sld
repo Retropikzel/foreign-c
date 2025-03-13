@@ -141,25 +141,26 @@
               (scheme process-context)
               (only (gambit) c-declare c-lambda c-define))
       (export pffi-init
-              pffi-size-of
-              pffi-type?
-              pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              ;pffi-size-of
+              ;pffi-type?
+              ;pffi-align-of
+              ;pffi-shared-object-auto-load
+              ;pffi-shared-object-load
               ;pffi-pointer-null
               ;pffi-pointer-null?
               ;pffi-pointer-allocate
+              ;pffi-pointer-address
               ;pffi-pointer?
               ;pffi-pointer-free
               ;pffi-pointer-set!
               ;pffi-pointer-get
               ;pffi-string->pointer
               ;pffi-pointer->string
-              pffi-struct-make
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
+              ;pffi-struct-make
+              ;pffi-struct-pointer
+              ;pffi-struct-offset-get
+              ;pffi-struct-get
+              ;pffi-struct-set!
               ;pffi-define
               ;pffi-define-callback
               ))
