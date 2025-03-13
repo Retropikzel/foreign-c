@@ -1,5 +1,5 @@
 (package
-  (name (retropikzel r7rs-pffi))
+  (name (retropikzel pffi))
   (authors "Retropikzel")
   (maintainers "Retropikzel")
   (homepage "https://git.sr.ht/~retropikzel/r7rs-pffi")
@@ -7,10 +7,10 @@
   (description "Portable Foreign Function Interface for R7RS schemes")
   (keywords 'ffi)
   (license 'lgpl)
-  (version "0.5.0")
+  (version "0.6.0")
   (test "test.scm")
   (library
-    (name (retropikzel r7rs-pffi))
-    (path "retropikzel/r7rs-pffi.sld")
+    (name (retropikzel pffi))
+    (path "retropikzel/pffi.sld")
     (depends)
     (platforms linux windows)))
