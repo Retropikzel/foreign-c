@@ -6,6 +6,11 @@
          '(import (chicken foreign)
                   (chicken memory))
          #t))))
+  (ypsilon
+    (define-syntax pffi-init
+      (lambda (x)
+        (syntax-case x ()
+                     ((_) '(import (ypsilon c-ffi)))))))
   (else
     (define pffi-init(lambda () #t))))
 
