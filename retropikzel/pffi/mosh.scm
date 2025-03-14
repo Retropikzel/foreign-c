@@ -40,6 +40,10 @@
   (lambda (size)
     (malloc size)))
 
+(define pffi-pointer-address
+  (lambda (pointer)
+    (pointer->integer pointer)))
+
 (define pffi-pointer?
   (lambda (object)
     (pointer? object)))
