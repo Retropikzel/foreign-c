@@ -23,11 +23,11 @@
   (lambda ()
     (error "Not defined")))
 
-(define pffi-string->pointer
+#;(define pffi-string->pointer
   (lambda (string-content)
     (error "Not defined")))
 
-(define pffi-pointer->string
+#;(define pffi-pointer->string
   (lambda (pointer)
     pointer))
 

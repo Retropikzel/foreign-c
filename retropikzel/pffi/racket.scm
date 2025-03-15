@@ -65,14 +65,14 @@
   (lambda ()
     #f )) ; #f is the null pointer on racket
 
-(define pffi-string->pointer
+#;(define pffi-string->pointer
   (lambda (string-content)
     (let* ((size (string-length string-content))
            (pointer (pffi-pointer-allocate (+ size 1))))
       (memmove pointer (cast (string-append string-content "") _string _pointer) (+ size 1))
       pointer)))
 
-(define pffi-pointer->string
+#;(define pffi-pointer->string
   (lambda (pointer)
     (when (pffi-pointer-null? pointer)
       (error "Can not make string from null pointer" pointer))

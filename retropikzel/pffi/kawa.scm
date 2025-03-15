@@ -143,13 +143,13 @@
   (lambda ()
     (static-field java.lang.foreign.MemorySegment 'NULL)))
 
-(define pffi-string->pointer
+#;(define pffi-string->pointer
   (lambda (string-content)
     (let ((size (+ (invoke string-content 'length) 1)))
       (invoke (invoke arena 'allocateFrom (invoke string-content 'toString))
               'reinterpret size))))
 
-(define pffi-pointer->string
+#;(define pffi-pointer->string
   (lambda (pointer)
     (invoke (invoke pointer 'reinterpret (static-field java.lang.Integer 'MAX_VALUE)) 'getString 0)))
 

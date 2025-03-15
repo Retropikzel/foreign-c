@@ -92,7 +92,7 @@
           ((equal? type 'void) (pointer-ref-c-pointer pointer offset))
           ((equal? type 'pointer) (pointer-ref-c-pointer pointer offset)))))
 
-(define pffi-string->pointer
+#;(define pffi-string->pointer
   (lambda (string-content)
     (let ((pointer (pffi-pointer-allocate (+ (string-length string-content) 1)))
           (index 0))
@@ -104,9 +104,14 @@
       (pffi-pointer-set! pointer 'char (* index (size-of-type 'char)) #\null)
       pointer)))
 
-(define pffi-pointer->string
+#;(define pffi-pointer->string
   (lambda (pointer)
     (pointer->string pointer)))
+
+;; FIXME
+(define pffi-pointer-address
+  (lambda (pointer)
+    0))
 
 (define pffi-type->native-type
   (lambda (type)
