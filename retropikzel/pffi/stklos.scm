@@ -72,17 +72,22 @@
   (lambda (size)
     (allocate-bytes size)))
 
+;; FIXME
+(define pffi-pointer-address
+  (lambda (pointer)
+    0))
+
 (define pffi-pointer-null
   (lambda ()
     (let ((p (allocate-bytes 0)))
       (free-bytes p)
       p)))
 
-(define pffi-string->pointer
+#;(define pffi-string->pointer
   (lambda (string-content)
     string-content))
 
-(define pffi-pointer->string
+#;(define pffi-pointer->string
   (lambda (pointer)
     (if (string? pointer)
       pointer
@@ -108,8 +113,3 @@
 (define pffi-pointer-get
   (lambda (pointer type offset)
     (error "Not implemented")))
-
-(define pffi-pointer-address
-  (lambda (pointer)
-    (error "Not implemented")))
-
