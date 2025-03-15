@@ -179,12 +179,12 @@
 (define-c (maybe-null pointer void*) (pointer-ref-c-pointer pointer_ref_c_pointer) ((pointer void*) int))
 
 ;; pffi-string->pointer
-(c-declare "void* string_to_pointer(char* string) { return (void*)string; }")
-(define-c (maybe-null pointer void*) (string-to-pointer string_to_pointer) (string))
+;(c-declare "void* string_to_pointer(char* string) { return (void*)string; }")
+;(define-c (maybe-null pointer void*) (string-to-pointer string_to_pointer) (string))
 
 ;; pffi-pointer->string
-(c-declare "char* pointer_to_string(void* pointer) { return (char*)pointer; }")
-(define-c string (pointer-to-string pointer_to_string) ((maybe-null pointer void*)))
+;(c-declare "char* pointer_to_string(void* pointer) { return (char*)pointer; }")
+;(define-c string (pointer-to-string pointer_to_string) ((maybe-null pointer void*)))
 
 ;; pffi-define
 

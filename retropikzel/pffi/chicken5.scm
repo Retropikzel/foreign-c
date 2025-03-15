@@ -153,11 +153,11 @@
   (lambda ()
     (address->pointer 0)))
 
-(pffi-define strncpy-ps #f 'strncpy 'pointer (list 'pointer 'pointer 'int))
-(pffi-define puts #f 'puts 'int (list 'pointer))
-(pffi-define memset #f 'memset 'void (list 'pointer 'int 'int))
+;(pffi-define strncpy-ps #f 'strncpy 'pointer (list 'pointer 'pointer 'int))
+;(pffi-define puts #f 'puts 'int (list 'pointer))
+;(pffi-define memset #f 'memset 'void (list 'pointer 'int 'int))
 
-(define pffi-string->pointer
+#;(define pffi-string->pointer
   (lambda (string-content)
     (let* ((size (string-length string-content))
            (pointer (pffi-pointer-allocate (+ size 1))))
@@ -175,7 +175,7 @@
 ;(pffi-define strncpy-pp #f 'strncpy 'pointer (list 'pointer 'pointer 'int))
 ;(pffi-define strlen #f 'strlen 'int (list 'pointer))
 
-(define pffi-pointer->string
+#;(define pffi-pointer->string
   (foreign-lambda* c-string
                    ((c-pointer p))
                    "C_return((char*)p);"))

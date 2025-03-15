@@ -85,7 +85,7 @@
   (lambda ()
     (empty-pointer)))
 
-(define (string->c-string s)
+#;(define (string->c-string s)
   (let* ((bv (string->utf8 s))
          (p  (allocate-pointer (+ (bytevector-length bv) 1))))
     (do ((i 0 (+ i 1)))
@@ -93,11 +93,11 @@
       (pointer-set-c-uint8! p i (bytevector-u8-ref bv i)))
     p))
 
-(define pffi-string->pointer
+#;(define pffi-string->pointer
   (lambda (string-content)
     (string->c-string string-content)))
 
-(define pffi-pointer->string
+#;(define pffi-pointer->string
   (lambda (pointer)
     (pointer->string pointer)))
 

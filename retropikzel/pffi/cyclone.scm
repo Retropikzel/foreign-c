@@ -102,12 +102,12 @@
   (lambda ()
     (make-opaque)))
 
-(define-c pffi-string->pointer
+#;(define-c pffi-string->pointer
           "(void *data, int argc, closure _, object k, object s)"
           "make_c_opaque(opq, string_str(s));
           return_closcall1(data, k, &opq);")
 
-(define-c pffi-pointer->string
+#;(define-c pffi-pointer->string
           "(void *data, int argc, closure _, object k, object p)"
           "make_string(s, opaque_ptr(p));
           return_closcall1(data, k, &s);")
