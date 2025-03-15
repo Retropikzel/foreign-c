@@ -113,11 +113,11 @@
           ((equal? type 'void) (pointer-get-pointer pointer offset))
           ((equal? type 'pointer) (pointer-get-pointer pointer offset)))))
 
-(define pffi-string->pointer
+#;(define pffi-string->pointer
   (lambda (string-content)
     (string->pointer string-content)))
 
-(define pffi-pointer->string
+#;(define pffi-pointer->string
   (lambda (pointer)
     (pointer->string pointer)))
 
