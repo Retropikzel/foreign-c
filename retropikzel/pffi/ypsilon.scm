@@ -53,13 +53,13 @@
     (and (pffi-pointer? pointer)
          (= (pffi-pointer-address pointer) 0))))
 
-(define pffi-pointer->string
+#;(define pffi-pointer->string
   (lambda (pointer)
     (c-string-ref pointer)))
 
-(define c-memset(c-function int memset (void* int int)))
-(define c-snprintf (c-function int snprintf (void* size_t void*) (long double)))
-(define pffi-string->pointer
+;(define c-memset(c-function int memset (void* int int)))
+;(define c-snprintf (c-function int snprintf (void* size_t void*) (long double)))
+#;(define pffi-string->pointer
   (lambda (string-content)
     (let* ((c-string (make-c-string string-content))
           (c-string-length (bytevector-length c-string))
