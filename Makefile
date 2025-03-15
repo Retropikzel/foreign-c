@@ -48,24 +48,24 @@ libtest.so: src/libtest.c
 libtest.a: libtest.o src/libtest.c
 	ar rcs libtest.a libtest.o
 
-test-script: libtest.so
-	SCHEME=${SCHEME} script-r7rs -I . test.scm
+test-interpreter-compliance: libtest.so
+	SCHEME=${SCHEME} script-r7rs -I . tests/compliance.scm
 
-test-script-docker:
+test-interpreter-compliance-docker:
 	docker build -f dockerfiles/test . --build-arg SCHEME=${SCHEME} --tag=pffi-${SCHEME}
-	docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && SCHEME=${SCHEME} script-r7rs -I . test.scm"
+	docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && SCHEME=${SCHEME} script-r7rs -I . tests/compliance.scm"
 
 test-compile-library: libtest.so libtest.a libtest.o
 	SCHEME=${SCHEME} compile-r7rs-library retropikzel/pffi.sld
 
-test-compile: test-compile-library
-	SCHEME=${SCHEME} CFLAGS="-I./include -L." LDFLAGS="-ltest libtest.o" compile-r7rs -I . test.scm
-	./test
+test-compiler-compliance: test-compile-library
+	SCHEME=${SCHEME} CFLAGS="-I./include -L." LDFLAGS="-ltest libtest.o" compile-r7rs -I . tests/compliance.scm
+	./tests/compliance
 
-test-compile-docker: libtest.so libtest.a
+test-compiler-compliance-docker: libtest.so libtest.a
 	docker build -f dockerfiles/test . --build-arg SCHEME=${SCHEME} --tag=pffi-${SCHEME}
 	docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && SCHEME=${SCHEME} compile-r7rs-library retropikzel/pffi.sld"
-	docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && SCHEME=${SCHEME} compile-r7rs -I . test.scm && ./test"
+	docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && SCHEME=${SCHEME} compile-r7rs -I . compliance.scm && ./test"
 
 clean:
 	@rm -rf retropikzel/pffi/*.o*
