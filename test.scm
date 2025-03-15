@@ -728,43 +728,32 @@
 (debug (pffi-struct-get struct-test 'b))
 (assert char=? (pffi-struct-get struct-test 'b) #\b)
 (debug (pffi-struct-get struct-test 'c))
-;; FIXME
-;(assert = (pffi-struct-get struct-test 'c) 3.0)
+(assert = (pffi-struct-get struct-test 'c) 3.0)
 (debug (pffi-struct-get struct-test 'd))
 (assert char=? (pffi-struct-get struct-test 'd) #\d)
 (debug (pffi-struct-get struct-test 'e))
 (debug (pffi-pointer-null? (pffi-struct-get struct-test 'e)))
 (assert equal? (pffi-pointer-null? (pffi-struct-get struct-test 'e)) #t)
 (debug (pffi-struct-get struct-test 'f))
-;; FIXME
-;(assert = (pffi-struct-get struct-test 'f) 6.0)
+(assert = (pffi-struct-get struct-test 'f) 6.0)
 (debug (pffi-struct-get struct-test 'g))
-;; FIXME
-;(debug (pffi-pointer->string (pffi-struct-get struct-test 'g)))
-;; FIXME
-;(assert equal? (string=? (pffi-pointer->string (pffi-struct-get struct-test 'g)) "FOOBAR")  #t)
+(debug (pffi-pointer->string (pffi-struct-get struct-test 'g)))
+(assert equal? (string=? (pffi-pointer->string (pffi-struct-get struct-test 'g)) "FOOBAR")  #t)
 (debug (pffi-struct-get struct-test 'h))
 (assert = (pffi-struct-get struct-test 'h) 8)
 (debug (pffi-struct-get struct-test 'i))
 (debug (pffi-pointer-null? (pffi-struct-get struct-test 'i)))
-;; FIXME
-;(assert equal? (pffi-pointer-null? (pffi-struct-get struct-test 'i)) #t)
-;; FIXME
-;(debug (pffi-struct-get struct-test 'j))
-;; FIXME
-;(assert = (pffi-struct-get struct-test 'j) 10)
+(assert equal? (pffi-pointer-null? (pffi-struct-get struct-test 'i)) #t)
+(debug (pffi-struct-get struct-test 'j))
+(assert = (pffi-struct-get struct-test 'j) 10)
 (debug (pffi-struct-get struct-test 'k))
-;; FIXME
-;(assert = (pffi-struct-get struct-test 'k) 11)
+(assert = (pffi-struct-get struct-test 'k) 11)
 (debug (pffi-struct-get struct-test 'l))
-;; FIXME
-;(assert = (pffi-struct-get struct-test 'l) 12)
+(assert = (pffi-struct-get struct-test 'l) 12)
 (debug (pffi-struct-get struct-test 'm))
-;; FIXME
-;(assert = (pffi-struct-get struct-test 'm) 13.0)
+(assert = (pffi-struct-get struct-test 'm) 13.0)
 (debug (pffi-struct-get struct-test 'n))
-;; FIXME
-;(assert = (pffi-struct-get struct-test 'n) 14.0)
+(assert = (pffi-struct-get struct-test 'n) 14.0)
 
 ;; pffi-struct-set! 1
 
@@ -833,40 +822,31 @@
 (debug (pffi-struct-get struct-test2 'b))
 (assert char=? (pffi-struct-get struct-test2 'b) #\b)
 (debug (pffi-struct-get struct-test2 'c))
-;; FIXME
-;(assert = (pffi-struct-get struct-test2 'c) 3)
+(assert = (pffi-struct-get struct-test2 'c) 3)
 (debug (pffi-struct-get struct-test2 'd))
 (assert char=? (pffi-struct-get struct-test2 'd) #\d)
 (debug (pffi-struct-get struct-test2 'e))
 (debug (pffi-pointer-null? (pffi-struct-get struct-test2 'e)))
 (assert equal? (pffi-pointer-null? (pffi-struct-get struct-test2 'e)) #t)
 (debug (pffi-struct-get struct-test2 'f))
-;; FIXME
-;(assert = (pffi-struct-get struct-test2 'f) 6.0)
-;; FIXME
-;(debug (pffi-pointer->string (pffi-struct-get struct-test2 'g)))
-;(assert equal? (string=? (pffi-pointer->string (pffi-struct-get struct-test2 'g)) "FOOBAR") #t)
+(assert = (pffi-struct-get struct-test2 'f) 6.0)
+(debug (pffi-pointer->string (pffi-struct-get struct-test2 'g)))
+(assert equal? (string=? (pffi-pointer->string (pffi-struct-get struct-test2 'g)) "FOOBAR") #t)
 (debug (pffi-struct-get struct-test2 'h))
 (assert = (pffi-struct-get struct-test2 'h) 8)
 (debug (pffi-struct-get struct-test2 'i))
 (debug (pffi-pointer-null? (pffi-struct-get struct-test2 'i)))
-;; FIXME
-;(assert (lambda (p t) (pffi-pointer-null? p)) (pffi-struct-get struct-test2 'i) #t)
+(assert (lambda (p t) (pffi-pointer-null? p)) (pffi-struct-get struct-test2 'i) #t)
 (debug (pffi-struct-get struct-test2 'j))
-;; FIXME
-;(assert = (pffi-struct-get struct-test2 'j) 10)
+(assert = (pffi-struct-get struct-test2 'j) 10)
 (debug (pffi-struct-get struct-test2 'k))
-;; FIXME
-;(assert = (pffi-struct-get struct-test2 'k) 11)
+(assert = (pffi-struct-get struct-test2 'k) 11)
 (debug (pffi-struct-get struct-test2 'l))
-;; FIXME
-;(assert = (pffi-struct-get struct-test2 'l) 12)
+(assert = (pffi-struct-get struct-test2 'l) 12)
 (debug (pffi-struct-get struct-test2 'm))
-;; FIXME
-;(assert = (pffi-struct-get struct-test2 'm) 13.0)
+(assert = (pffi-struct-get struct-test2 'm) 13.0)
 (debug (pffi-struct-get struct-test2 'n))
-;; FIXME
-;(assert = (pffi-struct-get struct-test2 'n) 14.0)
+(assert = (pffi-struct-get struct-test2 'n) 14.0)
 
 ;; pffi-struct-dereference
 
