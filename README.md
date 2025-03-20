@@ -43,8 +43,7 @@ conforming to some specification.
         - [pffi-init](#pffi-init)
         - [pffi-size-of](#pffi-size-of)
         - [pffi-align-of](#pffi-align-of)
-        - [pffi-shared-object-auto-load](#pffi-shared-object-auto-load)
-        - [pffi-shared-object-load](#pffi-shared-object-load)
+        - [pffi-load](#pffi-load)
         - [pffi-pointer-null](#pffi-pointer-null)
         - [pffi-pointer-null?](#pffi-pointer-null?)
         - [pffi-pointer-allocate](#pffi-pointer-allocate)
@@ -114,31 +113,31 @@ For roadmap to 1.0.0 see [issues](https://todo.sr.ht/~retropikzel/r7rs-pffi?sear
 ### Beta
 <a name="beta"></a>
 
-|              | pffi-init | pffi-size-of | pffi-shared-object-auto-load | pffi-shared-object-load | pffi-pointer-null | pffi-pointer-null? | pffi-pointer-allocate | pffi-pointer-address | pffi-pointer? | pffi-pointer-free | pffi-pointer-set! | pffi-pointer-get | pffi-string->pointer | pffi-pointer->string | pffi-struct-make | pffi-struct-pointer | pffi-struct-offset-get | pffi-struct-get | pffi-struct-set! | pffi-define | pffi-define-callback |
-|--------------|:---------:|:------------:|:----------------------------:|:-----------------------:|:-----------------:|:------------------:|:---------------------:|:--------------------:|:-------------:|:-----------------:|:-----------------:|:----------------:|:--------------------:|:--------------------:|:----------------:|:-------------------:|:----------------------:|:---------------:|:----------------:|:-----------:|:--------------------:|
-| Chibi        | X         | X            | X                            | X                       | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           |                      |
-| Chicken-5    | X         | X            | X                            | X                       | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
-| Gauche       | X         | X            | X                            | X                       | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           |                      |
-| Guile        | X         | X            | X                            | X                       | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
-| Kawa         | X         | X            | X                            | X                       | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
-| Racket       | X         | X            | X                            | X                       | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
-| Saggittarius | X         | X            | X                            | X                       | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
+|              | pffi-init | pffi-size-of | pffi-load | pffi-pointer-null | pffi-pointer-null? | pffi-pointer-allocate | pffi-pointer-address | pffi-pointer? | pffi-pointer-free | pffi-pointer-set! | pffi-pointer-get | pffi-string->pointer | pffi-pointer->string | pffi-struct-make | pffi-struct-pointer | pffi-struct-offset-get | pffi-struct-get | pffi-struct-set! | pffi-define | pffi-define-callback |
+|--------------|:---------:|:------------:|:---------:|:-----------------:|:------------------:|:---------------------:|:--------------------:|:-------------:|:-----------------:|:-----------------:|:----------------:|:--------------------:|:--------------------:|:----------------:|:-------------------:|:----------------------:|:---------------:|:----------------:|:-----------:|:--------------------:|
+| Chibi        | X         | X            | X         | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           |                      |
+| Chicken-5    | X         | X            | X         | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
+| Gauche       | X         | X            | X         | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           |                      |
+| Guile        | X         | X            | X         | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
+| Kawa         | X         | X            | X         | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
+| Racket       | X         | X            | X         | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
+| Saggittarius | X         | X            | X         | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
 
 
 ### Alpha
 <a name="alpha"></a>
 
-|              | pffi-init | pffi-size-of | pffi-shared-object-auto-load | pffi-shared-object-load | pffi-pointer-null | pffi-pointer-null? | pffi-pointer-allocate | pffi-pointer-address | pffi-pointer? | pffi-pointer-free | pffi-pointer-set! | pffi-pointer-get | pffi-string->pointer | pffi-pointer->string | pffi-struct-make | pffi-struct-pointer | pffi-struct-offset-get | pffi-struct-get | pffi-struct-set! | pffi-define | pffi-define-callback |
-|--------------|:---------:|:------------:|:----------------------------:|:-----------------------:|:-----------------:|:------------------:|:---------------------:|:--------------------:|:-------------:|:-----------------:|:-----------------:|:----------------:|:--------------------:|:--------------------:|:----------------:|:-------------------:|:----------------------:|:---------------:|:----------------:|:-----------:|:--------------------:|
-| Cyclone      | X         | X            | X                            | X                       | X                 | X                  | X                     |                      | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           |                      |
-| Gambit       | X         | X            |                              |                         |                   |                    |                       | X                    |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
-| Gerbil       | X         |              |                              |                         |                   |                    |                       |                      |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
-| Larceny      | X         |              |                              |                         |                   |                    |                       |                      |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
-| Mosh         | X         | X            | X                            | X                       | X                 | X                  | X                     |                      | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
-| Skint        | X         |              |                              |                         |                   |                    |                       |                      |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
-| Stklos       | X         | X            | X                            | X                       | X                 | X                  | X                     |                      | X             | X                 |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
-| tr7          |           |              |                              |                         |                   |                    |                       |                      |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
-| Ypsilon      |           |              |                              |                         |                   |                    |                       |                      |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
+|              | pffi-init | pffi-size-of | pffi-load | pffi-pointer-null | pffi-pointer-null? | pffi-pointer-allocate | pffi-pointer-address | pffi-pointer? | pffi-pointer-free | pffi-pointer-set! | pffi-pointer-get | pffi-string->pointer | pffi-pointer->string | pffi-struct-make | pffi-struct-pointer | pffi-struct-offset-get | pffi-struct-get | pffi-struct-set! | pffi-define | pffi-define-callback |
+|--------------|:---------:|:------------:|:---------:|:-----------------:|:------------------:|:---------------------:|:--------------------:|:-------------:|:-----------------:|:-----------------:|:----------------:|:--------------------:|:--------------------:|:----------------:|:-------------------:|:----------------------:|:---------------:|:----------------:|:-----------:|:--------------------:|
+| Cyclone      | X         | X            | X         | X                 | X                  | X                     |                      | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           |                      |
+| Gambit       | X         | X            |           |                   |                    |                       | X                    |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
+| Gerbil       | X         |              |           |                   |                    |                       |                      |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
+| Larceny      | X         |              |           |                   |                    |                       |                      |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
+| Mosh         | X         | X            | X         | X                 | X                  | X                     |                      | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
+| Skint        | X         |              |           |                   |                    |                       |                      |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
+| Stklos       | X         | X            | X         | X                 | X                  | X                     |                      | X             | X                 |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
+| tr7          |           |              |           |                   |                    |                       |                      |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
+| Ypsilon      |           |              |           |                   |                    |                       |                      |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
 
 ###  Not started
 <a name="not-started"></a>
@@ -267,9 +266,9 @@ Returns the size of the pffi-struct, pffi-enum or pffi-type.
 
 Returns the align of the type.
 
-#### pffi-shared-object-auto-load <a name="pffi-shared-object-auto-load"></a>
+#### pffi-load <a name="pffi-load"></a>
 
-**pffi-shared-object-auto-load** headers shared-object-name [options] -> object
+**pffi-load** headers shared-object-name [options] -> object
 
 Load given shared object automatically searching many predefined paths.
 
@@ -291,33 +290,11 @@ Example:
 
     (define libc-stdlib
       (cond-expand
-        (windows (pffi-shared-object-auto-load (list "stdlib.h") "ucrtbase"))
-        (else (pffi-shared-object-auto-load (list "stdlib.h")
-                                            "c"
-                                            '(additional-versions . ("6"))
-                                            '(additional-search-paths . ("."))))))
-
-
-#### pffi-shared-object-load <a name="pffi-shared-object-load"></a>
-
-**pffi-shared-object-load** headers path [options]
-
-It is recommended to use the pffi-shared-object-auto-load instead of this
-directly.
-
-Headers is a list of strings needed to be included, for example
-
-    (list "curl/curl.h")
-
-Path is the full path of the shared object without any "lib" prefix or ".so/.dll" suffix. For example:
-
-    "curl"
-
-
-Options:
-
-- additional-versions
-    - List of different versions of library to try, for example (list ".0" ".1")
+        (windows (pffi-load (list "stdlib.h") "ucrtbase"))
+        (else (pffi-load (list "stdlib.h")
+                         "c"
+                         '(additional-versions . ("6"))
+                         '(additional-search-paths . ("."))))))
 
 #### pffi-pointer-null <a name="pffi-pointer-null"></a>
 
@@ -438,8 +415,8 @@ Defines a new foreign function to be used from Scheme code. For example:
 
     (define libc-stdlib
         (cond-expand
-            (windows (pffi-shared-object-auto-load (list "stdlib.h") (list) "ucrtbase" (list "")))
-            (else (pffi-shared-object-auto-load (list "stdlib.h") (list) "c" (list "" "6")))))
+            (windows (pffi-load (list "stdlib.h") (list) "ucrtbase" (list "")))
+            (else (pffi-load (list "stdlib.h") (list) "c" (list "" "6")))))
     (pffi-define c-puts libc-stdlib 'puts 'int (list 'pointer))
     (c-puts "Message brought to you by FFI!")
 
@@ -452,8 +429,8 @@ Defines a new Sceme function to be used as callback to C code. For example:
     ; Load the shared library
     (define libc-stdlib
         (cond-expand
-            (windows (pffi-shared-object-auto-load (list "stdlib.h") (list) "ucrtbase" (list "")))
-            (else (pffi-shared-object-auto-load (list "stdlib.h") (list) "c" (list "" "6")))))
+            (windows (pffi-load (list "stdlib.h") (list) "ucrtbase" (list "")))
+            (else (pffi-load (list "stdlib.h") (list) "c" (list "" "6")))))
 
     ; Define C function that takes a callback
     (pffi-define qsort libc-stdlib 'qsort 'void (list 'pointer 'int 'int 'callback))

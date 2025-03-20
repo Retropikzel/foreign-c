@@ -386,27 +386,27 @@
     (assert equal? (number? align-pointer) #t)
     (assert = align-pointer 8)))
 
-;; pffi-shared-object-auto-load
+;; pffi-load
 
 (print-header 'pffi-shared-object-auto-load)
 
 (define libc-stdlib
   (cond-expand
-    (windows (pffi-shared-object-auto-load (list "stdlib.h") "ucrtbase"))
-    (else (pffi-shared-object-auto-load (list "stdlib.h")
-                                        "c"
-                                        '(additional-versions . ("0" "6"))))))
+    (windows (pffi-load (list "stdlib.h") "ucrtbase"))
+    (else (pffi-load (list "stdlib.h")
+                     "c"
+                     '(additional-versions . ("0" "6"))))))
 
 (debug libc-stdlib)
 
 (define c-testlib
   (cond-expand
-    (windows (pffi-shared-object-auto-load (list "libtest.h")
-                                           "test"
-                                           '(additional-paths . ("."))))
-    (else (pffi-shared-object-auto-load (list "libtest.h")
-                                        "test"
-                                        '(additional-paths . ("."))))))
+    (windows (pffi-load (list "libtest.h")
+                        "test"
+                        '(additional-paths . ("."))))
+    (else (pffi-load (list "libtest.h")
+                     "test"
+                     '(additional-paths . ("."))))))
 
 (debug c-testlib)
 
@@ -661,10 +661,10 @@
 (define libc-stdio
   (cond-expand
     ; FIXME Check that windows so file is correct
-    (windows (pffi-shared-object-auto-load (list "stdio.h") "ucrtbase"))
-    (else (pffi-shared-object-auto-load (list "stdio.h")
-                                        "c"
-                                        '(additional-versions . ("0" "6"))))))
+    (windows (pffi-load (list "stdio.h") "ucrtbase"))
+    (else (pffi-load (list "stdio.h")
+                     "c"
+                     '(additional-versions . ("0" "6"))))))
 
 (pffi-define c-fopen libc-stdio 'fopen 'pointer (list 'pointer 'pointer))
 (define output-file (c-fopen (pffi-string->pointer "testfile.test")

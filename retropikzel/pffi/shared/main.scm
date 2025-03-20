@@ -90,16 +90,16 @@
 (cond-expand
   (gambit
     (define-macro
-      (pffi-shared-object-auto-load headers object-name options)
+      (pffi-load headers object-name options)
       `(pffi-shared-object-load ,(car headers))))
 
   ((or chicken cyclone)
-   (define-syntax pffi-shared-object-auto-load
+   (define-syntax pffi-load
      (syntax-rules ()
        ((_ headers object-name . options)
         (pffi-shared-object-load headers)))))
   (else
-    (define pffi-shared-object-auto-load
+    (define pffi-load
       (lambda (headers object-name . options)
         (let* ((additional-paths (if (assoc 'additional-paths options)
                                    (cdr (assoc 'additional-paths options))

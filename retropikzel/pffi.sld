@@ -13,8 +13,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-load
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -50,8 +49,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-load
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -84,8 +82,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-load
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -114,8 +111,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-load
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -144,8 +140,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-load
               ;pffi-pointer-null
               ;pffi-pointer-null?
               ;pffi-pointer-allocate
@@ -175,8 +170,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-load
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -205,8 +199,7 @@
               ;pffi-size-of
               pffi-type?
               ;pffi-align-of
-              ;pffi-shared-object-auto-load
-              ;pffi-shared-object-load
+              ;pffi-load
               ;pffi-pointer-null
               ;pffi-pointer-null?
               ;pffi-pointer-allocate
@@ -237,8 +230,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-load
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -266,8 +258,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-load
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -302,8 +293,7 @@
               ;pffi-size-of
               pffi-type?
               ;pffi-align-of
-              ;pffi-shared-object-auto-load
-              ;pffi-shared-object-load
+              ;pffi-load
               ;pffi-pointer-null
               ;pffi-pointer-null?
               ;pffi-pointer-allocate
@@ -332,8 +322,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-load
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -366,8 +355,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-load
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -397,8 +385,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-load
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -426,8 +413,7 @@
               ;pffi-size-of
               pffi-type?
               ;pffi-align-of
-              ;pffi-shared-object-auto-load
-              ;pffi-shared-object-load
+              ;pffi-load
               ;pffi-pointer-null
               ;pffi-pointer-null?
               ;pffi-pointer-allocate
@@ -456,8 +442,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-load
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -486,7 +471,7 @@
               ;pffi-size-of
               pffi-type?
               ;pffi-align-of
-              ;pffi-shared-object-auto-load
+              ;pffi-load
               ;pffi-shared-object-load
               ;pffi-pointer-null
               ;pffi-pointer-null?
@@ -515,8 +500,7 @@
         ;pffi-size-of
         pffi-type?
         ;pffi-align-of
-        ;pffi-shared-object-auto-load
-        ;pffi-shared-object-load
+        ;pffi-load
         ;pffi-pointer-null
         ;pffi-pointer-null?
         ;pffi-pointer-allocate
