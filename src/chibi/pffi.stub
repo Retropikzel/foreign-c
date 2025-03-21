@@ -179,12 +179,12 @@
 (define-c (maybe-null pointer void*) (pointer-ref-c-pointer pointer_ref_c_pointer) ((pointer void*) int))
 
 ;; pffi-string->pointer
-(c-declare "void* string_to_pointer(char* string) { return (void*)string; }")
-(define-c (maybe-null pointer void*) (string-to-pointer string_to_pointer) (string))
+;(c-declare "void* string_to_pointer(char* string) { return (void*)string; }")
+;(define-c (maybe-null pointer void*) (string-to-pointer string_to_pointer) (string))
 
 ;; pffi-pointer->string
-(c-declare "char* pointer_to_string(void* pointer) { return (char*)pointer; }")
-(define-c string (pointer-to-string pointer_to_string) ((maybe-null pointer void*)))
+;(c-declare "char* pointer_to_string(void* pointer) { return (char*)pointer; }")
+;(define-c string (pointer-to-string pointer_to_string) ((maybe-null pointer void*)))
 
 ;; pffi-define
 
@@ -256,16 +256,7 @@
     ffi_prep_cif(&cif, FFI_DEFAULT_ABI, nargs, (ffi_type*)rtype, (ffi_type**)atypes);
     void* c_avalues[nargs];
     for(int i = 0; i < nargs; i++) {
-        if(atypes[i] == &ffi_type_pointer) {
-          if(sexp_booleanp(avalues[i])) {
-            void* p = NULL;
-            c_avalues[i] = &p;
-          } else {
-            c_avalues[i] = &sexp_cpointer_value(avalues[i]);
-          }
-        } else {
-          c_avalues[i] = sexp_cpointer_value(avalues[i]);
-        }
+      c_avalues[i] = sexp_cpointer_value(avalues[i]);
     }
     ffi_call(&cif, FFI_FN(fn), rvalue, c_avalues);
   }")

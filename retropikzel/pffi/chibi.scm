@@ -102,11 +102,11 @@
           ((equal? type 'void) (pointer-ref-c-pointer pointer offset))
           ((equal? type 'pointer) (pointer-ref-c-pointer pointer offset)))))
 
-(define pffi-string->pointer
+#;(define pffi-string->pointer
   (lambda (string-content)
     (string-to-pointer string-content)))
 
-(define pffi-pointer->string
+#;(define pffi-pointer->string
   (lambda (pointer)
     (pointer-to-string pointer)))
 
@@ -165,8 +165,7 @@
 
 (define argument->pointer
   (lambda (value type)
-    (cond ((pffi-pointer? value) value)
-          ((procedure? value) (scheme-procedure-to-pointer value))
+    (cond ((procedure? value) (scheme-procedure-to-pointer value))
           (else (let ((pointer (pffi-pointer-allocate (size-of-type type))))
                   (pffi-pointer-set! pointer type 0 value)
                   pointer)))))

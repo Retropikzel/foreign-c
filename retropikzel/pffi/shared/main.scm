@@ -22,6 +22,31 @@
           ((pffi-type? object) (size-of-type object))
           (else (error "Not pffi-struct, pffi-enum of pffi-type" object)))))
 
+(define pffi-string->pointer
+  (lambda (str)
+    (letrec* ((str-length (string-length str))
+              (pointer (pffi-pointer-allocate (+ str-length 1)))
+              (looper (lambda (index)
+                        (when (< index str-length)
+                          (pffi-pointer-set! pointer
+                                             'char
+                                             index
+                                             (string-ref str index))
+                          (looper (+ index 1))))))
+      (looper 0)
+      (pffi-pointer-set! pointer 'char str-length #\null)
+      pointer)))
+
+(define pffi-pointer->string
+  (lambda (pointer)
+    (letrec* ((looper (lambda (index str)
+                        (let ((c (pffi-pointer-get pointer 'char index)))
+                          (if (char=? c #\null)
+                            str
+                            (looper (+ index 1) (cons c str)))))))
+      (list->string (reverse (looper 0 (list)))))))
+
+
 (define pffi-types
   '(int8
      uint8
@@ -65,16 +90,16 @@
 (cond-expand
   (gambit
     (define-macro
-      (pffi-shared-object-auto-load headers object-name options)
-      `(pffi-shared-object-load headers)))
+      (pffi-load headers object-name options)
+      `(pffi-shared-object-load ,(car headers))))
 
   ((or chicken cyclone)
-   (define-syntax pffi-shared-object-auto-load
+   (define-syntax pffi-load
      (syntax-rules ()
        ((_ headers object-name . options)
         (pffi-shared-object-load headers)))))
   (else
-    (define pffi-shared-object-auto-load
+    (define pffi-load
       (lambda (headers object-name . options)
         (let* ((additional-paths (if (assoc 'additional-paths options)
                                    (cdr (assoc 'additional-paths options))

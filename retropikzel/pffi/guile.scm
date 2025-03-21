@@ -65,11 +65,11 @@
   (lambda ()
     (make-pointer 0)))
 
-(define pffi-string->pointer
+#;(define pffi-string->pointer
   (lambda (string-content)
     (string->pointer string-content)))
 
-(define pffi-pointer->string
+#;(define pffi-pointer->string
   (lambda (pointer)
     (pointer->string pointer)))
 
