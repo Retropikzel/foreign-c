@@ -87,3 +87,4 @@ clean:
 	@rm -rf test
 	find . -name "core.1" -delete
 	find . -name "*@gambit*" -delete
+	rm -rf retropikzel/pffi.c

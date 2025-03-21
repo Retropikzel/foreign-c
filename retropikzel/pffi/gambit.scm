@@ -20,8 +20,7 @@
 (define size-of-double (c-lambda () int "___return(sizeof(double));"))
 (define size-of-void* (c-lambda () int "___return(sizeof(void*));"))
 
-
-#;(define size-of-type
+(define size-of-type
   (lambda (type)
     (cond ((eq? type 'int8) (size-of-int8_t))
           ((eq? type 'uint8) (size-of-uint8_t))
@@ -42,16 +41,23 @@
           ((eq? type 'float) (size-of-float))
           ((eq? type 'double) (size-of-double))
           ((eq? type 'pointer) (size-of-void*))
+          ((eq? type 'callback) (size-of-void*))
+          ((eq? type 'void) (size-of-void*))
           (else (error "Can not get size of unknown type" type)))))
 
-#;(define-macro (pffi-shared-object-load headers)
-  `@,(map (lambda (header)
-            '(c-declare ,(string-append "#include <" header ">")))
-          headers))
+#;(define-macro
+  (include-c-headers headers)
+    `(c-declare ,(apply string-append
+                       (map
+                         (lambda (header)
+                           (string-append "#include <" header ">" (string #\newline)))
+                         (list "stdio.h")))))
 
-
-#;(define-syntax pffi-shared-object-load
-  (syntax-rules ()
-    ((_ headers)
-    (c-declare "#include <stdint.h>"))))
+(define-macro
+  (pffi-shared-object-auto-load headers object-name . options)
+  `(c-declare ,(apply string-append
+                     (map
+                       (lambda (header)
+                         (string-append "#include <" header ">" (string #\newline)))
+                       (cdr headers)))))
 
