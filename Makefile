@@ -88,3 +88,7 @@ clean:
 	find . -name "core.1" -delete
 	find . -name "*@gambit*" -delete
 	rm -rf retropikzel/pffi.c
+	rm -rf tests/compliance.c
+	rm -rf tests/compliance.o
+	rm -rf tests/compliance.so
+	rm -rf tests/compliance

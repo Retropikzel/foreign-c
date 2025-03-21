@@ -88,11 +88,7 @@
       res)))
 
 (cond-expand
-  (gambit
-    (define-macro
-      (pffi-load headers object-name options)
-      `(pffi-shared-object-load ,(car headers))))
-
+  (gambit #t)
   ((or chicken cyclone)
    (define-syntax pffi-load
      (syntax-rules ()

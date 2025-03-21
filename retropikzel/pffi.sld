@@ -135,7 +135,7 @@
               (scheme char)
               (scheme file)
               (scheme process-context)
-              (only (gambit) c-declare c-lambda c-define))
+              (only (gambit) c-declare c-lambda c-define define-macro))
       (export pffi-init
               pffi-size-of
               pffi-type?
