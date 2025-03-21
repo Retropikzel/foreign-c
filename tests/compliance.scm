@@ -388,7 +388,7 @@
 
 ;; pffi-load
 
-(print-header 'pffi-shared-object-auto-load)
+(print-header 'pffi-load)
 
 (define libc-stdlib
   (cond-expand
