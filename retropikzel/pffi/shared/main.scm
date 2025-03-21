@@ -66,7 +66,6 @@
      unsigned-long
      float
      double
-     string
      pointer
      void))
 

@@ -99,8 +99,6 @@
 (assert equal? (pffi-type? 'float) #t)
 (debug (pffi-type? 'double))
 (assert equal? (pffi-type? 'double) #t)
-(debug (pffi-type? 'string))
-(assert equal? (pffi-type? 'string) #t)
 (debug (pffi-type? 'pointer))
 (assert equal? (pffi-type? 'pointer) #t)
 (debug (pffi-type? 'void))
