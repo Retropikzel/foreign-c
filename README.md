@@ -303,7 +303,10 @@ Example:
                                    (additiona-paths ("."))))))
 
 #### Notes
+
 - Do not cond-expand inside the arguments, that might lead to problems on some
+implementations.
+- Do not store options in variables, that might lead to problems on some
 implementations.
 - Do pass the headers using quote
     - As '(... and not (list...

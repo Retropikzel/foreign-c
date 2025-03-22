@@ -504,8 +504,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate

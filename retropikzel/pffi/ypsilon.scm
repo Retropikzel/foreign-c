@@ -115,7 +115,7 @@
             ((equal? type 'pointer) (bytevector-c-void*-ref bv 0))))))
 
 (define pffi-shared-object-load
-  (lambda (headers path . options)
+  (lambda (headers path options)
     (load-shared-object path)))
 
 (define pffi-type->native-type
