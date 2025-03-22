@@ -543,5 +543,4 @@
     (ypsilon (include "pffi/ypsilon.scm")))
   (include "pffi/shared/struct.scm")
   (include "pffi/shared/union.scm")
-  (include "pffi/shared/main.scm")
-  )
+  (include "pffi/shared/main.scm"))

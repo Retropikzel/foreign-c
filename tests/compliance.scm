@@ -3,9 +3,7 @@
         (scheme char)
         (scheme file)
         (scheme process-context)
-        (retropikzel pffi)
-        (ypsilon c-ffi)
-        )
+        (retropikzel pffi))
 
 (define header-count 1)
 
