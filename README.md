@@ -266,9 +266,9 @@ Returns the size of the pffi-struct, pffi-enum or pffi-type.
 
 Returns the align of the type.
 
-#### pffi-load <a name="pffi-load"></a>
+#### pffi-define-library <a name="pffi-define-library"></a>
 
-**pffi-load** headers shared-object-name [options] -> object
+**pffi-define-library** headers shared-object-name [options] -> object
 
 Load given shared object automatically searching many predefined paths.
 
@@ -288,13 +288,25 @@ keyword. The options are:
 
 Example:
 
-    (define libc-stdlib
-      (cond-expand
-        (windows (pffi-load (list "stdlib.h") "ucrtbase"))
-        (else (pffi-load (list "stdlib.h")
-                         "c"
-                         '(additional-versions . ("6"))
-                         '(additional-search-paths . ("."))))))
+    (cond-expand
+      (windows (pffi-define-library libc-stdlib
+                                    (list "stdlib.h")
+                                    "ucrtbase"
+                                    '((additional-versions ("0" "6"))
+                                      (additiona-paths (".")))))
+      (else (pffi-define-library libc-stdlib
+                                 (list "stdlib.h")
+                                 "c"
+                                 '((additional-versions ("0" "6"))
+                                   (additiona-paths ("."))))))
+
+#### Notes
+- Do not cond-expand inside the arguments, that might lead to problems on some
+implementations.
+- Do pass the headers using quote
+    - As '(... and not (list...
+- Do pass the options using quote
+    - As '(... and not (list...
 
 #### pffi-pointer-null <a name="pffi-pointer-null"></a>
 

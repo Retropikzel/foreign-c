@@ -405,12 +405,11 @@
 
 (cond-expand
   (windows (pffi-define-library libc-stdlib
-                                (list "stdlib.h")
+                                '("stdlib.h")
                                 "ucrtbase"
-                                '((additional-versions ("0" "6")))
-                                ))
+                                '((additional-versions ("0" "6")))))
   (else (pffi-define-library libc-stdlib
-                             (list "stdlib.h")
+                             '("stdlib.h")
                              "c"
                              '((additional-versions ("0" "6"))))))
 
@@ -418,18 +417,18 @@
 
 (cond-expand
   (windows (pffi-define-library libc-stdio
-                                (list "stdio.h")
+                                '("stdio.h")
                                 "ucrtbase"
                                 '((additional-versions ("0" "6")))))
   (else (pffi-define-library libc-stdio
-                             (list "stdio.h")
+                             '("stdio.h")
                              "c"
                              '((additional-versions ("0" "6"))))))
 
 (debug libc-stdio)
 
 (pffi-define-library c-testlib
-                     (list "libtest.h")
+                     '("libtest.h")
                      "test"
                      '((additional-paths ("." "./tests"))))
 

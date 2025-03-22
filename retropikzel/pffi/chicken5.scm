@@ -183,7 +183,7 @@
 (define-syntax pffi-shared-object-load
   (er-macro-transformer
     (lambda (expr rename compare)
-      (let* ((headers (cdr (car (cdr expr)))))
+      (let* ((headers (cadr (car (cdr expr)))))
         `(begin
            ,@ (map
                 (lambda (header)
