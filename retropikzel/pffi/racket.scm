@@ -79,9 +79,11 @@
     (string-copy (cast pointer _pointer _string))))
 
 (define pffi-shared-object-load
-  (lambda (header path . options)
+  (lambda (header path options)
+    (write options)
+    (newline)
     (if (and (not (null? options))
-             (assoc 'additional-versions (car options)))
+             (assoc 'additional-versions options))
       (ffi-lib path (mlist->list (append (cadr (assoc 'additional-versions
                                                       (car options)))
                                          (list #f))))

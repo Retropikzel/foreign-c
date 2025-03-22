@@ -59,7 +59,7 @@ test-compile-library: tests/libtest.so libtest.a libtest.o
 	SCHEME=${SCHEME} compile-r7rs-library retropikzel/pffi.sld
 
 test-compiler-compliance-compile: test-compile-library
-	SCHEME=${SCHEME} CFLAGS="-I../include -L.." LDFLAGS="-ltest" compile-r7rs -I . tests/compliance.scm
+	SCHEME=${SCHEME} CFLAGS="-I./include -L." LDFLAGS="-ltest -L." compile-r7rs -I . tests/compliance.scm
 	./tests/compliance
 
 test-compiler-compliance: test-compiler-compliance-compile

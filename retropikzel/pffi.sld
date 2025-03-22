@@ -13,7 +13,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -49,7 +49,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -82,7 +82,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -111,7 +111,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -171,7 +171,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -200,7 +200,7 @@
               ;pffi-size-of
               pffi-type?
               ;pffi-align-of
-              ;pffi-load
+              ;pffi-define-library
               ;pffi-pointer-null
               ;pffi-pointer-null?
               ;pffi-pointer-allocate
@@ -231,7 +231,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -259,7 +259,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -294,7 +294,7 @@
               ;pffi-size-of
               pffi-type?
               ;pffi-align-of
-              ;pffi-load
+              ;pffi-define-library
               ;pffi-pointer-null
               ;pffi-pointer-null?
               ;pffi-pointer-allocate
@@ -323,7 +323,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -356,7 +356,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -386,7 +386,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -414,7 +414,7 @@
               ;pffi-size-of
               pffi-type?
               ;pffi-align-of
-              ;pffi-load
+              ;pffi-define-library
               ;pffi-pointer-null
               ;pffi-pointer-null?
               ;pffi-pointer-allocate
@@ -443,7 +443,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -472,7 +472,7 @@
               ;pffi-size-of
               pffi-type?
               ;pffi-align-of
-              ;pffi-load
+              ;pffi-define-library
               ;pffi-shared-object-load
               ;pffi-pointer-null
               ;pffi-pointer-null?
@@ -501,7 +501,7 @@
         ;pffi-size-of
         pffi-type?
         ;pffi-align-of
-        ;pffi-load
+        ;pffi-define-library
         ;pffi-pointer-null
         ;pffi-pointer-null?
         ;pffi-pointer-allocate
