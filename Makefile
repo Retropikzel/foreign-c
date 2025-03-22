@@ -49,11 +49,11 @@ libtest.a: libtest.o src/libtest.c
 	ar rcs libtest.a libtest.o
 
 test-interpreter-compliance: tests/libtest.so
-	SCHEME=${SCHEME} script-r7rs -I . tests/compliance.scm
+	SCHEME=${SCHEME} script-r7rs -I . -I .. tests/compliance.scm
 
 test-interpreter-compliance-docker:
 	docker build -f dockerfiles/test . --build-arg SCHEME=${SCHEME} --tag=pffi-${SCHEME}
-	docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && SCHEME=${SCHEME} script-r7rs -I . tests/compliance.scm"
+	docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && SCHEME=${SCHEME} script-r7rs -I . -I .. tests/compliance.scm"
 
 test-compile-library: tests/libtest.so libtest.a libtest.o
 	SCHEME=${SCHEME} compile-r7rs-library retropikzel/pffi.sld
