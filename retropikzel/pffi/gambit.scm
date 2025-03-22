@@ -168,11 +168,6 @@
 
 (define-macro
   (pffi-define scheme-name shared-object c-name return-type argument-types)
-              (display "HERE: ")
-              (write argument-types)
-              (newline)
-              (write (equal? '(list) argument-types))
-              (newline)
   (letrec* ((native-argument-types
               (if (equal? '(list) argument-types)
                 (list)
@@ -196,11 +191,6 @@
                       "(" (c-arguments 1 (- (length argument-types) 1) "") ")"
                       (if (equal? 'void (cadr return-type)) "" ")")
                       ";")))
-    (write `(define ,scheme-name
-           (c-lambda ,native-argument-types
-                     ,native-return-type
-                     ,c-code)))
-    (newline)
     `(define ,scheme-name
        (c-lambda ,native-argument-types
                  ,native-return-type
