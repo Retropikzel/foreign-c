@@ -273,3 +273,11 @@ EXPORT struct test* test_new() {
     t->n = 14;
     return t;
 }
+
+EXPORT void takes_no_args() {
+    puts("I take no arguments :)");
+}
+
+EXPORT int takes_no_args_returns_int() {
+    return 0;
+}

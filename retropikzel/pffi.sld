@@ -140,23 +140,23 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-load
-              ;pffi-pointer-null
-              ;pffi-pointer-null?
-              ;pffi-pointer-allocate
-              ;pffi-pointer-address
-              ;pffi-pointer?
-              ;pffi-pointer-free
-              ;pffi-pointer-set!
-              ;pffi-pointer-get
-              ;pffi-string->pointer
-              ;pffi-pointer->string
+              pffi-define-library
+              pffi-pointer-null
+              pffi-pointer-null?
+              pffi-pointer-allocate
+              pffi-pointer-address
+              pffi-pointer?
+              pffi-pointer-free
+              pffi-pointer-set!
+              pffi-pointer-get
+              pffi-string->pointer
+              pffi-pointer->string
               pffi-struct-make
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
-              ;pffi-define
+              pffi-define
               ;pffi-define-callback
               ))
     (gauche
@@ -540,4 +540,5 @@
     (ypsilon (include "pffi/ypsilon.scm")))
   (include "pffi/shared/struct.scm")
   (include "pffi/shared/union.scm")
-  (include "pffi/shared/main.scm"))
+  (include "pffi/shared/main.scm")
+  )

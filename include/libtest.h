@@ -13,3 +13,5 @@ int color_check_by_value(struct color color);
 int test_check(struct test* test);
 int test_check_by_value(struct test test);
 struct test* test_new();
+void takes_no_args();
+int takes_no_args_returns_int();

@@ -1,10 +1,10 @@
-.PHONY=libtest.o libtest.so libtest.a documentation
+.PHONY=libtest.o tests/libtest.so libtest.a documentation
 CC=gcc
 DOCKER=docker run -it -v ${PWD}:/workdir
 DOCKER_INIT=cd /workdir && make clean &&
 VERSION=$(shell grep "version:" README.md | awk '{split\($0,a\); print a[2];}')
 
-all: chibi gauche libtest.so libtest.o libtest.a
+all: chibi gauche tests/libtest.so libtest.o libtest.a
 
 # apt-get install pandoc weasyprint
 docs:
@@ -42,27 +42,30 @@ jenkinsfile:
 libtest.o: src/libtest.c
 	${CC} -o libtest.o -fPIC -c src/libtest.c -I./include
 
-libtest.so: src/libtest.c
-	${CC} -o libtest.so -shared -fPIC src/libtest.c -I./include
+tests/libtest.so: src/libtest.c
+	${CC} -o tests/libtest.so -shared -fPIC src/libtest.c -I./include
 
 libtest.a: libtest.o src/libtest.c
 	ar rcs libtest.a libtest.o
 
-test-interpreter-compliance: libtest.so
+test-interpreter-compliance: tests/libtest.so
 	SCHEME=${SCHEME} script-r7rs -I . tests/compliance.scm
 
 test-interpreter-compliance-docker:
 	docker build -f dockerfiles/test . --build-arg SCHEME=${SCHEME} --tag=pffi-${SCHEME}
 	docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && SCHEME=${SCHEME} script-r7rs -I . tests/compliance.scm"
 
-test-compile-library: libtest.so libtest.a libtest.o
+test-compile-library: tests/libtest.so libtest.a libtest.o
 	SCHEME=${SCHEME} compile-r7rs-library retropikzel/pffi.sld
 
-test-compiler-compliance: test-compile-library
-	SCHEME=${SCHEME} CFLAGS="-I./include -L." LDFLAGS="-ltest libtest.o" compile-r7rs -I . tests/compliance.scm
+test-compiler-compliance-compile: test-compile-library
+	SCHEME=${SCHEME} CFLAGS="-I../include -L.." LDFLAGS="-ltest" compile-r7rs -I . tests/compliance.scm
 	./tests/compliance
 
-test-compiler-compliance-docker: libtest.so libtest.a
+test-compiler-compliance: test-compiler-compliance-compile
+	./tests/compliance
+
+test-compiler-compliance-docker: tests/libtest.so libtest.a
 	docker build -f dockerfiles/test . --build-arg SCHEME=${SCHEME} --tag=pffi-${SCHEME}
 	docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && SCHEME=${SCHEME} compile-r7rs-library retropikzel/pffi.sld"
 	docker run -v ${PWD}:/workdir pffi-${SCHEME} bash -c "cd /workdir && SCHEME=${SCHEME} compile-r7rs -I . compliance.scm && ./test"

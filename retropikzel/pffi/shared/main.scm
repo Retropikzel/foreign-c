@@ -6,8 +6,8 @@
          '(import (chicken foreign)
                   (chicken memory))
          #t))))
-  (else
-    (define pffi-init(lambda () #t))))
+  (gambit #t)
+  (else (define pffi-init (lambda () #t))))
 
 (define pffi-type?
   (lambda (object)
@@ -89,12 +89,12 @@
 (cond-expand
   (gambit #t)
   ((or chicken cyclone)
-   (define-syntax pffi-load
+   (define-syntax pffi-define-library
      (syntax-rules ()
        ((_ headers object-name . options)
         (pffi-shared-object-load headers)))))
   (else
-    (define pffi-load
+    (define pffi-define-library
       (lambda (headers object-name . options)
         (let* ((additional-paths (if (assoc 'additional-paths options)
                                    (cdr (assoc 'additional-paths options))
