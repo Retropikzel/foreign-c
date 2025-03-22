@@ -91,7 +91,7 @@
   ((or chicken cyclone)
    (define-syntax pffi-define-library
      (syntax-rules ()
-       ((_ scheme-name headers object-name . options)
+       ((_ scheme-name headers object-name options)
         (begin
           (define scheme-name #t)
           (pffi-shared-object-load headers))))))
@@ -99,20 +99,19 @@
     (define-syntax pffi-define-library
       (syntax-rules ()
         ((_ scheme-name headers object-name options)
-         (define scheme-name #t))))
-    #;(define-syntax pffi-define-library-old
-      (syntax-rules ()
-        ((_ scheme-name headers object-name options)
          (define scheme-name
-           (let* ((additional-paths (if (assoc 'additional-paths options)
-                                      (cdr (assoc 'additional-paths options))
+           (let* ((internal-options (if (null? 'options)
+                                      (list)
+                                      (cadr 'options)))
+                  (additional-paths (if (assoc 'additional-paths internal-options)
+                                      (cadr (assoc 'additional-paths internal-options))
                                       (list)))
-                  (additional-versions (if (assoc 'additional-versions options)
+                  (additional-versions (if (assoc 'additional-versions internal-options)
                                          (map (lambda (version)
                                                 (if (number? version)
                                                   (number->string version)
                                                   version))
-                                              (cdr (assoc 'additional-versions options)))
+                                              (cadr (assoc 'additional-versions internal-options)))
                                          (list)))
                   (slash (cond-expand (windows (string #\\)) (else "/")))
                   (auto-load-paths
@@ -174,21 +173,10 @@
                   (auto-load-versions (list ""))
                   (paths (append auto-load-paths additional-paths))
                   (versions (append additional-versions auto-load-versions))
-                  (platform-lib-prefix
-                    (cond-expand
-                      ;(racket (if (equal? (system-type 'os) 'windows) "" "lib"))
-                      (windows "")
-                      (else "lib")))
-                  (platform-file-extension
-                    (cond-expand
-                      ;(racket (if (equal? (system-type 'os) 'windows) ".dll" ".so"))
-                      (windows ".dll")
-                      (else ".so")))
+                  (platform-lib-prefix (cond-expand (windows "") (else "lib")))
+                  (platform-file-extension (cond-expand (windows ".dll") (else ".so")))
                   (shared-object #f)
                   (searched-paths (list)))
-         (display "HERE: ")
-         (write additional-versions)
-         (newline)
              (for-each
                (lambda (path)
                  (for-each
@@ -236,4 +224,4 @@
                  (exit 1))
                (pffi-shared-object-load headers
                                         shared-object
-                                        `((additional-versions ,versions)))))))))))
+                                        `((additional-versions ,additional-versions)))))))))))
