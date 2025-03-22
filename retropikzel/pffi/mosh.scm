@@ -40,6 +40,10 @@
   (lambda (size)
     (malloc size)))
 
+(define pffi-pointer-address
+  (lambda (pointer)
+    (pointer->integer pointer)))
+
 (define pffi-pointer?
   (lambda (object)
     (pointer? object)))
@@ -107,11 +111,6 @@
 #;(define pffi-pointer->string
   (lambda (pointer)
     (pointer->string pointer)))
-
-;; FIXME
-(define pffi-pointer-address
-  (lambda (pointer)
-    0))
 
 (define pffi-type->native-type
   (lambda (type)

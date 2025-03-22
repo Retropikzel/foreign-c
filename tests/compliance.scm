@@ -30,21 +30,38 @@
     (set! assert-tag tag)
     (set! count 0)))
 
-(define-syntax assert
-  (syntax-rules ()
-    ((_ check value-a value-b)
-     (let ((result (apply check (list value-a value-b))))
-       (set! count (+ count 1))
-       (if (not result) (display "FAIL ") (display "PASS "))
-       (display "[")
-       (display assert-tag)
-       (display " - ")
-       (display count)
-       (display "]")
-       (display ": ")
-       (write (list 'check 'value-a 'value-b))
-       (newline)
-       (when (not result) (exit 1))))))
+(cond-expand
+  (gambit
+    (define assert
+      (lambda (check value-a value-b)
+        (let ((result (apply check (list value-a value-b))))
+          (set! count (+ count 1))
+          (if (not result) (display "FAIL ") (display "PASS "))
+          (display "[")
+          (display assert-tag)
+          (display " - ")
+          (display count)
+          (display "]")
+          (display ": ")
+          (write (list 'check 'value-a 'value-b))
+          (newline)
+          (when (not result) (exit 1))))))
+  (else
+    (define-syntax assert
+      (syntax-rules ()
+        ((_ check value-a value-b)
+         (let ((result (apply check (list value-a value-b))))
+           (set! count (+ count 1))
+           (if (not result) (display "FAIL ") (display "PASS "))
+           (display "[")
+           (display assert-tag)
+           (display " - ")
+           (display count)
+           (display "]")
+           (display ": ")
+           (write (list 'check 'value-a 'value-b))
+           (newline)
+           (when (not result) (exit 1))))))))
 
 (define-syntax debug
   (syntax-rules ()
@@ -101,16 +118,12 @@
 (assert equal? (pffi-type? 'float) #t)
 (debug (pffi-type? 'double))
 (assert equal? (pffi-type? 'double) #t)
-(debug (pffi-type? 'string))
-(assert equal? (pffi-type? 'string) #t)
 (debug (pffi-type? 'pointer))
 (assert equal? (pffi-type? 'pointer) #t)
 (debug (pffi-type? 'void))
 (assert equal? (pffi-type? 'void) #t)
 (debug (pffi-type? 'callback))
 (assert equal? (pffi-type? 'callback) #t)
-
-(pffi-init)
 
 ;; pffi-size-of
 
@@ -388,27 +401,38 @@
     (assert equal? (number? align-pointer) #t)
     (assert = align-pointer 8)))
 
-;; pffi-shared-object-auto-load
+;; pffi-define-library
 
-(print-header 'pffi-shared-object-auto-load)
+(print-header 'pffi-define-library)
 
-(define libc-stdlib
-  (cond-expand
-    (windows (pffi-shared-object-auto-load (list "stdlib.h") "ucrtbase"))
-    (else (pffi-shared-object-auto-load (list "stdlib.h")
-                                        "c"
-                                        '(additional-versions . ("0" "6"))))))
+(cond-expand
+  (windows (pffi-define-library libc-stdlib
+                                '("stdlib.h")
+                                "ucrtbase"
+                                '((additional-versions ("0" "6")))))
+  (else (pffi-define-library libc-stdlib
+                             '("stdlib.h")
+                             "c"
+                             '((additional-versions ("0" "6"))))))
 
 (debug libc-stdlib)
 
-(define c-testlib
-  (cond-expand
-    (windows (pffi-shared-object-auto-load (list "libtest.h")
-                                           "test"
-                                           '(additional-paths . ("."))))
-    (else (pffi-shared-object-auto-load (list "libtest.h")
-                                        "test"
-                                        '(additional-paths . ("."))))))
+(cond-expand
+  (windows (pffi-define-library libc-stdio
+                                '("stdio.h")
+                                "ucrtbase"
+                                '((additional-versions ("0" "6")))))
+  (else (pffi-define-library libc-stdio
+                             '("stdio.h")
+                             "c"
+                             '((additional-versions ("0" "6"))))))
+
+(debug libc-stdio)
+
+(pffi-define-library c-testlib
+                     '("libtest.h")
+                     "test"
+                     '((additional-paths ("." "./tests"))))
 
 (debug c-testlib)
 
@@ -484,12 +508,20 @@
 (debug offset)
 (debug value)
 
-(define-syntax test-type
-  (syntax-rules ()
-    ((_ type)
-     (begin
-       (pffi-pointer-set! set-pointer type offset value)
-       (assert = (pffi-pointer-get set-pointer type offset) value)))))
+(cond-expand
+  (gambit
+    (define test-type
+      (lambda (type)
+        (begin
+          (pffi-pointer-set! set-pointer type offset value)
+          (assert = (pffi-pointer-get set-pointer type offset) value)))))
+  (else
+    (define-syntax test-type
+      (syntax-rules ()
+        ((_ type)
+         (begin
+           (pffi-pointer-set! set-pointer type offset value)
+           (assert = (pffi-pointer-get set-pointer type offset) value)))))))
 
 (test-type 'int8)
 (test-type 'uint8)
@@ -663,14 +695,6 @@
 (pffi-define c-atoi libc-stdlib 'atoi 'int (list 'pointer))
 (assert = (c-atoi (pffi-string->pointer "100")) 100)
 
-(define libc-stdio
-  (cond-expand
-    ; FIXME Check that windows so file is correct
-    (windows (pffi-shared-object-auto-load (list "stdio.h") "ucrtbase"))
-    (else (pffi-shared-object-auto-load (list "stdio.h")
-                                        "c"
-                                        '(additional-versions . ("0" "6"))))))
-
 (pffi-define c-fopen libc-stdio 'fopen 'pointer (list 'pointer 'pointer))
 (define output-file (c-fopen (pffi-string->pointer "testfile.test")
                               (pffi-string->pointer "w")))
@@ -688,6 +712,15 @@
 (assert equal? (string=? (with-input-from-file "testfile.test"
                                                (lambda () (read-line)))
                          "Hello world") #t)
+
+(pffi-define c-takes-no-args c-testlib 'takes_no_args 'void (list))
+(debug c-takes-no-args)
+(c-takes-no-args)
+
+(pffi-define c-takes-no-args-returns-int c-testlib 'takes_no_args_returns_int 'int (list))
+(debug c-takes-no-args)
+(define takes-no-args-returns-int-result (c-takes-no-args-returns-int))
+(assert equal? (= takes-no-args-returns-int-result 0) #t)
 
 ;; pffi-struct-get
 

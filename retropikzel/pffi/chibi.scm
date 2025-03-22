@@ -165,8 +165,7 @@
 
 (define argument->pointer
   (lambda (value type)
-    (cond ((pffi-pointer? value) value)
-          ((procedure? value) (scheme-procedure-to-pointer value))
+    (cond ((procedure? value) (scheme-procedure-to-pointer value))
           (else (let ((pointer (pffi-pointer-allocate (size-of-type type))))
                   (pffi-pointer-set! pointer type 0 value)
                   pointer)))))

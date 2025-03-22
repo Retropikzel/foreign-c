@@ -13,8 +13,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -50,8 +49,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -84,8 +82,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -114,8 +111,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -139,28 +135,28 @@
               (scheme char)
               (scheme file)
               (scheme process-context)
-              (only (gambit) c-declare c-lambda c-define))
+              (only (gambit) c-declare c-lambda c-define define-macro))
       (export pffi-init
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
-              ;pffi-pointer-null
-              ;pffi-pointer-null?
-              ;pffi-pointer-allocate
-              ;pffi-pointer?
-              ;pffi-pointer-free
-              ;pffi-pointer-set!
-              ;pffi-pointer-get
-              ;pffi-string->pointer
-              ;pffi-pointer->string
+              pffi-define-library
+              pffi-pointer-null
+              pffi-pointer-null?
+              pffi-pointer-allocate
+              pffi-pointer-address
+              pffi-pointer?
+              pffi-pointer-free
+              pffi-pointer-set!
+              pffi-pointer-get
+              pffi-string->pointer
+              pffi-pointer->string
               pffi-struct-make
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
-              ;pffi-define
+              pffi-define
               ;pffi-define-callback
               ))
     (gauche
@@ -175,8 +171,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -205,8 +200,7 @@
               ;pffi-size-of
               pffi-type?
               ;pffi-align-of
-              ;pffi-shared-object-auto-load
-              ;pffi-shared-object-load
+              ;pffi-define-library
               ;pffi-pointer-null
               ;pffi-pointer-null?
               ;pffi-pointer-allocate
@@ -237,8 +231,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -266,8 +259,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -302,8 +294,7 @@
               ;pffi-size-of
               pffi-type?
               ;pffi-align-of
-              ;pffi-shared-object-auto-load
-              ;pffi-shared-object-load
+              ;pffi-define-library
               ;pffi-pointer-null
               ;pffi-pointer-null?
               ;pffi-pointer-allocate
@@ -332,8 +323,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -366,8 +356,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -397,8 +386,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -426,8 +414,7 @@
               ;pffi-size-of
               pffi-type?
               ;pffi-align-of
-              ;pffi-shared-object-auto-load
-              ;pffi-shared-object-load
+              ;pffi-define-library
               ;pffi-pointer-null
               ;pffi-pointer-null?
               ;pffi-pointer-allocate
@@ -456,8 +443,7 @@
               pffi-size-of
               pffi-type?
               pffi-align-of
-              pffi-shared-object-auto-load
-              pffi-shared-object-load
+              pffi-define-library
               pffi-pointer-null
               pffi-pointer-null?
               pffi-pointer-allocate
@@ -486,7 +472,7 @@
               ;pffi-size-of
               pffi-type?
               ;pffi-align-of
-              ;pffi-shared-object-auto-load
+              ;pffi-define-library
               ;pffi-shared-object-load
               ;pffi-pointer-null
               ;pffi-pointer-null?
@@ -558,4 +544,5 @@
     (ypsilon (include "pffi/ypsilon.scm")))
   (include "pffi/shared/struct.scm")
   (include "pffi/shared/union.scm")
-  (include "pffi/shared/main.scm"))
+  (include "pffi/shared/main.scm")
+  )

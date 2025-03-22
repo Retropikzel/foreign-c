@@ -39,3 +39,4 @@ dockerfiles/build
 .scheme_testrunner
 core
 testfile.test
+tests/compliance

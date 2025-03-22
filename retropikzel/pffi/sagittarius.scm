@@ -32,7 +32,7 @@
 
 (define-syntax pffi-define
   (syntax-rules ()
-    ((pffi-define scheme-name shared-object c-name return-type argument-types)
+    ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
        (make-c-function shared-object
                         (pffi-type->native-type return-type)
@@ -102,7 +102,7 @@
     (pointer->string pointer)))
 
 (define pffi-shared-object-load
-  (lambda (headers path . options)
+  (lambda (headers path options)
     (open-shared-library path)))
 
 (define pffi-pointer-free
