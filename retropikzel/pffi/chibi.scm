@@ -26,7 +26,7 @@
           (else #f))))
 
 (define pffi-shared-object-load
-  (lambda (headers path . options)
+  (lambda (path options)
     (let ((shared-object (dlopen path RTLD-NOW))
           (maybe-error (dlerror)))
       (when (not (pffi-pointer-null? maybe-error))
@@ -210,4 +210,4 @@
   (syntax-rules ()
     ((pffi-define scheme-name return-type argument-types procedure)
      (define scheme-name
-       (make-c-callback return-type argument-types procedure)))))
+       (make-c-callback return-type 'argument-types procedure)))))

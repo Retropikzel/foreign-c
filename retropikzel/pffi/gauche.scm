@@ -42,7 +42,7 @@
       ((equal? type 'void) (size-of-void)))))
 
 (define pffi-shared-object-load
-  (lambda (headers path . options)
+  (lambda (path options)
     (shared-object-load path)))
 
 (define pffi-pointer-null

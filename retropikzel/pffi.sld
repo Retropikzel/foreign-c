@@ -66,7 +66,8 @@
               pffi-struct-get
               pffi-struct-set!
               pffi-define
-              pffi-define-callback))
+              ;pffi-define-callback
+              ))
     (chicken6
       (import (scheme base)
               (scheme write)
@@ -403,7 +404,8 @@
               pffi-struct-get
               pffi-struct-set!
               pffi-define
-              pffi-define-callback))
+              ;pffi-define-callback
+              ))
     (skint
       (import (scheme base)
               (scheme write)
@@ -541,6 +543,6 @@
     (stklos (include "pffi/stklos.scm"))
     (tr7 (include "pffi/tr7.scm"))
     (ypsilon (include "pffi/ypsilon.scm")))
+  ;(include "pffi/shared/union.scm")
   (include "pffi/shared/struct.scm")
-  (include "pffi/shared/union.scm")
   (include "pffi/shared/main.scm"))

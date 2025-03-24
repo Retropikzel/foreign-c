@@ -39,7 +39,7 @@
                         c-name
                         (map pffi-type->native-type argument-types))))))
 
-(define-syntax pffi-define-callback
+#;(define-syntax pffi-define-callback
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
      (define scheme-name
@@ -102,7 +102,7 @@
     (pointer->string pointer)))
 
 (define pffi-shared-object-load
-  (lambda (headers path options)
+  (lambda (path options)
     (open-shared-library path)))
 
 (define pffi-pointer-free

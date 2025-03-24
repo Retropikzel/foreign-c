@@ -18,7 +18,7 @@
 (define pffi-size-of
   (lambda (object)
     (cond ((pffi-struct? object) (pffi-struct-size object))
-          ((pffi-union? object) (pffi-union-size object))
+          ;((pffi-union? object) (pffi-union-size object))
           ((pffi-type? object) (size-of-type object))
           (else (error "Not pffi-struct, pffi-enum of pffi-type" object)))))
 
@@ -222,6 +222,5 @@
                  (write searched-paths)
                  (newline)
                  (exit 1))
-               (pffi-shared-object-load headers
-                                        shared-object
+               (pffi-shared-object-load shared-object
                                         `((additional-versions ,additional-versions)))))))))))

@@ -715,7 +715,7 @@
 (debug c-takes-no-args)
 (c-takes-no-args)
 
-(pffi-define c-takes-no-args-returns-int c-testlib 'takes_no_args_returns_int 'int '())
+(pffi-define c-takes-no-args-returns-int c-testlib 'takes_no_args_returns_int 'int (list))
 (debug c-takes-no-args)
 (define takes-no-args-returns-int-result (c-takes-no-args-returns-int))
 (assert equal? (= takes-no-args-returns-int-result 0) #t)
@@ -724,8 +724,8 @@
 
 (print-header 'pffi-struct-get)
 
-(pffi-define c-init-struct c-testlib 'init_struct 'pointer '(pointer))
-(pffi-define c-check-offset c-testlib 'check_offset 'void '(int int))
+(pffi-define c-init-struct c-testlib 'init_struct 'pointer (list 'pointer))
+(pffi-define c-check-offset c-testlib 'check_offset 'void (list 'int 'int))
 (define struct-test (pffi-struct-make 'test
                                           '((int8 . a)
                                             (char . b)
@@ -795,7 +795,7 @@
 
 (print-header "pffi-struct-set! 1")
 
-(pffi-define c-test-check c-testlib 'test_check 'int '(pointer))
+(pffi-define c-test-check c-testlib 'test_check 'int (list 'pointer))
 (define struct-test1 (pffi-struct-make 'test
                                           '((int8 . a)
                                             (char . b)
@@ -831,7 +831,7 @@
 
 (print-header "pffi-struct-make with pointer")
 
-(pffi-define c-test-new c-testlib 'test_new 'pointer '())
+(pffi-define c-test-new c-testlib 'test_new 'pointer (list))
 (define struct-test2-pointer (c-test-new))
 (define struct-test2 (pffi-struct-make 'test
                                        '((int8 . a)
@@ -887,7 +887,7 @@
 ;; pffi-struct-dereference
 
 ;(print-header "pffi-struct-dereference 1")
-;(pffi-define c-color-check-by-value c-testlib 'color_check_by_value 'int '(struct))
+;(pffi-define c-color-check-by-value c-testlib 'color_check_by_value 'int (list 'struct))
 #;(define struct-color (pffi-struct-make 'color '((int8 . r)
                                                 (int8 . g)
                                                 (int8 . b)
@@ -900,7 +900,7 @@
 
 ;(print-header "pffi-struct-dereference 2")
 
-;(pffi-define c-test-check-by-value c-testlib 'test_check_by_value 'int '(struct))
+;(pffi-define c-test-check-by-value c-testlib 'test_check_by_value 'int (list 'struct))
 #;(define struct-test3 (pffi-struct-make 'test
                                           '((int8 . a)
                                             (char . b)
@@ -948,39 +948,39 @@
 
 ;; pffi-define-callback
 
-;(print-header 'pffi-define-callback)
+(print-header 'pffi-define-callback)
 
-;(define array (pffi-pointer-allocate (* (pffi-size-of 'int) 3)))
-;(pffi-pointer-set! array 'int (* (pffi-size-of 'int) 0) 3)
-;(pffi-pointer-set! array 'int (* (pffi-size-of 'int) 1) 2)
-;(pffi-pointer-set! array 'int (* (pffi-size-of 'int) 2) 1)
+(define array (pffi-pointer-allocate (* (pffi-size-of 'int) 3)))
+(pffi-pointer-set! array 'int (* (pffi-size-of 'int) 0) 3)
+(pffi-pointer-set! array 'int (* (pffi-size-of 'int) 1) 2)
+(pffi-pointer-set! array 'int (* (pffi-size-of 'int) 2) 1)
 
-;(pffi-define qsort libc-stdlib 'qsort 'void '(pointer int int callback))
+(pffi-define qsort libc-stdlib 'qsort 'void (list 'pointer 'int 'int 'callback))
 
-#;(pffi-define-callback compare
+(pffi-define-callback compare
                       'int
-                      '(pointer pointer)
+                      (list 'pointer 'pointer)
                       (lambda (pointer-a pointer-b)
                         (let ((a (pffi-pointer-get pointer-a 'int 0))
                               (b (pffi-pointer-get pointer-b 'int 0)))
                           (cond ((> a b) 1)
                                 ((= a b) 0)
                                 ((< a b) -1)))))
-;(write compare)
-;(newline)
+(write compare)
+(newline)
 
-#;(define unsorted (list (pffi-pointer-get array 'int (* (pffi-size-of 'int) 0))
+(define unsorted (list (pffi-pointer-get array 'int (* (pffi-size-of 'int) 0))
              (pffi-pointer-get array 'int (* (pffi-size-of 'int) 1))
              (pffi-pointer-get array 'int (* (pffi-size-of 'int) 2))))
-;(debug unsorted)
-;(assert equal? unsorted (list 3 2 1))
+(debug unsorted)
+(assert equal? unsorted (list 3 2 1))
 
-;(qsort array 3 (pffi-size-of 'int) compare)
+(qsort array 3 (pffi-size-of 'int) compare)
 
-#;(define sorted (list (pffi-pointer-get array 'int (* (pffi-size-of 'int) 0))
+(define sorted (list (pffi-pointer-get array 'int (* (pffi-size-of 'int) 0))
              (pffi-pointer-get array 'int (* (pffi-size-of 'int) 1))
              (pffi-pointer-get array 'int (* (pffi-size-of 'int) 2))))
-;(debug sorted)
-;(assert equal? sorted (list 1 2 3))
+(debug sorted)
+(assert equal? sorted (list 1 2 3))
 
 (exit 0)

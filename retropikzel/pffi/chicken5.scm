@@ -57,24 +57,24 @@
                        ((equal? type 'callback) 'c-pointer)
                        ((equal? type 'struct) 'c-pointer)
                        (else (error "pffi-type->native-type -- No such pffi type" type)))))
-             (scheme-name (car (cdr expr)))
-             (c-name (symbol->string (car (cdr (car (cdr (cdr (cdr expr))))))))
-             (return-type (pffi-type->native-type (car (cdr (car (cdr (cdr (cdr (cdr expr)))))))))
-             (argument-types
-               (let ((types (cdr (car (cdr (cdr (cdr (cdr (cdr expr)))))))))
-                 (if (null? types)
-                   '()
-                   (map pffi-type->native-type (map car (map cdr types)))))))
+             (scheme-name (list-ref expr 1))
+             (c-name (symbol->string (cadr (list-ref expr 3))))
+             (return-type (pffi-type->native-type (cadr (list-ref expr 4))))
+             (argument-types (map pffi-type->native-type (cadr (list-ref expr 5)))))
         (if (null? argument-types)
           `(define ,scheme-name
              (foreign-safe-lambda ,return-type ,c-name))
           `(define ,scheme-name
              (foreign-safe-lambda ,return-type ,c-name ,@ argument-types)))))))
 
-(define-syntax pffi-define-callback
+#;(define-syntax pffi-define-callback
   (er-macro-transformer
     (lambda (expr rename compare)
-      (let* ((pffi-type->native-type ; Chicken has this procedure in three places
+      (let* ((debug (begin
+                      (write (list-ref expr 4))
+                      (newline)
+                      ))
+             (pffi-type->native-type ; Chicken has this procedure in three places
                (lambda (type)
                  (cond ((equal? type 'int8) 'byte)
                        ((equal? type 'uint8) 'unsigned-byte)
@@ -99,19 +99,15 @@
                        ((equal? type 'callback) 'c-pointer)
                        ((equal? type 'struct) 'c-pointer)
                        (else (error "pffi-type->native-type -- No such pffi type" type)))))
-             (scheme-name (car (cdr expr)))
-             (return-type (pffi-type->native-type (car (cdr (car (cdr (cdr expr)))))))
-             (argument-types
-               (let ((types (cdr (car (cdr (cdr (cdr expr)))))))
-                 (if (null? types)
-                   '()
-                   (map pffi-type->native-type (map car (map cdr types))))))
-             (argument-names (car (cdr (car (cdr (cdr (cdr (cdr expr))))))))
+             (scheme-name (list-ref expr 1))
+             (return-type (pffi-type->native-type (cadr (list-ref expr 2))))
+             (argument-types (map pffi-type->native-type (cadr (list-ref expr 3))))
+             (argument-names (cadr (list-ref expr 4)))
              (arguments (map
                           (lambda (name type)
                             `(,name ,type))
                           argument-types argument-names))
-             (procedure-body (cdr (cdr (car (cdr (cdr (cdr (cdr expr)))))))))
+             (procedure-body (cadr (cdr (list-ref expr 4)))))
         `(begin (define-external ,(cons 'external_123456789 arguments)
                                  ,return-type
                                  (begin ,@ procedure-body))

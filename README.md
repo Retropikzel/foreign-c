@@ -98,8 +98,8 @@ changing anymore and some implementations are in **beta**.
 
 - No way to pass structs by value
 - Most implementations are missing callback support
-- Always pass arguments to pffi functions/macros as (list 1 2 3) and not '(1 2 3)
-- Always pass pffi-define-callback procedure as lambda on place
+- Always pass arguments to pffi functions/macros as '(1 2 3) and not (list 1 2 3)
+- Always pass pffi-define-callback procedure as lambda in place
 
 ## Roadmap
 
@@ -292,7 +292,7 @@ Example:
 
     (cond-expand
       (windows (pffi-define-library libc-stdlib
-                                    (list "stdlib.h")
+                                    '("stdlib.h")
                                     "ucrtbase"
                                     '((additional-versions ("0" "6"))
                                       (additiona-paths (".")))))
@@ -433,7 +433,7 @@ Defines a new foreign function to be used from Scheme code. For example:
     (cond-expand
         (windows (pffi-define-library libc-stdlib '("stdlib.h") "ucrtbase" '("")))
         (else (pffi-define-library libc-stdlib '("stdlib.h")  "c" '("" "6"))))
-    (pffi-define c-puts libc-stdlib 'puts 'int (list 'pointer))
+    (pffi-define c-puts libc-stdlib 'puts 'int '(pointer))
     (c-puts "Message brought to you by FFI!")
 
 #### pffi-define-callback <a name="pffi-define-callback"></a>
@@ -448,12 +448,12 @@ Defines a new Sceme function to be used as callback to C code. For example:
         (else (pffi-define-library '("stdlib.h") "c" '("" "6"))))
 
     ; Define C function that takes a callback
-    (pffi-define qsort libc-stdlib 'qsort 'void (list 'pointer 'int 'int 'callback))
+    (pffi-define qsort libc-stdlib 'qsort 'void '(pointer int int callback))
 
     ; Define our callback
     (pffi-define-callback compare
                           'int
-                          (list 'pointer 'pointer)
+                          '(pointer pointer)
                           (lambda (pointer-a pointer-b)
                             (let ((a (pffi-pointer-get pointer-a 'int 0))
                                   (b (pffi-pointer-get pointer-b 'int 0)))
