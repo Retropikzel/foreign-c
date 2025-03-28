@@ -32,11 +32,15 @@ conforming to some specification.
     - [Not started](#not-started)
     - [Other](#other)
 - [Documentation](#documentation)
-    - [Usage](#usage)
-        - [Chibi](#usage-chibi)
-        - [Chicken](#usage-chicken)
-        - [Racket](#usage-racket)
-        - [Kawa](#usage-kawa)
+    - [Installation](#installation)
+        - [Compiling the library](#compiling-the-library)
+            - [Chibi](#compiling-the-library-chibi)
+            - [Gauche](#compiling-the-library-gauche)
+    - [Installing dependencies](#installing-dependencies)
+        - [Chibi](#installing-dependencies-chibi)
+        - [Chicken](#installing-dependencies-chicken)
+        - [Racket](#installing-dependencies-racket)
+        - [Kawa](#installing-dependencies-kawa)
 - [Reference](#reference)
     - [Types](#types)
     - [Procedures and macros](#procedures-and-macros)
@@ -171,16 +175,33 @@ For roadmap to 1.0.0 see [issues](https://todo.sr.ht/~retropikzel/r7rs-pffi?sear
 - [Loko](https://scheme.fail/)
     - Desires no C interop, I can respect that
 
-## Documentation
-<a name="documentation"></a>
+## Documentation <a name="documentation"></a>
 
-### Usage
-<a name="usage"></a>
+### Installation <a name="installation"></a>
 
-#### Chibi
-<a name="usage-chibi"></a>
+Download the latest release from
+[https://git.sr.ht/~retropikzel/r7rs-pffi/refs](https://git.sr.ht/~retropikzel/r7rs-pffi/refs).
 
-Needs libffi-dev, on Debina/Ubuntu/Mint install with:
+Unpack it somewhere and copy the directory called "retropikzel" to your projects
+library directory. For the rest of this documentation it is assumed to be ./snow.
+
+#### Compiling the libary <a name="compiling-the-library"></a>
+Some implementations need extra step of compiling the library. Change directory
+to ./snow/retropikzel/pffi and run command corresponding to your implementation.
+
+##### Chibi <a name="compiling-the-library-chibi"></a>
+
+    make -C ./snow/retropikzel/pffi chibi-pffi.so
+
+##### Gauche <a name="compiling-the-library-gauche"></a>
+
+    make -C ./snow/retropikzel/pffi gauche-pffi.so
+
+#### Installing dependencies <a name="installing-dependencies"></a>
+
+#### Chibi <a name="installing-dependencies-chibi"></a>
+
+Needs libffi-dev, on Debiaa/Ubuntu/Mint install with:
 
     apt install libffi-dev
 
@@ -188,26 +209,22 @@ Build with:
 
     make chibi
 
-#### Chicken
-<a name="usage-chicken"></a>
+#### Chicken <a name="installing-dependencies-chicken"></a>
 
 Needs [r7rs egg](https://wiki.call-cc.org/eggref/5/r7rs), install with:
 
     chicken-install r7rs
 
-#### Racket
-<a name="usage-racket"></a>
+#### Racket <a name="installing-dependencies-racket"></a>
 
 Needs [racket-r7rs](https://github.com/lexi-lambda/racket-r7rs), install with:
 
     raco pkg install --auto r7rs
 
-#### Kawa
-<a name="usage-kawa"></a>
+#### Kawa <a name="installing-dependencies-kawa"></a>
 
-Kawa Needs at least Java version 22
-
-Needs jvm flags:
+This is not exactly installing dependencies but Kawa Needs at least Java
+version 22 and jvm flags:
 
 - \--add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED
 - \--add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED

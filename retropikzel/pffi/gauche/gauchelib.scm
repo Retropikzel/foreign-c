@@ -1,7 +1,7 @@
 (in-module retropikzel.pffi.gauche)
 
 (inline-stub
- (.include "include/gauche/pffi.h")
+ (.include "gauche-pffi.h")
  (define-cproc size-of-int8 () size_of_int8)
  (define-cproc size-of-uint8 () size_of_uint8)
  (define-cproc size-of-int16 () size_of_int16)

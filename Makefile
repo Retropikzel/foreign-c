@@ -22,14 +22,7 @@ chibi:
 	make -C retropikzel/pffi chibi-pffi.so
 
 gauche:
-		gauche-package compile \
-		--verbose \
-		--srcdir=src/gauche \
-		--cc=${CC} \
-		--cflags="-I." \
-		--libs=-lffi \
-		retropikzel-pffi-gauche pffi.c gauchelib.scm
-		mv retropikzel-pffi-gauche.so retropikzel/pffi/
+	make -C retropikzel/pffi gauche-pffi.so
 
 jenkinsfile:
 	gosh -r7 -I ./snow build.scm
