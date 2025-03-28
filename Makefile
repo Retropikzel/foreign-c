@@ -19,12 +19,7 @@ docs:
 		README.md
 
 chibi:
-	chibi-ffi src/chibi/pffi.stub
-	${CC} -g3 -o retropikzel/pffi/chibi-pffi.so \
-		src/chibi/pffi.c \
-		-fPIC \
-		-lffi \
-		-shared
+	make -C retropikzel/pffi chibi-pffi.so
 
 gauche:
 		gauche-package compile \
