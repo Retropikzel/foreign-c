@@ -36,11 +36,11 @@ conforming to some specification.
         - [Compiling the library](#compiling-the-library)
             - [Chibi](#compiling-the-library-chibi)
             - [Gauche](#compiling-the-library-gauche)
-    - [Installing dependencies](#installing-dependencies)
-        - [Chibi](#installing-dependencies-chibi)
-        - [Chicken](#installing-dependencies-chicken)
-        - [Racket](#installing-dependencies-racket)
-        - [Kawa](#installing-dependencies-kawa)
+    - [Dependencies](#dependencies)
+        - [Chibi](#dependencies-chibi)
+        - [Chicken](#dependencies-chicken)
+        - [Racket](#dependencies-racket)
+        - [Kawa](#dependencies-kawa)
 - [Reference](#reference)
     - [Types](#types)
     - [Procedures and macros](#procedures-and-macros)
@@ -197,34 +197,31 @@ to ./snow/retropikzel/pffi and run command corresponding to your implementation.
 
     make -C ./snow/retropikzel/pffi gauche-pffi.so
 
-#### Installing dependencies <a name="installing-dependencies"></a>
+#### Dependencies <a name="dependencies"></a>
 
-#### Chibi <a name="installing-dependencies-chibi"></a>
+Some implementations have external dependencies beyond just the library.
 
-Needs libffi-dev, on Debiaa/Ubuntu/Mint install with:
+#### Chibi <a name="dependencies-chibi"></a>
+
+Needs libffi-dev, on Debian/Ubuntu/Mint install with:
 
     apt install libffi-dev
 
-Build with:
-
-    make chibi
-
-#### Chicken <a name="installing-dependencies-chicken"></a>
+#### Chicken <a name="dependencies-chicken"></a>
 
 Needs [r7rs egg](https://wiki.call-cc.org/eggref/5/r7rs), install with:
 
     chicken-install r7rs
 
-#### Racket <a name="installing-dependencies-racket"></a>
+#### Racket <a name="dependencies-racket"></a>
 
 Needs [racket-r7rs](https://github.com/lexi-lambda/racket-r7rs), install with:
 
     raco pkg install --auto r7rs
 
-#### Kawa <a name="installing-dependencies-kawa"></a>
+#### Kawa <a name="dependencies-kawa"></a>
 
-This is not exactly installing dependencies but Kawa Needs at least Java
-version 22 and jvm flags:
+Kawa Needs at least Java version 22 and jvm flags:
 
 - \--add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED
 - \--add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED
