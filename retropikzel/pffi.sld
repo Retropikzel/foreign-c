@@ -454,8 +454,8 @@
               pffi-pointer-free
               pffi-pointer-set!
               pffi-pointer-get
-              ;pffi-string->pointer
-              ;pffi-pointer->string
+              pffi-string->pointer
+              pffi-pointer->string
               pffi-struct-make
               pffi-struct-pointer
               pffi-struct-offset-get

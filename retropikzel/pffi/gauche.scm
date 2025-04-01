@@ -14,7 +14,7 @@
                        pffi-define))
 
 (select-module retropikzel.pffi.gauche)
-(dynamic-load "retropikzel/pffi/retropikzel-pffi-gauche")
+(dynamic-load "retropikzel/pffi/gauche-pffi")
 
 (define size-of-type
   (lambda (type)

@@ -222,5 +222,7 @@
                  (write searched-paths)
                  (newline)
                  (exit 1))
-               (pffi-shared-object-load shared-object
-                                        `((additional-versions ,additional-versions)))))))))))
+               (cond-expand
+                 (stklos shared-object)
+                 (else (pffi-shared-object-load shared-object
+                                        `((additional-versions ,additional-versions)))))))))))))
