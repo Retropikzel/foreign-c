@@ -461,7 +461,7 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
-              ;pffi-define
+              pffi-define
               ;pffi-define-callback
               ))
     (tr7
