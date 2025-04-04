@@ -104,6 +104,9 @@ changing anymore and some implementations are in **beta**.
 - Most implementations are missing callback support
 - Always pass arguments to pffi functions/macros as '(1 2 3) and not (list 1 2 3)
 - Always pass pffi-define-callback procedure as lambda in place
+- No support for variadic function arguments
+    - Can be partially worked around by defining multiple versions of same
+    function with different amount of arguments
 
 ## Roadmap
 

@@ -73,7 +73,7 @@
   (lambda ()
     (error "Not implemented")))
 
-; If youre reading this, this is just a temp hack. Dont judge me :D
+; FIXME
 (define size-of-type
   (lambda (type)
     (cond
