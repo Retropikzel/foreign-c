@@ -113,14 +113,6 @@
           ((equal? type 'void) (pointer-get-pointer pointer offset))
           ((equal? type 'pointer) (pointer-get-pointer pointer offset)))))
 
-#;(define pffi-string->pointer
-  (lambda (string-content)
-    (string->pointer string-content)))
-
-#;(define pffi-pointer->string
-  (lambda (pointer)
-    (pointer->string pointer)))
-
 (define pffi-type->libffi-type
   (lambda (type)
     (cond ((equal? type 'int8) (get-ffi-type-int8))
@@ -185,3 +177,12 @@
                         return-type
                         argument-types)))))
 
+(define make-c-callback
+  (lambda (return-type argument-types procedure)
+    (scheme-procedure-to-pointer procedure)))
+
+(define-syntax pffi-define-callback
+  (syntax-rules ()
+    ((pffi-define scheme-name return-type argument-types procedure)
+     (define scheme-name
+       (make-c-callback return-type 'argument-types procedure)))))

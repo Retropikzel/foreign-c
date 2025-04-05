@@ -96,4 +96,5 @@
  (define-cproc get-ffi-type-float () get_ffi_type_float)
  (define-cproc get-ffi-type-double () get_ffi_type_double)
  (define-cproc get-ffi-type-pointer () get_ffi_type_pointer)
- )
+
+ (define-cproc procedure-to-pointer (procedure) procedure_to_pointer))

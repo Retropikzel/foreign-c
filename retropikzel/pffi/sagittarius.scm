@@ -39,7 +39,7 @@
                         c-name
                         (map pffi-type->native-type argument-types))))))
 
-#;(define-syntax pffi-define-callback
+(define-syntax pffi-define-callback
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
      (define scheme-name
@@ -73,15 +73,15 @@
           ((eq? type 'callback) size-of-void*)
           (else #f))))
 
-(define pffi-pointer-allocate
+#;(define pffi-pointer-allocate
   (lambda (size)
     (c-malloc size)))
 
 (define pffi-pointer-address
   (lambda (pointer)
-    (pointer-address pointer)))
+    (address pointer 0)))
 
-(define pffi-pointer-null
+#;(define pffi-pointer-null
   (lambda ()
     (empty-pointer)))
 
@@ -105,7 +105,7 @@
   (lambda (path options)
     (open-shared-library path)))
 
-(define pffi-pointer-free
+#;(define pffi-pointer-free
   (lambda (pointer)
     (when (pointer? pointer)
       (c-free pointer))))

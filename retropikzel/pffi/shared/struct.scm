@@ -62,7 +62,7 @@
          (size (cdr (assoc 'size size-and-offsets)))
          (offsets (cdr (assoc 'offsets size-and-offsets)))
          (pointer (if (null? pointer) (pffi-pointer-allocate size) (car pointer)))
-         (c-typr (if (string? c-type) c-type (symbol->string c-type))))
+         (c-type (if (string? c-type) c-type (symbol->string c-type))))
     (struct-make c-type size pointer offsets))))
 
 (define (pffi-struct-offset-get struct member-name)

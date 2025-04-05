@@ -58,7 +58,7 @@
                              (map
                                (lambda (header)
                                  (string-append "#include <" header ">" (string #\newline)))
-                               (cdr headers))))))
+                               header-list)))))
 
 (define pointer? (c-lambda ((pointer void)) bool  "___return(1);"))
 (define pffi-pointer?
@@ -77,11 +77,11 @@
     (and (pffi-pointer? pointer)
          (pointer-null? pointer))))
 
-(define pffi-pointer-allocate (c-lambda (int) (pointer void) "void* p = malloc(___arg1); ___return(p);"))
+;(define pffi-pointer-allocate (c-lambda (int) (pointer void) "void* p = malloc(___arg1); ___return(p);"))
 
 (define pffi-pointer-address (c-lambda ((pointer void)) ptrdiff_t "void* p = ___arg1; ___return((intptr_t)&p);"))
 
-(define pffi-pointer-free (c-lambda ((pointer void)) void "free(___arg1);"))
+;(define pffi-pointer-free (c-lambda ((pointer void)) void "free(___arg1);"))
 
 (define pointer-set-c-int8_t! (c-lambda ((pointer void) int int8) void "*(int8_t*)((char*)___arg1 + ___arg2) = ___arg3;"))
 (define pointer-set-c-uint8_t! (c-lambda ((pointer void) int unsigned-int8) void "*(uint8_t*)((char*)___arg1 + ___arg2) = ___arg3;"))

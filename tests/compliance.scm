@@ -887,7 +887,7 @@
 ;; pffi-struct-dereference
 
 ;(print-header "pffi-struct-dereference 1")
-;(pffi-define c-color-check-by-value c-testlib 'color_check_by_value 'int '(struct))
+;(pffi-define c-color-check-by-value c-testlib 'color_check_by_value 'int '(uint32))
 #;(define struct-color (pffi-struct-make 'color '((int8 . r)
                                                 (int8 . g)
                                                 (int8 . b)
@@ -896,11 +896,11 @@
 ;(debug (pffi-struct-set! struct-color 'g 101))
 ;(debug (pffi-struct-set! struct-color 'b 102))
 ;(debug (pffi-struct-set! struct-color 'a 103))
-;(assert = (c-color-check-by-value (pffi-struct-dereference struct-color)) 0)
+;(assert = (c-color-check-by-value (pffi-pointer-address (pffi-struct-pointer struct-color))) 0)
 
 ;(print-header "pffi-struct-dereference 2")
 
-;(pffi-define c-test-check-by-value c-testlib 'test_check_by_value 'int '(struct))
+;(pffi-define c-test-check-by-value c-testlib 'test_check_by_value 'int '(int))
 #;(define struct-test3 (pffi-struct-make 'test
                                           '((int8 . a)
                                             (char . b)
@@ -944,7 +944,7 @@
 ;(debug (pffi-struct-get struct-test3 'l))
 ;(debug (pffi-struct-get struct-test3 'm))
 ;(debug (pffi-struct-get struct-test3 'n))
-;(c-test-check-by-value (pffi-struct-dereference struct-test3))
+;(c-test-check-by-value (pffi-pointer-address (pffi-struct-pointer struct-test3)))
 
 ;; pffi-define-callback
 

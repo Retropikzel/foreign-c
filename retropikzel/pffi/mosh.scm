@@ -25,7 +25,7 @@
           (else #f))))
 
 (define pffi-shared-object-load
-  (lambda (header path . options)
+  (lambda (path . options)
     (open-shared-library path)))
 
 (define pffi-pointer-null
@@ -36,7 +36,7 @@
   (lambda (pointer)
     (pointer-null? pointer)))
 
-(define pffi-pointer-allocate
+#;(define pffi-pointer-allocate
   (lambda (size)
     (malloc size)))
 
@@ -48,7 +48,7 @@
   (lambda (object)
     (pointer? object)))
 
-(define pffi-pointer-free
+#;(define pffi-pointer-free
   (lambda (pointer)
     (free pointer)))
 

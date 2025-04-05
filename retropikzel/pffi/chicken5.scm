@@ -67,14 +67,10 @@
           `(define ,scheme-name
              (foreign-safe-lambda ,return-type ,c-name ,@ argument-types)))))))
 
-#;(define-syntax pffi-define-callback
+(define-syntax pffi-define-callback
   (er-macro-transformer
     (lambda (expr rename compare)
-      (let* ((debug (begin
-                      (write (list-ref expr 4))
-                      (newline)
-                      ))
-             (pffi-type->native-type ; Chicken has this procedure in three places
+      (let* ((pffi-type->native-type ; Chicken has this procedure in three places
                (lambda (type)
                  (cond ((equal? type 'int8) 'byte)
                        ((equal? type 'uint8) 'unsigned-byte)
@@ -107,7 +103,7 @@
                           (lambda (name type)
                             `(,name ,type))
                           argument-types argument-names))
-             (procedure-body (cadr (cdr (list-ref expr 4)))))
+             (procedure-body (cdr (cdr (list-ref expr 4)))))
         `(begin (define-external ,(cons 'external_123456789 arguments)
                                  ,return-type
                                  (begin ,@ procedure-body))
@@ -137,7 +133,7 @@
           ((equal? type 'string) (foreign-value "sizeof(void*)" int))
           ((equal? type 'callback) (foreign-value "sizeof(void*)" int)))))
 
-(define pffi-pointer-allocate
+#;(define pffi-pointer-allocate
   (lambda (size)
     (allocate size)))
 
@@ -186,7 +182,7 @@
                   `(foreign-declare ,(string-append "#include <" header ">")))
                 headers))))))
 
-(define pffi-pointer-free
+#;(define pffi-pointer-free
   (lambda (pointer)
     (if (not (pointer? pointer))
       (error "pffi-pointer-free -- Argument is not pointer" pointer))

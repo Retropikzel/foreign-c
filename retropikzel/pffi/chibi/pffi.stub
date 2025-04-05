@@ -272,8 +272,9 @@
 (c-declare
   "void* scheme_procedure_to_pointer(sexp proc) {
     if(sexp_procedurep(proc) == 1) {
-      sexp debug1 = sexp_procedure_code(proc);
-      printf(\"HERE: %u\\n\", sexp_bytecode_length(debug1));
+      return 0;  //&sexp_unbox_fixnum(proc);
+    } else {
+      printf(\"NOT A FUNCTION\\n\");
     }
     return (void*)proc;
   }")

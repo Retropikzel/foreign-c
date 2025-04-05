@@ -53,7 +53,7 @@
         (ctype-sizeof native-type)
         #f))))
 
-(define pffi-pointer-allocate
+#;(define pffi-pointer-allocate
   (lambda (size)
     (malloc 'raw size)))
 
@@ -87,7 +87,7 @@
                                          (list #f))))
       (ffi-lib path))))
 
-(define pffi-pointer-free
+#;(define pffi-pointer-free
   (lambda (pointer)
     (free pointer)))
 

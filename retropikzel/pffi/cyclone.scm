@@ -93,7 +93,7 @@
           ((equal? type 'double) (c-value "sizeof(double)" int))
           ((equal? type 'pointer) (c-value "sizeof(void*)" int)))))
 
-(define-c pffi-pointer-allocate
+#;(define-c pffi-pointer-allocate
           "(void *data, int argc, closure _, object k, object size)"
           "make_c_opaque(opq, malloc(obj_obj2int(size)));
           return_closcall1(data, k, &opq);")
@@ -121,7 +121,7 @@
                 `(include-c-header ,(string-append "<" header ">")))
               (cdr (car (cdr expr))))))))
 
-(define-c pffi-pointer-free
+#;(define-c pffi-pointer-free
           "(void *data, int argc, closure _, object k, object pointer)"
           "free(opaque_ptr(pointer));
           return_closcall1(data, k, make_boolean(boolean_t));")

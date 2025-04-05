@@ -28,7 +28,7 @@
 (define c-malloc (c-function void* malloc (size_t)))
 (define c-free (c-function int free (void*)))
 
-(define pffi-pointer-allocate
+#;(define pffi-pointer-allocate
   (lambda (size)
     (c-malloc size)))
 
@@ -40,7 +40,7 @@
   (lambda (object)
     (number? object)))
 
-(define pffi-pointer-free
+#;(define pffi-pointer-free
   (lambda (pointer)
     (c-free pointer)))
 
@@ -118,31 +118,30 @@
   (lambda (headers path options)
     (load-shared-object path)))
 
-(define pffi-type->native-type
-  (lambda (type)
-    (cond ((equal? type '(quote int8)) 'int8_t)
-          ((equal? type '(quote uint8)) 'uint8_t)
-          ((equal? type '(quote int16)) 'int16_t)
-          ((equal? type '(quote uint16)) 'uint16_t)
-          ((equal? type '(quote int32)) 'int32_t)
-          ((equal? type '(quote uint32)) 'uint32_t)
-          ((equal? type '(quote int64)) 'int64_t)
-          ((equal? type '(quote uint64)) 'uint64_t)
-          ((equal? type '(quote char)) 'char)
-          ((equal? type '(quote unsigned-char)) 'char)
-          ((equal? type '(quote short)) 'short)
-          ((equal? type '(quote unsigned-short)) 'unsigned-short)
-          ((equal? type '(quote int)) 'int)
-          ((equal? type '(quote unsigned-int)) 'unsigned-int)
-          ((equal? type '(quote long)) 'long)
-          ((equal? type '(quote unsigned-long)) 'unsigned-long)
-          ((equal? type '(quote float)) 'float)
-          ((equal? type '(quote double)) 'double)
-          ((equal? type '(quote pointer)) 'void*)
-          ((equal? type '(quote string)) 'void*)
-          ((equal? type '(quote void)) 'void)
-          ((equal? type '(quote callback)) 'void*)
-          (else (error "pffi-type->native-type -- No such pffi type" type)))))
+(define-macro (pffi-type->native-type type)
+    `(cond ((equal? ,type int8) int8_t)
+          ((equal? ,type uint8) uint8_t)
+          ((equal? ,type int16) int16_t)
+          ((equal? ,type uint16) uint16_t)
+          ((equal? ,type int32) int32_t)
+          ((equal? ,type uint32) uint32_t)
+          ((equal? ,type int64) int64_t)
+          ((equal? ,type uint64) uint64_t)
+          ((equal? ,type char) char)
+          ((equal? ,type unsigned-char) char)
+          ((equal? ,type short) short)
+          ((equal? ,type unsigned-short) unsigned-short)
+          ((equal? ,type int) int)
+          ((equal? ,type unsigned-int) unsigned-int)
+          ((equal? ,type long) long)
+          ((equal? ,type unsigned-long) unsigned-long)
+          ((equal? ,type float) float)
+          ((equal? ,type double) double)
+          ((equal? ,type pointer) void*)
+          ((equal? ,type string) void*)
+          ((equal? ,type void) void)
+          ((equal? ,type callback) void*)
+          (else (error "pffi-type->native-type -- No such pffi type" ,type))))
 
 (define-macro
   (pffi-define scheme-name shared-object c-name return-type argument-types)

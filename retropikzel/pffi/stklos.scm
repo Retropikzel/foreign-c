@@ -99,7 +99,7 @@
 
       )))
 
-(define pffi-pointer-allocate
+#;(define pffi-pointer-allocate
   (lambda (size)
     (allocate-bytes size)))
 
@@ -108,13 +108,14 @@
   (lambda (pointer)
     0))
 
+;; FIXME
 (define pffi-pointer-null
   (lambda ()
     (let ((p (allocate-bytes 0)))
       (free-bytes p)
       p)))
 
-(define pffi-pointer-free
+#;(define pffi-pointer-free
   (lambda (pointer)
     (free-bytes pointer)))
 
