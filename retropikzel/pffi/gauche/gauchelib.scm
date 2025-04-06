@@ -95,6 +95,8 @@
  (define-cproc get-ffi-type-unsigned-long () get_ffi_type_unsigned_long)
  (define-cproc get-ffi-type-float () get_ffi_type_float)
  (define-cproc get-ffi-type-double () get_ffi_type_double)
+ (define-cproc get-ffi-type-void() get_ffi_type_void)
  (define-cproc get-ffi-type-pointer () get_ffi_type_pointer)
 
- (define-cproc procedure-to-pointer (procedure) procedure_to_pointer))
+ ;(define-cproc procedure-to-pointer (procedure) procedure_to_pointer)
+ )

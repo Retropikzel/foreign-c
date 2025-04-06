@@ -9,9 +9,13 @@
                              "c"
                              '((additional-versions ("0" "6"))))))
 
-(pffi-define pffi-pointer-allocate pffi-libc-stdlib 'malloc 'pointer '(int))
+(cond-expand
+  (chibi #t) ; FIXME
+  (else (pffi-define pffi-pointer-allocate pffi-libc-stdlib 'malloc 'pointer '(int))))
 ;(pffi-define pffi-pointer-allocate-aligned pffi-libc-stdlib 'aligned_alloc 'pointer '(int int))
-(pffi-define pffi-pointer-free pffi-libc-stdlib 'free 'void '(pointer))
+(cond-expand
+  (chibi #t) ; FIXME
+  (else (pffi-define pffi-pointer-free pffi-libc-stdlib 'free 'void '(pointer))))
 
 #;(define pffi-pointer-null
   (lambda ()

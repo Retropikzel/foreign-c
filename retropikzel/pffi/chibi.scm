@@ -46,7 +46,7 @@
     (or (equal? object #f) ; False can be null pointer
     (pointer? object))))
 
-#;(define pffi-pointer-allocate
+(define pffi-pointer-allocate
   (lambda (size)
     (pointer-allocate size)))
 
@@ -54,7 +54,7 @@
   (lambda (pointer)
     (pointer-address pointer)))
 
-#;(define pffi-pointer-free
+(define pffi-pointer-free
   (lambda (pointer)
     (pointer-free pointer)))
 

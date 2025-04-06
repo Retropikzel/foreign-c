@@ -134,7 +134,7 @@
           ((equal? type 'unsigned-long) (get-ffi-type-ulong))
           ((equal? type 'float) (get-ffi-type-float))
           ((equal? type 'double) (get-ffi-type-double))
-          ((equal? type 'void) (get-ffi-type-pointer))
+          ((equal? type 'void) (get-ffi-type-void))
           ((equal? type 'pointer) (get-ffi-type-pointer))
           ((equal? type 'callback) (get-ffi-type-pointer)))))
 
