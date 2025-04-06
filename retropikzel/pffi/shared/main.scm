@@ -1,5 +1,6 @@
 (cond-expand
-  ((or chicken-5 chicken-6)
+  (mosh (define pffi-init (lambda () #t)))
+  (chicken
    (define-syntax pffi-init
      (er-macro-transformer
        (lambda (expr rename compare)
@@ -7,6 +8,12 @@
                   (chicken memory))
          #t))))
   (gambit #t)
+  (ypsilon
+    (define-syntax pffi-init
+      (syntax-rules ()
+        ((_)
+         (import (ypsilon ffi)
+                 (ypsilon c-types))))))
   (else (define pffi-init (lambda () #t))))
 
 (define pffi-type?
@@ -18,7 +25,6 @@
 (define pffi-size-of
   (lambda (object)
     (cond ((pffi-struct? object) (pffi-struct-size object))
-          ;((pffi-union? object) (pffi-union-size object))
           ((pffi-type? object) (size-of-type object))
           (else (error "Not pffi-struct, pffi-enum of pffi-type" object)))))
 

@@ -125,7 +125,10 @@
               (scheme char)
               (scheme file)
               (scheme process-context)
-              (stklos)))
+              (stklos))
+      (export make-external-function
+              calculate-struct-size-and-offsets
+              struct-make))
     (tr7
       (import (scheme base)
               (scheme write)
@@ -157,11 +160,17 @@
               pffi-pointer-get
               pffi-string->pointer
               pffi-pointer->string
-              pffi-struct-make
+              pffi-define-struct
               pffi-struct-pointer
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-struct-dereference
+              pffi-array?
+              pffi-array-allocate
+              pffi-pointer->array
+              pffi-array-get
+              pffi-array-set!
               pffi-list->array
               pffi-array->list
               pffi-define

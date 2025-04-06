@@ -22,8 +22,7 @@
           ((equal? type 'string) 'void*)
           ((equal? type 'void) 'void)
           ((equal? type 'callback) 'callback)
-          ((equal? type 'struct) 'void*)
-          ((list? type) (map pffi-type->native-type type))
+          ((and (pair? type) (equal? 'struct (car type))) 'void*)
           (else #f))))
 
 (define pffi-pointer?

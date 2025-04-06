@@ -160,11 +160,11 @@ EXPORT int color_check(struct color* color) {
     printf("C: Value of r is %c\n", color->r);
     assert(color->r == 100);
     printf("C: Value of g is %c\n", color->g);
-    assert(color->g == 100);
+    assert(color->g == 101);
     printf("C: Value of b is %c\n", color->b);
-    assert(color->b == 100);
+    assert(color->b == 102);
     printf("C: Value of a is %c\n", color->a);
-    assert(color->a == 100);
+    assert(color->a == 103);
     return 0;
 }
 
@@ -223,33 +223,33 @@ EXPORT int test_check(struct test* test) {
 EXPORT int test_check_by_value(struct test test) {
     print_offsets();
     printf("C: Value of a is %i\n", test.a);
-    //assert(test.a == 1);
+    assert(test.a == 1);
     printf("C: Value of b is %c\n", test.b);
-    //assert(test.b == 'b');
+    assert(test.b == 'b');
     printf("C: Value of c is %lf\n", test.c);
-    //assert(test.c == 3.0);
+    assert(test.c == 3.0);
     printf("C: Value of d is %c\n", test.d);
-    //assert(test.d == 'd');
+    assert(test.d == 'd');
     printf("C: Value of e is %s\n", test.e);
-    //assert(test.e == NULL);
+    assert(test.e == NULL);
     printf("C: Value of f is %f\n", test.f);
-    //assert(test.f == 6.0);
+    assert(test.f == 6.0);
     printf("C: Value of g is %f\n", test.g);
-    //assert(strcmp(test.g, "foo") == 0);
+    assert(strcmp(test.g, "foo") == 0);
     printf("C: Value of h is %i\n", test.h);
-    //assert(test.h == 8);
+    assert(test.h == 8);
     printf("C: Value of i is %s\n", test.i);
-    //assert(test.i == NULL);
+    assert(test.i == NULL);
     printf("C: Value of j is %i\n", test.j);
-    //assert(test.j == 10);
+    assert(test.j == 10);
     printf("C: Value of k is %i\n", test.k);
-    //assert(test.k == 11);
+    assert(test.k == 11);
     printf("C: Value of l is %i\n", test.l);
-    //assert(test.l == 12);
+    assert(test.l == 12);
     printf("C: Value of m is %i\n", test.m);
-    //assert(test.m == 13);
+    assert(test.m == 13);
     printf("C: Value of n is %i\n", test.n);
-    //assert(test.n == 14);
+    assert(test.n == 14);
 }
 
 EXPORT struct test* test_new() {

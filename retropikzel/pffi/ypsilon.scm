@@ -25,8 +25,8 @@
           ((eq? type 'void) 0)
           (else #f))))
 
-(define c-malloc (c-function void* malloc (size_t)))
-(define c-free (c-function int free (void*)))
+;(define c-malloc (c-function void* malloc (size_t)))
+;(define c-free (c-function int free (void*)))
 
 #;(define pffi-pointer-allocate
   (lambda (size)

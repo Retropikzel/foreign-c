@@ -156,6 +156,6 @@
                         (map pffi-type->native-type argument-types)
                         procedure)))))
 
-(define pffi-struct-dereference
+#;(define pffi-struct-dereference
   (lambda (struct)
     (pffi-struct-pointer struct)))

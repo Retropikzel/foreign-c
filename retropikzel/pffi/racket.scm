@@ -115,6 +115,6 @@
         (integer->char r)
         r))))
 
-(define pffi-struct-dereference
+#;(define pffi-struct-dereference
   (lambda (struct)
     (pffi-struct-pointer struct)))

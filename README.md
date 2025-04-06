@@ -35,7 +35,9 @@ conforming to some specification.
             - [Chibi](#compiling-the-library-chibi)
             - [Gauche](#compiling-the-library-gauche)
     - [Dependencies](#dependencies)
+        - [Chibi](#dependencies-chibi)
         - [Chicken](#dependencies-chicken)
+        - [Gauche](#dependencies-gauche)
         - [Racket](#dependencies-racket)
         - [Kawa](#dependencies-kawa)
 - [Reference](#reference)
@@ -202,18 +204,30 @@ to ./snow/retropikzel/pffi and run command corresponding to your implementation.
 
 #### Dependencies <a name="dependencies"></a>
 
-The library depends on (libffi)[https://sourceware.org/libffi/) and
-some implementations have extra dependencies/requiremetns beyond that.
+Some implementations have extra dependencies/requirements beyond just the
+library.
+
+#### Chibi <a name="dependencies-chibi"></a>
+
+Building depends on libffi.
 
 Debian/Ubuntu/Mint install with:
 
-    apt install libffi8 libffi-dev
+    apt install libffi-dev
 
 #### Chicken <a name="dependencies-chicken"></a>
 
 Needs [r7rs egg](https://wiki.call-cc.org/eggref/5/r7rs), install with:
 
     chicken-install r7rs
+
+#### Gauche <a name="dependencies-gauche"></a>
+
+Building depends on libffi.
+
+Debian/Ubuntu/Mint install with:
+
+    apt install libffi-dev
 
 #### Racket <a name="dependencies-racket"></a>
 
