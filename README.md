@@ -26,11 +26,9 @@ conforming to some specification.
 - [Status](#status)
     - [Current caveats](#current-caveats)
 - [Roadmap](#roadmap)
-- [Implementation table](#implementation-table)
-    - [Beta](#beta)
-    - [Alpha](#alpha)
-    - [Not started](#not-started)
-    - [Other](#other)
+- [Feature implementation table](#feature-implementation-table)
+    - [Primitives](#feature-implementation-table-primitives)
+    - [Built upon](#feature-implementation-table-built-upon)
 - [Documentation](#documentation)
     - [Installation](#installation)
         - [Compiling the library](#compiling-the-library)
@@ -93,10 +91,6 @@ conforming to some specification.
 Currently the interface of the library is in okay shape. It propably will not change much but no
 guarantees are being made just yet.
 
-Due to supporting many different Scheme implementations, different parts of this software are in
-different stage. As a whole it is still in **alpha** stage. That said the interface should not be
-changing anymore and some implementations are in **beta**.
-
 ### Current caveats
 <a name="current-caveats"></a>
 
@@ -112,41 +106,46 @@ changing anymore and some implementations are in **beta**.
 
 For roadmap to 1.0.0 see [issues](https://todo.sr.ht/~retropikzel/r7rs-pffi?search=status%3Aopen%20label%3A%221.0.0%22)
 
-## Implementation table
-<a name="implementation-table"></a>
+## Feature mplementation table
+<a name="feature-implementation-table"></a>
 
-### Released
-<a name="released"></a>
+## Primitives
+<a name="feature-implementation-table-primitives"></a>
 
+|              | pffi-init | pffi-size-of | pffi-define-library | pffi-pointer-null | pffi-pointer-null? | pffi-pointer-address | pffi-pointer? | pffi-pointer-set! | pffi-pointer-get | pffi-define | pffi-define-callback |
+|--------------|:---------:|:------------:|:-------------------:|:-----------------:|:------------------:|:--------------------:|:-------------:|:-----------------:|:----------------:|:-----------:|:--------------------:|
+| Chibi        | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           |                      |
+| Chicken-5    | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           | X                    |
+| Cyclone      | X         | X            | X                   | X                 | X                  |                      | X             | X                 | X                | X           |                      |
+| Gambit       | X         | X            |                     |                   |                    | X                    |               |                   |                  |             |                      |
+| Gauche       | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           |                      |
+| Gerbil       | X         |              |                     |                   |                    |                      |               |                   |                  |             |                      |
+| Guile        | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           | X                    |
+| Kawa         | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           | X                    |
+| Larceny      | X         |              |                     |                   |                    |                      |               |                   |                  |             |                      |
+| Mosh         | X         | X            | X                   | X                 | X                  |                      | X             | X                 | X                | X           | X                    |
+| Racket       | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           | X                    |
+| Saggittarius | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           | X                    |
+| Skint        | X         |              |                     |                   |                    |                      |               |                   |                  |             |                      |
+| Stklos       | X         | X            | X                   | X                 | X                  |                      | X             |                   |                  |             |                      |
+| tr7          |           |              |                     |                   |                    |                      |               |                   |                  |             |                      |
+| Ypsilon      | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           | X                    |
 
-### Beta
-<a name="beta"></a>
+## Built upon
+<a name="feature-implementation-table-built-upon"></a>
 
-|              | pffi-init | pffi-size-of | pffi-define-library | pffi-pointer-null | pffi-pointer-null? | pffi-pointer-allocate | pffi-pointer-address | pffi-pointer? | pffi-pointer-free | pffi-pointer-set! | pffi-pointer-get | pffi-string->pointer | pffi-pointer->string | pffi-struct-make | pffi-struct-pointer | pffi-struct-offset-get | pffi-struct-get | pffi-struct-set! | pffi-define | pffi-define-callback |
-|--------------|:---------:|:------------:|:-------------------:|:-----------------:|:------------------:|:---------------------:|:--------------------:|:-------------:|:-----------------:|:-----------------:|:----------------:|:--------------------:|:--------------------:|:----------------:|:-------------------:|:----------------------:|:---------------:|:----------------:|:-----------:|:--------------------:|
-| Chibi        | X         | X            | X                   | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           |                      |
-| Chicken-5    | X         | X            | X                   | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
-| Gauche       | X         | X            | X                   | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           |                      |
-| Guile        | X         | X            | X                   | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
-| Kawa         | X         | X            | X                   | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
-| Racket       | X         | X            | X                   | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
-| Saggittarius | X         | X            | X                   | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
+These features are built upon the primitives and if primitives are implemented
+and work, they should work too.
 
-
-### Alpha
-<a name="alpha"></a>
-
-|              | pffi-init | pffi-size-of | pffi-define-library | pffi-pointer-null | pffi-pointer-null? | pffi-pointer-allocate | pffi-pointer-address | pffi-pointer? | pffi-pointer-free | pffi-pointer-set! | pffi-pointer-get | pffi-string->pointer | pffi-pointer->string | pffi-struct-make | pffi-struct-pointer | pffi-struct-offset-get | pffi-struct-get | pffi-struct-set! | pffi-define | pffi-define-callback |
-|--------------|:---------:|:------------:|:-------------------:|:-----------------:|:------------------:|:---------------------:|:--------------------:|:-------------:|:-----------------:|:-----------------:|:----------------:|:--------------------:|:--------------------:|:----------------:|:-------------------:|:----------------------:|:---------------:|:----------------:|:-----------:|:--------------------:|
-| Cyclone      | X         | X            | X                   | X                 | X                  | X                     |                      | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           |                      |
-| Gambit       | X         | X            |                     |                   |                    |                       | X                    |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
-| Gerbil       | X         |              |                     |                   |                    |                       |                      |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
-| Larceny      | X         |              |                     |                   |                    |                       |                      |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
-| Mosh         | X         | X            | X                   | X                 | X                  | X                     |                      | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
-| Skint        | X         |              |                     |                   |                    |                       |                      |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
-| Stklos       | X         | X            | X                   | X                 | X                  | X                     |                      | X             | X                 |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
-| tr7          |           |              |                     |                   |                    |                       |                      |               |                   |                   |                  |                      |                      | X                | X                   | X                      | X               | X                |             |                      |
-| Ypsilon      | X         | X            | X                   | X                 | X                  | X                     | X                    | X             | X                 | X                 | X                | X                    | X                    | X                | X                   | X                      | X               | X                | X           | X                    |
+- pffi-pointer-allocate
+- pffi-pointer-free
+- pffi-pointer-\>string
+- pffi-string-\>pointer
+- pffi-struct-make
+- pffi-struct-pointer
+- pffi-struct-offset-get
+- pffi-struct-get
+- pffi-struct-set!
 
 ###  Not started
 <a name="not-started"></a>

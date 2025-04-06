@@ -29,6 +29,8 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-list->array
+              pffi-array->list
               pffi-define
               pffi-define-callback
               ;scheme-procedure-to-pointer
@@ -65,6 +67,8 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-list->array
+              pffi-array->list
               pffi-define
               pffi-define-callback))
     (chicken6
@@ -97,6 +101,8 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-list->array
+              pffi-array->list
               pffi-define
               pffi-define-callback))
     (cyclone
@@ -126,6 +132,8 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-list->array
+              pffi-array->list
               pffi-define
               ;pffi-define-callback
               ))
@@ -156,6 +164,8 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-list->array
+              pffi-array->list
               pffi-define
               ;pffi-define-callback
               ))
@@ -187,6 +197,8 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-list->array
+              pffi-array->list
               pffi-define
               ;pffi-define-callback
               ))
@@ -215,6 +227,8 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-list->array
+              pffi-array->list
               ;pffi-define
               ;pffi-define-callback
               ))
@@ -247,6 +261,8 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-list->array
+              pffi-array->list
               pffi-define
               pffi-define-callback))
     (kawa
@@ -275,6 +291,8 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-list->array
+              pffi-array->list
               pffi-define
               pffi-define-callback
               ))
@@ -309,6 +327,8 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-list->array
+              pffi-array->list
               ;pffi-define
               ;pffi-define-callback
               ))
@@ -339,6 +359,8 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-list->array
+              pffi-array->list
               pffi-define
               pffi-define-callback))
     (racket
@@ -372,6 +394,8 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-list->array
+              pffi-array->list
               pffi-define
               pffi-define-callback))
     (sagittarius
@@ -402,6 +426,8 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-list->array
+              pffi-array->list
               pffi-define
               pffi-define-callback))
     (skint
@@ -429,6 +455,8 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-list->array
+              pffi-array->list
               ;pffi-define
               ;pffi-define-callback
               ))
@@ -459,6 +487,8 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-list->array
+              pffi-array->list
               pffi-define
               ;pffi-define-callback
               ))
@@ -488,6 +518,8 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-list->array
+              pffi-array->list
               ;pffi-define
               ;pffi-define-callback
               ))
@@ -520,6 +552,8 @@
               pffi-struct-offset-get
               pffi-struct-get
               pffi-struct-set!
+              pffi-list->array
+              pffi-array->list
               pffi-define
               pffi-define-callback))
     (else (error "Unsupported implementation")))
@@ -544,5 +578,6 @@
   ;(include "pffi/shared/union.scm")
   (include "pffi/shared/main.scm")
   (include "pffi/shared/pointer.scm")
+  (include "pffi/shared/array.scm")
   (include "pffi/shared/struct.scm")
   )

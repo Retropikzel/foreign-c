@@ -22,7 +22,8 @@
           ((equal? type 'string) 'void*)
           ((equal? type 'void) 'void)
           ((equal? type 'callback) 'callback)
-          ((equal? type 'struct) 'char*)
+          ((equal? type 'struct) 'void*)
+          ((list? type) (map pffi-type->native-type type))
           (else #f))))
 
 (define pffi-pointer?
@@ -81,7 +82,7 @@
   (lambda (pointer)
     (address pointer 0)))
 
-#;(define pffi-pointer-null
+(define pffi-pointer-null
   (lambda ()
     (empty-pointer)))
 
