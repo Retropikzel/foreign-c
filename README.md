@@ -35,7 +35,6 @@ conforming to some specification.
             - [Chibi](#compiling-the-library-chibi)
             - [Gauche](#compiling-the-library-gauche)
     - [Dependencies](#dependencies)
-        - [Chibi](#dependencies-chibi)
         - [Chicken](#dependencies-chicken)
         - [Racket](#dependencies-racket)
         - [Kawa](#dependencies-kawa)
@@ -203,13 +202,12 @@ to ./snow/retropikzel/pffi and run command corresponding to your implementation.
 
 #### Dependencies <a name="dependencies"></a>
 
-Some implementations have external dependencies beyond just the library.
+The library depends on (libffi)[https://sourceware.org/libffi/) and
+some implementations have extra dependencies/requiremetns beyond that.
 
-#### Chibi <a name="dependencies-chibi"></a>
+Debian/Ubuntu/Mint install with:
 
-Needs libffi-dev, on Debian/Ubuntu/Mint install with:
-
-    apt install libffi-dev
+    apt install libffi8 libffi-dev
 
 #### Chicken <a name="dependencies-chicken"></a>
 

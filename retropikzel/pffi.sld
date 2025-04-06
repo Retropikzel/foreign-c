@@ -188,5 +188,4 @@
   (include "pffi/shared/main.scm")
   (include "pffi/shared/pointer.scm")
   (include "pffi/shared/array.scm")
-  (include "pffi/shared/struct.scm")
-  )
+  (include "pffi/shared/struct.scm"))
