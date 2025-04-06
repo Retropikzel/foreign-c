@@ -61,6 +61,8 @@ conforming to some specification.
         - [pffi-struct-offset-get](#pffi-struct-offset-get)
         - [pffi-struct-get](#pffi-struct-get)
         - [pffi-struct-set!](#pffi-struct-set!)
+        - [pffi-list->array](#pffi-list-to-array)
+        - [pffi-array->list](#pffi-array-to-list)
         - [pffi-define](#pffi-define)
         - [pffi-define-callback](#pffi-define-callback)
 
@@ -439,6 +441,14 @@ Returns the value of the givens struct member.
 
 Sets the value of the givens struct member. It is up to you to make sure that the type of value is
 correct.
+
+**pffi-list->array** type list
+
+Converts given list into C array of given type.
+
+**pffi-array->list** type list size
+
+Converts given C array into list of given type and length.
 
 #### pffi-define <a name="pffi-define"></a>
 
