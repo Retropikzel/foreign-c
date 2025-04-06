@@ -902,8 +902,6 @@
 (define check-list1 (list 4 5 6))
 (assert equal? (pffi-array->list 'int test-array1 3) check-list1)
 
-
-
 ;; pffi-struct-dereference
 
 ;(print-header "pffi-struct-dereference 1")

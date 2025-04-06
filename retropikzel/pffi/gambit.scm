@@ -58,7 +58,7 @@
                              (map
                                (lambda (header)
                                  (string-append "#include <" header ">" (string #\newline)))
-                               header-list)))))
+                               (cdr headers))))))
 
 (define pointer? (c-lambda ((pointer void)) bool  "___return(1);"))
 (define pffi-pointer?

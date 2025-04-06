@@ -446,7 +446,7 @@ correct.
 
 Converts given list into C array of given type.
 
-**pffi-array->list** type list size
+**pffi-array->list** type list length
 
 Converts given C array into list of given type and length.
 

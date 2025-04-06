@@ -9,32 +9,6 @@
               (scheme process-context)
               (chibi ast)
               (chibi))
-      (export pffi-init
-              pffi-size-of
-              pffi-type?
-              pffi-align-of
-              pffi-define-library
-              pffi-pointer-null
-              pffi-pointer-null?
-              pffi-pointer-allocate
-              pffi-pointer-address
-              pffi-pointer?
-              pffi-pointer-free
-              pffi-pointer-set!
-              pffi-pointer-get
-              pffi-string->pointer
-              pffi-pointer->string
-              pffi-struct-make
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
-              pffi-list->array
-              pffi-array->list
-              pffi-define
-              pffi-define-callback
-              ;scheme-procedure-to-pointer
-              )
       (include-shared "pffi/chibi-pffi"))
     (chicken-5
       (import (scheme base)
@@ -46,31 +20,7 @@
               (chicken locative)
               (chicken syntax)
               (chicken memory)
-              (chicken random))
-      (export pffi-init
-              pffi-size-of
-              pffi-type?
-              pffi-align-of
-              pffi-define-library
-              pffi-pointer-null
-              pffi-pointer-null?
-              pffi-pointer-allocate
-              pffi-pointer-address
-              pffi-pointer?
-              pffi-pointer-free
-              pffi-pointer-set!
-              pffi-pointer-get
-              pffi-string->pointer
-              pffi-pointer->string
-              pffi-struct-make
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
-              pffi-list->array
-              pffi-array->list
-              pffi-define
-              pffi-define-callback))
+              (chicken random)))
     (chicken6
       (import (scheme base)
               (scheme write)
@@ -81,30 +31,7 @@
               (chicken locative)
               (chicken syntax)
               (chicken memory)
-              (chicken random))
-      (export pffi-init
-              pffi-size-of
-              pffi-type?
-              pffi-align-of
-              pffi-define-library
-              pffi-pointer-null
-              pffi-pointer-null?
-              pffi-pointer-allocate
-              pffi-pointer?
-              pffi-pointer-free
-              pffi-pointer-set!
-              pffi-pointer-get
-              pffi-string->pointer
-              pffi-pointer->string
-              pffi-struct-make
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
-              pffi-list->array
-              pffi-array->list
-              pffi-define
-              pffi-define-callback))
+              (chicken random)))
     (cyclone
       (import (scheme base)
               (scheme write)
@@ -112,63 +39,14 @@
               (scheme file)
               (scheme process-context)
               (cyclone foreign)
-              (scheme cyclone primitives))
-      (export pffi-init
-              pffi-size-of
-              pffi-type?
-              pffi-align-of
-              pffi-define-library
-              pffi-pointer-null
-              pffi-pointer-null?
-              pffi-pointer-allocate
-              pffi-pointer?
-              pffi-pointer-free
-              pffi-pointer-set!
-              pffi-pointer-get
-              pffi-string->pointer
-              pffi-pointer->string
-              pffi-struct-make
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
-              pffi-list->array
-              pffi-array->list
-              pffi-define
-              ;pffi-define-callback
-              ))
+              (scheme cyclone primitives)))
     (gambit
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
               (scheme process-context)
-              (only (gambit) c-declare c-lambda c-define define-macro))
-      (export pffi-init
-              pffi-size-of
-              pffi-type?
-              pffi-align-of
-              pffi-define-library
-              pffi-pointer-null
-              pffi-pointer-null?
-              pffi-pointer-allocate
-              pffi-pointer-address
-              pffi-pointer?
-              pffi-pointer-free
-              pffi-pointer-set!
-              pffi-pointer-get
-              pffi-string->pointer
-              pffi-pointer->string
-              pffi-struct-make
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
-              pffi-list->array
-              pffi-array->list
-              pffi-define
-              ;pffi-define-callback
-              ))
+              (only (gambit) c-declare c-lambda c-define define-macro)))
     (gauche
       (import (scheme base)
               (scheme write)
@@ -176,62 +54,13 @@
               (scheme file)
               (scheme process-context)
               (gauche base)
-              (retropikzel pffi gauche))
-      (export pffi-init
-              pffi-size-of
-              pffi-type?
-              pffi-align-of
-              pffi-define-library
-              pffi-pointer-null
-              pffi-pointer-null?
-              pffi-pointer-allocate
-              pffi-pointer-address
-              pffi-pointer?
-              pffi-pointer-free
-              pffi-pointer-set!
-              pffi-pointer-get
-              pffi-string->pointer
-              pffi-pointer->string
-              pffi-struct-make
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
-              pffi-list->array
-              pffi-array->list
-              pffi-define
-              ;pffi-define-callback
-              ))
+              (retropikzel pffi gauche)))
     (gerbil
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context))
-      (export pffi-init
-              ;pffi-size-of
-              pffi-type?
-              ;pffi-align-of
-              ;pffi-define-library
-              ;pffi-pointer-null
-              ;pffi-pointer-null?
-              ;pffi-pointer-allocate
-              ;pffi-pointer?
-              ;pffi-pointer-free
-              ;pffi-pointer-set!
-              ;pffi-pointer-get
-              ;pffi-string->pointer
-              ;pffi-pointer->string
-              pffi-struct-make
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
-              pffi-list->array
-              pffi-array->list
-              ;pffi-define
-              ;pffi-define-callback
-              ))
+              (scheme process-context)))
     (guile
       (import (scheme base)
               (scheme write)
@@ -240,62 +69,13 @@
               (scheme process-context)
               (rnrs bytevectors)
               (system foreign)
-              (system foreign-library))
-      (export pffi-init
-              pffi-size-of
-              pffi-type?
-              pffi-align-of
-              pffi-define-library
-              pffi-pointer-null
-              pffi-pointer-null?
-              pffi-pointer-allocate
-              pffi-pointer-address
-              pffi-pointer?
-              pffi-pointer-free
-              pffi-pointer-set!
-              pffi-pointer-get
-              pffi-string->pointer
-              pffi-pointer->string
-              pffi-struct-make
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
-              pffi-list->array
-              pffi-array->list
-              pffi-define
-              pffi-define-callback))
+              (system foreign-library)))
     (kawa
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context))
-      (export pffi-init
-              pffi-size-of
-              pffi-type?
-              pffi-align-of
-              pffi-define-library
-              pffi-pointer-null
-              pffi-pointer-null?
-              pffi-pointer-allocate
-              pffi-pointer-address
-              pffi-pointer?
-              pffi-pointer-free
-              pffi-pointer-set!
-              pffi-pointer-get
-              pffi-string->pointer
-              pffi-pointer->string
-              pffi-struct-make
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
-              pffi-list->array
-              pffi-array->list
-              pffi-define
-              pffi-define-callback
-              ))
+              (scheme process-context)))
     (larceny
       (import (scheme base)
               (scheme write)
@@ -306,63 +86,14 @@
               (primitives std-ffi)
               (primitives foreign-procedure)
               (primitives foreign-file)
-              (primitives foreign-stdlib)
-              )
-      (export pffi-init
-              ;pffi-size-of
-              pffi-type?
-              ;pffi-align-of
-              ;pffi-define-library
-              ;pffi-pointer-null
-              ;pffi-pointer-null?
-              ;pffi-pointer-allocate
-              ;pffi-pointer?
-              ;pffi-pointer-free
-              ;pffi-pointer-set!
-              ;pffi-pointer-get
-              ;pffi-string->pointer
-              ;pffi-pointer->string
-              pffi-struct-make
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
-              pffi-list->array
-              pffi-array->list
-              ;pffi-define
-              ;pffi-define-callback
-              ))
+              (primitives foreign-stdlib)))
     (mosh
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
               (scheme process-context)
-              (mosh ffi))
-      (export pffi-init
-              pffi-size-of
-              pffi-type?
-              pffi-align-of
-              pffi-define-library
-              pffi-pointer-null
-              pffi-pointer-null?
-              pffi-pointer-allocate
-              pffi-pointer-address
-              pffi-pointer?
-              pffi-pointer-free
-              pffi-pointer-set!
-              pffi-pointer-get
-              pffi-string->pointer
-              pffi-pointer->string
-              pffi-struct-make
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
-              pffi-list->array
-              pffi-array->list
-              pffi-define
-              pffi-define-callback))
+              (mosh ffi)))
     (racket
       (import (scheme base)
               (scheme write)
@@ -373,31 +104,7 @@
               (ffi winapi)
               (compatibility mlist)
               (ffi unsafe)
-              (ffi vector))
-      (export pffi-init
-              pffi-size-of
-              pffi-type?
-              pffi-align-of
-              pffi-define-library
-              pffi-pointer-null
-              pffi-pointer-null?
-              pffi-pointer-allocate
-              pffi-pointer-address
-              pffi-pointer?
-              pffi-pointer-free
-              pffi-pointer-set!
-              pffi-pointer-get
-              pffi-string->pointer
-              pffi-pointer->string
-              pffi-struct-make
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
-              pffi-list->array
-              pffi-array->list
-              pffi-define
-              pffi-define-callback))
+              (ffi vector)))
     (sagittarius
       (import (scheme base)
               (scheme write)
@@ -405,124 +112,26 @@
               (scheme file)
               (scheme process-context)
               (sagittarius ffi)
-              (sagittarius))
-      (export pffi-init
-              pffi-size-of
-              pffi-type?
-              pffi-align-of
-              pffi-define-library
-              pffi-pointer-null
-              pffi-pointer-null?
-              pffi-pointer-allocate
-              pffi-pointer-address
-              pffi-pointer?
-              pffi-pointer-free
-              pffi-pointer-set!
-              pffi-pointer-get
-              pffi-string->pointer
-              pffi-pointer->string
-              pffi-struct-make
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
-              pffi-list->array
-              pffi-array->list
-              pffi-define
-              pffi-define-callback))
+              (sagittarius)))
     (skint
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context))
-      (export pffi-init
-              ;pffi-size-of
-              pffi-type?
-              ;pffi-align-of
-              ;pffi-define-library
-              ;pffi-pointer-null
-              ;pffi-pointer-null?
-              ;pffi-pointer-allocate
-              ;pffi-pointer?
-              ;pffi-pointer-free
-              ;pffi-pointer-set!
-              ;pffi-pointer-get
-              ;pffi-string->pointer
-              ;pffi-pointer->string
-              pffi-struct-make
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
-              pffi-list->array
-              pffi-array->list
-              ;pffi-define
-              ;pffi-define-callback
-              ))
+              (scheme process-context)))
     (stklos
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
               (scheme process-context)
-              (stklos))
-      (export pffi-init
-              pffi-size-of
-              pffi-type?
-              pffi-align-of
-              pffi-define-library
-              pffi-pointer-null
-              pffi-pointer-null?
-              pffi-pointer-allocate
-              pffi-pointer-address
-              pffi-pointer?
-              pffi-pointer-free
-              pffi-pointer-set!
-              pffi-pointer-get
-              pffi-string->pointer
-              pffi-pointer->string
-              pffi-struct-make
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
-              pffi-list->array
-              pffi-array->list
-              pffi-define
-              ;pffi-define-callback
-              ))
+              (stklos)))
     (tr7
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context))
-      (export pffi-init
-              ;pffi-size-of
-              pffi-type?
-              ;pffi-align-of
-              ;pffi-define-library
-              ;pffi-shared-object-load
-              ;pffi-pointer-null
-              ;pffi-pointer-null?
-              ;pffi-pointer-allocate
-              ;pffi-pointer?
-              ;pffi-pointer-free
-              ;pffi-pointer-set!
-              ;pffi-pointer-get
-              ;pffi-string->pointer
-              ;pffi-pointer->string
-              pffi-struct-make
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
-              pffi-list->array
-              pffi-array->list
-              ;pffi-define
-              ;pffi-define-callback
-              ))
+              (scheme process-context)))
     (ypsilon
       (import (scheme base)
               (scheme write)
@@ -531,8 +140,9 @@
               (scheme process-context)
               (ypsilon c-ffi)
               (ypsilon c-types)
-              (only (core) define-macro syntax-case))
-      (export pffi-init
+              (only (core) define-macro syntax-case)))
+    (else (error "Unsupported implementation")))
+  (export pffi-init
               pffi-size-of
               pffi-type?
               pffi-align-of
@@ -555,8 +165,7 @@
               pffi-list->array
               pffi-array->list
               pffi-define
-              pffi-define-callback))
-    (else (error "Unsupported implementation")))
+              pffi-define-callback)
   (cond-expand
     (chibi (include "pffi/chibi.scm"))
     (chicken-5 (include "pffi/chicken5.scm"))

@@ -24,6 +24,8 @@
           ((eq? type 'float) 4)
           ((eq? type 'double) 8)
           ((eq? type 'pointer) 4)
+          ((eq? type 'void) 0)
+          ((eq? type 'callback) 4)
           (else (error "Can not get size of unknown type" type)))))
 
 (define c-malloc (foreign-procedure "malloc" '(int) 'void*))
