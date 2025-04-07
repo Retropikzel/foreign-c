@@ -51,7 +51,7 @@ conforming to some specification.
         - [pffi-pointer-null?](#pffi-pointer-is-null)
         - [pffi-pointer-allocate](#pffi-pointer-allocate)
         - [pffi-pointer-address](#pffi-pointer-address)
-        - [pffi-pointer?](#pffi-pointer?)
+        - [pffi-pointer?](#pffi-is-pointer)
         - [pffi-pointer-free](#pffi-pointer-free)
         - [pffi-pointer-set!](#pffi-pointer-set!)
         - [pffi-pointer-get](#pffi-pointer-get)
@@ -431,7 +431,7 @@ Returns the address of given pointer as number.
 
 #### pffi-pointer?
 
-<a name="pffi-pointer?"></a>
+<a name="pffi-is-pointer"></a>
 
 **pffi-pointer?** object -> boolean
 
