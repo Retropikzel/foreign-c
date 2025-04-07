@@ -48,10 +48,10 @@ conforming to some specification.
         - [pffi-align-of](#pffi-align-of)
         - [pffi-define-library](#pffi-define-library)
         - [pffi-pointer-null](#pffi-pointer-null)
-        - [pffi-pointer-null?](#pffi-pointer-is-null)
+        - [pffi-pointer-null?](#pffi-pointer-null)
         - [pffi-pointer-allocate](#pffi-pointer-allocate)
         - [pffi-pointer-address](#pffi-pointer-address)
-        - [pffi-pointer?](#pffi-is-pointer)
+        - [pffi-pointer?](#pffi-pointer)
         - [pffi-pointer-free](#pffi-pointer-free)
         - [pffi-pointer-set!](#pffi-pointer-set!)
         - [pffi-pointer-get](#pffi-pointer-get)
@@ -63,7 +63,7 @@ conforming to some specification.
         - [pffi-struct-get](#pffi-struct-get)
         - [pffi-struct-set!](#pffi-struct-set!)
         - [pffi-array-allocate](#pffi-array-allocate)
-        - [pffi-array?](#pffi-is-array)
+        - [pffi-array?](#pffi-array)
         - [pffi-pointer->array](#pffi-pointer->array)
         - [pffi-array-get](#pffi-array-get)
         - [pffi-array-set!](#pffi-array-set!)
@@ -407,7 +407,7 @@ Returns a new NULL pointer.
 
 #### pffi-pointer-null?
 
-<a name="pffi-pointer-is-null"></a>
+<a name="pffi-pointer-null"></a>
 
 **pffi-pointer-null?** pointer -> boolean
 
@@ -431,7 +431,7 @@ Returns the address of given pointer as number.
 
 #### pffi-pointer?
 
-<a name="pffi-pointer?"></a>
+<a name="pffi-pointer"></a>
 
 **pffi-pointer?** object -> boolean
 
@@ -548,7 +548,7 @@ Allocates pointer array of given type and size.
 
 #### pffi-array?
 
-<a name="pffi-is-array"></a>
+<a name="pffi-array"></a>
 
 **pffi-array?** object
 
