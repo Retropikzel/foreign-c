@@ -149,6 +149,13 @@ and work, they should work too.
 - pffi-struct-offset-get
 - pffi-struct-get
 - pffi-struct-set!
+- pffi-array-allocate
+- pffi-array?
+- pffi-pointer-\>array
+- pffi-array-get
+- pffi-array-set!
+- pffi-list-\>array
+- pffi-array-\>list
 
 ###  Not started
 <a name="not-started"></a>
@@ -453,6 +460,26 @@ Returns the value of the givens struct member.
 
 Sets the value of the givens struct member. It is up to you to make sure that the type of value is
 correct.
+
+**pffi-array-allocate** type size
+
+Allocates pointer array of given type and size.
+
+**pffi-array?** object
+
+Returns #t of given object is array, #f otherwise.
+
+**pffi-pointer->array** pointer type size
+
+Converts given pointer to an array of giben type and size.
+
+**pffi-array-get** array index
+
+Returns the value of given index from given array.
+
+**pffi-array-set!** array index value
+
+Sets the given value of given index in given array.
 
 **pffi-list->array** type list
 

@@ -166,8 +166,8 @@
               pffi-struct-get
               pffi-struct-set!
               pffi-struct-dereference
-              pffi-array?
               pffi-array-allocate
+              pffi-array?
               pffi-pointer->array
               pffi-array-get
               pffi-array-set!
