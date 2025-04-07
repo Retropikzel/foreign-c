@@ -51,7 +51,7 @@ conforming to some specification.
         - [pffi-pointer-null?](#pffi-pointer-is-null)
         - [pffi-pointer-allocate](#pffi-pointer-allocate)
         - [pffi-pointer-address](#pffi-pointer-address)
-        - [pffi-pointer?](#pffi-is-pointer)
+        - [pffi-pointer?](#pffi-pointer?)
         - [pffi-pointer-free](#pffi-pointer-free)
         - [pffi-pointer-set!](#pffi-pointer-set!)
         - [pffi-pointer-get](#pffi-pointer-get)
