@@ -431,7 +431,9 @@ Returns the address of given pointer as number.
 
 #### pffi-pointer?
 
-<a name="pffi-is-pointer"><b>pffi-pointer?</b></a> object -> boolean
+<a name="pffi-pointer?"></a>
+
+**pffi-pointer?** object -> boolean
 
 Returns #t if given object is pointer, #f otherwise.
 
