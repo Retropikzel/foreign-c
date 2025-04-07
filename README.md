@@ -62,6 +62,11 @@ conforming to some specification.
         - [pffi-struct-offset-get](#pffi-struct-offset-get)
         - [pffi-struct-get](#pffi-struct-get)
         - [pffi-struct-set!](#pffi-struct-set!)
+        - [pffi-array-allocate](#pffi-array-allocate)
+        - [pffi-array?](#pffi-is-array)
+        - [pffi-pointer->array](#pffi-pointer-to-array)
+        - [pffi-array-get](#pffi-array-get)
+        - [pffi-array-set!](#pffi-array-set!)
         - [pffi-list->array](#pffi-list-to-array)
         - [pffi-array->list](#pffi-array-to-list)
         - [pffi-define](#pffi-define)
@@ -461,29 +466,43 @@ Returns the value of the givens struct member.
 Sets the value of the givens struct member. It is up to you to make sure that the type of value is
 correct.
 
+#### pffi-array-allocate <a name="pffi-array-allocate"></a>
+
 **pffi-array-allocate** type size
 
 Allocates pointer array of given type and size.
+
+#### pffi-array? <a name="pffi-is-array"></a>
 
 **pffi-array?** object
 
 Returns #t of given object is array, #f otherwise.
 
+#### pffi-pointer->array <a name="pffi-pointer->array"></a>
+
 **pffi-pointer->array** pointer type size
 
 Converts given pointer to an array of giben type and size.
+
+#### pffi-array-get <a name="pffi-array-get"></a>
 
 **pffi-array-get** array index
 
 Returns the value of given index from given array.
 
+#### pffi-array-set! <a name="pffi-array-set!"></a>
+
 **pffi-array-set!** array index value
 
 Sets the given value of given index in given array.
 
+#### pffi-list->array <a name="pffi-list-to-array"></a>
+
 **pffi-list->array** type list
 
 Converts given list into C array of given type.
+
+#### pffi-array->list <a name="pffi-array-to-list"></a>
 
 **pffi-array->list** type list length
 
