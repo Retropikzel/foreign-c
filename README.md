@@ -48,7 +48,7 @@ conforming to some specification.
         - [pffi-align-of](#pffi-align-of)
         - [pffi-define-library](#pffi-define-library)
         - [pffi-pointer-null](#pffi-pointer-null)
-        - [pffi-pointer-null?](#pffi-pointer-null?)
+        - [pffi-pointer-null?](#pffi-pointer-is-null)
         - [pffi-pointer-allocate](#pffi-pointer-allocate)
         - [pffi-pointer-address](#pffi-pointer-address)
         - [pffi-pointer?](#pffi-pointer?)
@@ -377,8 +377,8 @@ implementations.
 
 Returns a new NULL pointer.
 
-#### pffi-pointer-null? 
-<a name="pffi-pointer-null?"></a>
+#### pffi-pointer-null?
+<a name="pffi-pointer-is-null"></a>
 
 **pffi-pointer-null?** pointer -> boolean
 
