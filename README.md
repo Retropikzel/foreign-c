@@ -66,7 +66,7 @@ conforming to some specification.
         - [pffi-array?](#pffi-is-array)
         - [pffi-pointer->array](#pffi-pointer->array)
         - [pffi-array-get](#pffi-array-get)
-        - [pffi-array-set!](#pffi-array-set)
+        - [pffi-array-set!](#pffi-array-set!)
         - [pffi-list->array](#pffi-list->array)
         - [pffi-array->list](#pffi-array->list)
         - [pffi-define](#pffi-define)
@@ -525,7 +525,7 @@ Converts given pointer to an array of giben type and size.
 Returns the value of given index from given array.
 
 #### pffi-array-set!
-<a name="pffi-array-set"></a>
+<a name="pffi-array-set!"></a>
 
 **pffi-array-set!** array index value
 
