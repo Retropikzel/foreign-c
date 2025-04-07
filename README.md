@@ -55,8 +55,8 @@ conforming to some specification.
         - [pffi-pointer-free](#pffi-pointer-free)
         - [pffi-pointer-set!](#pffi-pointer-set!)
         - [pffi-pointer-get](#pffi-pointer-get)
-        - [pffi-string->pointer](#pffi-string-to-pointer)
-        - [pffi-pointer->string](#pffi-pointer-to-string)
+        - [pffi-string->pointer](#pffi-string->pointer)
+        - [pffi-pointer->string](#pffi-pointer->string)
         - [pffi-struct-make](#pffi-struct-make)
         - [pffi-struct-pointer](#pffi-struct-pointer)
         - [pffi-struct-offset-get](#pffi-struct-offset-get)
@@ -64,11 +64,11 @@ conforming to some specification.
         - [pffi-struct-set!](#pffi-struct-set!)
         - [pffi-array-allocate](#pffi-array-allocate)
         - [pffi-array?](#pffi-is-array)
-        - [pffi-pointer->array](#pffi-pointer-to-array)
+        - [pffi-pointer->array](#pffi-pointer->array)
         - [pffi-array-get](#pffi-array-get)
         - [pffi-array-set!](#pffi-array-set)
-        - [pffi-list->array](#pffi-list-to-array)
-        - [pffi-array->list](#pffi-array-to-list)
+        - [pffi-list->array](#pffi-list->array)
+        - [pffi-array->list](#pffi-array->list)
         - [pffi-define](#pffi-define)
         - [pffi-define-callback](#pffi-define-callback)
 
@@ -437,14 +437,14 @@ Gets the value from a pointer on given offset. For example:
     > 100
 
 #### pffi-string->pointer
-<a name="pffi-string-to-pointer"></a>
+<a name="pffi-string->pointer"></a>
 
 **pffi-string->pointer** string -> pointer
 
 Makes pointer out of a given string.
 
 #### pffi-pointer->string
-<a name="pffi-pointer-to-string"></a>
+<a name="pffi-pointer->string"></a>
 
 **pffi-pointer->string** pointer -> string
 
@@ -532,14 +532,14 @@ Returns the value of given index from given array.
 Sets the given value of given index in given array.
 
 #### pffi-list->array
-<a name="pffi-list-to-array"></a>
+<a name="pffi-list->array"></a>
 
 **pffi-list->array** type list
 
 Converts given list into C array of given type.
 
 #### pffi-array->list
-<a name="pffi-array-to-list"></a>
+<a name="pffi-array->list"></a>
 
 **pffi-array->list** type list length
 
