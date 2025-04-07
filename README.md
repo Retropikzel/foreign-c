@@ -77,6 +77,7 @@ conforming to some specification.
 <main>
 
 ## Goals
+
 <a name="goals"></a>
 
 - Support only R7RS implementations
@@ -86,6 +87,7 @@ conforming to some specification.
 - Stability and being boring after 1.0.0 is reached
 
 ## Non goals
+
 <a name="non-goals"></a>
 
 - To have every possible FFI feature
@@ -94,12 +96,14 @@ conforming to some specification.
     - The pffi library itself may require compilation on installation
 
 ## Status
+
 <a name="status"></a>
 
 Currently the interface of the library is in okay shape. It propably will not change much but no
 guarantees are being made just yet.
 
 ### Current caveats
+
 <a name="current-caveats"></a>
 
 - No way to pass structs by value
@@ -115,9 +119,11 @@ guarantees are being made just yet.
 For roadmap to 1.0.0 see [issues](https://todo.sr.ht/~retropikzel/r7rs-pffi?search=status%3Aopen%20label%3A%221.0.0%22)
 
 ## Feature mplementation table
+
 <a name="feature-implementation-table"></a>
 
 ## Primitives
+
 <a name="feature-implementation-table-primitives"></a>
 
 |              | pffi-init | pffi-size-of | pffi-define-library | pffi-pointer-null | pffi-pointer-null? | pffi-pointer-address | pffi-pointer? | pffi-pointer-set! | pffi-pointer-get | pffi-define | pffi-define-callback |
@@ -140,6 +146,7 @@ For roadmap to 1.0.0 see [issues](https://todo.sr.ht/~retropikzel/r7rs-pffi?sear
 | Ypsilon      | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           | X                    |
 
 ## Built upon
+
 <a name="feature-implementation-table-built-upon"></a>
 
 These features are built upon the primitives and if primitives are implemented
@@ -163,6 +170,7 @@ and work, they should work too.
 - pffi-array-\>list
 
 ###  Not started
+
 <a name="not-started"></a>
 
 - [LIPS](https://lips.js.org/)
@@ -185,6 +193,7 @@ and work, they should work too.
     - Need to study the implementation more
 
 ### Other
+
 <a name="other"></a>
 
 - [s7](https://scheme.fail://ccrma.stanford.edu/software/snd/snd/s7.html)
@@ -193,9 +202,11 @@ and work, they should work too.
     - Desires no C interop, I can respect that
 
 ## Documentation
+
 <a name="documentation"></a>
 
 ### Installation
+
 <a name="installation"></a>
 
 Download the latest release from
@@ -205,27 +216,32 @@ Unpack it somewhere and copy the directory called "retropikzel" to your projects
 library directory. For the rest of this documentation it is assumed to be ./snow.
 
 #### Compiling the libary
+
 <a name="compiling-the-library"></a>
 Some implementations need extra step of compiling the library. Change directory
 to ./snow/retropikzel/pffi and run command corresponding to your implementation.
 
 ##### Chibi
+
 <a name="compiling-the-library-chibi"></a>
 
     make -C ./snow/retropikzel/pffi chibi-pffi.so
 
 ##### Gauche
+
 <a name="compiling-the-library-gauche"></a>
 
     make -C ./snow/retropikzel/pffi gauche-pffi.so
 
 #### Dependencies
+
 <a name="dependencies"></a>
 
 Some implementations have extra dependencies/requirements beyond just the
 library.
 
 #### Chibi
+
 <a name="dependencies-chibi"></a>
 
 Building depends on libffi.
@@ -235,6 +251,7 @@ Debian/Ubuntu/Mint install with:
     apt install libffi-dev
 
 #### Chicken
+
 <a name="dependencies-chicken"></a>
 
 Needs [r7rs egg](https://wiki.call-cc.org/eggref/5/r7rs), install with:
@@ -242,6 +259,7 @@ Needs [r7rs egg](https://wiki.call-cc.org/eggref/5/r7rs), install with:
     chicken-install r7rs
 
 #### Gauche
+
 <a name="dependencies-gauche"></a>
 
 Building depends on libffi.
@@ -251,6 +269,7 @@ Debian/Ubuntu/Mint install with:
     apt install libffi-dev
 
 #### Racket
+
 <a name="dependencies-racket"></a>
 
 Needs [racket-r7rs](https://github.com/lexi-lambda/racket-r7rs), install with:
@@ -258,6 +277,7 @@ Needs [racket-r7rs](https://github.com/lexi-lambda/racket-r7rs), install with:
     raco pkg install --auto r7rs
 
 #### Kawa
+
 <a name="dependencies-kawa"></a>
 
 Kawa Needs at least Java version 22 and jvm flags:
@@ -268,9 +288,11 @@ Kawa Needs at least Java version 22 and jvm flags:
 - \--enable-native-access=ALL-UNNAMED
 
 ## Reference
+
 <a name="reference"></a>
 
 ### Types
+
 <a name="types"></a>
 
 Types are given as symbols, for example 'int8 or 'pointer.
@@ -298,11 +320,13 @@ Types are given as symbols, for example 'int8 or 'pointer.
     - Callback function
 
 ### Procedures and macros
+
 <a name="procedures-and-macros"></a>
 
 Some of these are procedures and some macros, it might also change implementation to implementation.
 
 #### pffi-init
+
 <a name="pffi-init"></a>
 
 **pffi-init**
@@ -311,6 +335,7 @@ Always call this first, on most implementation it does nothing but some implemen
 initialisation run.
 
 #### pffi-size-of
+
 <a name="pffi-size-of"></a>
 
 **pffi-size-of** object -> number
@@ -318,6 +343,7 @@ initialisation run.
 Returns the size of the pffi-struct, pffi-enum or pffi-type.
 
 #### pffi-align-of
+
 <a name="pffi-align-of"></a>
 
 **pffi-align-of** type -> number
@@ -325,6 +351,7 @@ Returns the size of the pffi-struct, pffi-enum or pffi-type.
 Returns the align of the type.
 
 #### pffi-define-library
+
 <a name="pffi-define-library"></a>
 
 **pffi-define-library** headers shared-object-name [options] -> object
@@ -371,6 +398,7 @@ implementations.
     - As '(... and not (list...
 
 #### pffi-pointer-null
+
 <a name="pffi-pointer-null"></a>
 
 **pffi-pointer-null** -> pointer
@@ -378,6 +406,7 @@ implementations.
 Returns a new NULL pointer.
 
 #### pffi-pointer-null?
+
 <a name="pffi-pointer-is-null"></a>
 
 **pffi-pointer-null?** pointer -> boolean
@@ -385,6 +414,7 @@ Returns a new NULL pointer.
 Returns #t if given pointer is null pointer, #f otherwise.
 
 #### pffi-pointer-allocate
+
 <a name="pffi-pointer-allocate"></a>
 
 **pffi-pointer-allocate** size -> pointer
@@ -392,6 +422,7 @@ Returns #t if given pointer is null pointer, #f otherwise.
 Returns newly allocated pointer of given size.
 
 #### pffi-pointer-address
+
 <a name="pffi-pointer-address"></a>
 
 **pffi-pointer-address** pointer -> number
@@ -399,6 +430,7 @@ Returns newly allocated pointer of given size.
 Returns the address of given pointer as number.
 
 #### pffi-pointer?
+
 <a name="pffi-pointer?"></a>
 
 **pffi-pointer?** object -> boolean
@@ -406,6 +438,7 @@ Returns the address of given pointer as number.
 Returns #t if given object is pointer, #f otherwise.
 
 #### pffi-pointer-free
+
 <a name="pffi-pointer-free"></a>
 
 **pffi-pointer-free** pointer
@@ -413,6 +446,7 @@ Returns #t if given object is pointer, #f otherwise.
 Frees given pointer.
 
 #### pffi-pointer-set!
+
 <a name="pffi-pointer-set!"></a>
 
 **pffi-pointer-set!** pointer type offset value
@@ -425,6 +459,7 @@ Sets the value on a pointer on given offset. For example:
 Would set the offset of 64, on pointer p to value 100.
 
 #### pffi-pointer-get
+
 <a name="pffi-pointer-get"></a>
 
 **pffi-pointer-get** pointer type offset -> object
@@ -437,6 +472,7 @@ Gets the value from a pointer on given offset. For example:
     > 100
 
 #### pffi-string->pointer
+
 <a name="pffi-string->pointer"></a>
 
 **pffi-string->pointer** string -> pointer
@@ -444,6 +480,7 @@ Gets the value from a pointer on given offset. For example:
 Makes pointer out of a given string.
 
 #### pffi-pointer->string
+
 <a name="pffi-pointer->string"></a>
 
 **pffi-pointer->string** pointer -> string
@@ -451,6 +488,7 @@ Makes pointer out of a given string.
 Makes string out of a given pointer.
 
 #### pffi-struct-make
+
 <a name="pffi-struct-make"></a>
 
 **pffi-struct-make** c-type members . pointer -> pffi-struct
@@ -464,6 +502,7 @@ names and types. For example:
 C-type argument can be symbol or a string.
 
 #### pffi-struct-pointer
+
 <a name="pffi-struct-pointer"></a>
 
 **pffi-struct-pointer** pffi-struct -> pointer
@@ -475,6 +514,7 @@ a pointer to foreign functions.
     (pffi-struct-pointer s)
 
 #### pffi-struct-offset-get
+
 <a name="pffi-struct-offset-get"></a>
 
 **pffi-struct-offset-get** member-name -> number
@@ -482,6 +522,7 @@ a pointer to foreign functions.
 Returns the offset of a struct member with given name.
 
 #### pffi-struct-get
+
 <a name="pffi-struct-get"></a>
 
 **pffi-struct-get** pffi-struct member-name -> object
@@ -489,6 +530,7 @@ Returns the offset of a struct member with given name.
 Returns the value of the givens struct member.
 
 #### pffi-struct-set!
+
 <a name="pffi-struct-set!"></a>
 
 **pffi-struct-set!** pffi-struct member-name value
@@ -497,6 +539,7 @@ Sets the value of the givens struct member. It is up to you to make sure that th
 correct.
 
 #### pffi-array-allocate
+
 <a name="pffi-array-allocate"></a>
 
 **pffi-array-allocate** type size
@@ -504,6 +547,7 @@ correct.
 Allocates pointer array of given type and size.
 
 #### pffi-array?
+
 <a name="pffi-is-array"></a>
 
 **pffi-array?** object
@@ -511,6 +555,7 @@ Allocates pointer array of given type and size.
 Returns #t of given object is array, #f otherwise.
 
 #### pffi-pointer->array
+
 <a name="pffi-pointer->array"></a>
 
 **pffi-pointer->array** pointer type size
@@ -518,6 +563,7 @@ Returns #t of given object is array, #f otherwise.
 Converts given pointer to an array of giben type and size.
 
 #### pffi-array-get
+
 <a name="pffi-array-get"></a>
 
 **pffi-array-get** array index
@@ -525,6 +571,7 @@ Converts given pointer to an array of giben type and size.
 Returns the value of given index from given array.
 
 #### pffi-array-set!
+
 <a name="pffi-array-set!"></a>
 
 **pffi-array-set!** array index value
@@ -532,6 +579,7 @@ Returns the value of given index from given array.
 Sets the given value of given index in given array.
 
 #### pffi-list->array
+
 <a name="pffi-list->array"></a>
 
 **pffi-list->array** type list
@@ -539,6 +587,7 @@ Sets the given value of given index in given array.
 Converts given list into C array of given type.
 
 #### pffi-array->list
+
 <a name="pffi-array->list"></a>
 
 **pffi-array->list** type list length
@@ -546,6 +595,7 @@ Converts given list into C array of given type.
 Converts given C array into list of given type and length.
 
 #### pffi-define
+
 <a name="pffi-define"></a>
 
 **pffi-define** scheme-name shared-object c-name return-type argument-types
@@ -559,6 +609,7 @@ Defines a new foreign function to be used from Scheme code. For example:
     (c-puts "Message brought to you by FFI!")
 
 #### pffi-define-callback
+
 <a name="pffi-define-callback"></a>
 
 **pffi-define-callback** scheme-name return-type argument-types procedure
