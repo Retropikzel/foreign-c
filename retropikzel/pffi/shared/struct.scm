@@ -1,5 +1,3 @@
-(pffi-define-library pffi-libc-stdlib '("ffi.h") "ffi" '())
-
 (define-record-type <pffi-struct>
   (struct-make c-type size pointer members)
   pffi-struct?

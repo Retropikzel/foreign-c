@@ -60,7 +60,10 @@
              (scheme-name (list-ref expr 1))
              (c-name (symbol->string (cadr (list-ref expr 3))))
              (return-type (pffi-type->native-type (cadr (list-ref expr 4))))
-             (argument-types (map pffi-type->native-type (cadr (list-ref expr 5)))))
+             (argument-types (if (null? (cdr (list-ref expr 5)))
+                               (list)
+                               (map pffi-type->native-type
+                                    (cadr (list-ref expr 5))))))
         (if (null? argument-types)
           `(define ,scheme-name
              (foreign-safe-lambda ,return-type ,c-name))
