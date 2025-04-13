@@ -10,23 +10,13 @@
               (chibi ast)
               (chibi))
       (include-shared "pffi/chibi-pffi"))
-    (chicken-5
+    (chicken
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
               (scheme process-context)
-              (chicken foreign)
-              (chicken locative)
-              (chicken syntax)
-              (chicken memory)
-              (chicken random)))
-    (chicken6
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (scheme process-context)
+              (chicken base)
               (chicken foreign)
               (chicken locative)
               (chicken syntax)
@@ -146,39 +136,38 @@
               (only (core) define-macro syntax-case)))
     (else (error "Unsupported implementation")))
   (export pffi-init
-              pffi-size-of
-              pffi-type?
-              pffi-align-of
-              pffi-define-library
-              pffi-pointer-null
-              pffi-pointer-null?
-              pffi-pointer-allocate
-              pffi-pointer-address
-              pffi-pointer?
-              pffi-pointer-free
-              pffi-pointer-set!
-              pffi-pointer-get
-              pffi-string->pointer
-              pffi-pointer->string
-              pffi-define-struct
-              pffi-struct-pointer
-              pffi-struct-offset-get
-              pffi-struct-get
-              pffi-struct-set!
-              pffi-struct-dereference
-              pffi-array-allocate
-              pffi-array?
-              pffi-pointer->array
-              pffi-array-get
-              pffi-array-set!
-              pffi-list->array
-              pffi-array->list
-              pffi-define
-              pffi-define-callback)
+          pffi-size-of
+          pffi-type?
+          pffi-align-of
+          pffi-define-library
+          pffi-pointer-null
+          pffi-pointer-null?
+          pffi-pointer-allocate
+          pffi-pointer-address
+          pffi-pointer?
+          pffi-pointer-free
+          pffi-pointer-set!
+          pffi-pointer-get
+          pffi-string->pointer
+          pffi-pointer->string
+          pffi-define-struct
+          pffi-struct-pointer
+          pffi-struct-offset-get
+          pffi-struct-get
+          pffi-struct-set!
+          pffi-struct-dereference
+          pffi-array-allocate
+          pffi-array?
+          pffi-pointer->array
+          pffi-array-get
+          pffi-array-set!
+          pffi-list->array
+          pffi-array->list
+          pffi-define
+          pffi-define-callback)
   (cond-expand
     (chibi (include "pffi/chibi.scm"))
-    (chicken-5 (include "pffi/chicken5.scm"))
-    (chicken-6 (include "chicken6.scm"))
+    (chicken (include-relative "pffi/chicken.scm"))
     (cyclone (include "pffi/cyclone.scm"))
     (gambit (include "pffi/gambit.scm"))
     (gauche (include "pffi/gauche.scm"))

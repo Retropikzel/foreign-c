@@ -36,7 +36,6 @@ conforming to some specification.
             - [Gauche](#compiling-the-library-gauche)
     - [Dependencies](#dependencies)
         - [Chibi](#dependencies-chibi)
-        - [Chicken](#dependencies-chicken)
         - [Gauche](#dependencies-gauche)
         - [Racket](#dependencies-racket)
         - [Kawa](#dependencies-kawa)
@@ -123,7 +122,7 @@ For roadmap to 1.0.0 see [issues](https://todo.sr.ht/~retropikzel/r7rs-pffi?sear
 |              | pffi-init | pffi-size-of | pffi-define-library | pffi-pointer-null | pffi-pointer-null? | pffi-pointer-address | pffi-pointer? | pffi-pointer-set! | pffi-pointer-get | pffi-define | pffi-define-callback |
 |--------------|:---------:|:------------:|:-------------------:|:-----------------:|:------------------:|:--------------------:|:-------------:|:-----------------:|:----------------:|:-----------:|:--------------------:|
 | Chibi        | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           |                      |
-| Chicken-5    | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           | X                    |
+| Chicken      | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           | X                    |
 | Cyclone      | X         | X            | X                   | X                 | X                  |                      | X             | X                 | X                | X           |                      |
 | Gambit       | X         | X            |                     |                   |                    | X                    |               |                   |                  |             |                      |
 | Gauche       | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           |                      |
@@ -233,13 +232,6 @@ Building depends on libffi.
 Debian/Ubuntu/Mint install with:
 
     apt install libffi-dev
-
-#### Chicken
-<a name="dependencies-chicken"></a>
-
-Needs [r7rs egg](https://wiki.call-cc.org/eggref/5/r7rs), install with:
-
-    chicken-install r7rs
 
 #### Gauche
 <a name="dependencies-gauche"></a>
