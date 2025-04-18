@@ -30,17 +30,21 @@ conforming to some specification.
     - [Primitives](#feature-implementation-table-primitives)
     - [Built upon](#feature-implementation-table-built-upon)
 - [Documentation](#documentation)
-    - [Installation](#installation)
-        - [Compiling the library](#compiling-the-library)
-            - [Chibi](#compiling-the-library-chibi)
-            - [Gauche](#compiling-the-library-gauche)
     - [Dependencies](#dependencies)
         - [Chibi](#dependencies-chibi)
+        - [Chicken](#dependencies-chicken)
         - [Gauche](#dependencies-gauche)
         - [Racket](#dependencies-racket)
         - [Kawa](#dependencies-kawa)
+    - [Installation](#installation)
+        - [Project local](#installation-project-local)
+            - [Linux](#installation-project-local-linux)
+            - [Windows](#installation-project-local-windows)
+        - [System global](#installation-system-global)
 - [Reference](#reference)
     - [Types](#types)
+    - [Environment variables](#environment-variables)
+        - [PFFI\_LOAD\_PATH](#environment-variables-pffi-load-path)
     - [Procedures and macros](#procedures-and-macros)
         - [pffi-init](#pffi-init)
         - [pffi-size-of](#pffi-size-of)
@@ -194,31 +198,7 @@ and work, they should work too.
 ## Documentation
 <a name="documentation"></a>
 
-### Installation
-<a name="installation"></a>
-
-Download the latest release from
-[https://git.sr.ht/~retropikzel/r7rs-pffi/refs](https://git.sr.ht/~retropikzel/r7rs-pffi/refs).
-
-Unpack it somewhere and copy the directory called "retropikzel" to your projects
-library directory. For the rest of this documentation it is assumed to be ./snow.
-
-#### Compiling the libary
-<a name="compiling-the-library"></a>
-Some implementations need extra step of compiling the library. Change directory
-to ./snow/retropikzel/pffi and run command corresponding to your implementation.
-
-##### Chibi
-<a name="compiling-the-library-chibi"></a>
-
-    make -C ./snow/retropikzel/pffi chibi-pffi.so
-
-##### Gauche
-<a name="compiling-the-library-gauche"></a>
-
-    make -C ./snow/retropikzel/pffi gauche-pffi.so
-
-#### Dependencies
+### Dependencies
 <a name="dependencies"></a>
 
 Some implementations have extra dependencies/requirements beyond just the
@@ -232,6 +212,13 @@ Building depends on libffi.
 Debian/Ubuntu/Mint install with:
 
     apt install libffi-dev
+
+#### Chicken
+<a name="dependencies-chicken"></a>
+
+Chicken needs r7rs egg installed. Install it with:
+
+    chicken-install r7rs
 
 #### Gauche
 <a name="dependencies-gauche"></a>
@@ -258,6 +245,37 @@ Kawa Needs at least Java version 22 and jvm flags:
 - \--add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED
 - \--add-exports java.base/jdk.internal.foreign=ALL-UNNAMED
 - \--enable-native-access=ALL-UNNAMED
+
+### Installation
+<a name="installation"></a>
+
+Since the project is under active development is best to clone it from git,
+
+### Project local
+<a name="installation-project-local"></a>
+
+#### Linux
+<a name="installation-project-local-linux"></a>
+Assuming you have a project and your libraries live in directory called snow
+in it:
+
+    git clone https://git.sr.ht/~retropikzel/r7rs-pffi
+    mkdir -p snow
+    cp -r r7rs-pffi/retropikzel snow/
+    cd snow/retropikzel/pffi
+    make <SCHEME>
+
+#### Windows
+<a name="installation-project-local-windows"></a>
+
+There is no build scripts yet for Windows, that said many implementations work
+without compiling anything. If you run this and it says "There is notching to
+build for SCHEME" then you should be good to go.
+
+### System global
+<a name="installation-system-global"></a>
+
+Still work in progress.
 
 ## Reference
 <a name="reference"></a>
@@ -288,6 +306,22 @@ Types are given as symbols, for example 'int8 or 'pointer.
 - pointer
 - callback
     - Callback function
+
+### Types
+<a name="types"></a>
+
+### Environment variables
+<a name="environment-variables"></a>
+
+Setting environment variables like this on Windows works for this library:
+
+    set "PFFI_LOAD_PATH=C:\Program Files (x86)/foo/bar"
+
+#### PFFI\_LOAD\_PATH
+<a name="environment-variables-pffi-load-path"></a>
+
+To add more paths to where pffi looks for libraries set PFFI\_LOAD\_PATH to
+paths separated by ; on windows, and : on other operating systems.
 
 ### Procedures and macros
 <a name="procedures-and-macros"></a>

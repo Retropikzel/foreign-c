@@ -1,21 +1,16 @@
 pipeline {
-    agent {
-        dockerfile {
-            filename 'dockerfiles/jenkins'
-            dir '.'
-            args '--user=root --privileged -v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
 
     options {
-            buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
     }
 
     stages {
-        stage('Build test libraries') {
+        stage('Chibi') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make libtest.so libtest.a'
+                    sh 'make COMPILE_R7RS=chibi test-compile-r7rs-docker'
                 }
             }
         }

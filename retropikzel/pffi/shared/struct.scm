@@ -52,7 +52,7 @@
 
 (define round-to-next-modulo-of
   (lambda (to-round roundee)
-    (if (= (floor-remainder to-round roundee) 0)
+    (if (= (modulo to-round roundee) 0)
       to-round
       (round-to-next-modulo-of (+ to-round 1) roundee))))
 
@@ -67,7 +67,7 @@
                              (when (> (size-of-type type) largest-member-size)
                                (set! largest-member-size (size-of-type type)))
                              (if (or (= size 0)
-                                     (= (floor-remainder size type-alignment) 0))
+                                     (= (modulo size type-alignment) 0))
                                (begin
                                  (set! size (+ size type-alignment))
                                  (list name type (- size type-alignment)))

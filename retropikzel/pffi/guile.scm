@@ -53,7 +53,7 @@
             (native-type (sizeof native-type))
             (else #f)))))
 
-(define pffi-pointer-allocate
+#;(define pffi-pointer-allocate
   (lambda (size)
     (bytevector->pointer (make-bytevector size 0))))
 
@@ -74,10 +74,10 @@
     (pointer->string pointer)))
 
 (define pffi-shared-object-load
-  (lambda (header path . options)
+  (lambda (path options)
     (load-foreign-library path)))
 
-(define pffi-pointer-free
+#;(define pffi-pointer-free
   (lambda (pointer)
     #t))
 
@@ -132,6 +132,6 @@
             ((equal? type 'pointer) (make-pointer (bytevector-sint-ref p offset (native-endianness) (size-of-type type))))
             ((equal? type 'string) (pffi-pointer->string (make-pointer (bytevector-sint-ref p offset (native-endianness) (size-of-type type)))))))))
 
-(define pffi-struct-dereference
+#;(define pffi-struct-dereference
   (lambda (struct)
     (dereference-pointer (pffi-struct-pointer struct))))

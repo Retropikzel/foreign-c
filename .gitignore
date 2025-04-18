@@ -40,3 +40,4 @@ dockerfiles/build
 core
 testfile.test
 tests/compliance
+tests/retropikzel

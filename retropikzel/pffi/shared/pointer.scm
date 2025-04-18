@@ -12,7 +12,7 @@
   (chibi #t) ; FIXME
   (else (pffi-define pffi-pointer-allocate pffi-libc-stdlib 'malloc 'pointer '(int))))
 
-(pffi-define pffi-pointer-allocate-aligned pffi-libc-stdlib 'aligned_alloc 'pointer '(int int))
+;(pffi-define pffi-pointer-allocate-aligned pffi-libc-stdlib 'aligned_alloc 'pointer '(int int))
 (pffi-define pffi-pointer-allocate-calloc pffi-libc-stdlib 'calloc 'pointer '(int int))
 
 (cond-expand

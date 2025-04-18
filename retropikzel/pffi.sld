@@ -59,7 +59,8 @@
               (scheme process-context)
               (rnrs bytevectors)
               (system foreign)
-              (system foreign-library)))
+              (system foreign-library)
+              (only (guile) include-from-path)))
     (kawa
       (import (scheme base)
               (scheme write)
@@ -133,8 +134,7 @@
               (scheme process-context)
               (ypsilon c-ffi)
               (ypsilon c-types)
-              (only (core) define-macro syntax-case)))
-    (else (error "Unsupported implementation")))
+              (only (core) define-macro syntax-case))))
   (export pffi-init
           pffi-size-of
           pffi-type?
@@ -167,7 +167,8 @@
           pffi-define-callback)
   (cond-expand
     (chibi (include "pffi/chibi.scm"))
-    (chicken (include-relative "pffi/chicken.scm"))
+    (chicken-5 (include "pffi/chicken.scm"))
+    (chicken-6 (include-relative "pffi/chicken.scm"))
     (cyclone (include "pffi/cyclone.scm"))
     (gambit (include "pffi/gambit.scm"))
     (gauche (include "pffi/gauche.scm"))
@@ -183,7 +184,12 @@
     (tr7 (include "pffi/tr7.scm"))
     (ypsilon (include "pffi/ypsilon.scm")))
   ;(include "pffi/shared/union.scm")
-  (include "pffi/shared/main.scm")
-  (include "pffi/shared/pointer.scm")
-  (include "pffi/shared/array.scm")
-  (include "pffi/shared/struct.scm"))
+  (cond-expand
+    (chicken-6 (include-relative "pffi/shared/main.scm")
+             (include-relative "pffi/shared/pointer.scm")
+             (include-relative "pffi/shared/array.scm")
+             (include-relative "pffi/shared/struct.scm"))
+    (else (include "pffi/shared/main.scm")
+          (include "pffi/shared/pointer.scm")
+          (include "pffi/shared/array.scm")
+          (include "pffi/shared/struct.scm"))))

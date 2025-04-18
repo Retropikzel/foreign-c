@@ -121,61 +121,67 @@
                                          (list)))
                   (slash (cond-expand (windows (string #\\)) (else "/")))
                   (auto-load-paths
-                    (cond-expand
-                      (windows
-                        (append
-                          (if (get-environment-variable "SYSTEM")
-                            (list (get-environment-variable "SYSTEM"))
-                            (list))
-                          (if (get-environment-variable "WINDIR")
-                            (list (get-environment-variable "WINDIR"))
-                            (list))
-                          (if (get-environment-variable "WINEDLLDIR0")
-                            (list (get-environment-variable "WINEDLLDIR0"))
-                            (list))
-                          (if (get-environment-variable "SystemRoot")
-                            (list (string-append
-                                    (get-environment-variable "SystemRoot")
-                                    slash
-                                    "system32"))
-                            (list))
-                          (list ".")
-                          (if (get-environment-variable "PATH")
-                            (string-split (get-environment-variable "PATH") #\;)
-                            (list))
-                          (if (get-environment-variable "PWD")
-                            (list (get-environment-variable "PWD"))
-                            (list))))
-                      (else
-                        (append
-                          ; Guix
-                          (list (if (get-environment-variable "GUIX_ENVIRONMENT")
-                                  (string-append (get-environment-variable "GUIX_ENVIRONMENT") slash "lib")
-                                  "")
-                                "/run/current-system/profile/lib")
-                          ; Debian
-                          (if (get-environment-variable "LD_LIBRARY_PATH")
-                            (string-split (get-environment-variable "LD_LIBRARY_PATH") #\:)
-                            (list))
-                          (list
-                            ;;; x86-64
+                      (cond-expand
+                        (windows
+                          (append
+                            (if (get-environment-variable "PFFI_LOAD_PATH")
+                              (string-split (get-environment-variable "PFFI_LOAD_PATH") #\;)
+                              (list))
+                            (if (get-environment-variable "SYSTEM")
+                              (list (get-environment-variable "SYSTEM"))
+                              (list))
+                            (if (get-environment-variable "WINDIR")
+                              (list (get-environment-variable "WINDIR"))
+                              (list))
+                            (if (get-environment-variable "WINEDLLDIR0")
+                              (list (get-environment-variable "WINEDLLDIR0"))
+                              (list))
+                            (if (get-environment-variable "SystemRoot")
+                              (list (string-append
+                                      (get-environment-variable "SystemRoot")
+                                      slash
+                                      "system32"))
+                              (list))
+                            (list ".")
+                            (if (get-environment-variable "PATH")
+                              (string-split (get-environment-variable "PATH") #\;)
+                              (list))
+                            (if (get-environment-variable "PWD")
+                              (list (get-environment-variable "PWD"))
+                              (list))))
+                        (else
+                          (append
+                           (if (get-environment-variable "PFFI_LOAD_PATH")
+                              (string-split (get-environment-variable "PFFI_LOAD_PATH") #\:)
+                              (list))
+                            ; Guix
+                            (list (if (get-environment-variable "GUIX_ENVIRONMENT")
+                                    (string-append (get-environment-variable "GUIX_ENVIRONMENT") slash "lib")
+                                    "")
+                                  "/run/current-system/profile/lib")
                             ; Debian
-                            "/lib/x86_64-linux-gnu"
-                            "/usr/lib/x86_64-linux-gnu"
-                            "/usr/local/lib"
-                            ; Fedora/Alpine
-                            "/usr/lib"
-                            "/usr/lib64"
-                            ;;; aarch64
-                            ; Debian
-                            "/lib/aarch64-linux-gnu"
-                            "/usr/lib/aarch64-linux-gnu"
-                            "/usr/local/lib"
-                            ; Fedora/Alpine
-                            "/usr/lib"
-                            "/usr/lib64"
-                            ; NetBSD
-                            "/usr/pkg/lib")))))
+                            (if (get-environment-variable "LD_LIBRARY_PATH")
+                              (string-split (get-environment-variable "LD_LIBRARY_PATH") #\:)
+                              (list))
+                            (list
+                              ;;; x86-64
+                              ; Debian
+                              "/lib/x86_64-linux-gnu"
+                              "/usr/lib/x86_64-linux-gnu"
+                              "/usr/local/lib"
+                              ; Fedora/Alpine
+                              "/usr/lib"
+                              "/usr/lib64"
+                              ;;; aarch64
+                              ; Debian
+                              "/lib/aarch64-linux-gnu"
+                              "/usr/lib/aarch64-linux-gnu"
+                              "/usr/local/lib"
+                              ; Fedora/Alpine
+                              "/usr/lib"
+                              "/usr/lib64"
+                              ; NetBSD
+                              "/usr/pkg/lib")))))
                   (auto-load-versions (list ""))
                   (paths (append auto-load-paths additional-paths))
                   (versions (append additional-versions auto-load-versions))
