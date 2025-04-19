@@ -30,9 +30,6 @@
           (let* ((member-type (cadr struct-member))
                  (member-name (car struct-member))
                  (member-size (pffi-size-of member-type)))
-            (display "HERE: ")
-            (write member-size)
-            (newline)
             (pffi-pointer-set! pointer
                                member-type
                                offset
@@ -114,10 +111,6 @@
     (error "Struct has no such member" (list struct member-name)))
   (let ((type (car (cdr (assoc member-name (pffi-struct-members struct)))))
         (offset (car (cdr (cdr (assoc member-name (pffi-struct-members struct)))))))
-    (map display (list "type: " type
-                       ", offset: " offset
-                       ", value: " (pffi-pointer-get (pffi-struct-pointer struct) type offset)
-                       #\newline))
     (pffi-pointer-get (pffi-struct-pointer struct) type offset)))
 
 (define (pffi-struct-set! struct member-name value)
