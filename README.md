@@ -66,6 +66,7 @@ conforming to some specification.
         - [pffi-struct-get](#pffi-struct-get)
         - [pffi-struct-set!](#pffi-struct-set!)
         - [pffi-array-allocate](#pffi-array-allocate)
+        - [pffi-array-pointer](#pffi-array-pointer)
         - [pffi-array?](#pffi-array)
         - [pffi-pointer->array](#pffi-pointer->array)
         - [pffi-array-get](#pffi-array-get)
@@ -239,12 +240,15 @@ Needs [racket-r7rs](https://github.com/lexi-lambda/racket-r7rs), install with:
 #### Kawa
 <a name="dependencies-kawa"></a>
 
-Kawa Needs at least Java version 22 and jvm flags:
+Kawa Needs at least Java version 22 these flags before any other arguments:
 
-- \--add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED
-- \--add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED
-- \--add-exports java.base/jdk.internal.foreign=ALL-UNNAMED
-- \--enable-native-access=ALL-UNNAMED
+- \-J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED
+- \-J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED
+- \-J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED
+- \-J--enable-native-access=ALL-UNNAMED
+
+If you are running kawa.jar with plain java then give same arguments to java
+without the -J prefix.
 
 ### Installation
 <a name="installation"></a>
@@ -528,6 +532,13 @@ correct.
 **pffi-array-allocate** type size
 
 Allocates pointer array of given type and size.
+
+#### pffi-array-pointer
+<a name="pffi-array-pointer"></a>
+
+**pffi-array-pointer** array
+
+Returns the pointer of the array.
 
 #### pffi-array?
 <a name="pffi-array"></a>
