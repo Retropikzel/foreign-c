@@ -42,3 +42,5 @@ testfile.test
 tests/compliance
 tests/retropikzel
 *.rkt
+testfile.test
+tests/testfile.test
