@@ -11,7 +11,7 @@
                        pffi-pointer-get
                        pffi-string->pointer
                        pffi-pointer->string
-                       pffi-define))
+                       pffi-define-function))
 
 (select-module retropikzel.pffi.gauche)
 (dynamic-load "retropikzel/pffi/gauche-pffi")
