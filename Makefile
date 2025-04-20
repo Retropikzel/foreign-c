@@ -19,61 +19,19 @@ documentation:
 chibi:
 	make -C retropikzel/pffi chibi
 
-chicken:
-	make -C retropikzel/pffi chicken
-
-cyclone:
-	make -C retropikzel/pffi cyclone
-
-gambit:
-	make -C retropikzel/pffi gambit
-
 gauche:
 	make -C retropikzel/pffi gauche
-
-gerbil:
-	make -C retropikzel/pffi gerbil
-
-guile:
-	make -C retropikzel/pffi guile
-
-kawa:
-	make -C retropikzel/pffi kawa
-
-larceny:
-	make -C retropikzel/pffi larceny
-
-mosh:
-	make -C retropikzel/pffi mosh
-
-racket:
-	make -C retropikzel/pffi racket
-
-sagittarius:
-	make -C retropikzel/pffi sagittarius
-
-skint:
-	make -C retropikzel/pffi skint
-
-stklos:
-	make -C retropikzel/pffi stklos
-
-tr7:
-	make -C retropikzel/pffi tr7
-
-ypsilon:
-	make -C retropikzel/pffi tr7
 
 test-compile-r7rs: tmp/test/libtest.o tmp/test/libtest.so
 	make ${COMPILE_R7RS}
 	cp -r retropikzel tmp/test/
 	cp tests/compliance.scm tmp/test/
-	cp include/libtest.h tmp/test/
+	cp tests/c-include/libtest.h tmp/test/
 	cd tmp/test && COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." compile-r7rs -I . -o compliance compliance.scm
 	cd tmp/test && LD_LIBRARY_PATH=. ./compliance
 
 test-compile-r7rs-docker:
-	docker build --build-arg COMPILE_R7RS=${COMPILE_R7RS} --tag=r7rs-pffi-test-${COMPILE_R7RS} .
+	docker build --build-arg COMPILE_R7RS=${COMPILE_R7RS} --tag=r7rs-pffi-test-${COMPILE_R7RS} -f dockerfiles/test .
 	docker run -v "${PWD}":/workdir -w /workdir -t r7rs-pffi-test-${COMPILE_R7RS} sh -c "make COMPILE_R7RS=${COMPILE_R7RS} test-compile-r7rs"
 
 #chicken-objects:
@@ -101,11 +59,11 @@ test-compile-r7rs-docker:
 
 tmp/test/libtest.o: src/libtest.c
 	mkdir -p tmp/test
-	${CC} -o tmp/test/libtest.o -fPIC -c src/libtest.c -I./include
+	${CC} -o tmp/test/libtest.o -fPIC -c tests/c-src/libtest.c -I./include
 
 tmp/test/libtest.so: src/libtest.c
 	mkdir -p tmp/test
-	${CC} -o tmp/test/libtest.so -shared -fPIC src/libtest.c -I./include
+	${CC} -o tmp/test/libtest.so -shared -fPIC tests/c-src/libtest.c -I./include
 
 tmp/test/libtest.a: tmp/test/libtest.o src/libtest.c
 	ar rcs tmp/test/libtest.a tmp/test/libtest.o

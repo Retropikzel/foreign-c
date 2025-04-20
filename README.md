@@ -268,6 +268,12 @@ in it:
     cd snow/retropikzel/pffi
     make <SCHEME>
 
+If make says:
+
+    make: *** No rule to make target 'SCHEME'.  Stop.
+
+then implementation does not need anything to be built.
+
 #### Windows
 <a name="installation-project-local-windows"></a>
 
