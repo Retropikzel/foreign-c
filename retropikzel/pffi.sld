@@ -155,7 +155,6 @@
           pffi-struct-offset-get
           pffi-struct-get
           pffi-struct-set!
-          pffi-struct-dereference
           pffi-array-allocate
           pffi-array-pointer
           pffi-array?

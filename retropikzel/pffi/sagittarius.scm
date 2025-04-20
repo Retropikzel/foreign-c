@@ -27,8 +27,7 @@
 
 (define pffi-pointer?
   (lambda (object)
-    (or (pointer? object)
-        (string? object))))
+    (pointer? object)))
 
 (define-syntax pffi-define-function
   (syntax-rules ()
@@ -79,7 +78,7 @@
 
 (define pffi-pointer-address
   (lambda (pointer)
-    (address pointer 0)))
+    (address pointer)))
 
 (define pffi-pointer-null
   (lambda ()

@@ -21,7 +21,7 @@
                 (c-type-string (if (string? c-type) c-type (symbol->string c-type))))
            (struct-make c-type-string size pointer offsets)))))))
 
-(define pffi-struct-dereference
+#;(define pffi-struct-dereference
   (lambda (struct)
     (let ((pointer (pffi-pointer-allocate (pffi-struct-size struct)))
           (offset 0))

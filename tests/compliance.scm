@@ -468,12 +468,30 @@
 
 (print-header 'pffi-pointer-allocate)
 
+(pffi-define-function test-passing-pointer-address
+                      c-testlib
+                      'test_passing_pointer_address
+                      'int
+                      '(pointer pointer))
+(pffi-define-function pa c-testlib 'pa 'pointer '(pointer))
+(pffi-define-function printa c-testlib 'printa 'void '(pointer))
+
 (define test-pointer1 (pffi-pointer-allocate 100))
 (debug test-pointer1)
 (debug (pffi-pointer? test-pointer1))
 (assert equal? (pffi-pointer? test-pointer1) #t)
 (debug (pffi-pointer-address test-pointer1))
-;(assert equal? (number? (pffi-pointer-address test-pointer1)) #t)
+
+(define input-pointer (pffi-pointer-allocate (pffi-size-of 'int)))
+(pffi-pointer-set! input-pointer 'int 0 100)
+(define input-pointer-address (pffi-pointer-address input-pointer))
+(debug input-pointer-address)
+(test-passing-pointer-address input-pointer input-pointer-address)
+(debug input-pointer)
+(debug input-pointer-address)
+(debug (pffi-pointer-get input-pointer 'int 0))
+;(assert equal? (pffi-pointer? input-pointer-address) #t)
+;(assert equal? (= (pffi-pointer-get input-pointer 'int 0) 42) #t)
 ;(assert equal? (> (pffi-pointer-address test-pointer1) 0) #t)
 
 ;; pffi-pointer?
