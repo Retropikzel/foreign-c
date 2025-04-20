@@ -12,9 +12,8 @@ Documentation - 0.6.0</title>
         </style>
     </head>
     <body>
-        <h1
-        id="portable-foreign-function-interface-for-r7rs---version">Portable
-        Foreign Function Interface for R7RS - ${version}</h1>
+        <h1 id="portable-foreign-function-interface-for-r7rs">Portable
+        Foreign Function Interface for R7RS</h1>
         <p>Portable foreign function interface for R7RS. It is portable
         in the sense that it supports multiple implementations, as
         opposed to being portable by conforming to some
@@ -36,56 +35,81 @@ Documentation - 0.6.0</title>
         <ul>
         <li><a href="#current-caveats">Current caveats</a></li>
         </ul></li>
-        <li><a href="#implementation-table">Implementation table</a>
+        <li><a href="#roadmap">Roadmap</a></li>
+        <li><a href="#feature-implementation-table">Feature
+        implementation table</a>
         <ul>
-        <li><a href="#beta">Beta</a></li>
-        <li><a href="#alpha">Alpha</a></li>
-        <li><a href="#not-started">Not started</a></li>
-        <li><a href="#other">Other</a></li>
+        <li><a
+        href="#feature-implementation-table-primitives">Primitives</a></li>
+        <li><a href="#feature-implementation-table-built-upon">Built
+        upon</a></li>
         </ul></li>
         <li><a href="#documentation">Documentation</a>
         <ul>
-        <li><a href="#usage">Usage</a>
+        <li><a href="#dependencies">Dependencies</a>
         <ul>
-        <li><a href="#usage-chibi">Chibi</a></li>
-        <li><a href="#usage-chicken">Chicken</a></li>
-        <li><a href="#usage-racket">Racket</a></li>
-        <li><a href="#usage-kawa">Kawa</a></li>
+        <li><a href="#dependencies-chibi">Chibi</a></li>
+        <li><a href="#dependencies-chicken">Chicken</a></li>
+        <li><a href="#dependencies-gauche">Gauche</a></li>
+        <li><a href="#dependencies-racket">Racket</a></li>
+        <li><a href="#dependencies-kawa">Kawa</a></li>
+        </ul></li>
+        <li><a href="#installation">Installation</a>
+        <ul>
+        <li><a href="#installation-project-local">Project local</a>
+        <ul>
+        <li><a href="#installation-project-local-linux">Linux</a></li>
+        <li><a
+        href="#installation-project-local-windows">Windows</a></li>
+        </ul></li>
+        <li><a href="#installation-system-global">System global</a></li>
         </ul></li>
         </ul></li>
         <li><a href="#reference">Reference</a>
         <ul>
         <li><a href="#types">Types</a></li>
+        <li><a href="#environment-variables">Environment variables</a>
+        <ul>
+        <li><a
+        href="#environment-variables-pffi-load-path">PFFI_LOAD_PATH</a></li>
+        </ul></li>
         <li><a href="#procedures-and-macros">Procedures and macros</a>
         <ul>
         <li><a href="#pffi-init">pffi-init</a></li>
         <li><a href="#pffi-size-of">pffi-size-of</a></li>
         <li><a href="#pffi-align-of">pffi-align-of</a></li>
-        <li><a
-        href="#pffi-shared-object-auto-load">pffi-shared-object-auto-load</a></li>
-        <li><a
-        href="#pffi-shared-object-load">pffi-shared-object-load</a></li>
+        <li><a href="#pffi-define-library">pffi-define-library</a></li>
         <li><a href="#pffi-pointer-null">pffi-pointer-null</a></li>
-        <li><a href="#pffi-pointer-null?">pffi-pointer-null?</a></li>
+        <li><a href="#pffi-pointer-null">pffi-pointer-null?</a></li>
         <li><a
         href="#pffi-pointer-allocate">pffi-pointer-allocate</a></li>
         <li><a
         href="#pffi-pointer-address">pffi-pointer-address</a></li>
-        <li><a href="#pffi-pointer?">pffi-pointer?</a></li>
+        <li><a href="#pffi-pointer">pffi-pointer?</a></li>
         <li><a href="#pffi-pointer-free">pffi-pointer-free</a></li>
         <li><a href="#pffi-pointer-set!">pffi-pointer-set!</a></li>
         <li><a href="#pffi-pointer-get">pffi-pointer-get</a></li>
         <li><a
-        href="#pffi-string-to-pointer">pffi-string-&gt;pointer</a></li>
+        href="#pffi-string-%3Epointer">pffi-string-&gt;pointer</a></li>
         <li><a
-        href="#pffi-pointer-to-string">pffi-pointer-&gt;string</a></li>
+        href="#pffi-pointer-%3Estring">pffi-pointer-&gt;string</a></li>
         <li><a href="#pffi-struct-make">pffi-struct-make</a></li>
         <li><a href="#pffi-struct-pointer">pffi-struct-pointer</a></li>
         <li><a
         href="#pffi-struct-offset-get">pffi-struct-offset-get</a></li>
         <li><a href="#pffi-struct-get">pffi-struct-get</a></li>
         <li><a href="#pffi-struct-set!">pffi-struct-set!</a></li>
-        <li><a href="#pffi-define">pffi-define</a></li>
+        <li><a href="#pffi-array-allocate">pffi-array-allocate</a></li>
+        <li><a href="#pffi-array-pointer">pffi-array-pointer</a></li>
+        <li><a href="#pffi-array">pffi-array?</a></li>
+        <li><a
+        href="#pffi-pointer-%3Earray">pffi-pointer-&gt;array</a></li>
+        <li><a href="#pffi-array-get">pffi-array-get</a></li>
+        <li><a href="#pffi-array-set!">pffi-array-set!</a></li>
+        <li><a href="#pffi-list-%3Earray">pffi-list-&gt;array</a></li>
+        <li><a href="#pffi-array-%3Elist">pffi-array-&gt;list</a></li>
+        <li><a
+        href="#pffi-define-function">pffi-define-function</a></li>
         <li><a
         href="#pffi-define-callback">pffi-define-callback</a></li>
         </ul></li>
@@ -107,7 +131,6 @@ Documentation - 0.6.0</title>
         <h2 id="non-goals">Non goals</h2>
         <p><a name="non-goals"></a></p>
         <ul>
-        <li>To have every possible FFI feature</li>
         <li>Compiling of used library C code at any point
         <ul>
         <li>That is no stubs, no C code generated by the library and so
@@ -121,69 +144,56 @@ Documentation - 0.6.0</title>
         <p>Currently the interface of the library is in okay shape. It
         propably will not change much but no guarantees are being made
         just yet.</p>
-        <p>Due to supporting many different Scheme implementations,
-        different parts of this software are in different stage. As a
-        whole it is still in <strong>alpha</strong> stage. That said the
-        interface should not be changing anymore and some
-        implementations are in <strong>beta</strong>.</p>
         <h3 id="current-caveats">Current caveats</h3>
         <p><a name="current-caveats"></a></p>
         <ul>
         <li>No way to pass structs by value</li>
         <li>Most implementations are missing callback support</li>
+        <li>Always pass arguments to pffi functions/macros as ’(1 2 3)
+        and not (list 1 2 3)</li>
+        <li>Always pass pffi-define-callback procedure as lambda in
+        place</li>
+        <li>No support for variadic function arguments
+        <ul>
+        <li>Can be partially worked around by defining multiple versions
+        of same function with different amount of arguments</li>
+        </ul></li>
         </ul>
-        <h2 id="implementation-table">Implementation table</h2>
-        <p><a name="implementation-table"></a></p>
-        <h3 id="beta">Beta</h3>
-        <p><a name="beta"></a></p>
-        <table>
+        <h2 id="roadmap">Roadmap</h2>
+        <p>For roadmap to 1.0.0 see <a
+        href="https://todo.sr.ht/~retropikzel/r7rs-pffi?search=status%3Aopen%20label%3A%221.0.0%22">issues</a></p>
+        <h2 id="feature-mplementation-table">Feature mplementation
+        table</h2>
+        <p><a name="feature-implementation-table"></a></p>
+        <h2 id="primitives">Primitives</h2>
+        <p><a name="feature-implementation-table-primitives"></a></p>
+        <table style="width:100%;">
         <colgroup>
-        <col style="width: 3%" />
-        <col style="width: 2%" />
-        <col style="width: 3%" />
+        <col style="width: 6%" />
+        <col style="width: 5%" />
+        <col style="width: 6%" />
+        <col style="width: 10%" />
+        <col style="width: 9%" />
+        <col style="width: 9%" />
+        <col style="width: 10%" />
         <col style="width: 7%" />
-        <col style="width: 5%" />
-        <col style="width: 4%" />
-        <col style="width: 4%" />
-        <col style="width: 5%" />
-        <col style="width: 5%" />
-        <col style="width: 3%" />
-        <col style="width: 4%" />
-        <col style="width: 4%" />
-        <col style="width: 4%" />
-        <col style="width: 5%" />
-        <col style="width: 5%" />
-        <col style="width: 4%" />
-        <col style="width: 4%" />
-        <col style="width: 5%" />
-        <col style="width: 3%" />
-        <col style="width: 4%" />
-        <col style="width: 3%" />
-        <col style="width: 5%" />
+        <col style="width: 9%" />
+        <col style="width: 8%" />
+        <col style="width: 6%" />
+        <col style="width: 10%" />
         </colgroup>
         <thead>
         <tr class="header">
         <th></th>
         <th style="text-align: center;">pffi-init</th>
         <th style="text-align: center;">pffi-size-of</th>
-        <th
-        style="text-align: center;">pffi-shared-object-auto-load</th>
-        <th style="text-align: center;">pffi-shared-object-load</th>
+        <th style="text-align: center;">pffi-define-library</th>
         <th style="text-align: center;">pffi-pointer-null</th>
         <th style="text-align: center;">pffi-pointer-null?</th>
-        <th style="text-align: center;">pffi-pointer-allocate</th>
         <th style="text-align: center;">pffi-pointer-address</th>
         <th style="text-align: center;">pffi-pointer?</th>
-        <th style="text-align: center;">pffi-pointer-free</th>
         <th style="text-align: center;">pffi-pointer-set!</th>
         <th style="text-align: center;">pffi-pointer-get</th>
-        <th style="text-align: center;">pffi-string-&gt;pointer</th>
-        <th style="text-align: center;">pffi-pointer-&gt;string</th>
-        <th style="text-align: center;">pffi-struct-make</th>
-        <th style="text-align: center;">pffi-struct-pointer</th>
-        <th style="text-align: center;">pffi-struct-offset-get</th>
-        <th style="text-align: center;">pffi-struct-get</th>
-        <th style="text-align: center;">pffi-struct-set!</th>
         <th style="text-align: center;">pffi-define</th>
         <th style="text-align: center;">pffi-define-callback</th>
         </tr>
@@ -201,6 +211,52 @@ Documentation - 0.6.0</title>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
+        <td style="text-align: center;"></td>
+        </tr>
+        <tr class="even">
+        <td>Chicken</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        </tr>
+        <tr class="odd">
+        <td>Cyclone</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;"></td>
+        </tr>
+        <tr class="even">
+        <td>Gambit</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        </tr>
+        <tr class="odd">
+        <td>Gauche</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
@@ -214,41 +270,21 @@ Documentation - 0.6.0</title>
         <td style="text-align: center;"></td>
         </tr>
         <tr class="even">
-        <td>Gauche</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
+        <td>Gerbil</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;"></td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
         </tr>
         <tr class="odd">
         <td>Guile</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
@@ -270,15 +306,33 @@ Documentation - 0.6.0</title>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        </tr>
+        <tr class="odd">
+        <td>Larceny</td>
+        <td style="text-align: center;">X</td>
         <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        <td style="text-align: center;"></td>
+        </tr>
+        <tr class="even">
+        <td>Mosh</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
+        <td style="text-align: center;"></td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
@@ -294,16 +348,6 @@ Documentation - 0.6.0</title>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
@@ -311,217 +355,6 @@ Documentation - 0.6.0</title>
         </tr>
         <tr class="even">
         <td>Saggittarius</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        </tr>
-        </tbody>
-        </table>
-        <h3 id="alpha">Alpha</h3>
-        <p><a name="alpha"></a></p>
-        <table>
-        <colgroup>
-        <col style="width: 3%" />
-        <col style="width: 2%" />
-        <col style="width: 3%" />
-        <col style="width: 7%" />
-        <col style="width: 5%" />
-        <col style="width: 4%" />
-        <col style="width: 4%" />
-        <col style="width: 5%" />
-        <col style="width: 5%" />
-        <col style="width: 3%" />
-        <col style="width: 4%" />
-        <col style="width: 4%" />
-        <col style="width: 4%" />
-        <col style="width: 5%" />
-        <col style="width: 5%" />
-        <col style="width: 4%" />
-        <col style="width: 4%" />
-        <col style="width: 5%" />
-        <col style="width: 3%" />
-        <col style="width: 4%" />
-        <col style="width: 3%" />
-        <col style="width: 5%" />
-        </colgroup>
-        <thead>
-        <tr class="header">
-        <th></th>
-        <th style="text-align: center;">pffi-init</th>
-        <th style="text-align: center;">pffi-size-of</th>
-        <th
-        style="text-align: center;">pffi-shared-object-auto-load</th>
-        <th style="text-align: center;">pffi-shared-object-load</th>
-        <th style="text-align: center;">pffi-pointer-null</th>
-        <th style="text-align: center;">pffi-pointer-null?</th>
-        <th style="text-align: center;">pffi-pointer-allocate</th>
-        <th style="text-align: center;">pffi-pointer-address</th>
-        <th style="text-align: center;">pffi-pointer?</th>
-        <th style="text-align: center;">pffi-pointer-free</th>
-        <th style="text-align: center;">pffi-pointer-set!</th>
-        <th style="text-align: center;">pffi-pointer-get</th>
-        <th style="text-align: center;">pffi-string-&gt;pointer</th>
-        <th style="text-align: center;">pffi-pointer-&gt;string</th>
-        <th style="text-align: center;">pffi-struct-make</th>
-        <th style="text-align: center;">pffi-struct-pointer</th>
-        <th style="text-align: center;">pffi-struct-offset-get</th>
-        <th style="text-align: center;">pffi-struct-get</th>
-        <th style="text-align: center;">pffi-struct-set!</th>
-        <th style="text-align: center;">pffi-define</th>
-        <th style="text-align: center;">pffi-define-callback</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr class="odd">
-        <td>Chicken-5</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        </tr>
-        <tr class="even">
-        <td>Cyclone</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        </tr>
-        <tr class="odd">
-        <td>Gambit</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        </tr>
-        <tr class="even">
-        <td>Gerbil</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        </tr>
-        <tr class="odd">
-        <td>Larceny</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        </tr>
-        <tr class="even">
-        <td>Mosh</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
@@ -547,16 +380,6 @@ Documentation - 0.6.0</title>
         <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
         </tr>
         <tr class="even">
         <td>Stklos</td>
@@ -565,20 +388,10 @@ Documentation - 0.6.0</title>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
         <td style="text-align: center;"></td>
-        <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
         <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
         </tr>
@@ -595,43 +408,45 @@ Documentation - 0.6.0</title>
         <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
         </tr>
         <tr class="even">
         <td>Ypsilon</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
+        <td style="text-align: center;">X</td>
         </tr>
         </tbody>
         </table>
+        <h2 id="built-upon">Built upon</h2>
+        <p><a name="feature-implementation-table-built-upon"></a></p>
+        <p>These features are built upon the primitives and if
+        primitives are implemented and work, they should work too.</p>
+        <ul>
+        <li>pffi-pointer-allocate</li>
+        <li>pffi-pointer-free</li>
+        <li>pffi-pointer-&gt;string</li>
+        <li>pffi-string-&gt;pointer</li>
+        <li>pffi-struct-make</li>
+        <li>pffi-struct-pointer</li>
+        <li>pffi-struct-offset-get</li>
+        <li>pffi-struct-get</li>
+        <li>pffi-struct-set!</li>
+        <li>pffi-array-allocate</li>
+        <li>pffi-array?</li>
+        <li>pffi-pointer-&gt;array</li>
+        <li>pffi-array-get</li>
+        <li>pffi-array-set!</li>
+        <li>pffi-list-&gt;array</li>
+        <li>pffi-array-&gt;list</li>
+        </ul>
         <h3 id="not-started">Not started</h3>
         <p><a name="not-started"></a></p>
         <ul>
@@ -691,38 +506,66 @@ Documentation - 0.6.0</title>
         </ul>
         <h2 id="documentation">Documentation</h2>
         <p><a name="documentation"></a></p>
-        <h3 id="usage">Usage</h3>
-        <p><a name="usage"></a></p>
+        <h3 id="dependencies">Dependencies</h3>
+        <p><a name="dependencies"></a></p>
+        <p>Some implementations have extra dependencies/requirements
+        beyond just the library.</p>
         <h4 id="chibi">Chibi</h4>
-        <p><a name="usage-chibi"></a></p>
-        <p>Needs libffi-dev, on Debina/Ubuntu/Mint install with:</p>
+        <p><a name="dependencies-chibi"></a></p>
+        <p>Building depends on libffi.</p>
+        <p>Debian/Ubuntu/Mint install with:</p>
         <pre><code>apt install libffi-dev</code></pre>
-        <p>Build with:</p>
-        <pre><code>make chibi</code></pre>
         <h4 id="chicken">Chicken</h4>
-        <p><a name="usage-chicken"></a></p>
-        <p>Needs <a href="https://wiki.call-cc.org/eggref/5/r7rs">r7rs
-        egg</a>, install with:</p>
+        <p><a name="dependencies-chicken"></a></p>
+        <p>Chicken needs r7rs egg installed. Install it with:</p>
         <pre><code>chicken-install r7rs</code></pre>
+        <h4 id="gauche">Gauche</h4>
+        <p><a name="dependencies-gauche"></a></p>
+        <p>Building depends on libffi.</p>
+        <p>Debian/Ubuntu/Mint install with:</p>
+        <pre><code>apt install libffi-dev</code></pre>
         <h4 id="racket">Racket</h4>
-        <p><a name="usage-racket"></a></p>
+        <p><a name="dependencies-racket"></a></p>
         <p>Needs <a
         href="https://github.com/lexi-lambda/racket-r7rs">racket-r7rs</a>,
         install with:</p>
         <pre><code>raco pkg install --auto r7rs</code></pre>
         <h4 id="kawa">Kawa</h4>
-        <p><a name="usage-kawa"></a></p>
-        <p>Kawa Needs at least Java version 22</p>
-        <p>Needs jvm flags:</p>
+        <p><a name="dependencies-kawa"></a></p>
+        <p>Kawa Needs at least Java version 22 these flags before any
+        other arguments:</p>
         <ul>
-        <li>--add-exports
-        java.base/jdk.internal.foreign.abi=ALL-UNNAMED</li>
-        <li>--add-exports
-        java.base/jdk.internal.foreign.layout=ALL-UNNAMED</li>
-        <li>--add-exports
-        java.base/jdk.internal.foreign=ALL-UNNAMED</li>
-        <li>--enable-native-access=ALL-UNNAMED</li>
+        <li>-J–add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED</li>
+        <li>-J–add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED</li>
+        <li>-J–add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED</li>
+        <li>-J–enable-native-access=ALL-UNNAMED</li>
         </ul>
+        <p>If you are running kawa.jar with plain java then give same
+        arguments to java without the -J prefix.</p>
+        <h3 id="installation">Installation</h3>
+        <p><a name="installation"></a></p>
+        <p>Since the project is under active development is best to
+        clone it from git,</p>
+        <h3 id="project-local">Project local</h3>
+        <p><a name="installation-project-local"></a></p>
+        <h4 id="linux">Linux</h4>
+        <p><a name="installation-project-local-linux"></a> Assuming you
+        have a project and your libraries live in directory called snow
+        in it:</p>
+        <pre><code>git clone https://git.sr.ht/~retropikzel/r7rs-pffi
+mkdir -p snow
+cp -r r7rs-pffi/retropikzel snow/
+cd snow/retropikzel/pffi
+make &lt;SCHEME&gt;</code></pre>
+        <h4 id="windows">Windows</h4>
+        <p><a name="installation-project-local-windows"></a></p>
+        <p>There is no build scripts yet for Windows, that said many
+        implementations work without compiling anything. If you run this
+        and it says “There is notching to build for SCHEME” then you
+        should be good to go.</p>
+        <h3 id="system-global">System global</h3>
+        <p><a name="installation-system-global"></a></p>
+        <p>Still work in progress.</p>
         <h2 id="reference">Reference</h2>
         <p><a name="reference"></a></p>
         <h3 id="types">Types</h3>
@@ -754,28 +597,40 @@ Documentation - 0.6.0</title>
         <li>Callback function</li>
         </ul></li>
         </ul>
+        <h3 id="types-1">Types</h3>
+        <p><a name="types"></a></p>
+        <h3 id="environment-variables">Environment variables</h3>
+        <p><a name="environment-variables"></a></p>
+        <p>Setting environment variables like this on Windows works for
+        this library:</p>
+        <pre><code>set &quot;PFFI_LOAD_PATH=C:\Program Files (x86)/foo/bar&quot;</code></pre>
+        <h4 id="pffi_load_path">PFFI_LOAD_PATH</h4>
+        <p><a name="environment-variables-pffi-load-path"></a></p>
+        <p>To add more paths to where pffi looks for libraries set
+        PFFI_LOAD_PATH to paths separated by ; on windows, and : on
+        other operating systems.</p>
         <h3 id="procedures-and-macros">Procedures and macros</h3>
         <p><a name="procedures-and-macros"></a></p>
         <p>Some of these are procedures and some macros, it might also
         change implementation to implementation.</p>
-        <h4 id="pffi-init">pffi-init <a name="pffi-init"></a></h4>
+        <h4 id="pffi-init">pffi-init</h4>
+        <p><a name="pffi-init"></a></p>
         <p><strong>pffi-init</strong></p>
         <p>Always call this first, on most implementation it does
         nothing but some implementations might need initialisation
         run.</p>
-        <h4 id="pffi-size-of">pffi-size-of
-        <a name="pffi-size-of"></a></h4>
+        <h4 id="pffi-size-of">pffi-size-of</h4>
+        <p><a name="pffi-size-of"></a></p>
         <p><strong>pffi-size-of</strong> object -&gt; number</p>
         <p>Returns the size of the pffi-struct, pffi-enum or
         pffi-type.</p>
-        <h4 id="pffi-align-of">pffi-align-of
-        <a name="pffi-align-of"></a></h4>
+        <h4 id="pffi-align-of">pffi-align-of</h4>
+        <p><a name="pffi-align-of"></a></p>
         <p><strong>pffi-align-of</strong> type -&gt; number</p>
         <p>Returns the align of the type.</p>
-        <h4
-        id="pffi-shared-object-auto-load">pffi-shared-object-auto-load
-        <a name="pffi-shared-object-auto-load"></a></h4>
-        <p><strong>pffi-shared-object-auto-load</strong> headers
+        <h4 id="pffi-define-library">pffi-define-library</h4>
+        <p><a name="pffi-define-library"></a></p>
+        <p><strong>pffi-define-library</strong> headers
         shared-object-name [options] -&gt; object</p>
         <p>Load given shared object automatically searching many
         predefined paths.</p>
@@ -800,69 +655,68 @@ Documentation - 0.6.0</title>
         </ul></li>
         </ul>
         <p>Example:</p>
-        <pre><code>(define libc-stdlib
-  (cond-expand
-    (windows (pffi-shared-object-auto-load (list &quot;stdlib.h&quot;) &quot;ucrtbase&quot;))
-    (else (pffi-shared-object-auto-load (list &quot;stdlib.h&quot;)
-                                        &quot;c&quot;
-                                        &#39;(additional-versions . (&quot;6&quot;))
-                                        &#39;(additional-search-paths . (&quot;.&quot;))))))</code></pre>
-        <h4 id="pffi-shared-object-load">pffi-shared-object-load
-        <a name="pffi-shared-object-load"></a></h4>
-        <p><strong>pffi-shared-object-load</strong> headers path
-        [options]</p>
-        <p>It is recommended to use the pffi-shared-object-auto-load
-        instead of this directly.</p>
-        <p>Headers is a list of strings needed to be included, for
-        example</p>
-        <pre><code>(list &quot;curl/curl.h&quot;)</code></pre>
-        <p>Path is the full path of the shared object without any “lib”
-        prefix or “.so/.dll” suffix. For example:</p>
-        <pre><code>&quot;curl&quot;</code></pre>
-        <p>Options:</p>
+        <pre><code>(cond-expand
+  (windows (pffi-define-library libc-stdlib
+                                &#39;(&quot;stdlib.h&quot;)
+                                &quot;ucrtbase&quot;
+                                &#39;((additional-versions (&quot;0&quot; &quot;6&quot;))
+                                  (additiona-paths (&quot;.&quot;)))))
+  (else (pffi-define-library libc-stdlib
+                             (list &quot;stdlib.h&quot;)
+                             &quot;c&quot;
+                             &#39;((additional-versions (&quot;0&quot; &quot;6&quot;))
+                               (additiona-paths (&quot;.&quot;))))))</code></pre>
+        <h4 id="notes">Notes</h4>
         <ul>
-        <li>additional-versions
+        <li>Do not cond-expand inside the arguments, that might lead to
+        problems on some implementations.</li>
+        <li>Do not store options in variables, that might lead to
+        problems on some implementations.</li>
+        <li>Do pass the headers using quote
         <ul>
-        <li>List of different versions of library to try, for example
-        (list “.0” “.1”)</li>
+        <li>As ’(… and not (list…</li>
+        </ul></li>
+        <li>Do pass the options using quote
+        <ul>
+        <li>As ’(… and not (list…</li>
         </ul></li>
         </ul>
-        <h4 id="pffi-pointer-null">pffi-pointer-null
-        <a name="pffi-pointer-null"></a></h4>
+        <h4 id="pffi-pointer-null">pffi-pointer-null</h4>
+        <p><a name="pffi-pointer-null"></a></p>
         <p><strong>pffi-pointer-null</strong> -&gt; pointer</p>
         <p>Returns a new NULL pointer.</p>
-        <h4 id="pffi-pointer-null-1">pffi-pointer-null?
-        <a name="pffi-pointer-null?"></a></h4>
+        <h4 id="pffi-pointer-null-1">pffi-pointer-null?</h4>
+        <p><a name="pffi-pointer-null"></a></p>
         <p><strong>pffi-pointer-null?</strong> pointer -&gt; boolean</p>
         <p>Returns #t if given pointer is null pointer, #f
         otherwise.</p>
-        <h4 id="pffi-pointer-allocate">pffi-pointer-allocate
-        <a name="pffi-pointer-allocate"></a></h4>
+        <h4 id="pffi-pointer-allocate">pffi-pointer-allocate</h4>
+        <p><a name="pffi-pointer-allocate"></a></p>
         <p><strong>pffi-pointer-allocate</strong> size -&gt; pointer</p>
         <p>Returns newly allocated pointer of given size.</p>
-        <h4 id="pffi-pointer-address">pffi-pointer-address
-        <a name="pffi-pointer-address"></a></h4>
+        <h4 id="pffi-pointer-address">pffi-pointer-address</h4>
+        <p><a name="pffi-pointer-address"></a></p>
         <p><strong>pffi-pointer-address</strong> pointer -&gt;
         number</p>
         <p>Returns the address of given pointer as number.</p>
-        <h4 id="pffi-pointer">pffi-pointer?
-        <a name="pffi-pointer?"></a></h4>
+        <h4 id="pffi-pointer">pffi-pointer?</h4>
+        <p><a name="pffi-pointer"></a></p>
         <p><strong>pffi-pointer?</strong> object -&gt; boolean</p>
         <p>Returns #t if given object is pointer, #f otherwise.</p>
-        <h4 id="pffi-pointer-free">pffi-pointer-free
-        <a name="pffi-pointer-free"></a></h4>
+        <h4 id="pffi-pointer-free">pffi-pointer-free</h4>
+        <p><a name="pffi-pointer-free"></a></p>
         <p><strong>pffi-pointer-free</strong> pointer</p>
         <p>Frees given pointer.</p>
-        <h4 id="pffi-pointer-set">pffi-pointer-set!
-        <a name="pffi-pointer-set!"></a></h4>
+        <h4 id="pffi-pointer-set">pffi-pointer-set!</h4>
+        <p><a name="pffi-pointer-set!"></a></p>
         <p><strong>pffi-pointer-set!</strong> pointer type offset
         value</p>
         <p>Sets the value on a pointer on given offset. For example:</p>
         <pre><code>(define p (pffi-pointer-allocate 128))
 (pffi-pointer-set! p &#39;int 64 100)</code></pre>
         <p>Would set the offset of 64, on pointer p to value 100.</p>
-        <h4 id="pffi-pointer-get">pffi-pointer-get
-        <a name="pffi-pointer-get"></a></h4>
+        <h4 id="pffi-pointer-get">pffi-pointer-get</h4>
+        <p><a name="pffi-pointer-get"></a></p>
         <p><strong>pffi-pointer-get</strong> pointer type offset -&gt;
         object</p>
         <p>Gets the value from a pointer on given offset. For
@@ -871,18 +725,18 @@ Documentation - 0.6.0</title>
 (pffi-pointer-set! p &#39;int 64 100)
 (pffi-pointer-get p &#39;int 64)
 &gt; 100</code></pre>
-        <h4 id="pffi-string-pointer">pffi-string-&gt;pointer
-        <a name="pffi-string-to-pointer"></a></h4>
+        <h4 id="pffi-string-pointer">pffi-string-&gt;pointer</h4>
+        <p><a name="pffi-string->pointer"></a></p>
         <p><strong>pffi-string-&gt;pointer</strong> string -&gt;
         pointer</p>
         <p>Makes pointer out of a given string.</p>
-        <h4 id="pffi-pointer-string">pffi-pointer-&gt;string
-        <a name="pffi-pointer-to-string"></a></h4>
+        <h4 id="pffi-pointer-string">pffi-pointer-&gt;string</h4>
+        <p><a name="pffi-pointer->string"></a></p>
         <p><strong>pffi-pointer-&gt;string</strong> pointer -&gt;
         string</p>
         <p>Makes string out of a given pointer.</p>
-        <h4 id="pffi-struct-make">pffi-struct-make
-        <a name="pffi-struct-make"></a></h4>
+        <h4 id="pffi-struct-make">pffi-struct-make</h4>
+        <p><a name="pffi-struct-make"></a></p>
         <p><strong>pffi-struct-make</strong> c-type members . pointer
         -&gt; pffi-struct</p>
         <p>Creates a new pffi-struct and allocates pointer for it. The
@@ -891,8 +745,8 @@ Documentation - 0.6.0</title>
         <pre><code>(define color (pffi-struct-make &#39;color &#39;((int8 . r) (int8 . g) (int8 . b) (int8 .a ))))
 (define test (pffi-struct-make &quot;struct test&quot; &#39;((int8 . r) (int8 . g) (int8 . b) (int8 .a ))))</code></pre>
         <p>C-type argument can be symbol or a string.</p>
-        <h4 id="pffi-struct-pointer">pffi-struct-pointer
-        <a name="pffi-struct-pointer"></a></h4>
+        <h4 id="pffi-struct-pointer">pffi-struct-pointer</h4>
+        <p><a name="pffi-struct-pointer"></a></p>
         <p><strong>pffi-struct-pointer</strong> pffi-struct -&gt;
         pointer</p>
         <p>Returns the pointer that holds the struct content. You need
@@ -900,52 +754,85 @@ Documentation - 0.6.0</title>
         functions.</p>
         <pre><code>(define s (pffi-struct-make &#39;test &#39;((int . r) (int . g) (int . b))))
 (pffi-struct-pointer s)</code></pre>
-        <h4 id="pffi-struct-offset-get">pffi-struct-offset-get
-        <a name="pffi-struct-offset-get"></a></h4>
+        <h4 id="pffi-struct-offset-get">pffi-struct-offset-get</h4>
+        <p><a name="pffi-struct-offset-get"></a></p>
         <p><strong>pffi-struct-offset-get</strong> member-name -&gt;
         number</p>
         <p>Returns the offset of a struct member with given name.</p>
-        <h4 id="pffi-struct-get">pffi-struct-get
-        <a name="pffi-struct-get"></a></h4>
+        <h4 id="pffi-struct-get">pffi-struct-get</h4>
+        <p><a name="pffi-struct-get"></a></p>
         <p><strong>pffi-struct-get</strong> pffi-struct member-name
         -&gt; object</p>
         <p>Returns the value of the givens struct member.</p>
-        <h4 id="pffi-struct-set">pffi-struct-set!
-        <a name="pffi-struct-set!"></a></h4>
+        <h4 id="pffi-struct-set">pffi-struct-set!</h4>
+        <p><a name="pffi-struct-set!"></a></p>
         <p><strong>pffi-struct-set!</strong> pffi-struct member-name
         value</p>
         <p>Sets the value of the givens struct member. It is up to you
         to make sure that the type of value is correct.</p>
-        <h4 id="pffi-define">pffi-define <a name="pffi-define"></a></h4>
-        <p><strong>pffi-define</strong> scheme-name shared-object c-name
-        return-type argument-types</p>
+        <h4 id="pffi-array-allocate">pffi-array-allocate</h4>
+        <p><a name="pffi-array-allocate"></a></p>
+        <p><strong>pffi-array-allocate</strong> type size</p>
+        <p>Allocates pointer array of given type and size.</p>
+        <h4 id="pffi-array-pointer">pffi-array-pointer</h4>
+        <p><a name="pffi-array-pointer"></a></p>
+        <p><strong>pffi-array-pointer</strong> array</p>
+        <p>Returns the pointer of the array.</p>
+        <h4 id="pffi-array">pffi-array?</h4>
+        <p><a name="pffi-array"></a></p>
+        <p><strong>pffi-array?</strong> object</p>
+        <p>Returns #t of given object is array, #f otherwise.</p>
+        <h4 id="pffi-pointer-array">pffi-pointer-&gt;array</h4>
+        <p><a name="pffi-pointer->array"></a></p>
+        <p><strong>pffi-pointer-&gt;array</strong> pointer type size</p>
+        <p>Converts given pointer to an array of giben type and
+        size.</p>
+        <h4 id="pffi-array-get">pffi-array-get</h4>
+        <p><a name="pffi-array-get"></a></p>
+        <p><strong>pffi-array-get</strong> array index</p>
+        <p>Returns the value of given index from given array.</p>
+        <h4 id="pffi-array-set">pffi-array-set!</h4>
+        <p><a name="pffi-array-set!"></a></p>
+        <p><strong>pffi-array-set!</strong> array index value</p>
+        <p>Sets the given value of given index in given array.</p>
+        <h4 id="pffi-list-array">pffi-list-&gt;array</h4>
+        <p><a name="pffi-list->array"></a></p>
+        <p><strong>pffi-list-&gt;array</strong> type list</p>
+        <p>Converts given list into C array of given type.</p>
+        <h4 id="pffi-array-list">pffi-array-&gt;list</h4>
+        <p><a name="pffi-array->list"></a></p>
+        <p><strong>pffi-array-&gt;list</strong> type list length</p>
+        <p>Converts given C array into list of given type and
+        length.</p>
+        <h4 id="pffi-define-function">pffi-define-function</h4>
+        <p><a name="pffi-define-function"></a></p>
+        <p><strong>pffi-define-function</strong> scheme-name
+        shared-object c-name return-type argument-types</p>
         <p>Defines a new foreign function to be used from Scheme code.
         For example:</p>
-        <pre><code>(define libc-stdlib
-    (cond-expand
-        (windows (pffi-shared-object-auto-load (list &quot;stdlib.h&quot;) (list) &quot;ucrtbase&quot; (list &quot;&quot;)))
-        (else (pffi-shared-object-auto-load (list &quot;stdlib.h&quot;) (list) &quot;c&quot; (list &quot;&quot; &quot;6&quot;)))))
-(pffi-define c-puts libc-stdlib &#39;puts &#39;int (list &#39;pointer))
+        <pre><code>(cond-expand
+    (windows (pffi-define-library libc-stdlib &#39;(&quot;stdlib.h&quot;) &quot;ucrtbase&quot; &#39;(&quot;&quot;)))
+    (else (pffi-define-library libc-stdlib &#39;(&quot;stdlib.h&quot;)  &quot;c&quot; &#39;(&quot;&quot; &quot;6&quot;))))
+(pffi-define-function c-puts libc-stdlib &#39;puts &#39;int &#39;(pointer))
 (c-puts &quot;Message brought to you by FFI!&quot;)</code></pre>
-        <h4 id="pffi-define-callback">pffi-define-callback
-        <a name="pffi-define-callback"></a></h4>
+        <h4 id="pffi-define-callback">pffi-define-callback</h4>
+        <p><a name="pffi-define-callback"></a></p>
         <p><strong>pffi-define-callback</strong> scheme-name return-type
         argument-types procedure</p>
         <p>Defines a new Sceme function to be used as callback to C
         code. For example:</p>
         <pre><code>; Load the shared library
-(define libc-stdlib
-    (cond-expand
-        (windows (pffi-shared-object-auto-load (list &quot;stdlib.h&quot;) (list) &quot;ucrtbase&quot; (list &quot;&quot;)))
-        (else (pffi-shared-object-auto-load (list &quot;stdlib.h&quot;) (list) &quot;c&quot; (list &quot;&quot; &quot;6&quot;)))))
+(cond-expand
+    (windows (pffi-define-library libc-stdlib &#39;(&quot;stdlib.h&quot;) &quot;ucrtbase&quot; &#39;()))
+    (else (pffi-define-library &#39;(&quot;stdlib.h&quot;) &quot;c&quot; &#39;(&quot;&quot; &quot;6&quot;))))
 
 ; Define C function that takes a callback
-(pffi-define qsort libc-stdlib &#39;qsort &#39;void (list &#39;pointer &#39;int &#39;int &#39;callback))
+(pffi-define-function qsort libc-stdlib &#39;qsort &#39;void &#39;(pointer int int callback))
 
 ; Define our callback
 (pffi-define-callback compare
                       &#39;int
-                      (list &#39;pointer &#39;pointer)
+                      &#39;(pointer pointer)
                       (lambda (pointer-a pointer-b)
                         (let ((a (pffi-pointer-get pointer-a &#39;int 0))
                               (b (pffi-pointer-get pointer-b &#39;int 0)))

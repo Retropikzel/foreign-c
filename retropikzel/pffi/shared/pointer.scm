@@ -10,11 +10,10 @@
 
 (cond-expand
   (chibi #t) ; FIXME
-  (else (pffi-define pffi-pointer-allocate pffi-libc-stdlib 'malloc 'pointer '(int))))
+  (else (pffi-define-function pffi-pointer-allocate pffi-libc-stdlib 'malloc 'pointer '(int))))
 
-;(pffi-define pffi-pointer-allocate-aligned pffi-libc-stdlib 'aligned_alloc 'pointer '(int int))
-(pffi-define pffi-pointer-allocate-calloc pffi-libc-stdlib 'calloc 'pointer '(int int))
+(pffi-define-function pffi-pointer-allocate-calloc pffi-libc-stdlib 'calloc 'pointer '(int int))
 
 (cond-expand
   (chibi #t) ; FIXME
-  (else (pffi-define pffi-pointer-free pffi-libc-stdlib 'free 'void '(pointer))))
+  (else (pffi-define-function pffi-pointer-free pffi-libc-stdlib 'free 'void '(pointer))))

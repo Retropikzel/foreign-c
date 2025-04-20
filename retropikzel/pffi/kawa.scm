@@ -59,9 +59,9 @@
     (string=? (invoke (invoke object 'getClass) 'getName)
               "jdk.internal.foreign.NativeMemorySegmentImpl")))
 
-(define-syntax pffi-define
+(define-syntax pffi-define-function
   (syntax-rules ()
-    ((pffi-define scheme-name shared-object c-name return-type argument-types)
+    ((pffi-define-function scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
        (lambda vals
          (invoke (invoke (cdr (assoc 'linker shared-object))

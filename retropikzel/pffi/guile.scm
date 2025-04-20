@@ -29,9 +29,9 @@
   (lambda (object)
     (pointer? object)))
 
-(define-syntax pffi-define
+(define-syntax pffi-define-function
   (syntax-rules ()
-    ((pffi-define scheme-name shared-object c-name return-type argument-types)
+    ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
        (foreign-library-function shared-object
                                  (symbol->string c-name)
@@ -40,7 +40,7 @@
 
 (define-syntax pffi-define-callback
   (syntax-rules ()
-    ((pffi-define-callback scheme-name return-type argument-types procedure)
+    ((_ scheme-name return-type argument-types procedure)
      (define scheme-name
        (procedure->pointer (pffi-type->native-type return-type)
                            procedure

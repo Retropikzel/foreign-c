@@ -29,7 +29,7 @@
   (lambda (object)
     (pointer? object)))
 
-(define-syntax pffi-define
+(define-syntax pffi-define-function
   (er-macro-transformer
     (lambda (expr rename compare)
       (let* ((pffi-type->native-type ; Chicken has this procedure in three places
@@ -147,33 +147,6 @@
 (define pffi-pointer-null
   (lambda ()
     (address->pointer 0)))
-
-;(pffi-define strncpy-ps #f 'strncpy 'pointer (list 'pointer 'pointer 'int))
-;(pffi-define puts #f 'puts 'int (list 'pointer))
-;(pffi-define memset #f 'memset 'void (list 'pointer 'int 'int))
-
-#;(define pffi-string->pointer
-  (lambda (string-content)
-    (let* ((size (string-length string-content))
-           (pointer (pffi-pointer-allocate (+ size 1))))
-      (memset pointer 0 (+ size 1))
-      (strncpy-ps pointer (location string-content) size)
-      ;(puts pointer)
-      pointer)))
-
-#;(define pffi-string->pointer
-  (foreign-lambda* c-pointer
-                   ((c-string str))
-                   "C_return((void*)str);"))
-
-
-;(pffi-define strncpy-pp #f 'strncpy 'pointer (list 'pointer 'pointer 'int))
-;(pffi-define strlen #f 'strlen 'int (list 'pointer))
-
-#;(define pffi-pointer->string
-  (foreign-lambda* c-string
-                   ((c-pointer p))
-                   "C_return((char*)p);"))
 
 (define-syntax pffi-shared-object-load
   (er-macro-transformer

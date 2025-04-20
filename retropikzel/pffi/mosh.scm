@@ -139,9 +139,9 @@
           ((equal? type 'struct) 'void*)
           (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
-(define-syntax pffi-define
+(define-syntax pffi-define-function
   (syntax-rules ()
-    ((pffi-define scheme-name shared-object c-name return-type argument-types)
+    ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
        (make-c-function shared-object
                         (pffi-type->native-type return-type)

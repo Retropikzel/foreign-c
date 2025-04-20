@@ -167,7 +167,7 @@
           ((equal? type 'pointer) (pointer-ref-c-pointer pointer offset)))))
 
 (define-macro
-  (pffi-define scheme-name shared-object c-name return-type argument-types)
+  (pffi-define-function scheme-name shared-object c-name return-type argument-types)
   (letrec* ((native-argument-types
               (if (equal? '(list) argument-types)
                 (list)

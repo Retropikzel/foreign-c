@@ -122,9 +122,9 @@
           ((equal? type 'void) (%peek-pointer (+ pointer offset)))
           ((equal? type 'pointer) (%peek-pointer (+ pointer offset))))))
 
-(define-syntax pffi-define
+(define-syntax pffi-define-function
   (syntax-rules ()
-    ((pffi-define scheme-name shared-object c-name return-type argument-types)
+    ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
        0
 
@@ -135,7 +135,7 @@
 
 (define-syntax pffi-define-callback
   (syntax-rules ()
-    ((pffi-define scheme-name return-type argument-types procedure)
+    ((_ scheme-name return-type argument-types procedure)
      (define scheme-name
        0
        #;(make-c-callback return-type argument-types procedure)))))

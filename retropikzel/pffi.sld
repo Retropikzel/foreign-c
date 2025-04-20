@@ -164,7 +164,7 @@
           pffi-array-set!
           pffi-list->array
           pffi-array->list
-          pffi-define
+          pffi-define-function
           pffi-define-callback)
   (cond-expand
     (chibi (include "pffi/chibi.scm"))

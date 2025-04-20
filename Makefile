@@ -5,7 +5,7 @@ DOCKER_INIT=cd /workdir && make clean &&
 VERSION=$(shell grep "version:" README.md | awk '{split\($0,a\); print a[2];}')
 
 # apt-get install pandoc weasyprint
-docs:
+documentation:
 	mkdir -p documentation
 	pandoc --standalone \
 		--template templates/documentation.html README.md \

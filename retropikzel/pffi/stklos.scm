@@ -33,9 +33,9 @@
     (newline)
     (cpointer? object)))
 
-(define-syntax pffi-define
+(define-syntax pffi-define-function
   (syntax-rules ()
-    ((pffi-define scheme-name shared-object c-name return-type argument-types)
+    ((_ scheme-name shared-object c-name return-type argument-types)
      (begin
        (define pffi-type->native-type
   (lambda (type)

@@ -144,7 +144,7 @@
           (else (error "pffi-type->native-type -- No such pffi type" ,type))))
 
 (define-macro
-  (pffi-define scheme-name shared-object c-name return-type argument-types)
+  (pffi-define-function scheme-name shared-object c-name return-type argument-types)
     `(define ,scheme-name
        (c-function ,(pffi-type->native-type return-type)
                    ,(cadr c-name)

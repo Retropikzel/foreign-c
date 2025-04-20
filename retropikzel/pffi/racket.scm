@@ -29,9 +29,9 @@
   (lambda (object)
     (cpointer? object)))
 
-(define-syntax pffi-define
+(define-syntax pffi-define-function
   (syntax-rules ()
-    ((pffi-define scheme-name shared-object c-name return-type argument-types)
+    ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
        (get-ffi-obj c-name
                     shared-object

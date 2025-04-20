@@ -27,7 +27,7 @@
   (lambda (object)
     (opaque? object)))
 
-(define-syntax pffi-define
+(define-syntax pffi-define-function
   (er-macro-transformer
     (lambda (expr rename compare)
       (let* ((pffi-type->native-type

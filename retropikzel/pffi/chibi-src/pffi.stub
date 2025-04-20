@@ -186,7 +186,7 @@
 ;(c-declare "char* pointer_to_string(void* pointer) { return (char*)pointer; }")
 ;(define-c string (pointer-to-string pointer_to_string) ((maybe-null pointer void*)))
 
-;; pffi-define
+;; pffi-define-function
 
 (c-declare "ffi_cif cif;")
 (define-c (pointer void*) dlsym ((maybe-null pointer void*) string))

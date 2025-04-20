@@ -30,7 +30,7 @@
     (or (pointer? object)
         (string? object))))
 
-(define-syntax pffi-define
+(define-syntax pffi-define-function
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name

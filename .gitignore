@@ -41,3 +41,4 @@ core
 testfile.test
 tests/compliance
 tests/retropikzel
+*.rkt

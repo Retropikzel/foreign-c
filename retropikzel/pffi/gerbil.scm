@@ -6,9 +6,9 @@
   (lambda (object)
     (error "Not defined")))
 
-(define-syntax pffi-define
+(define-syntax pffi-define-function
   (syntax-rules ()
-    ((pffi-define scheme-name shared-object c-name return-type argument-types)
+    ((_ scheme-name shared-object c-name return-type argument-types)
      (error "Not defined"))))
 
 (define size-of-type

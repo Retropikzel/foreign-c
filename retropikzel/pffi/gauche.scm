@@ -168,9 +168,9 @@
           (cond ((not (equal? return-type 'void))
                  (pffi-pointer-get return-value return-type 0))))))))
 
-(define-syntax pffi-define
+(define-syntax pffi-define-function
   (syntax-rules ()
-    ((pffi-define scheme-name shared-object c-name return-type argument-types)
+    ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
        (make-c-function shared-object
                         (symbol->string c-name)
@@ -183,6 +183,6 @@
 
 (define-syntax pffi-define-callback
   (syntax-rules ()
-    ((pffi-define scheme-name return-type argument-types procedure)
+    ((_ scheme-name return-type argument-types procedure)
      (define scheme-name
        (make-c-callback return-type 'argument-types procedure)))))

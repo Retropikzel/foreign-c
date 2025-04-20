@@ -9,4 +9,5 @@ RUN apt-get update && apt-get install -y \
     git make libffi8 libgc1 libssl3 libuv1 build-essential libffi-dev
 COPY --from=build /usr/local-other/ /usr/local-other/
 ENV PATH=${PATH}:/usr/local-other/bin
-RUN git clone https://git.sr.ht/~retropikzel/compile-r7rs && cd compile-r7rs && make && make install
+RUN git clone https://gitea.scheme.org/Retropikzel/compile-r7rs.git --depth=1
+RUN cd compile-r7rs && make && make install

@@ -684,31 +684,31 @@
 
 (print-header 'pffi-define)
 
-(pffi-define c-abs libc-stdlib 'abs 'int '(int))
+(pffi-define-function c-abs libc-stdlib 'abs 'int '(int))
 (debug c-abs)
 (define absoluted (c-abs -2))
 (debug absoluted)
 (assert = absoluted 2)
 
-(pffi-define c-puts libc-stdlib 'puts 'int '(pointer))
+(pffi-define-function c-puts libc-stdlib 'puts 'int '(pointer))
 (debug c-puts)
 (define chars-written (c-puts (pffi-string->pointer "puts: Hello from testing, I am C function puts")))
 (debug chars-written)
 (assert = chars-written 47)
 
-(pffi-define c-atoi libc-stdlib 'atoi 'int '(pointer))
+(pffi-define-function c-atoi libc-stdlib 'atoi 'int '(pointer))
 (assert = (c-atoi (pffi-string->pointer "100")) 100)
 
-(pffi-define c-fopen libc-stdio 'fopen 'pointer '(pointer pointer))
+(pffi-define-function c-fopen libc-stdio 'fopen 'pointer '(pointer pointer))
 (define output-file (c-fopen (pffi-string->pointer "testfile.test")
                               (pffi-string->pointer "w")))
 (debug output-file)
-(pffi-define c-fprintf libc-stdio 'fprintf 'int '(pointer pointer))
+(pffi-define-function c-fprintf libc-stdio 'fprintf 'int '(pointer pointer))
 (define characters-written
   (c-fprintf output-file (pffi-string->pointer "Hello world")))
 (debug characters-written)
 (assert equal? (= characters-written 11) #t)
-(pffi-define c-fclose libc-stdio 'fclose 'int '(pointer))
+(pffi-define-function c-fclose libc-stdio 'fclose 'int '(pointer))
 (define closed-status (c-fclose output-file))
 (debug closed-status)
 (assert equal? (= closed-status 0) #t)
@@ -717,11 +717,11 @@
                                                (lambda () (read-line)))
                          "Hello world") #t)
 
-(pffi-define c-takes-no-args c-testlib 'takes_no_args 'void '())
+(pffi-define-function c-takes-no-args c-testlib 'takes_no_args 'void '())
 (debug c-takes-no-args)
 (c-takes-no-args)
 
-(pffi-define c-takes-no-args-returns-int c-testlib 'takes_no_args_returns_int 'int '())
+(pffi-define-function c-takes-no-args-returns-int c-testlib 'takes_no_args_returns_int 'int '())
 (debug c-takes-no-args)
 (define takes-no-args-returns-int-result (c-takes-no-args-returns-int))
 (assert equal? (= takes-no-args-returns-int-result 0) #t)
@@ -730,8 +730,8 @@
 
 (print-header 'pffi-struct-get)
 
-(pffi-define c-init-struct c-testlib 'init_struct 'pointer '(pointer))
-(pffi-define c-check-offset c-testlib 'check_offset 'void '(int int))
+(pffi-define-function c-init-struct c-testlib 'init_struct 'pointer '(pointer))
+(pffi-define-function c-check-offset c-testlib 'check_offset 'void '(int int))
 (pffi-define-struct struct-test-get1 'test_get1
                                           '((int8 . a)
                                             (char . b)
@@ -802,7 +802,7 @@
 
 (print-header "pffi-struct-set! 1")
 
-(pffi-define c-test-check c-testlib 'test_check 'int '(pointer))
+(pffi-define-function c-test-check c-testlib 'test_check 'int '(pointer))
 (pffi-define-struct struct-test-set1 'test_set1
                                           '((int8 . a)
                                             (char . b)
@@ -839,7 +839,7 @@
 
 ;(print-header "pffi-struct constructor with pointer")
 
-;(pffi-define c-test-new c-testlib 'test_new 'pointer '())
+;(pffi-define-function c-test-new c-testlib 'test_new 'pointer '())
 ;(define struct-test2-pointer (c-test-new))
 #;(define struct-test2 (pffi-struct-make 'test
                                        '((int8 . a)
@@ -923,7 +923,7 @@
 ;; pffi-struct-dereference 1
 
 ;(print-header "pffi-struct-dereference 1")
-;(pffi-define c-color-check-by-value c-testlib 'color_check_by_value 'int '((struct . color)))
+;(pffi-define-function c-color-check-by-value c-testlib 'color_check_by_value 'int '((struct . color)))
 #;(pffi-define-struct make-struct-color 'color '((int8 . r)
                                                (int8 . g)
                                                (int8 . b)
@@ -939,7 +939,7 @@
 
 ;(print-header "pffi-struct-dereference 2")
 
-;(pffi-define c-test-check-by-value c-testlib 'test_check_by_value 'int '((struct . test)))
+;(pffi-define-function c-test-check-by-value c-testlib 'test_check_by_value 'int '((struct . test)))
 #;(pffi-define-struct make-struct-test-dereference2
                     'test
                     '((int8 . a)
@@ -996,7 +996,7 @@
 ;(pffi-pointer-set! array 'int (* (pffi-size-of 'int) 1) 2)
 ;(pffi-pointer-set! array 'int (* (pffi-size-of 'int) 2) 1)
 
-;(pffi-define qsort libc-stdlib 'qsort 'void '(pointer int int callback))
+;(pffi-define-function qsort libc-stdlib 'qsort 'void '(pointer int int callback))
 
 #;(pffi-define-callback compare
                       'int
