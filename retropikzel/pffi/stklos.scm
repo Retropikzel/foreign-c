@@ -1,13 +1,13 @@
 (define pffi-type->native-type
   (lambda (type)
-    (cond ((equal? type 'int8) :int)
-          ((equal? type 'uint8) :uint)
-          ((equal? type 'int16) :int)
-          ((equal? type 'uint16) :uint)
+    (cond ((equal? type 'int8) :char)
+          ((equal? type 'uint8) :char)
+          ((equal? type 'int16) :short)
+          ((equal? type 'uint16) :ushort)
           ((equal? type 'int32) :int)
           ((equal? type 'uint32) :uint)
-          ((equal? type 'int64) :int)
-          ((equal? type 'uint64) :uint)
+          ((equal? type 'int64) :long)
+          ((equal? type 'uint64) :ulong)
           ((equal? type 'char) :char)
           ((equal? type 'unsigned-char) :uchar)
           ((equal? type 'short) :short)
@@ -19,21 +19,15 @@
           ((equal? type 'float) :float)
           ((equal? type 'double) :double)
           ((equal? type 'pointer) :pointer)
-          ((equal? type 'string) :string)
           ((equal? type 'void) :void)
           ((equal? type 'struct) :void)
           (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
-(define pffi-pointer?
+(define c-bytevector?
   (lambda (object)
-    (display "HERE: ")
-    (write object)
-    (newline)
-    (write (cpointer? object))
-    (newline)
     (cpointer? object)))
 
-(define-syntax pffi-define-function
+(define-syntax define-c-procedure
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (begin
@@ -76,53 +70,25 @@
 ; FIXME
 (define size-of-type
   (lambda (type)
-    (cond
-      ((equal? type 'int8) 1)
-      ((equal? type 'uint8) 1)
-      ((equal? type 'int16) 2)
-      ((equal? type 'uint16) 2)
-      ((equal? type 'int32) 4)
-      ((equal? type 'uint32) 4)
-      ((equal? type 'int64) 8)
-      ((equal? type 'uint64) 8)
-      ((equal? type 'char) 1)
-      ((equal? type 'unsigned-char) 1)
-      ((equal? type 'short) 2)
-      ((equal? type 'unsigned-short) 2)
-      ((equal? type 'int) 4)
-      ((equal? type 'unsigned-int) 4)
-      ((equal? type 'long) 8)
-      ((equal? type 'unsigned-long) 8)
-      ((equal? type 'float) 4)
-      ((equal? type 'double) 8)
-      ((equal? type 'pointer) 8)
-
-      )))
-
-#;(define pffi-pointer-allocate
-  (lambda (size)
-    (allocate-bytes size)))
-
-;; FIXME
-(define pffi-pointer-address
-  (lambda (pointer)
-    0))
-
-;; FIXME
-(define pffi-pointer-null
-  (lambda ()
-    (let ((p (allocate-bytes 0)))
-      (free-bytes p)
-      p)))
-
-#;(define pffi-pointer-free
-  (lambda (pointer)
-    (free-bytes pointer)))
-
-(define pffi-pointer-null?
-  (lambda (pointer)
-    (and (cpointer? pointer)
-         (cpointer-null? pointer))))
+    (cond ((equal? type 'int8) 1)
+          ((equal? type 'uint8) 1)
+          ((equal? type 'int16) 2)
+          ((equal? type 'uint16) 2)
+          ((equal? type 'int32) 4)
+          ((equal? type 'uint32) 4)
+          ((equal? type 'int64) 8)
+          ((equal? type 'uint64) 8)
+          ((equal? type 'char) 1)
+          ((equal? type 'unsigned-char) 1)
+          ((equal? type 'short) 2)
+          ((equal? type 'unsigned-short) 2)
+          ((equal? type 'int) 4)
+          ((equal? type 'unsigned-int) 4)
+          ((equal? type 'long) 8)
+          ((equal? type 'unsigned-long) 8)
+          ((equal? type 'float) 4)
+          ((equal? type 'double) 8)
+          ((equal? type 'pointer) 8))))
 
 (define pffi-pointer-set!
   (lambda (pointer type offset value)

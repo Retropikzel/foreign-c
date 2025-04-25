@@ -1,3 +1,33 @@
+(define size-of-type
+  (lambda (type)
+    (cond ((eq? type 'int8) size-of-int8_t)
+          ((eq? type 'uint8) size-of-uint8_t)
+          ((eq? type 'int16) size-of-int16_t)
+          ((eq? type 'uint16) size-of-uint16_t)
+          ((eq? type 'int32) size-of-int32_t)
+          ((eq? type 'uint32) size-of-uint32_t)
+          ((eq? type 'int64) size-of-int64_t)
+          ((eq? type 'uint64) size-of-uint64_t)
+          ((eq? type 'char) size-of-char)
+          ((eq? type 'unsigned-char) size-of-char)
+          ((eq? type 'short) size-of-short)
+          ((eq? type 'unsigned-short) size-of-unsigned-short)
+          ((eq? type 'int) size-of-int)
+          ((eq? type 'unsigned-int) size-of-unsigned-int)
+          ((eq? type 'long) size-of-long)
+          ((eq? type 'unsigned-long) size-of-unsigned-long)
+          ((eq? type 'float) size-of-float)
+          ((eq? type 'double) size-of-double)
+          ((eq? type 'pointer) size-of-void*)
+          ((eq? type 'void) 0)
+          ((eq? type 'string) size-of-void*)
+          ((eq? type 'callback) size-of-void*)
+          (else #f))))
+
+(define pffi-shared-object-load
+  (lambda (path options)
+    (open-shared-library path)))
+
 (define pffi-type->native-type
   (lambda (type)
     (cond ((equal? type 'int8) 'int8_t)
@@ -25,11 +55,7 @@
           ((and (pair? type) (equal? 'struct (car type))) 'void*)
           (else #f))))
 
-(define pffi-pointer?
-  (lambda (object)
-    (pointer? object)))
-
-(define-syntax pffi-define-function
+(define-syntax define-c-procedure
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
@@ -46,72 +72,9 @@
                         (map pffi-type->native-type argument-types)
                         procedure)))))
 
-(define size-of-type
-  (lambda (type)
-    (cond ((eq? type 'int8) size-of-int8_t)
-          ((eq? type 'uint8) size-of-uint8_t)
-          ((eq? type 'int16) size-of-int16_t)
-          ((eq? type 'uint16) size-of-uint16_t)
-          ((eq? type 'int32) size-of-int32_t)
-          ((eq? type 'uint32) size-of-uint32_t)
-          ((eq? type 'int64) size-of-int64_t)
-          ((eq? type 'uint64) size-of-uint64_t)
-          ((eq? type 'char) size-of-char)
-          ((eq? type 'unsigned-char) size-of-char)
-          ((eq? type 'short) size-of-short)
-          ((eq? type 'unsigned-short) size-of-unsigned-short)
-          ((eq? type 'int) size-of-int)
-          ((eq? type 'unsigned-int) size-of-unsigned-int)
-          ((eq? type 'long) size-of-long)
-          ((eq? type 'unsigned-long) size-of-unsigned-long)
-          ((eq? type 'float) size-of-float)
-          ((eq? type 'double) size-of-double)
-          ((eq? type 'pointer) size-of-void*)
-          ((eq? type 'void) 0)
-          ((eq? type 'string) size-of-void*)
-          ((eq? type 'callback) size-of-void*)
-          (else #f))))
-
-#;(define pffi-pointer-allocate
-  (lambda (size)
-    (c-malloc size)))
-
-(define pffi-pointer-address
-  (lambda (pointer)
-    (address pointer)))
-
-(define pffi-pointer-null
-  (lambda ()
-    (empty-pointer)))
-
-#;(define (string->c-string s)
-  (let* ((bv (string->utf8 s))
-         (p  (allocate-pointer (+ (bytevector-length bv) 1))))
-    (do ((i 0 (+ i 1)))
-      ((= i (bytevector-length bv)) p)
-      (pointer-set-c-uint8! p i (bytevector-u8-ref bv i)))
-    p))
-
-#;(define pffi-string->pointer
-  (lambda (string-content)
-    (string->c-string string-content)))
-
-#;(define pffi-pointer->string
-  (lambda (pointer)
-    (pointer->string pointer)))
-
-(define pffi-shared-object-load
-  (lambda (path options)
-    (open-shared-library path)))
-
-#;(define pffi-pointer-free
-  (lambda (pointer)
-    (when (pointer? pointer)
-      (c-free pointer))))
-
-(define pffi-pointer-null?
-  (lambda (pointer)
-    (null-pointer? pointer)))
+(define c-bytevector?
+  (lambda (object)
+    (pointer? object)))
 
 (define pffi-pointer-set!
   (lambda (pointer type offset value)
@@ -156,3 +119,4 @@
           ((equal? type 'double) (pointer-ref-c-double pointer offset))
           ((equal? type 'void) (pointer-ref-c-pointer pointer offset))
           ((equal? type 'pointer) (pointer-ref-c-pointer pointer offset)))))
+

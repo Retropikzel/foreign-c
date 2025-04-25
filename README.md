@@ -47,19 +47,19 @@ conforming to some specification.
         - [PFFI\_LOAD\_PATH](#environment-variables-pffi-load-path)
     - [Procedures and macros](#procedures-and-macros)
         - [pffi-init](#pffi-init)
-        - [pffi-size-of](#pffi-size-of)
+        - [c-size-of](#c-size-of)
         - [pffi-align-of](#pffi-align-of)
-        - [pffi-define-library](#pffi-define-library)
-        - [pffi-pointer-null](#pffi-pointer-null)
-        - [pffi-pointer-null?](#pffi-pointer-null)
-        - [pffi-pointer-allocate](#pffi-pointer-allocate)
+        - [define-c-library](#define-c-library)
+        - [make-c-null](#make-c-null)
+        - [c-null?](#is-c-null)
+        - [make-c-bytevector ](#make-c-bytevector )
         - [pffi-pointer-address](#pffi-pointer-address)
-        - [pffi-pointer?](#pffi-pointer)
-        - [pffi-pointer-free](#pffi-pointer-free)
+        - [c-bytevector?](#is-c-bytevector)
+        - [c-free](#c-free)
         - [pffi-pointer-set!](#pffi-pointer-set!)
         - [pffi-pointer-get](#pffi-pointer-get)
-        - [pffi-string->pointer](#pffi-string->pointer)
-        - [pffi-pointer->string](#pffi-pointer->string)
+        - [string->c-bytevector](#string-into-c-bytevector)
+        - [c-bytevector->sring](#c-bytevector-into-string)
         - [pffi-struct-make](#pffi-struct-make)
         - [pffi-struct-pointer](#pffi-struct-pointer)
         - [pffi-struct-offset-get](#pffi-struct-offset-get)
@@ -73,7 +73,7 @@ conforming to some specification.
         - [pffi-array-set!](#pffi-array-set!)
         - [pffi-list->array](#pffi-list->array)
         - [pffi-array->list](#pffi-array->list)
-        - [pffi-define-function](#pffi-define-function)
+        - [define-c-procedure](#define-c-procedure)
         - [pffi-define-callback](#pffi-define-callback)
 
 </nav>
@@ -99,8 +99,7 @@ conforming to some specification.
 ## Status
 <a name="status"></a>
 
-Currently the interface of the library is in okay shape. It propably will not change much but no
-guarantees are being made just yet.
+In alpha.
 
 ### Current caveats
 <a name="current-caveats"></a>
@@ -111,7 +110,7 @@ guarantees are being made just yet.
 - Always pass pffi-define-callback procedure as lambda in place
 - No support for variadic function arguments
     - Can be partially worked around by defining multiple versions of same
-    function with different amount of arguments
+    function with different number of arguments
 
 ## Roadmap
 
@@ -123,24 +122,24 @@ For roadmap to 1.0.0 see [issues](https://todo.sr.ht/~retropikzel/r7rs-pffi?sear
 ## Primitives
 <a name="feature-implementation-table-primitives"></a>
 
-|              | pffi-init | pffi-size-of | pffi-define-library | pffi-pointer-null | pffi-pointer-null? | pffi-pointer-address | pffi-pointer? | pffi-pointer-set! | pffi-pointer-get | pffi-define | pffi-define-callback |
-|--------------|:---------:|:------------:|:-------------------:|:-----------------:|:------------------:|:--------------------:|:-------------:|:-----------------:|:----------------:|:-----------:|:--------------------:|
-| Chibi        | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           |                      |
-| Chicken      | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           | X                    |
-| Cyclone      | X         | X            | X                   | X                 | X                  |                      | X             | X                 | X                | X           |                      |
-| Gambit       | X         | X            |                     |                   |                    | X                    |               |                   |                  |             |                      |
-| Gauche       | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           |                      |
-| Gerbil       | X         |              |                     |                   |                    |                      |               |                   |                  |             |                      |
-| Guile        | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           | X                    |
-| Kawa         | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           | X                    |
-| Larceny      | X         |              |                     |                   |                    |                      |               |                   |                  |             |                      |
-| Mosh         | X         | X            | X                   | X                 | X                  |                      | X             | X                 | X                | X           | X                    |
-| Racket       | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           | X                    |
-| Saggittarius | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           | X                    |
-| Skint        | X         |              |                     |                   |                    |                      |               |                   |                  |             |                      |
-| Stklos       | X         | X            | X                   | X                 | X                  |                      | X             |                   |                  |             |                      |
-| tr7          |           |              |                     |                   |                    |                      |               |                   |                  |             |                      |
-| Ypsilon      | X         | X            | X                   | X                 | X                  | X                    | X             | X                 | X                | X           | X                    |
+|              | c-size-of    | define-c-library    | c-bytevector? | pffi-pointer-set! | pffi-pointer-get | define-c-procedure | pffi-define-callback |
+|--------------|:------------:|:-------------------:|:-------------:|:-----------------:|:----------------:|:-------------------:|:--------------------:|
+| Chibi        | X            | X                   | X             | X                 | X                | X                   |                      |
+| Chicken      | X            | X                   | X             | X                 | X                | X                   | X                    |
+| Cyclone      | X            | X                   | X             | X                 | X                | X                   |                      |
+| Gambit       | X            |                     |               |                   |                  |                     |                      |
+| Gauche       | X            | X                   | X             | X                 | X                | X                   |                      |
+| Gerbil       |              |                     |               |                   |                  |                     |                      |
+| Guile        | X            | X                   | X             | X                 | X                | X                   | X                    |
+| Kawa         | X            | X                   | X             | X                 | X                | X                   | X                    |
+| Larceny      |              |                     |               |                   |                  |                     |                      |
+| Mosh         | X            | X                   | X             | X                 | X                | X                   | X                    |
+| Racket       | X            | X                   | X             | X                 | X                | X                   | X                    |
+| Saggittarius | X            | X                   | X             | X                 | X                | X                   | X                    |
+| Skint        |              |                     |               |                   |                  |                     |                      |
+| Stklos       | X            | X                   | X             |                   |                  |                     |                      |
+| tr7          |              |                     |               |                   |                  |                     |                      |
+| Ypsilon      | X            | X                   | X             | X                 | X                | X                   | X                    |
 
 ## Built upon
 <a name="feature-implementation-table-built-upon"></a>
@@ -148,8 +147,11 @@ For roadmap to 1.0.0 see [issues](https://todo.sr.ht/~retropikzel/r7rs-pffi?sear
 These features are built upon the primitives and if primitives are implemented
 and work, they should work too.
 
-- pffi-pointer-allocate
-- pffi-pointer-free
+- make-c-bytevector
+- make-c-null
+- c-null?
+- pffi-pointer-address
+- c-free
 - pffi-pointer-\>string
 - pffi-string-\>pointer
 - pffi-struct-make
@@ -339,10 +341,10 @@ Some of these are procedures and some macros, it might also change implementatio
 Always call this first, on most implementation it does nothing but some implementations might need
 initialisation run.
 
-#### pffi-size-of
-<a name="pffi-size-of"></a>
+#### c-size-of
+<a name="c-size-of"></a>
 
-**pffi-size-of** object -> number
+**c-size-of** object -> number
 
 Returns the size of the pffi-struct, pffi-enum or pffi-type.
 
@@ -353,10 +355,10 @@ Returns the size of the pffi-struct, pffi-enum or pffi-type.
 
 Returns the align of the type.
 
-#### pffi-define-library
-<a name="pffi-define-library"></a>
+#### define-c-library
+<a name="define-c-library"></a>
 
-**pffi-define-library** headers shared-object-name [options] -> object
+**define-c-library** headers shared-object-name [options] -> object
 
 Load given shared object automatically searching many predefined paths.
 
@@ -377,12 +379,12 @@ keyword. The options are:
 Example:
 
     (cond-expand
-      (windows (pffi-define-library libc-stdlib
+      (windows (define-c-library libc-stdlib
                                     '("stdlib.h")
                                     "ucrtbase"
                                     '((additional-versions ("0" "6"))
                                       (additiona-paths (".")))))
-      (else (pffi-define-library libc-stdlib
+      (else (define-c-library libc-stdlib
                                  (list "stdlib.h")
                                  "c"
                                  '((additional-versions ("0" "6"))
@@ -399,45 +401,57 @@ implementations.
 - Do pass the options using quote
     - As '(... and not (list...
 
-#### pffi-pointer-null
-<a name="pffi-pointer-null"></a>
+#### make-c-null
+<a name="make-c-null"></a>
 
-**pffi-pointer-null** -> pointer
+**make-c-null** -> pointer
 
 Returns a new NULL pointer.
 
-#### pffi-pointer-null?
-<a name="pffi-pointer-null"></a>
+#### c-null?
+<a name="is-c-null"></a>
 
-**pffi-pointer-null?** pointer -> boolean
+**c-null?** pointer -> boolean
 
 Returns #t if given pointer is null pointer, #f otherwise.
 
-#### pffi-pointer-allocate
-<a name="pffi-pointer-allocate"></a>
+#### make-c-bytevector
+<a name="make-c-bytevector "></a>
 
-**pffi-pointer-allocate** size -> pointer
+(make-c-bytevector *k*)
+(make-c-bytevector *k* *fill*)
 
-Returns newly allocated pointer of given size.
+Returns a newly allocated C bytevector(pointer) of length k. If byte is given,
+then all elements of the C bytevector are initialized to byte, otherwise the
+contents of each element are unspecified.
 
 #### pffi-pointer-address
 <a name="pffi-pointer-address"></a>
 
-**pffi-pointer-address** pointer -> number
+**pffi-pointer-address** pointer -> pointer
 
-Returns the address of given pointer as number.
+Returns the address of given pointer inside a pointer. This is used when
+passing pointers to pointers to foreign procedures. This is similar to the
+c's &. One **important difference** is that after you have passed a pointer to
+the procedure you must get value from it back to the pointer which address you
+are passing. Example:
 
-#### pffi-pointer?
+    (define input-pointer (make-c-bytevector <needed size>))
+    (define input-pointer-address (pffi-pointer-address input-pointer))
+    (<foreign-procedure-that takes &pointer as argument> input-pointer-address)
+    (set! input-pointer (pffi-pointer-get input-pointer-address 'pointer 0))
+
+#### c-bytevector?
 <a name="pffi-pointer"></a>
 
-**pffi-pointer?** object -> boolean
+**c-bytevector?** object -> boolean
 
 Returns #t if given object is pointer, #f otherwise.
 
-#### pffi-pointer-free
-<a name="pffi-pointer-free"></a>
+#### c-free
+<a name="c-free"></a>
 
-**pffi-pointer-free** pointer
+**c-free** pointer
 
 Frees given pointer.
 
@@ -448,7 +462,7 @@ Frees given pointer.
 
 Sets the value on a pointer on given offset. For example:
 
-    (define p (pffi-pointer-allocate 128))
+    (define p (make-c-bytevector 128))
     (pffi-pointer-set! p 'int 64 100)
 
 Would set the offset of 64, on pointer p to value 100.
@@ -460,22 +474,22 @@ Would set the offset of 64, on pointer p to value 100.
 
 Gets the value from a pointer on given offset. For example:
 
-    (define p (pffi-pointer-allocate 128))
+    (define p (make-c-bytevector 128))
     (pffi-pointer-set! p 'int 64 100)
     (pffi-pointer-get p 'int 64)
     > 100
 
-#### pffi-string->pointer
-<a name="pffi-string->pointer"></a>
+#### string->c-bytevector
+<a name="string-into-c-bytevector"></a>
 
-**pffi-string->pointer** string -> pointer
+**string->c-bytevector** string -> pointer
 
 Makes pointer out of a given string.
 
-#### pffi-pointer->string
-<a name="pffi-pointer->string"></a>
+#### c-bytevector->string
+<a name="c-bytevector-into-string"></a>
 
-**pffi-pointer->string** pointer -> string
+**c-bytevector->sring** pointer -> string
 
 Makes string out of a given pointer.
 
@@ -581,17 +595,17 @@ Converts given list into C array of given type.
 
 Converts given C array into list of given type and length.
 
-#### pffi-define-function
-<a name="pffi-define-function"></a>
+#### define-c-procedure
+<a name="define-c-procedure"></a>
 
-**pffi-define-function** scheme-name shared-object c-name return-type argument-types
+**define-c-procedure** scheme-name shared-object c-name return-type argument-types
 
 Defines a new foreign function to be used from Scheme code. For example:
 
     (cond-expand
-        (windows (pffi-define-library libc-stdlib '("stdlib.h") "ucrtbase" '("")))
-        (else (pffi-define-library libc-stdlib '("stdlib.h")  "c" '("" "6"))))
-    (pffi-define-function c-puts libc-stdlib 'puts 'int '(pointer))
+        (windows (define-c-library libc-stdlib '("stdlib.h") "ucrtbase" '("")))
+        (else (define-c-library libc-stdlib '("stdlib.h")  "c" '("" "6"))))
+    (define-c-procedure c-puts libc-stdlib 'puts 'int '(pointer))
     (c-puts "Message brought to you by FFI!")
 
 #### pffi-define-callback
@@ -603,11 +617,11 @@ Defines a new Sceme function to be used as callback to C code. For example:
 
     ; Load the shared library
     (cond-expand
-        (windows (pffi-define-library libc-stdlib '("stdlib.h") "ucrtbase" '()))
-        (else (pffi-define-library '("stdlib.h") "c" '("" "6"))))
+        (windows (define-c-library libc-stdlib '("stdlib.h") "ucrtbase" '()))
+        (else (define-c-library '("stdlib.h") "c" '("" "6"))))
 
     ; Define C function that takes a callback
-    (pffi-define-function qsort libc-stdlib 'qsort 'void '(pointer int int callback))
+    (define-c-procedure qsort libc-stdlib 'qsort 'void '(pointer int int callback))
 
     ; Define our callback
     (pffi-define-callback compare
@@ -621,17 +635,17 @@ Defines a new Sceme function to be used as callback to C code. For example:
                                     ((< a b) -1)))))
 
     ; Create new array of ints to be sorted
-    (define array (pffi-pointer-allocate (* (pffi-size-of 'int) 3)))
-    (pffi-pointer-set! array 'int (* (pffi-size-of 'int) 0) 3)
-    (pffi-pointer-set! array 'int (* (pffi-size-of 'int) 1) 2)
-    (pffi-pointer-set! array 'int (* (pffi-size-of 'int) 2) 1)
+    (define array (make-c-bytevector (* (c-size-of 'int) 3)))
+    (pffi-pointer-set! array 'int (* (c-size-of 'int) 0) 3)
+    (pffi-pointer-set! array 'int (* (c-size-of 'int) 1) 2)
+    (pffi-pointer-set! array 'int (* (c-size-of 'int) 2) 1)
 
     (display array)
     (newline)
     ;> (3 2 1)
 
     ; Sort the array
-    (qsort array 3 (pffi-size-of 'int) compare)
+    (qsort array 3 (c-size-of 'int) compare)
 
     (display array)
     (newline)

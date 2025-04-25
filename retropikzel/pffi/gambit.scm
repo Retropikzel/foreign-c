@@ -1,11 +1,6 @@
 (c-declare "#include <stdlib.h>")
 (c-declare "#include <stdint.h>")
 
-(define-macro
-  (pffi-init)
-  `(begin (c-define-type pointer (pointer void))
-          (c-define-type callback (pointer void))))
-
 (define size-of-int8_t (c-lambda () int "___return(sizeof(int8_t));"))
 (define size-of-uint8_t (c-lambda () int "___return(sizeof(uint8_t));"))
 (define size-of-int16_t (c-lambda () int "___return(sizeof(int16_t));"))
@@ -52,36 +47,24 @@
           (else (error "Can not get size of unknown type" type)))))
 
 (define-macro
-  (pffi-define-library name headers object-name . options)
-  `(begin (define ,name #t)
-          (c-declare ,(apply string-append
-                             (map
-                               (lambda (header)
-                                 (string-append "#include <" header ">" (string #\newline)))
-                               (cdr headers))))))
+  (define-c-library name headers object-name . options)
+  (begin
+    (let ((c-code (apply string-append
+                         (map
+                           (lambda (header)
+                             (string-append "#include <" header ">" (string #\newline)))
+                           (car (cdr headers))))))
+      `(begin (define ,name #t) (c-declare ,c-code)))))
+
 
 (define pointer? (c-lambda ((pointer void)) bool  "___return(1);"))
-(define pffi-pointer?
+(define c-bytevector?
   (lambda (object)
     (call-with-current-continuation
       (lambda (k)
         (with-exception-handler
           (lambda (x) #f)
           (lambda () (pointer? object)))))))
-
-(define pffi-pointer-null (c-lambda () (pointer void) "void* p = NULL; ___return(p);"))
-
-(define pointer-null? (c-lambda ((pointer void)) bool  "if(___arg1 == NULL) {  ___return(1); } else { ___return(0); }"))
-(define pffi-pointer-null?
-  (lambda (pointer)
-    (and (pffi-pointer? pointer)
-         (pointer-null? pointer))))
-
-;(define pffi-pointer-allocate (c-lambda (int) (pointer void) "void* p = malloc(___arg1); ___return(p);"))
-
-(define pffi-pointer-address (c-lambda ((pointer void)) ptrdiff_t "void* p = ___arg1; ___return((intptr_t)&p);"))
-
-;(define pffi-pointer-free (c-lambda ((pointer void)) void "free(___arg1);"))
 
 (define pointer-set-c-int8_t! (c-lambda ((pointer void) int int8) void "*(int8_t*)((char*)___arg1 + ___arg2) = ___arg3;"))
 (define pointer-set-c-uint8_t! (c-lambda ((pointer void) int unsigned-int8) void "*(uint8_t*)((char*)___arg1 + ___arg2) = ___arg3;"))
@@ -167,31 +150,57 @@
           ((equal? type 'pointer) (pointer-ref-c-pointer pointer offset)))))
 
 (define-macro
-  (pffi-define-function scheme-name shared-object c-name return-type argument-types)
-  (letrec* ((native-argument-types
-              (if (equal? '(list) argument-types)
-                (list)
-                (let ((types (map cdr (cdr argument-types))))
-                  (if (null? types) types (map car types)))))
-            (native-return-type (car (cdr return-type)))
-            (c-arguments (lambda (index argument-count result)
-                           (if (> index argument-count)
-                             result
-                             (c-arguments (+ index 1)
-                                          argument-count
-                                          (string-append result
-                                                         "___arg"
-                                                         (number->string index)
-                                                         (if (< index argument-count)
-                                                           ", "
-                                                           ""))))))
-            (c-code (string-append
-                      (if (equal? 'void (cadr return-type)) "" "___return(")
-                      (symbol->string (cadr c-name))
-                      "(" (c-arguments 1 (- (length argument-types) 1) "") ")"
-                      (if (equal? 'void (cadr return-type)) "" ")")
-                      ";")))
-    `(define ,scheme-name
-       (c-lambda ,native-argument-types
-                 ,native-return-type
-                 ,c-code))))
+  (define-c-procedure scheme-name shared-object c-name return-type argument-types)
+  (begin
+    (letrec* ((pffi-type->native-type
+                (lambda (type)
+                  (cond ((equal? type 'int8) 'byte)
+                        ((equal? type 'uint8) 'unsigned-int8)
+                        ((equal? type 'int16) 'int16_t)
+                        ((equal? type 'uint16) 'uint16_t)
+                        ((equal? type 'int32) 'int32)
+                        ((equal? type 'uint32) 'unsigned-int32)
+                        ((equal? type 'int64) 'int64)
+                        ((equal? type 'uint64) 'unsigned-int64)
+                        ((equal? type 'char) 'char)
+                        ((equal? type 'unsigned-char) 'unsigned-char)
+                        ((equal? type 'short) 'short)
+                        ((equal? type 'unsigned-short) 'unsigned-short)
+                        ((equal? type 'int) 'int)
+                        ((equal? type 'unsigned-int) 'unsigned-int)
+                        ((equal? type 'long) 'long)
+                        ((equal? type 'unsigned-long) 'unsigned-long)
+                        ((equal? type 'float) 'float)
+                        ((equal? type 'double) 'double)
+                        ((equal? type 'pointer) '(pointer void))
+                        ((equal? type 'void) 'void)
+                        ((equal? type 'callback) 'c-pointer)
+                        ((equal? type 'struct) 'c-pointer)
+                        (else (error "pffi-type->native-type -- No such pffi type" type)))))
+              (native-argument-types
+                (if (equal? '(list) argument-types)
+                  (list)
+                  (let ((types (map pffi-type->native-type (cadr argument-types))))
+                    (if (null? types) types types))))
+              (native-return-type (pffi-type->native-type (cadr return-type)))
+              (argument-count (length native-argument-types))
+              (c-arguments (lambda (index result)
+                             (if (>= index argument-count)
+                               result
+                               (c-arguments (+ index 1)
+                                            (string-append result
+                                                           "___arg"
+                                                           (number->string (+ index 1))
+                                                           (if (<= index (- argument-count 2))
+                                                             ", "
+                                                             ""))))))
+              (c-code (string-append
+                        (if (equal? 'void (cadr return-type)) "" "___return(")
+                        (symbol->string (cadr c-name))
+                        "(" (c-arguments 0 "") ")"
+                        (if (equal? 'void (cadr return-type)) "" ")")
+                        ";")))
+      `(define ,scheme-name
+         (c-lambda ,native-argument-types
+                   ,native-return-type
+                   ,c-code)))))

@@ -4,6 +4,9 @@ DOCKER=docker run -it -v ${PWD}:/workdir
 DOCKER_INIT=cd /workdir && make clean &&
 VERSION=$(shell grep "version:" README.md | awk '{split\($0,a\); print a[2];}')
 
+snow:
+	snow-chibi --install-source-dir ./snow install "(r6rs bytevectors)"
+
 # apt-get install pandoc weasyprint
 docs:
 	mkdir -p documentation
@@ -64,13 +67,19 @@ tr7:
 ypsilon:
 	make -C retropikzel/pffi tr7
 
-test-compile-r7rs: tmp/test/libtest.o tmp/test/libtest.so
+test-compile-r7rs: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 	make ${COMPILE_R7RS}
 	cp -r retropikzel tmp/test/
 	cp tests/compliance.scm tmp/test/
 	cp tests/c-include/libtest.h tmp/test/
-	cd tmp/test && COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." compile-r7rs -I . -o compliance compliance.scm
-	cd tmp/test && LD_LIBRARY_PATH=. ./compliance
+	cp -r snow/* tmp/test/
+	cd tmp/test && \
+		COMPILE_R7RS_GAMBIT="-cc-options \"-ltest -I. -L\" -ld-options \"-L.\"" \
+		COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." \
+		compile-r7rs -I . -o compliance compliance.scm
+	cd tmp/test && \
+		LD_LIBRARY_PATH=. \
+		./compliance
 
 test-compile-r7rs-docker:
 	docker build --build-arg COMPILE_R7RS=${COMPILE_R7RS} --tag=r7rs-pffi-test-${COMPILE_R7RS} -f dockerfiles/test .
@@ -84,10 +93,11 @@ tmp/test/libtest.so: tests/c-src/libtest.c
 	mkdir -p tmp/test
 	${CC} -o tmp/test/libtest.so -shared -fPIC tests/c-src/libtest.c -I./include
 
-tmp/test/libtest.a: tmp/test/libtest.o src/libtest.c
+tmp/test/libtest.a: tmp/test/libtest.o tests/c-src/libtest.c
 	ar rcs tmp/test/libtest.a tmp/test/libtest.o
 
 clean:
+	@rm -rf retropikzel/pffi/pffi.c
 	@rm -rf retropikzel/pffi/*.o*
 	@rm -rf retropikzel/pffi/*.so
 	@rm -rf retropikzel/pffi/*.meta

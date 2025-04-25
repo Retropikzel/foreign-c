@@ -25,32 +25,12 @@
           (else #f))))
 
 (define pffi-shared-object-load
-  (lambda (path . options)
+  (lambda (path options)
     (open-shared-library path)))
 
-(define pffi-pointer-null
-  (lambda ()
-    pointer-null))
-
-(define pffi-pointer-null?
-  (lambda (pointer)
-    (pointer-null? pointer)))
-
-#;(define pffi-pointer-allocate
-  (lambda (size)
-    (malloc size)))
-
-(define pffi-pointer-address
-  (lambda (pointer)
-    (pointer->integer pointer)))
-
-(define pffi-pointer?
+(define c-bytevector?
   (lambda (object)
     (pointer? object)))
-
-#;(define pffi-pointer-free
-  (lambda (pointer)
-    (free pointer)))
 
 (define pffi-pointer-set!
   (lambda (pointer type offset value)
@@ -96,22 +76,6 @@
           ((equal? type 'void) (pointer-ref-c-pointer pointer offset))
           ((equal? type 'pointer) (pointer-ref-c-pointer pointer offset)))))
 
-#;(define pffi-string->pointer
-  (lambda (string-content)
-    (let ((pointer (pffi-pointer-allocate (+ (string-length string-content) 1)))
-          (index 0))
-      (string-for-each
-        (lambda (c)
-          (pffi-pointer-set! pointer 'char (* index (size-of-type 'char)) c)
-          (set! index (+ index 1)))
-        string-content)
-      (pffi-pointer-set! pointer 'char (* index (size-of-type 'char)) #\null)
-      pointer)))
-
-#;(define pffi-pointer->string
-  (lambda (pointer)
-    (pointer->string pointer)))
-
 (define pffi-type->native-type
   (lambda (type)
     (cond ((equal? type 'int8) 'int8_t)
@@ -139,7 +103,7 @@
           ((equal? type 'struct) 'void*)
           (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
-(define-syntax pffi-define-function
+(define-syntax define-c-procedure
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
@@ -155,7 +119,3 @@
        (make-c-callback (pffi-type->native-type return-type)
                         (map pffi-type->native-type argument-types)
                         procedure)))))
-
-#;(define pffi-struct-dereference
-  (lambda (struct)
-    (pffi-struct-pointer struct)))

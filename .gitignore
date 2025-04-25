@@ -44,3 +44,4 @@ tests/retropikzel
 *.rkt
 testfile.test
 tests/testfile.test
+snow

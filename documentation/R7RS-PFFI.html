@@ -76,23 +76,22 @@ Documentation - 0.6.0</title>
         <li><a href="#procedures-and-macros">Procedures and macros</a>
         <ul>
         <li><a href="#pffi-init">pffi-init</a></li>
-        <li><a href="#pffi-size-of">pffi-size-of</a></li>
+        <li><a href="#c-size-of">c-size-of</a></li>
         <li><a href="#pffi-align-of">pffi-align-of</a></li>
-        <li><a href="#pffi-define-library">pffi-define-library</a></li>
-        <li><a href="#pffi-pointer-null">pffi-pointer-null</a></li>
-        <li><a href="#pffi-pointer-null">pffi-pointer-null?</a></li>
-        <li><a
-        href="#pffi-pointer-allocate">pffi-pointer-allocate</a></li>
+        <li><a href="#define-c-library">define-c-library</a></li>
+        <li><a href="#make-c-null">make-c-null</a></li>
+        <li><a href="#is-c-null">c-null?</a></li>
+        <li><a href="#make-c-bytevector">make-c-bytevector</a></li>
         <li><a
         href="#pffi-pointer-address">pffi-pointer-address</a></li>
-        <li><a href="#pffi-pointer">pffi-pointer?</a></li>
-        <li><a href="#pffi-pointer-free">pffi-pointer-free</a></li>
+        <li><a href="#is-c-bytevector">c-bytevector?</a></li>
+        <li><a href="#c-free">c-free</a></li>
         <li><a href="#pffi-pointer-set!">pffi-pointer-set!</a></li>
         <li><a href="#pffi-pointer-get">pffi-pointer-get</a></li>
         <li><a
-        href="#pffi-string-%3Epointer">pffi-string-&gt;pointer</a></li>
+        href="#string-into-c-bytevector">string-&gt;c-bytevector</a></li>
         <li><a
-        href="#pffi-pointer-%3Estring">pffi-pointer-&gt;string</a></li>
+        href="#c-bytevector-into-string">c-bytevector-&gt;sring</a></li>
         <li><a href="#pffi-struct-make">pffi-struct-make</a></li>
         <li><a href="#pffi-struct-pointer">pffi-struct-pointer</a></li>
         <li><a
@@ -108,8 +107,7 @@ Documentation - 0.6.0</title>
         <li><a href="#pffi-array-set!">pffi-array-set!</a></li>
         <li><a href="#pffi-list-%3Earray">pffi-list-&gt;array</a></li>
         <li><a href="#pffi-array-%3Elist">pffi-array-&gt;list</a></li>
-        <li><a
-        href="#pffi-define-function">pffi-define-function</a></li>
+        <li><a href="#define-c-procedure">define-c-procedure</a></li>
         <li><a
         href="#pffi-define-callback">pffi-define-callback</a></li>
         </ul></li>
@@ -141,9 +139,7 @@ Documentation - 0.6.0</title>
         </ul>
         <h2 id="status">Status</h2>
         <p><a name="status"></a></p>
-        <p>Currently the interface of the library is in okay shape. It
-        propably will not change much but no guarantees are being made
-        just yet.</p>
+        <p>In alpha.</p>
         <h3 id="current-caveats">Current caveats</h3>
         <p><a name="current-caveats"></a></p>
         <ul>
@@ -156,7 +152,7 @@ Documentation - 0.6.0</title>
         <li>No support for variadic function arguments
         <ul>
         <li>Can be partially worked around by defining multiple versions
-        of same function with different amount of arguments</li>
+        of same function with different number of arguments</li>
         </ul></li>
         </ul>
         <h2 id="roadmap">Roadmap</h2>
@@ -167,44 +163,32 @@ Documentation - 0.6.0</title>
         <p><a name="feature-implementation-table"></a></p>
         <h2 id="primitives">Primitives</h2>
         <p><a name="feature-implementation-table-primitives"></a></p>
-        <table style="width:100%;">
+        <table>
         <colgroup>
-        <col style="width: 6%" />
-        <col style="width: 5%" />
-        <col style="width: 6%" />
-        <col style="width: 10%" />
         <col style="width: 9%" />
         <col style="width: 9%" />
+        <col style="width: 14%" />
         <col style="width: 10%" />
-        <col style="width: 7%" />
-        <col style="width: 9%" />
-        <col style="width: 8%" />
-        <col style="width: 6%" />
-        <col style="width: 10%" />
+        <col style="width: 13%" />
+        <col style="width: 12%" />
+        <col style="width: 14%" />
+        <col style="width: 15%" />
         </colgroup>
         <thead>
         <tr class="header">
         <th></th>
-        <th style="text-align: center;">pffi-init</th>
-        <th style="text-align: center;">pffi-size-of</th>
-        <th style="text-align: center;">pffi-define-library</th>
-        <th style="text-align: center;">pffi-pointer-null</th>
-        <th style="text-align: center;">pffi-pointer-null?</th>
-        <th style="text-align: center;">pffi-pointer-address</th>
-        <th style="text-align: center;">pffi-pointer?</th>
+        <th style="text-align: center;">c-size-of</th>
+        <th style="text-align: center;">define-c-library</th>
+        <th style="text-align: center;">c-bytevector?</th>
         <th style="text-align: center;">pffi-pointer-set!</th>
         <th style="text-align: center;">pffi-pointer-get</th>
-        <th style="text-align: center;">pffi-define</th>
+        <th style="text-align: center;">define-c-procedure</th>
         <th style="text-align: center;">pffi-define-callback</th>
         </tr>
         </thead>
         <tbody>
         <tr class="odd">
         <td>Chibi</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
@@ -222,19 +206,11 @@ Documentation - 0.6.0</title>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
         </tr>
         <tr class="odd">
         <td>Cyclone</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
@@ -244,11 +220,7 @@ Documentation - 0.6.0</title>
         <tr class="even">
         <td>Gambit</td>
         <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
         <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;">X</td>
         <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
@@ -263,18 +235,10 @@ Documentation - 0.6.0</title>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
         <td style="text-align: center;"></td>
         </tr>
         <tr class="even">
         <td>Gerbil</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
@@ -292,10 +256,6 @@ Documentation - 0.6.0</title>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
         </tr>
         <tr class="even">
         <td>Kawa</td>
@@ -306,17 +266,9 @@ Documentation - 0.6.0</title>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
         </tr>
         <tr class="odd">
         <td>Larceny</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
@@ -332,19 +284,11 @@ Documentation - 0.6.0</title>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         </tr>
         <tr class="odd">
         <td>Racket</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
@@ -362,17 +306,9 @@ Documentation - 0.6.0</title>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
         </tr>
         <tr class="odd">
         <td>Skint</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
@@ -386,10 +322,6 @@ Documentation - 0.6.0</title>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;">X</td>
         <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
@@ -397,10 +329,6 @@ Documentation - 0.6.0</title>
         </tr>
         <tr class="odd">
         <td>tr7</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
         <td style="text-align: center;"></td>
@@ -418,10 +346,6 @@ Documentation - 0.6.0</title>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
         <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
-        <td style="text-align: center;">X</td>
         </tr>
         </tbody>
         </table>
@@ -430,8 +354,11 @@ Documentation - 0.6.0</title>
         <p>These features are built upon the primitives and if
         primitives are implemented and work, they should work too.</p>
         <ul>
-        <li>pffi-pointer-allocate</li>
-        <li>pffi-pointer-free</li>
+        <li>make-c-bytevector</li>
+        <li>make-c-null</li>
+        <li>c-null?</li>
+        <li>pffi-pointer-address</li>
+        <li>c-free</li>
         <li>pffi-pointer-&gt;string</li>
         <li>pffi-string-&gt;pointer</li>
         <li>pffi-struct-make</li>
@@ -619,19 +546,19 @@ make &lt;SCHEME&gt;</code></pre>
         <p>Always call this first, on most implementation it does
         nothing but some implementations might need initialisation
         run.</p>
-        <h4 id="pffi-size-of">pffi-size-of</h4>
-        <p><a name="pffi-size-of"></a></p>
-        <p><strong>pffi-size-of</strong> object -&gt; number</p>
+        <h4 id="c-size-of">c-size-of</h4>
+        <p><a name="c-size-of"></a></p>
+        <p><strong>c-size-of</strong> object -&gt; number</p>
         <p>Returns the size of the pffi-struct, pffi-enum or
         pffi-type.</p>
         <h4 id="pffi-align-of">pffi-align-of</h4>
         <p><a name="pffi-align-of"></a></p>
         <p><strong>pffi-align-of</strong> type -&gt; number</p>
         <p>Returns the align of the type.</p>
-        <h4 id="pffi-define-library">pffi-define-library</h4>
-        <p><a name="pffi-define-library"></a></p>
-        <p><strong>pffi-define-library</strong> headers
-        shared-object-name [options] -&gt; object</p>
+        <h4 id="define-c-library">define-c-library</h4>
+        <p><a name="define-c-library"></a></p>
+        <p><strong>define-c-library</strong> headers shared-object-name
+        [options] -&gt; object</p>
         <p>Load given shared object automatically searching many
         predefined paths.</p>
         <p>Takes as argument a list of C headers, these are for the
@@ -656,12 +583,12 @@ make &lt;SCHEME&gt;</code></pre>
         </ul>
         <p>Example:</p>
         <pre><code>(cond-expand
-  (windows (pffi-define-library libc-stdlib
+  (windows (define-c-library libc-stdlib
                                 &#39;(&quot;stdlib.h&quot;)
                                 &quot;ucrtbase&quot;
                                 &#39;((additional-versions (&quot;0&quot; &quot;6&quot;))
                                   (additiona-paths (&quot;.&quot;)))))
-  (else (pffi-define-library libc-stdlib
+  (else (define-c-library libc-stdlib
                              (list &quot;stdlib.h&quot;)
                              &quot;c&quot;
                              &#39;((additional-versions (&quot;0&quot; &quot;6&quot;))
@@ -681,38 +608,47 @@ make &lt;SCHEME&gt;</code></pre>
         <li>As ’(… and not (list…</li>
         </ul></li>
         </ul>
-        <h4 id="pffi-pointer-null">pffi-pointer-null</h4>
-        <p><a name="pffi-pointer-null"></a></p>
-        <p><strong>pffi-pointer-null</strong> -&gt; pointer</p>
+        <h4 id="make-c-null">make-c-null</h4>
+        <p><a name="make-c-null"></a></p>
+        <p><strong>make-c-null</strong> -&gt; pointer</p>
         <p>Returns a new NULL pointer.</p>
-        <h4 id="pffi-pointer-null-1">pffi-pointer-null?</h4>
-        <p><a name="pffi-pointer-null"></a></p>
-        <p><strong>pffi-pointer-null?</strong> pointer -&gt; boolean</p>
+        <h4 id="c-null">c-null?</h4>
+        <p><a name="is-c-null"></a></p>
+        <p><strong>c-null?</strong> pointer -&gt; boolean</p>
         <p>Returns #t if given pointer is null pointer, #f
         otherwise.</p>
-        <h4 id="pffi-pointer-allocate">pffi-pointer-allocate</h4>
-        <p><a name="pffi-pointer-allocate"></a></p>
-        <p><strong>pffi-pointer-allocate</strong> size -&gt; pointer</p>
+        <h4 id="make-c-bytevector">make-c-bytevector</h4>
+        <p><a name="make-c-bytevector "></a></p>
+        <p><strong>make-c-bytevector</strong> size -&gt; pointer</p>
         <p>Returns newly allocated pointer of given size.</p>
         <h4 id="pffi-pointer-address">pffi-pointer-address</h4>
         <p><a name="pffi-pointer-address"></a></p>
         <p><strong>pffi-pointer-address</strong> pointer -&gt;
-        number</p>
-        <p>Returns the address of given pointer as number.</p>
-        <h4 id="pffi-pointer">pffi-pointer?</h4>
+        pointer</p>
+        <p>Returns the address of given pointer inside a pointer. This
+        is used when passing pointers to pointers to foreign procedures.
+        This is similar to the c’s &amp;. One <strong>important
+        difference</strong> is that after you have passed a pointer to
+        the procedure you must get value from it back to the pointer
+        which address you are passing. Example:</p>
+        <pre><code>(define input-pointer (make-c-bytevector &lt;needed size&gt;))
+(define input-pointer-address (pffi-pointer-address input-pointer))
+(&lt;foreign-procedure-that takes &amp;pointer as argument&gt; input-pointer-address)
+(set! input-pointer (pffi-pointer-get input-pointer-address &#39;pointer 0))</code></pre>
+        <h4 id="c-bytevector">c-bytevector?</h4>
         <p><a name="pffi-pointer"></a></p>
-        <p><strong>pffi-pointer?</strong> object -&gt; boolean</p>
+        <p><strong>c-bytevector?</strong> object -&gt; boolean</p>
         <p>Returns #t if given object is pointer, #f otherwise.</p>
-        <h4 id="pffi-pointer-free">pffi-pointer-free</h4>
-        <p><a name="pffi-pointer-free"></a></p>
-        <p><strong>pffi-pointer-free</strong> pointer</p>
+        <h4 id="c-free">c-free</h4>
+        <p><a name="c-free"></a></p>
+        <p><strong>c-free</strong> pointer</p>
         <p>Frees given pointer.</p>
         <h4 id="pffi-pointer-set">pffi-pointer-set!</h4>
         <p><a name="pffi-pointer-set!"></a></p>
         <p><strong>pffi-pointer-set!</strong> pointer type offset
         value</p>
         <p>Sets the value on a pointer on given offset. For example:</p>
-        <pre><code>(define p (pffi-pointer-allocate 128))
+        <pre><code>(define p (make-c-bytevector 128))
 (pffi-pointer-set! p &#39;int 64 100)</code></pre>
         <p>Would set the offset of 64, on pointer p to value 100.</p>
         <h4 id="pffi-pointer-get">pffi-pointer-get</h4>
@@ -721,18 +657,18 @@ make &lt;SCHEME&gt;</code></pre>
         object</p>
         <p>Gets the value from a pointer on given offset. For
         example:</p>
-        <pre><code>(define p (pffi-pointer-allocate 128))
+        <pre><code>(define p (make-c-bytevector 128))
 (pffi-pointer-set! p &#39;int 64 100)
 (pffi-pointer-get p &#39;int 64)
 &gt; 100</code></pre>
-        <h4 id="pffi-string-pointer">pffi-string-&gt;pointer</h4>
-        <p><a name="pffi-string->pointer"></a></p>
-        <p><strong>pffi-string-&gt;pointer</strong> string -&gt;
+        <h4 id="string-c-bytevector">string-&gt;c-bytevector</h4>
+        <p><a name="string-into-c-bytevector"></a></p>
+        <p><strong>string-&gt;c-bytevector</strong> string -&gt;
         pointer</p>
         <p>Makes pointer out of a given string.</p>
-        <h4 id="pffi-pointer-string">pffi-pointer-&gt;string</h4>
-        <p><a name="pffi-pointer->string"></a></p>
-        <p><strong>pffi-pointer-&gt;string</strong> pointer -&gt;
+        <h4 id="c-bytevector-string">c-bytevector-&gt;string</h4>
+        <p><a name="c-bytevector-into-string"></a></p>
+        <p><strong>c-bytevector-&gt;sring</strong> pointer -&gt;
         string</p>
         <p>Makes string out of a given pointer.</p>
         <h4 id="pffi-struct-make">pffi-struct-make</h4>
@@ -804,16 +740,16 @@ make &lt;SCHEME&gt;</code></pre>
         <p><strong>pffi-array-&gt;list</strong> type list length</p>
         <p>Converts given C array into list of given type and
         length.</p>
-        <h4 id="pffi-define-function">pffi-define-function</h4>
-        <p><a name="pffi-define-function"></a></p>
-        <p><strong>pffi-define-function</strong> scheme-name
-        shared-object c-name return-type argument-types</p>
+        <h4 id="define-c-procedure">define-c-procedure</h4>
+        <p><a name="define-c-procedure"></a></p>
+        <p><strong>define-c-procedure</strong> scheme-name shared-object
+        c-name return-type argument-types</p>
         <p>Defines a new foreign function to be used from Scheme code.
         For example:</p>
         <pre><code>(cond-expand
-    (windows (pffi-define-library libc-stdlib &#39;(&quot;stdlib.h&quot;) &quot;ucrtbase&quot; &#39;(&quot;&quot;)))
-    (else (pffi-define-library libc-stdlib &#39;(&quot;stdlib.h&quot;)  &quot;c&quot; &#39;(&quot;&quot; &quot;6&quot;))))
-(pffi-define-function c-puts libc-stdlib &#39;puts &#39;int &#39;(pointer))
+    (windows (define-c-library libc-stdlib &#39;(&quot;stdlib.h&quot;) &quot;ucrtbase&quot; &#39;(&quot;&quot;)))
+    (else (define-c-library libc-stdlib &#39;(&quot;stdlib.h&quot;)  &quot;c&quot; &#39;(&quot;&quot; &quot;6&quot;))))
+(define-c-procedure c-puts libc-stdlib &#39;puts &#39;int &#39;(pointer))
 (c-puts &quot;Message brought to you by FFI!&quot;)</code></pre>
         <h4 id="pffi-define-callback">pffi-define-callback</h4>
         <p><a name="pffi-define-callback"></a></p>
@@ -823,11 +759,11 @@ make &lt;SCHEME&gt;</code></pre>
         code. For example:</p>
         <pre><code>; Load the shared library
 (cond-expand
-    (windows (pffi-define-library libc-stdlib &#39;(&quot;stdlib.h&quot;) &quot;ucrtbase&quot; &#39;()))
-    (else (pffi-define-library &#39;(&quot;stdlib.h&quot;) &quot;c&quot; &#39;(&quot;&quot; &quot;6&quot;))))
+    (windows (define-c-library libc-stdlib &#39;(&quot;stdlib.h&quot;) &quot;ucrtbase&quot; &#39;()))
+    (else (define-c-library &#39;(&quot;stdlib.h&quot;) &quot;c&quot; &#39;(&quot;&quot; &quot;6&quot;))))
 
 ; Define C function that takes a callback
-(pffi-define-function qsort libc-stdlib &#39;qsort &#39;void &#39;(pointer int int callback))
+(define-c-procedure qsort libc-stdlib &#39;qsort &#39;void &#39;(pointer int int callback))
 
 ; Define our callback
 (pffi-define-callback compare
@@ -841,17 +777,17 @@ make &lt;SCHEME&gt;</code></pre>
                                 ((&lt; a b) -1)))))
 
 ; Create new array of ints to be sorted
-(define array (pffi-pointer-allocate (* (pffi-size-of &#39;int) 3)))
-(pffi-pointer-set! array &#39;int (* (pffi-size-of &#39;int) 0) 3)
-(pffi-pointer-set! array &#39;int (* (pffi-size-of &#39;int) 1) 2)
-(pffi-pointer-set! array &#39;int (* (pffi-size-of &#39;int) 2) 1)
+(define array (make-c-bytevector (* (c-size-of &#39;int) 3)))
+(pffi-pointer-set! array &#39;int (* (c-size-of &#39;int) 0) 3)
+(pffi-pointer-set! array &#39;int (* (c-size-of &#39;int) 1) 2)
+(pffi-pointer-set! array &#39;int (* (c-size-of &#39;int) 2) 1)
 
 (display array)
 (newline)
 ;&gt; (3 2 1)
 
 ; Sort the array
-(qsort array 3 (pffi-size-of &#39;int) compare)
+(qsort array 3 (c-size-of &#39;int) compare)
 
 (display array)
 (newline)

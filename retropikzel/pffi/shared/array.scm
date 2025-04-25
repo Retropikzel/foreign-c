@@ -8,8 +8,8 @@
 (define pffi-list->array
   (lambda (type list-arg)
     (let* ((array-size (length list-arg))
-           (type-size (pffi-size-of type))
-           (array (pffi-pointer-allocate (* type-size array-size)))
+           (type-size (c-size-of type))
+           (array (make-c-bytevector (* type-size array-size)))
            (offset 0))
       (for-each
         (lambda (item)
@@ -25,7 +25,7 @@
 (define pffi-array->list
   (lambda (array)
     (letrec* ((type (pffi-array-type array))
-              (type-size (pffi-size-of type))
+              (type-size (c-size-of type))
               (max-offset (* type-size (pffi-array-size array)))
               (array-pointer (pffi-array-pointer array))
               (looper (lambda (offset result)
@@ -40,19 +40,19 @@
 
 (define pffi-array-allocate
   (lambda (type size)
-    (array-make type size (pffi-pointer-allocate-calloc size (pffi-size-of type)))))
+    (array-make type size (pffi-pointer-allocate-calloc size (c-size-of type)))))
 
 (define pffi-array-get
   (lambda (array index)
     (let ((type (pffi-array-type array)))
       (pffi-pointer-get (pffi-array-pointer array)
                         type
-                        (* (pffi-size-of type) index)))))
+                        (* (c-size-of type) index)))))
 
 (define pffi-array-set!
   (lambda (array index value)
     (let ((type (pffi-array-type array)))
       (pffi-pointer-set! (pffi-array-pointer array)
                         type
-                        (* (pffi-size-of type) index)
+                        (* (c-size-of type) index)
                         value))))

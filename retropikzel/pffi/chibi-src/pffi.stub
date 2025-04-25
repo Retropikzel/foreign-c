@@ -4,7 +4,7 @@
 (c-system-include "dlfcn.h")
 (c-system-include "ffi.h")
 
-;; pffi-size-of
+;; c-size-of
 (c-declare "
     int size_of_int8_t() { return sizeof(int8_t); }
     int size_of_uint8_t() { return sizeof(uint8_t); }
@@ -47,7 +47,7 @@
 (define-c int (size-of-double size_of_double) ())
 (define-c int (size-of-pointer size_of_pointer) ())
 
-;; pffi-shape-object-load
+;; pffi-shared-object-load
 (define-c-const int (RTLD-NOW "RTLD_NOW"))
 (define-c (maybe-null pointer void*) dlopen (string int))
 (define-c (maybe-null pointer void*) dlerror ())
@@ -70,10 +70,10 @@
            }")
 (define-c sexp (pointer? is_pointer) (sexp))
 
-(c-declare "intptr_t pointer_address(struct sexp_struct* pointer) {
-            return (intptr_t)&sexp_cpointer_value(pointer);
+(c-declare "void* pointer_address(struct sexp_struct* pointer) {
+            return (void*)&sexp_cpointer_value(pointer);
            }")
-(define-c uint32_t (pointer-address pointer_address) (sexp))
+(define-c (maybe-null pointer void*) (pointer-address pointer_address) (sexp))
 
 (c-declare "void pointer_free(void* pointer) { free(pointer); }")
 (define-c void (pointer-free pointer_free) ((maybe-null pointer void*)))
@@ -99,8 +99,8 @@
 (c-declare "void pointer_set_c_uint64_t(void* pointer, int offset, uint64_t value) { *(uint64_t*)((char*)pointer + offset) = value; }")
 (define-c void (pointer-set-c-uint64_t! pointer_set_c_uint64_t) ((pointer void*) int uint64_t))
 
-(c-declare "void pointer_set_c_char(void* pointer, int offset, char value) { *((char*)pointer + offset) = value; }")
-(define-c void (pointer-set-c-char! pointer_set_c_char) ((pointer void*) int char))
+(c-declare "void pointer_set_c_char(void* pointer, int offset, int8_t value) { *((char*)pointer + offset) = value; }")
+(define-c void (pointer-set-c-char! pointer_set_c_char) ((pointer void*) int int8_t))
 (c-declare "void pointer_set_c_unsigned_char(void* pointer, int offset, unsigned char value) { *(unsigned char*)((char*)pointer + offset) = value; }")
 (define-c void (pointer-set-c-unsigned-char! pointer_set_c_unsigned_char) ((pointer void*) int unsigned-char))
 
@@ -149,8 +149,8 @@
 (c-declare "uint64_t pointer_ref_c_uint64_t(void* pointer, int offset) { return *(uint64_t*)((char*)pointer + offset); }")
 (define-c uint64_t (pointer-ref-c-uint64_t pointer_ref_c_uint64_t) ((pointer void*) int))
 
-(c-declare "char pointer_ref_c_char(void* pointer, int offset) { return *(char*)((char*)pointer + offset); }")
-(define-c char (pointer-ref-c-char pointer_ref_c_char) ((pointer void*) int))
+(c-declare "int8_t pointer_ref_c_char(void* pointer, int offset) { return *(char*)((char*)pointer + offset); }")
+(define-c int8_t (pointer-ref-c-char pointer_ref_c_char) ((pointer void*) int))
 (c-declare "unsigned char pointer_ref_c_unsigned_char(void* pointer, int offset) { return *(unsigned char*)((char*)pointer + offset); }")
 (define-c unsigned-char (pointer-ref-c-unsigned-char pointer_ref_c_unsigned_char) ((pointer void*) int))
 
@@ -178,15 +178,7 @@
 (c-declare "void* pointer_ref_c_pointer(void* pointer, int offset) { char* p = (char*)pointer + offset; return *(char**)p; }")
 (define-c (maybe-null pointer void*) (pointer-ref-c-pointer pointer_ref_c_pointer) ((pointer void*) int))
 
-;; pffi-string->pointer
-;(c-declare "void* string_to_pointer(char* string) { return (void*)string; }")
-;(define-c (maybe-null pointer void*) (string-to-pointer string_to_pointer) (string))
-
-;; pffi-pointer->string
-;(c-declare "char* pointer_to_string(void* pointer) { return (char*)pointer; }")
-;(define-c string (pointer-to-string pointer_to_string) ((maybe-null pointer void*)))
-
-;; pffi-define-function
+;; define-c-procedure
 
 (c-declare "ffi_cif cif;")
 (define-c (pointer void*) dlsym ((maybe-null pointer void*) string))

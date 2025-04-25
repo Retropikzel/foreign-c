@@ -72,343 +72,343 @@
 
 ;; pffi-init
 
-(print-header 'pffi-init)
+;(print-header 'pffi-init)
 
-(pffi-init)
+;(pffi-init)
 
 ;; pffi-type?
 
-(print-header 'pffi-type?)
+;(print-header 'pffi-type?)
 
-(debug (pffi-type? 'int8))
-(assert equal? (pffi-type? 'int8) #t)
-(debug (pffi-type? 'uint8))
-(assert equal? (pffi-type? 'uint8) #t)
-(debug (pffi-type? 'int16))
-(assert equal? (pffi-type? 'int16) #t)
-(debug (pffi-type? 'uint16))
-(assert equal? (pffi-type? 'uint16) #t)
-(debug (pffi-type? 'int32))
-(assert equal? (pffi-type? 'int32) #t)
-(debug (pffi-type? 'uint32))
-(assert equal? (pffi-type? 'uint32) #t)
-(debug (pffi-type? 'int64))
-(assert equal? (pffi-type? 'int64) #t)
-(debug (pffi-type? 'uint64))
-(assert equal? (pffi-type? 'uint64) #t)
-(debug (pffi-type? 'char))
-(assert equal? (pffi-type? 'char) #t)
-(debug (pffi-type? 'unsigned-char))
-(assert equal? (pffi-type? 'unsigned-char) #t)
-(debug (pffi-type? 'short))
-(assert equal? (pffi-type? 'short) #t)
-(debug (pffi-type? 'unsigned-short))
-(assert equal? (pffi-type? 'unsigned-short) #t)
-(debug (pffi-type? 'int))
-(assert equal? (pffi-type? 'int) #t)
-(debug (pffi-type? 'unsigned-int))
-(assert equal? (pffi-type? 'unsigned-int) #t)
-(debug (pffi-type? 'long))
-(assert equal? (pffi-type? 'long) #t)
-(debug (pffi-type? 'unsigned-long))
-(assert equal? (pffi-type? 'unsigned-long) #t)
-(debug (pffi-type? 'float))
-(assert equal? (pffi-type? 'float) #t)
-(debug (pffi-type? 'double))
-(assert equal? (pffi-type? 'double) #t)
-(debug (pffi-type? 'pointer))
-(assert equal? (pffi-type? 'pointer) #t)
-(debug (pffi-type? 'void))
-(assert equal? (pffi-type? 'void) #t)
-(debug (pffi-type? 'callback))
-(assert equal? (pffi-type? 'callback) #t)
+;(debug (pffi-type? 'int8))
+;(assert equal? (pffi-type? 'int8) #t)
+;(debug (pffi-type? 'uint8))
+;(assert equal? (pffi-type? 'uint8) #t)
+;(debug (pffi-type? 'int16))
+;(assert equal? (pffi-type? 'int16) #t)
+;(debug (pffi-type? 'uint16))
+;(assert equal? (pffi-type? 'uint16) #t)
+;(debug (pffi-type? 'int32))
+;(assert equal? (pffi-type? 'int32) #t)
+;(debug (pffi-type? 'uint32))
+;(assert equal? (pffi-type? 'uint32) #t)
+;(debug (pffi-type? 'int64))
+;(assert equal? (pffi-type? 'int64) #t)
+;(debug (pffi-type? 'uint64))
+;(assert equal? (pffi-type? 'uint64) #t)
+;(debug (pffi-type? 'char))
+;(assert equal? (pffi-type? 'char) #t)
+;(debug (pffi-type? 'unsigned-char))
+;(assert equal? (pffi-type? 'unsigned-char) #t)
+;(debug (pffi-type? 'short))
+;(assert equal? (pffi-type? 'short) #t)
+;(debug (pffi-type? 'unsigned-short))
+;(assert equal? (pffi-type? 'unsigned-short) #t)
+;(debug (pffi-type? 'int))
+;(assert equal? (pffi-type? 'int) #t)
+;(debug (pffi-type? 'unsigned-int))
+;(assert equal? (pffi-type? 'unsigned-int) #t)
+;(debug (pffi-type? 'long))
+;(assert equal? (pffi-type? 'long) #t)
+;(debug (pffi-type? 'unsigned-long))
+;(assert equal? (pffi-type? 'unsigned-long) #t)
+;(debug (pffi-type? 'float))
+;(assert equal? (pffi-type? 'float) #t)
+;(debug (pffi-type? 'double))
+;(assert equal? (pffi-type? 'double) #t)
+;(debug (pffi-type? 'pointer))
+;(assert equal? (pffi-type? 'pointer) #t)
+;(debug (pffi-type? 'void))
+;(assert equal? (pffi-type? 'void) #t)
+;(debug (pffi-type? 'callback))
+;(assert equal? (pffi-type? 'callback) #t)
 
-;; pffi-size-of
+;; c-size-of
 
-(print-header 'pffi-size-of)
+(print-header 'c-size-of)
 
-(define size-int8 (pffi-size-of 'int8))
+(define size-int8 (c-size-of 'int8))
 (debug size-int8)
 (assert equal? (number? size-int8) #t)
 (assert = size-int8 1)
 
-(define size-uint8 (pffi-size-of 'uint8))
+(define size-uint8 (c-size-of 'uint8))
 (debug size-uint8)
 (assert equal? (number? size-uint8) #t)
 (assert = size-uint8 1)
 
-(assert equal? (number? (pffi-size-of 'uint8)) #t)
-(define size-int16 (pffi-size-of 'int16))
+(assert equal? (number? (c-size-of 'uint8)) #t)
+(define size-int16 (c-size-of 'int16))
 (debug size-int16)
 (assert equal? (number? size-int16) #t)
 (assert = size-int16 2)
 
-(assert equal? (number? (pffi-size-of 'int16)) #t)
-(define size-uint16 (pffi-size-of 'uint16))
+(assert equal? (number? (c-size-of 'int16)) #t)
+(define size-uint16 (c-size-of 'uint16))
 (debug size-uint16)
 (assert equal? (number? size-uint16) #t)
 (assert = size-uint16 2)
 
-(assert equal? (number? (pffi-size-of 'uint16)) #t)
-(define size-int32 (pffi-size-of 'int32))
+(assert equal? (number? (c-size-of 'uint16)) #t)
+(define size-int32 (c-size-of 'int32))
 (debug size-int32)
 (assert equal? (number? size-int32) #t)
 (assert = size-int32 4)
 
-(assert equal? (number? (pffi-size-of 'int32)) #t)
-(define size-uint32 (pffi-size-of 'uint32))
+(assert equal? (number? (c-size-of 'int32)) #t)
+(define size-uint32 (c-size-of 'uint32))
 (debug size-uint32)
 (assert equal? (number? size-uint32) #t)
 (assert = size-uint32 4)
 
-(assert equal? (number? (pffi-size-of 'uint32)) #t)
-(define size-int64 (pffi-size-of 'int64))
+(assert equal? (number? (c-size-of 'uint32)) #t)
+(define size-int64 (c-size-of 'int64))
 (debug size-int64)
 (assert equal? (number? size-int64) #t)
 (assert = size-int64 8)
 
-(assert equal? (number? (pffi-size-of 'int64)) #t)
-(define size-uint64 (pffi-size-of 'uint64))
+(assert equal? (number? (c-size-of 'int64)) #t)
+(define size-uint64 (c-size-of 'uint64))
 (debug size-uint64)
 (assert equal? (number? size-uint64) #t)
 (assert = size-uint64 8)
 
-(assert equal? (number? (pffi-size-of 'uint64)) #t)
-(define size-char (pffi-size-of 'char))
+(assert equal? (number? (c-size-of 'uint64)) #t)
+(define size-char (c-size-of 'char))
 (debug size-char)
 (assert equal? (number? size-char) #t)
 (assert = size-char 1)
 
-(assert equal? (number? (pffi-size-of 'char)) #t)
-(define size-unsigned-char (pffi-size-of 'unsigned-char))
+(assert equal? (number? (c-size-of 'char)) #t)
+(define size-unsigned-char (c-size-of 'unsigned-char))
 (debug size-unsigned-char)
 (assert equal? (number? size-unsigned-char) #t)
 (assert = size-unsigned-char 1)
 
-(assert equal? (number? (pffi-size-of 'unsigned-char)) #t)
-(define size-short (pffi-size-of 'short))
+(assert equal? (number? (c-size-of 'unsigned-char)) #t)
+(define size-short (c-size-of 'short))
 (debug size-short)
 (assert equal? (number? size-short) #t)
 (assert = size-short 2)
 
-(assert equal? (number? (pffi-size-of 'short)) #t)
-(define size-unsigned-short (pffi-size-of 'unsigned-short))
+(assert equal? (number? (c-size-of 'short)) #t)
+(define size-unsigned-short (c-size-of 'unsigned-short))
 (debug size-unsigned-short)
 (assert equal? (number? size-unsigned-short) #t)
 (assert = size-unsigned-short 2)
 
-(assert equal? (number? (pffi-size-of 'unsigned-short)) #t)
-(define size-int (pffi-size-of 'int))
+(assert equal? (number? (c-size-of 'unsigned-short)) #t)
+(define size-int (c-size-of 'int))
 (debug size-int)
 (assert equal? (number? size-int) #t)
 (assert = size-int 4)
 
-(assert equal? (number? (pffi-size-of 'int)) #t)
-(define size-unsigned-int (pffi-size-of 'unsigned-int))
+(assert equal? (number? (c-size-of 'int)) #t)
+(define size-unsigned-int (c-size-of 'unsigned-int))
 (debug size-unsigned-int)
 (assert equal? (number? size-unsigned-int) #t)
 (assert = size-unsigned-int 4)
 
 (cond-expand
   (i386
-    (assert equal? (number? (pffi-size-of 'long)) #t)
-    (define size-long (pffi-size-of 'long))
+    (assert equal? (number? (c-size-of 'long)) #t)
+    (define size-long (c-size-of 'long))
     (debug size-long)
     (assert equal? (number? size-long) #t)
     (assert = size-long 4))
   (else
-    (assert equal? (number? (pffi-size-of 'long)) #t)
-    (define size-long (pffi-size-of 'long))
+    (assert equal? (number? (c-size-of 'long)) #t)
+    (define size-long (c-size-of 'long))
     (debug size-long)
     (assert equal? (number? size-long) #t)
     (assert = size-long 8)))
 
 (cond-expand
   (i386
-    (assert equal? (number? (pffi-size-of 'unsigned-long)) #t)
-    (define size-unsigned-long (pffi-size-of 'unsigned-long))
+    (assert equal? (number? (c-size-of 'unsigned-long)) #t)
+    (define size-unsigned-long (c-size-of 'unsigned-long))
     (debug size-unsigned-long)
     (assert equal? (number? size-unsigned-long) #t)
     (assert = size-unsigned-long 4))
   (else
-    (assert equal? (number? (pffi-size-of 'long)) #t)
-    (define size-unsigned-long (pffi-size-of 'unsigned-long))
+    (assert equal? (number? (c-size-of 'long)) #t)
+    (define size-unsigned-long (c-size-of 'unsigned-long))
     (debug size-unsigned-long)
     (assert equal? (number? size-unsigned-long) #t)
     (assert = size-unsigned-long 8)))
 
-(assert equal? (number? (pffi-size-of 'float)) #t)
-(define size-float (pffi-size-of 'float))
+(assert equal? (number? (c-size-of 'float)) #t)
+(define size-float (c-size-of 'float))
 (debug size-float)
 (assert equal? (number? size-float) #t)
 (assert = size-float 4)
 
-(assert equal? (number? (pffi-size-of 'double)) #t)
-(define size-double (pffi-size-of 'double))
+(assert equal? (number? (c-size-of 'double)) #t)
+(define size-double (c-size-of 'double))
 (debug size-double)
 (assert equal? (number? size-double) #t)
 (assert = size-double 8)
 
 (cond-expand
   (i386
-    (define size-pointer (pffi-size-of 'pointer))
+    (define size-pointer (c-size-of 'pointer))
     (debug size-pointer)
     (assert equal? (number? size-pointer) #t)
     (assert = size-pointer 4))
   (else
-    (define size-pointer (pffi-size-of 'pointer))
+    (define size-pointer (c-size-of 'pointer))
     (debug size-pointer)
     (assert equal? (number? size-pointer) #t)
     (assert = size-pointer 8)))
 
-;; pffi-align-of
+;; c-align-of
+;
+;(print-header 'c-align-of)
+;
+;(define align-int8 (c-align-of 'int8))
+;(debug align-int8)
+;(assert equal? (number? align-int8) #t)
+;(assert = align-int8 1)
+;
+;(define align-uint8 (c-align-of 'uint8))
+;(debug align-uint8)
+;(assert equal? (number? align-uint8) #t)
+;(assert = align-uint8 1)
+;
+;(assert equal? (number? (c-align-of 'uint8)) #t)
+;(define align-int16 (c-align-of 'int16))
+;(debug align-int16)
+;(assert equal? (number? align-int16) #t)
+;(assert = align-int16 2)
+;
+;(assert equal? (number? (c-align-of 'int16)) #t)
+;(define align-uint16 (c-align-of 'uint16))
+;(debug align-uint16)
+;(assert equal? (number? align-uint16) #t)
+;(assert = align-uint16 2)
+;
+;(assert equal? (number? (c-align-of 'uint16)) #t)
+;(define align-int32 (c-align-of 'int32))
+;(debug align-int32)
+;(assert equal? (number? align-int32) #t)
+;(assert = align-int32 4)
+;
+;(assert equal? (number? (c-align-of 'int32)) #t)
+;(define align-uint32 (c-align-of 'uint32))
+;(debug align-uint32)
+;(assert equal? (number? align-uint32) #t)
+;(assert = align-uint32 4)
+;
+;(assert equal? (number? (c-align-of 'uint32)) #t)
+;(define align-int64 (c-align-of 'int64))
+;(debug align-int64)
+;(assert equal? (number? align-int64) #t)
+;(assert = align-int64 8)
+;
+;(assert equal? (number? (c-align-of 'int64)) #t)
+;(define align-uint64 (c-align-of 'uint64))
+;(debug align-uint64)
+;(assert equal? (number? align-uint64) #t)
+;(assert = align-uint64 8)
+;
+;(assert equal? (number? (c-align-of 'uint64)) #t)
+;(define align-char (c-align-of 'char))
+;(debug align-char)
+;(assert equal? (number? align-char) #t)
+;(assert = align-char 1)
+;
+;(assert equal? (number? (c-align-of 'char)) #t)
+;(define align-unsigned-char (c-align-of 'unsigned-char))
+;(debug align-unsigned-char)
+;(assert equal? (number? align-unsigned-char) #t)
+;(assert = align-unsigned-char 1)
+;
+;(assert equal? (number? (c-align-of 'unsigned-char)) #t)
+;(define align-short (c-align-of 'short))
+;(debug align-short)
+;(assert equal? (number? align-short) #t)
+;(assert = align-short 2)
+;
+;(assert equal? (number? (c-align-of 'short)) #t)
+;(define align-unsigned-short (c-align-of 'unsigned-short))
+;(debug align-unsigned-short)
+;(assert equal? (number? align-unsigned-short) #t)
+;(assert = align-unsigned-short 2)
+;
+;(assert equal? (number? (c-align-of 'unsigned-short)) #t)
+;(define align-int (c-align-of 'int))
+;(debug align-int)
+;(assert equal? (number? align-int) #t)
+;(assert = align-int 4)
+;
+;(assert equal? (number? (c-align-of 'int)) #t)
+;(define align-unsigned-int (c-align-of 'unsigned-int))
+;(debug align-unsigned-int)
+;(assert equal? (number? align-unsigned-int) #t)
+;(assert = align-unsigned-int 4)
+;
+;(cond-expand
+;  (i386
+;    (assert equal? (number? (c-align-of 'long)) #t)
+;    (define align-long (c-align-of 'long))
+;    (debug align-long)
+;    (assert equal? (number? align-long) #t)
+;    (assert = align-long 4))
+;  (else
+;    (assert equal? (number? (c-align-of 'long)) #t)
+;    (define align-long (c-align-of 'long))
+;    (debug align-long)
+;    (assert equal? (number? align-long) #t)
+;    (assert = align-long 8)))
+;
+;(cond-expand
+;  (i386
+;    (assert equal? (number? (c-align-of 'unsigned-long)) #t)
+;    (define align-unsigned-long (c-align-of 'unsigned-long))
+;    (debug align-unsigned-long)
+;    (assert equal? (number? align-unsigned-long) #t)
+;    (assert = align-unsigned-long 4))
+;  (else
+;    (assert equal? (number? (c-align-of 'long)) #t)
+;    (define align-unsigned-long (c-align-of 'unsigned-long))
+;    (debug align-unsigned-long)
+;    (assert equal? (number? align-unsigned-long) #t)
+;    (assert = align-unsigned-long 8)))
+;
+;(assert equal? (number? (c-align-of 'float)) #t)
+;(define align-float (c-align-of 'float))
+;(debug align-float)
+;(assert equal? (number? align-float) #t)
+;(assert = align-float 4)
+;
+;(assert equal? (number? (c-align-of 'double)) #t)
+;(define align-double (c-align-of 'double))
+;(debug align-double)
+;(assert equal? (number? align-double) #t)
+;(assert = align-double 8)
+;
+;(cond-expand
+;  (i386
+;    (define align-pointer (c-align-of 'pointer))
+;    (debug align-pointer)
+;    (assert equal? (number? align-pointer) #t)
+;    (assert = align-pointer 4))
+;  (else
+;    (define align-pointer (c-align-of 'pointer))
+;    (debug align-pointer)
+;    (assert equal? (number? align-pointer) #t)
+;    (assert = align-pointer 8)))
 
-(print-header 'pffi-align-of)
-
-(define align-int8 (pffi-align-of 'int8))
-(debug align-int8)
-(assert equal? (number? align-int8) #t)
-(assert = align-int8 1)
-
-(define align-uint8 (pffi-align-of 'uint8))
-(debug align-uint8)
-(assert equal? (number? align-uint8) #t)
-(assert = align-uint8 1)
-
-(assert equal? (number? (pffi-align-of 'uint8)) #t)
-(define align-int16 (pffi-align-of 'int16))
-(debug align-int16)
-(assert equal? (number? align-int16) #t)
-(assert = align-int16 2)
-
-(assert equal? (number? (pffi-align-of 'int16)) #t)
-(define align-uint16 (pffi-align-of 'uint16))
-(debug align-uint16)
-(assert equal? (number? align-uint16) #t)
-(assert = align-uint16 2)
-
-(assert equal? (number? (pffi-align-of 'uint16)) #t)
-(define align-int32 (pffi-align-of 'int32))
-(debug align-int32)
-(assert equal? (number? align-int32) #t)
-(assert = align-int32 4)
-
-(assert equal? (number? (pffi-align-of 'int32)) #t)
-(define align-uint32 (pffi-align-of 'uint32))
-(debug align-uint32)
-(assert equal? (number? align-uint32) #t)
-(assert = align-uint32 4)
-
-(assert equal? (number? (pffi-align-of 'uint32)) #t)
-(define align-int64 (pffi-align-of 'int64))
-(debug align-int64)
-(assert equal? (number? align-int64) #t)
-(assert = align-int64 8)
-
-(assert equal? (number? (pffi-align-of 'int64)) #t)
-(define align-uint64 (pffi-align-of 'uint64))
-(debug align-uint64)
-(assert equal? (number? align-uint64) #t)
-(assert = align-uint64 8)
-
-(assert equal? (number? (pffi-align-of 'uint64)) #t)
-(define align-char (pffi-align-of 'char))
-(debug align-char)
-(assert equal? (number? align-char) #t)
-(assert = align-char 1)
-
-(assert equal? (number? (pffi-align-of 'char)) #t)
-(define align-unsigned-char (pffi-align-of 'unsigned-char))
-(debug align-unsigned-char)
-(assert equal? (number? align-unsigned-char) #t)
-(assert = align-unsigned-char 1)
-
-(assert equal? (number? (pffi-align-of 'unsigned-char)) #t)
-(define align-short (pffi-align-of 'short))
-(debug align-short)
-(assert equal? (number? align-short) #t)
-(assert = align-short 2)
-
-(assert equal? (number? (pffi-align-of 'short)) #t)
-(define align-unsigned-short (pffi-align-of 'unsigned-short))
-(debug align-unsigned-short)
-(assert equal? (number? align-unsigned-short) #t)
-(assert = align-unsigned-short 2)
-
-(assert equal? (number? (pffi-align-of 'unsigned-short)) #t)
-(define align-int (pffi-align-of 'int))
-(debug align-int)
-(assert equal? (number? align-int) #t)
-(assert = align-int 4)
-
-(assert equal? (number? (pffi-align-of 'int)) #t)
-(define align-unsigned-int (pffi-align-of 'unsigned-int))
-(debug align-unsigned-int)
-(assert equal? (number? align-unsigned-int) #t)
-(assert = align-unsigned-int 4)
-
-(cond-expand
-  (i386
-    (assert equal? (number? (pffi-align-of 'long)) #t)
-    (define align-long (pffi-align-of 'long))
-    (debug align-long)
-    (assert equal? (number? align-long) #t)
-    (assert = align-long 4))
-  (else
-    (assert equal? (number? (pffi-align-of 'long)) #t)
-    (define align-long (pffi-align-of 'long))
-    (debug align-long)
-    (assert equal? (number? align-long) #t)
-    (assert = align-long 8)))
-
-(cond-expand
-  (i386
-    (assert equal? (number? (pffi-align-of 'unsigned-long)) #t)
-    (define align-unsigned-long (pffi-align-of 'unsigned-long))
-    (debug align-unsigned-long)
-    (assert equal? (number? align-unsigned-long) #t)
-    (assert = align-unsigned-long 4))
-  (else
-    (assert equal? (number? (pffi-align-of 'long)) #t)
-    (define align-unsigned-long (pffi-align-of 'unsigned-long))
-    (debug align-unsigned-long)
-    (assert equal? (number? align-unsigned-long) #t)
-    (assert = align-unsigned-long 8)))
-
-(assert equal? (number? (pffi-align-of 'float)) #t)
-(define align-float (pffi-align-of 'float))
-(debug align-float)
-(assert equal? (number? align-float) #t)
-(assert = align-float 4)
-
-(assert equal? (number? (pffi-align-of 'double)) #t)
-(define align-double (pffi-align-of 'double))
-(debug align-double)
-(assert equal? (number? align-double) #t)
-(assert = align-double 8)
-
-(cond-expand
-  (i386
-    (define align-pointer (pffi-align-of 'pointer))
-    (debug align-pointer)
-    (assert equal? (number? align-pointer) #t)
-    (assert = align-pointer 4))
-  (else
-    (define align-pointer (pffi-align-of 'pointer))
-    (debug align-pointer)
-    (assert equal? (number? align-pointer) #t)
-    (assert = align-pointer 8)))
-
-;; pffi-define-library
+;; define-c-library
 
 (print-header 'pffi-define-library)
 
 (cond-expand
-  (windows (pffi-define-library libc-stdlib
+  (windows (define-c-library libc-stdlib
                                 '("stdlib.h")
                                 "ucrtbase"
                                 '((additional-versions ("0" "6")))))
-  (else (pffi-define-library libc-stdlib
+  (else (define-c-library libc-stdlib
                              '("stdlib.h")
                              "c"
                              '((additional-versions ("0" "6"))))))
@@ -416,108 +416,146 @@
 (debug libc-stdlib)
 
 (cond-expand
-  (windows (pffi-define-library libc-stdio
+  (windows (define-c-library libc-stdio
                                 '("stdio.h")
                                 "ucrtbase"
                                 '((additional-versions ("0" "6")))))
-  (else (pffi-define-library libc-stdio
+  (else (define-c-library libc-stdio
                              '("stdio.h")
                              "c"
                              '((additional-versions ("0" "6"))))))
 
 (debug libc-stdio)
 
-(pffi-define-library c-testlib
+(define-c-library c-testlib
                      '("libtest.h")
                      "test"
                      '((additional-paths ("." "./tests"))))
 
 (debug c-testlib)
 
-;; pffi-pointer-null
+;; define-c-procedure
 
-(print-header 'pffi-pointer-null)
+(print-header 'define-c-procedure)
 
-(define null-pointer (pffi-pointer-null))
+(define-c-procedure c-abs libc-stdlib 'abs 'int '(int))
+(debug c-abs)
+(define absoluted (c-abs -2))
+(debug absoluted)
+(assert = absoluted 2)
+
+(define-c-procedure c-puts libc-stdlib 'puts 'int '(pointer))
+(debug c-puts)
+(define chars-written (c-puts (string->c-bytevector "puts: Hello from testing, I am C function puts")))
+(debug chars-written)
+(assert = chars-written 47)
+
+(define-c-procedure c-atoi libc-stdlib 'atoi 'int '(pointer))
+(assert = (c-atoi (string->c-bytevector "100")) 100)
+
+(define-c-procedure c-fopen libc-stdio 'fopen 'pointer '(pointer pointer))
+(define output-file (c-fopen (string->c-bytevector "testfile.test")
+                              (string->c-bytevector "w")))
+(debug output-file)
+(define-c-procedure c-fprintf libc-stdio 'fprintf 'int '(pointer pointer))
+(define characters-written
+  (c-fprintf output-file (string->c-bytevector "Hello world")))
+(debug characters-written)
+(assert equal? (= characters-written 11) #t)
+(define-c-procedure c-fclose libc-stdio 'fclose 'int '(pointer))
+(define closed-status (c-fclose output-file))
+(debug closed-status)
+(assert equal? (= closed-status 0) #t)
+(assert equal? (file-exists? "testfile.test") #t)
+(assert equal? (string=? (with-input-from-file "testfile.test"
+                                               (lambda () (read-line)))
+                         "Hello world") #t)
+
+(define-c-procedure c-takes-no-args c-testlib 'takes_no_args 'void '())
+(debug c-takes-no-args)
+(c-takes-no-args)
+
+(define-c-procedure c-takes-no-args-returns-int c-testlib 'takes_no_args_returns_int 'int '())
+(debug c-takes-no-args)
+(define takes-no-args-returns-int-result (c-takes-no-args-returns-int))
+(assert equal? (= takes-no-args-returns-int-result 0) #t)
+
+;; c-bytevector?
+
+(print-header 'c-bytevector?)
+
+(define is-pointer (make-c-bytevector 100))
+(debug is-pointer)
+(assert equal? (c-bytevector? is-pointer) #t)
+;(assert equal? (c-bytevector? 100) #f)
+(assert equal? (c-bytevector? 'bar) #f)
+
+;; make-c-null
+
+(print-header 'make-c-null)
+
+(define null-pointer (make-c-null))
 (debug null-pointer)
-(assert equal? (pffi-pointer-null? null-pointer) #t)
+(assert equal? (c-null? null-pointer) #t)
 
-;; pffi-pointer-null?
+;; c-null?
 
-(print-header 'pffi-pointer-null?)
+(print-header 'c-null?)
 
-(define is-null-pointer (pffi-pointer-null))
+(define is-null-pointer (make-c-null))
 (debug is-null-pointer)
-(assert equal? (pffi-pointer-null? is-null-pointer) #t)
-(assert equal? (pffi-pointer-null? 100) #f)
-(assert equal? (pffi-pointer-null? 'bar) #f)
+(assert equal? (c-null? is-null-pointer) #t)
+(assert equal? (c-null? 100) #f)
+(assert equal? (c-null? 'bar) #f)
 
-;; pffi-pointer-allocate
+;;make-c-bytevector
 
-(print-header 'pffi-pointer-allocate)
+(print-header 'make-c-bytevector )
 
-(define test-pointer (pffi-pointer-allocate 100))
+(define test-pointer (make-c-bytevector 100))
 (debug test-pointer)
-(assert equal? (pffi-pointer? test-pointer) #t)
-;(assert equal? (pffi-pointer? 0) #f)
-;(assert equal? (pffi-pointer? #t) #f)
-;(assert equal? (pffi-pointer? "Hello world") #f)
-(assert equal? (pffi-pointer-null? test-pointer) #f)
+(assert equal? (c-bytevector? test-pointer) #t)
+;(assert equal? (c-bytevector? 0) #f)
+;(assert equal? (c-bytevector? #t) #f)
+;(assert equal? (c-bytevector? "Hello world") #f)
+(assert equal? (c-null? test-pointer) #f)
 
-;; pffi-pointer-address
+;; call-with-address-of-c-bytevector
 
-(print-header 'pffi-pointer-allocate)
 
-(pffi-define-function test-passing-pointer-address
+(print-header 'call-with-address-of-c-bytevector)
+
+(define-c-procedure test-passing-pointer-address
                       c-testlib
                       'test_passing_pointer_address
                       'int
                       '(pointer pointer))
-(pffi-define-function pa c-testlib 'pa 'pointer '(pointer))
-(pffi-define-function printa c-testlib 'printa 'void '(pointer))
 
-(define test-pointer1 (pffi-pointer-allocate 100))
-(debug test-pointer1)
-(debug (pffi-pointer? test-pointer1))
-(assert equal? (pffi-pointer? test-pointer1) #t)
-(debug (pffi-pointer-address test-pointer1))
-
-(define input-pointer (pffi-pointer-allocate (pffi-size-of 'int)))
+(define input-pointer (make-c-bytevector (c-size-of 'int)))
 (pffi-pointer-set! input-pointer 'int 0 100)
-(define input-pointer-address (pffi-pointer-address input-pointer))
-(debug input-pointer-address)
-(test-passing-pointer-address input-pointer input-pointer-address)
-(debug input-pointer)
-(debug input-pointer-address)
 (debug (pffi-pointer-get input-pointer 'int 0))
-;(assert equal? (pffi-pointer? input-pointer-address) #t)
-;(assert equal? (= (pffi-pointer-get input-pointer 'int 0) 42) #t)
-;(assert equal? (> (pffi-pointer-address test-pointer1) 0) #t)
+(call-with-address-of-c-bytevector
+  input-pointer
+  (lambda (address)
+    (test-passing-pointer-address input-pointer address)))
+(debug input-pointer)
+(debug (pffi-pointer-get input-pointer 'int 0))
+(assert equal? (= (pffi-pointer-get input-pointer 'int 0) 42) #t)
 
-;; pffi-pointer?
+;; c-free
 
-(print-header 'pffi-pointer?)
+(print-header 'c-free)
 
-(define is-pointer (pffi-pointer-allocate 100))
-(debug is-pointer)
-(assert equal? (pffi-pointer? is-pointer) #t)
-;(assert equal? (pffi-pointer? 100) #f)
-(assert equal? (pffi-pointer? 'bar) #f)
-
-;; pffi-pointer-free
-
-(print-header 'pffi-pointer-free)
-
-(define pointer-to-be-freed (pffi-pointer-allocate 100))
+(define pointer-to-be-freed (make-c-bytevector 100))
 (debug pointer-to-be-freed)
-(pffi-pointer-free pointer-to-be-freed)
+(c-free pointer-to-be-freed)
 (debug pointer-to-be-freed)
 
 ;; pffi-pointer-set! and pffi-pointer-get 1/2
 
 (print-header "pffi-pointer-set! and pffi-pointer-get 1/2")
 
-(define set-pointer (pffi-pointer-allocate 256))
+(define set-pointer (make-c-bytevector 256))
 (define offset 64)
 (define value 1)
 (debug set-pointer)
@@ -573,32 +611,32 @@
 (pffi-define-struct test-struct1 'teststruct1 '((int . r) (int . g) (int . b)))
 (define struct1 (test-struct1))
 (debug struct1)
-(debug (pffi-size-of struct1))
-(assert = (pffi-size-of struct1) 12)
+(debug (c-size-of struct1))
+(assert = (c-size-of struct1) 12)
 
 (pffi-define-struct test-struct2 'test2 '((int8 . r) (int8 . g) (int . b)))
 (define struct2 (test-struct2))
 (debug struct2)
-(debug (pffi-size-of struct2))
-(assert = (pffi-size-of struct2) 8)
+(debug (c-size-of struct2))
+(assert = (c-size-of struct2) 8)
 
 (pffi-define-struct test-struct3 'test3 '((int8 . r) (int8 . g) (int . b)))
 (define struct3 (test-struct3))
 (debug struct3)
-(debug (pffi-size-of struct3))
-(assert = (pffi-size-of struct3) 8)
+(debug (c-size-of struct3))
+(assert = (c-size-of struct3) 8)
 
 (pffi-define-struct test-struct4 'test4 '((int8 . r) (pointer . a) (int8 . g) (int . b)))
 (define struct4 (test-struct4))
 (debug struct4)
-(debug (pffi-size-of struct4))
-(assert = (pffi-size-of struct4) 24)
+(debug (c-size-of struct4))
+(assert = (c-size-of struct4) 24)
 
 (pffi-define-struct test-struct5 'test5 '((int8 . r) (char . b) (pointer . a) (int8 . g) (int . b)))
 (define struct5 (test-struct5))
 (debug struct5)
-(debug (pffi-size-of struct5))
-(assert = (pffi-size-of struct5) 24)
+(debug (c-size-of struct5))
+(assert = (c-size-of struct5) 24)
 
 (pffi-define-struct test-struct6 'test6 '((int8 . a)
                                           (char . b)
@@ -616,18 +654,33 @@
                                           (float . n)))
 (define struct6 (test-struct6))
 (debug struct6)
-(debug (pffi-size-of struct6))
-(assert = (pffi-size-of struct6) 96)
+(debug (c-size-of struct6))
+(assert = (c-size-of struct6) 96)
 
-;; pffi-string->pointer
+;; bytevector->c-bytevector c-bytevector->bytevector
 
-(print-header 'pffi-string->pointer)
+(print-header "bytevector->c-bytevector c-bytevector->bytevector")
 
-(define string-pointer (pffi-string->pointer "Hello world"))
+(define bt1 (bytevector 1 2 3 4 5 6 7 8))
+(debug bt1)
+(define btp1 (bytevector->c-bytevector bt1))
+(debug btp1)
+(assert equal? (c-bytevector? btp1) #t)
+(define bt2 (c-bytevector->bytevector btp1 (bytevector-length bt1)))
+(debug bt2)
+(assert equal? (bytevector? bt2) #t)
+(debug (list bt1 bt2))
+(assert equal? bt1 bt2)
+
+;; string->c-bytevector
+
+(print-header 'string->c-bytevector)
+
+(define string-pointer (string->c-bytevector "Hello world"))
 (debug string-pointer)
-(debug (pffi-pointer->string string-pointer))
-(assert equal? (pffi-pointer? string-pointer) #t)
-(assert equal? (pffi-pointer-null? string-pointer) #f)
+(debug (c-bytevector->string string-pointer))
+(assert equal? (c-bytevector? string-pointer) #t)
+(assert equal? (c-null? string-pointer) #f)
 (debug (pffi-pointer-get string-pointer 'char 0))
 (assert char=? (pffi-pointer-get string-pointer 'char 0) #\H)
 (debug (pffi-pointer-get string-pointer 'char 1))
@@ -641,28 +694,28 @@
 (debug (pffi-pointer-get string-pointer 'char 10))
 (assert char=? (pffi-pointer-get string-pointer 'char 10) #\d)
 
-;; pffi-pointer->string
+;; c-bytevector->string
 
-(print-header 'pffi-pointer->string)
+(print-header 'c-bytevector->string)
 
-(define pointer-string (pffi-pointer->string string-pointer))
+(define pointer-string (c-bytevector->string string-pointer))
 (debug pointer-string)
 (assert equal? (string? pointer-string) #t)
 (assert string=? pointer-string "Hello world")
-(assert string=? (pffi-pointer->string (pffi-string->pointer "https://scheme.org")) "https://scheme.org")
+(assert string=? (c-bytevector->string (string->c-bytevector "https://scheme.org")) "https://scheme.org")
 (define test-url-string "https://scheme.org")
 (debug test-url-string)
-(define test-url (pffi-string->pointer test-url-string))
+(define test-url (string->c-bytevector test-url-string))
 (debug test-url)
-(debug (pffi-pointer->string test-url))
-(assert equal? (string=? (pffi-pointer->string test-url) test-url-string) #t)
+(debug (c-bytevector->string test-url))
+(assert equal? (string=? (c-bytevector->string test-url) test-url-string) #t)
 
 ;; pffi-pointer-get
 
 (print-header "pffi-pointer-get")
 
 (define hello-string "hello")
-(define hello-string-pointer (pffi-string->pointer hello-string))
+(define hello-string-pointer (string->c-bytevector hello-string))
 
 (debug (pffi-pointer-get hello-string-pointer 'char 0))
 (assert char=? (pffi-pointer-get hello-string-pointer 'char 0) #\h)
@@ -675,81 +728,36 @@
 
 (print-header "pffi-pointer-set! and pffi-pointer-get 2/2")
 
-(define pointer-to-be-set (pffi-string->pointer "FOOBAR"))
+(define pointer-to-be-set (string->c-bytevector "FOOBAR"))
 (debug pointer-to-be-set)
-(debug (pffi-pointer->string pointer-to-be-set))
+(debug (c-bytevector->string pointer-to-be-set))
 (pffi-pointer-set! set-pointer 'pointer offset pointer-to-be-set)
 
 (debug (pffi-pointer-get set-pointer 'pointer offset))
 (assert equal?
-        (pffi-pointer? (pffi-pointer-get set-pointer 'pointer offset))
+        (c-bytevector? (pffi-pointer-get set-pointer 'pointer offset))
         #t)
-(debug (pffi-pointer->string (pffi-pointer-get set-pointer 'pointer offset)))
+(debug (c-bytevector->string (pffi-pointer-get set-pointer 'pointer offset)))
 (assert equal?
-        (string? (pffi-pointer->string (pffi-pointer-get set-pointer 'pointer offset)))
+        (string? (c-bytevector->string (pffi-pointer-get set-pointer 'pointer offset)))
         #t)
-(debug (pffi-pointer->string (pffi-pointer-get set-pointer 'pointer offset)))
+(debug (c-bytevector->string (pffi-pointer-get set-pointer 'pointer offset)))
 (assert equal?
-        (string=? (pffi-pointer->string (pffi-pointer-get set-pointer 'pointer offset)) "FOOBAR")
+        (string=? (c-bytevector->string (pffi-pointer-get set-pointer 'pointer offset)) "FOOBAR")
         #t)
 
 (define string-to-be-set "FOOBAR")
 (debug string-to-be-set)
-(pffi-pointer-set! set-pointer 'pointer offset (pffi-string->pointer string-to-be-set))
-(assert string=? (pffi-pointer->string (pffi-pointer-get set-pointer 'pointer offset)) "FOOBAR")
+(pffi-pointer-set! set-pointer 'pointer offset (string->c-bytevector string-to-be-set))
+(assert string=? (c-bytevector->string (pffi-pointer-get set-pointer 'pointer offset)) "FOOBAR")
 
-;; pffi-define
-
-(print-header 'pffi-define)
-
-(pffi-define-function c-abs libc-stdlib 'abs 'int '(int))
-(debug c-abs)
-(define absoluted (c-abs -2))
-(debug absoluted)
-(assert = absoluted 2)
-
-(pffi-define-function c-puts libc-stdlib 'puts 'int '(pointer))
-(debug c-puts)
-(define chars-written (c-puts (pffi-string->pointer "puts: Hello from testing, I am C function puts")))
-(debug chars-written)
-(assert = chars-written 47)
-
-(pffi-define-function c-atoi libc-stdlib 'atoi 'int '(pointer))
-(assert = (c-atoi (pffi-string->pointer "100")) 100)
-
-(pffi-define-function c-fopen libc-stdio 'fopen 'pointer '(pointer pointer))
-(define output-file (c-fopen (pffi-string->pointer "testfile.test")
-                              (pffi-string->pointer "w")))
-(debug output-file)
-(pffi-define-function c-fprintf libc-stdio 'fprintf 'int '(pointer pointer))
-(define characters-written
-  (c-fprintf output-file (pffi-string->pointer "Hello world")))
-(debug characters-written)
-(assert equal? (= characters-written 11) #t)
-(pffi-define-function c-fclose libc-stdio 'fclose 'int '(pointer))
-(define closed-status (c-fclose output-file))
-(debug closed-status)
-(assert equal? (= closed-status 0) #t)
-(assert equal? (file-exists? "testfile.test") #t)
-(assert equal? (string=? (with-input-from-file "testfile.test"
-                                               (lambda () (read-line)))
-                         "Hello world") #t)
-
-(pffi-define-function c-takes-no-args c-testlib 'takes_no_args 'void '())
-(debug c-takes-no-args)
-(c-takes-no-args)
-
-(pffi-define-function c-takes-no-args-returns-int c-testlib 'takes_no_args_returns_int 'int '())
-(debug c-takes-no-args)
-(define takes-no-args-returns-int-result (c-takes-no-args-returns-int))
-(assert equal? (= takes-no-args-returns-int-result 0) #t)
 
 ;; pffi-struct-get
 
 (print-header 'pffi-struct-get)
 
-(pffi-define-function c-init-struct c-testlib 'init_struct 'pointer '(pointer))
-(pffi-define-function c-check-offset c-testlib 'check_offset 'void '(int int))
+(define-c-procedure c-init-struct c-testlib 'init_struct 'pointer '(pointer))
+(define-c-procedure c-check-offset c-testlib 'check_offset 'void '(int int))
 (pffi-define-struct struct-test-get1 'test_get1
                                           '((int8 . a)
                                             (char . b)
@@ -793,18 +801,18 @@
 (debug (pffi-struct-get struct-test 'd))
 (assert char=? (pffi-struct-get struct-test 'd) #\d)
 (debug (pffi-struct-get struct-test 'e))
-(debug (pffi-pointer-null? (pffi-struct-get struct-test 'e)))
-(assert equal? (pffi-pointer-null? (pffi-struct-get struct-test 'e)) #t)
+(debug (c-null? (pffi-struct-get struct-test 'e)))
+(assert equal? (c-null? (pffi-struct-get struct-test 'e)) #t)
 (debug (pffi-struct-get struct-test 'f))
 (assert = (pffi-struct-get struct-test 'f) 6.0)
 (debug (pffi-struct-get struct-test 'g))
-(debug (pffi-pointer->string (pffi-struct-get struct-test 'g)))
-(assert equal? (string=? (pffi-pointer->string (pffi-struct-get struct-test 'g)) "FOOBAR")  #t)
+(debug (c-bytevector->string (pffi-struct-get struct-test 'g)))
+(assert equal? (string=? (c-bytevector->string (pffi-struct-get struct-test 'g)) "FOOBAR")  #t)
 (debug (pffi-struct-get struct-test 'h))
 (assert = (pffi-struct-get struct-test 'h) 8)
 (debug (pffi-struct-get struct-test 'i))
-(debug (pffi-pointer-null? (pffi-struct-get struct-test 'i)))
-(assert equal? (pffi-pointer-null? (pffi-struct-get struct-test 'i)) #t)
+(debug (c-null? (pffi-struct-get struct-test 'i)))
+(assert equal? (c-null? (pffi-struct-get struct-test 'i)) #t)
 (debug (pffi-struct-get struct-test 'j))
 (assert = (pffi-struct-get struct-test 'j) 10)
 (debug (pffi-struct-get struct-test 'k))
@@ -820,7 +828,7 @@
 
 (print-header "pffi-struct-set! 1")
 
-(pffi-define-function c-test-check c-testlib 'test_check 'int '(pointer))
+(define-c-procedure c-test-check c-testlib 'test_check 'int '(pointer))
 (pffi-define-struct struct-test-set1 'test_set1
                                           '((int8 . a)
                                             (char . b)
@@ -841,11 +849,11 @@
 (pffi-struct-set! struct-test1 'b #\b)
 (pffi-struct-set! struct-test1 'c 3.0)
 (pffi-struct-set! struct-test1 'd #\d)
-(pffi-struct-set! struct-test1 'e (pffi-pointer-null))
+(pffi-struct-set! struct-test1 'e (make-c-null))
 (pffi-struct-set! struct-test1 'f 6.0)
-(pffi-struct-set! struct-test1 'g (pffi-string->pointer "foo"))
+(pffi-struct-set! struct-test1 'g (string->c-bytevector "foo"))
 (pffi-struct-set! struct-test1 'h 8)
-(pffi-struct-set! struct-test1 'i (pffi-pointer-null))
+(pffi-struct-set! struct-test1 'i (make-c-null))
 (pffi-struct-set! struct-test1 'j 10)
 (pffi-struct-set! struct-test1 'k 11)
 (pffi-struct-set! struct-test1 'l 12)
@@ -857,7 +865,7 @@
 
 ;(print-header "pffi-struct constructor with pointer")
 
-;(pffi-define-function c-test-new c-testlib 'test_new 'pointer '())
+;(define-c-procedure c-test-new c-testlib 'test_new 'pointer '())
 ;(define struct-test2-pointer (c-test-new))
 #;(define struct-test2 (pffi-struct-make 'test
                                        '((int8 . a)
@@ -888,17 +896,17 @@
 ;(debug (pffi-struct-get struct-test2 'd))
 ;(assert char=? (pffi-struct-get struct-test2 'd) #\d)
 ;(debug (pffi-struct-get struct-test2 'e))
-;(debug (pffi-pointer-null? (pffi-struct-get struct-test2 'e)))
-;(assert equal? (pffi-pointer-null? (pffi-struct-get struct-test2 'e)) #t)
+;(debug (c-null? (pffi-struct-get struct-test2 'e)))
+;(assert equal? (c-null? (pffi-struct-get struct-test2 'e)) #t)
 ;(debug (pffi-struct-get struct-test2 'f))
 ;(assert = (pffi-struct-get struct-test2 'f) 6.0)
-;(debug (pffi-pointer->string (pffi-struct-get struct-test2 'g)))
-;(assert equal? (string=? (pffi-pointer->string (pffi-struct-get struct-test2 'g)) "FOOBAR") #t)
+;(debug (c-bytevector->string (pffi-struct-get struct-test2 'g)))
+;(assert equal? (string=? (c-bytevector->string (pffi-struct-get struct-test2 'g)) "FOOBAR") #t)
 ;(debug (pffi-struct-get struct-test2 'h))
 ;(assert = (pffi-struct-get struct-test2 'h) 8)
 ;(debug (pffi-struct-get struct-test2 'i))
-;(debug (pffi-pointer-null? (pffi-struct-get struct-test2 'i)))
-;(assert (lambda (p t) (pffi-pointer-null? p)) (pffi-struct-get struct-test2 'i) #t)
+;(debug (c-null? (pffi-struct-get struct-test2 'i)))
+;(assert (lambda (p t) (c-null? p)) (pffi-struct-get struct-test2 'i) #t)
 ;(debug (pffi-struct-get struct-test2 'j))
 ;(assert = (pffi-struct-get struct-test2 'j) 10)
 ;(debug (pffi-struct-get struct-test2 'k))
@@ -919,10 +927,10 @@
 (debug (pffi-list->array 'int test-list1))
 (assert equal? (pffi-array->list (pffi-list->array 'int test-list1)) test-list1)
 
-(define test-array1 (pffi-pointer-allocate (* (pffi-size-of 'int) 3)))
-(pffi-pointer-set! test-array1 'int (* (pffi-size-of 'int) 0) 4)
-(pffi-pointer-set! test-array1 'int (* (pffi-size-of 'int) 1) 5)
-(pffi-pointer-set! test-array1 'int (* (pffi-size-of 'int) 2) 6)
+(define test-array1 (make-c-bytevector (* (c-size-of 'int) 3)))
+(pffi-pointer-set! test-array1 'int (* (c-size-of 'int) 0) 4)
+(pffi-pointer-set! test-array1 'int (* (c-size-of 'int) 1) 5)
+(pffi-pointer-set! test-array1 'int (* (c-size-of 'int) 2) 6)
 (debug test-array1)
 (debug (pffi-array->list (pffi-pointer->array test-array1 'int 3)))
 (define check-list1 (list 4 5 6))
@@ -941,7 +949,7 @@
 ;; pffi-struct-dereference 1
 
 ;(print-header "pffi-struct-dereference 1")
-;(pffi-define-function c-color-check-by-value c-testlib 'color_check_by_value 'int '((struct . color)))
+;(define-c-procedure c-color-check-by-value c-testlib 'color_check_by_value 'int '((struct . color)))
 #;(pffi-define-struct make-struct-color 'color '((int8 . r)
                                                (int8 . g)
                                                (int8 . b)
@@ -957,7 +965,7 @@
 
 ;(print-header "pffi-struct-dereference 2")
 
-;(pffi-define-function c-test-check-by-value c-testlib 'test_check_by_value 'int '((struct . test)))
+;(define-c-procedure c-test-check-by-value c-testlib 'test_check_by_value 'int '((struct . test)))
 #;(pffi-define-struct make-struct-test-dereference2
                     'test
                     '((int8 . a)
@@ -979,11 +987,11 @@
 ;(debug (pffi-struct-set! struct-test3 'b #\b))
 ;(debug (pffi-struct-set! struct-test3 'c 3.0))
 ;(debug (pffi-struct-set! struct-test3 'd #\d))
-;(debug (pffi-struct-set! struct-test3 'e (pffi-pointer-null)))
+;(debug (pffi-struct-set! struct-test3 'e (make-c-null)))
 ;(debug (pffi-struct-set! struct-test3 'f 6.0))
-;(debug (pffi-struct-set! struct-test3 'g (pffi-string->pointer "foo")))
+;(debug (pffi-struct-set! struct-test3 'g (string->c-bytevector "foo")))
 ;(debug (pffi-struct-set! struct-test3 'h 8))
-;(debug (pffi-struct-set! struct-test3 'i (pffi-pointer-null)))
+;(debug (pffi-struct-set! struct-test3 'i (make-c-null)))
 ;(debug (pffi-struct-set! struct-test3 'j 10))
 ;(debug (pffi-struct-set! struct-test3 'k 11))
 ;(debug (pffi-struct-set! struct-test3 'l 12))
@@ -1009,12 +1017,12 @@
 
 ;(print-header 'pffi-define-callback)
 
-;(define array (pffi-pointer-allocate (* (pffi-size-of 'int) 3)))
-;(pffi-pointer-set! array 'int (* (pffi-size-of 'int) 0) 3)
-;(pffi-pointer-set! array 'int (* (pffi-size-of 'int) 1) 2)
-;(pffi-pointer-set! array 'int (* (pffi-size-of 'int) 2) 1)
+;(define array (make-c-bytevector (* (c-size-of 'int) 3)))
+;(pffi-pointer-set! array 'int (* (c-size-of 'int) 0) 3)
+;(pffi-pointer-set! array 'int (* (c-size-of 'int) 1) 2)
+;(pffi-pointer-set! array 'int (* (c-size-of 'int) 2) 1)
 
-;(pffi-define-function qsort libc-stdlib 'qsort 'void '(pointer int int callback))
+;(define-c-procedure qsort libc-stdlib 'qsort 'void '(pointer int int callback))
 
 #;(pffi-define-callback compare
                       'int
@@ -1028,17 +1036,17 @@
 ;(write compare)
 ;(newline)
 
-#;(define unsorted (list (pffi-pointer-get array 'int (* (pffi-size-of 'int) 0))
-             (pffi-pointer-get array 'int (* (pffi-size-of 'int) 1))
-             (pffi-pointer-get array 'int (* (pffi-size-of 'int) 2))))
+#;(define unsorted (list (pffi-pointer-get array 'int (* (c-size-of 'int) 0))
+             (pffi-pointer-get array 'int (* (c-size-of 'int) 1))
+             (pffi-pointer-get array 'int (* (c-size-of 'int) 2))))
 ;(debug unsorted)
 ;(assert equal? unsorted (list 3 2 1))
 
-;(qsort array 3 (pffi-size-of 'int) compare)
+;(qsort array 3 (c-size-of 'int) compare)
 
-#;(define sorted (list (pffi-pointer-get array 'int (* (pffi-size-of 'int) 0))
-             (pffi-pointer-get array 'int (* (pffi-size-of 'int) 1))
-             (pffi-pointer-get array 'int (* (pffi-size-of 'int) 2))))
+#;(define sorted (list (pffi-pointer-get array 'int (* (c-size-of 'int) 0))
+             (pffi-pointer-get array 'int (* (c-size-of 'int) 1))
+             (pffi-pointer-get array 'int (* (c-size-of 'int) 2))))
 ;(debug sorted)
 ;(assert equal? sorted (list 1 2 3))
 

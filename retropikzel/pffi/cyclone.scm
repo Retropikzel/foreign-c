@@ -23,23 +23,23 @@
           ((equal? type 'struct) 'c-pointer)
           (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
-(define pffi-pointer?
+(define c-bytevector?
   (lambda (object)
     (opaque? object)))
 
-(define-syntax pffi-define-function
+(define-syntax define-c-procedure
   (er-macro-transformer
     (lambda (expr rename compare)
       (let* ((pffi-type->native-type
                (lambda (type)
-                 (cond ((equal? type 'int8) 'byte)
-                       ((equal? type 'uint8) 'unsigned-byte)
-                       ((equal? type 'int16) 'int16_t)
-                       ((equal? type 'uint16) 'uint16_t)
-                       ((equal? type 'int32) 'int32)
-                       ((equal? type 'uint32) 'unsigned-int32)
-                       ((equal? type 'int64) 'integer-64)
-                       ((equal? type 'uint64) 'unsigned-integer64)
+                 (cond ((equal? type 'int8) 'int)
+                       ((equal? type 'uint8) 'int)
+                       ((equal? type 'int16) 'int)
+                       ((equal? type 'uint16) 'int)
+                       ((equal? type 'int32) 'int)
+                       ((equal? type 'uint32) 'int)
+                       ((equal? type 'int64) 'int)
+                       ((equal? type 'uint64) 'int)
                        ((equal? type 'char) 'char)
                        ((equal? type 'unsigned-char) 'unsigned-char)
                        ((equal? type 'short) 'short)
@@ -50,22 +50,21 @@
                        ((equal? type 'unsigned-long) 'unsigned-long)
                        ((equal? type 'float) 'float)
                        ((equal? type 'double) 'double)
-                       ((equal? type 'pointer) 'c-pointer)
-                       ((equal? type 'void) 'void)
-                       ((equal? type 'struct) 'c-pointer)
+                       ((equal? type 'pointer) 'opaque)
+                       ((equal? type 'void) 'c-void)
                        (else (error "pffi-type->native-type -- No such pffi type" type)))))
-             (scheme-name (car (cdr expr)))
+             (scheme-name (cadr expr))
              (c-name (symbol->string (car (cdr (car (cdr (cdr (cdr expr))))))))
              (return-type (pffi-type->native-type (car (cdr (car (cdr (cdr (cdr (cdr expr)))))))))
              (argument-types
-               (let ((types (cdr (car (cdr (cdr (cdr (cdr (cdr expr)))))))))
+               (let ((types (cadr (car (cdr (cdr (cdr (cdr (cdr expr)))))))))
                  (if (null? types)
                    '()
-                   (map pffi-type->native-type (map car (map cdr types)))))))
+                   (map pffi-type->native-type types)))))
         (if (null? argument-types)
           `(c-define ,scheme-name ,return-type ,c-name)
           `(c-define ,scheme-name
-                     ,return-type ,c-name ,@ argument-types))))))
+                     ,return-type ,c-name ,@argument-types))))))
 
 (define pffi-define-callback
   (lambda (scheme-name return-type argument-types procedure)
@@ -93,38 +92,31 @@
           ((equal? type 'double) (c-value "sizeof(double)" int))
           ((equal? type 'pointer) (c-value "sizeof(void*)" int)))))
 
-#;(define-c pffi-pointer-allocate
-          "(void *data, int argc, closure _, object k, object size)"
-          "make_c_opaque(opq, malloc(obj_obj2int(size)));
+(define-c pffi-pointer-address
+          "(void *data, int argc, closure _, object k, object pointer)"
+          "make_c_opaque(opq, &(void*)opaque_ptr(pointer));
           return_closcall1(data, k, &opq);")
 
 (define pffi-pointer-null
   (lambda ()
     (make-opaque)))
 
-#;(define-c pffi-string->pointer
-          "(void *data, int argc, closure _, object k, object s)"
-          "make_c_opaque(opq, string_str(s));
-          return_closcall1(data, k, &opq);")
-
-#;(define-c pffi-pointer->string
-          "(void *data, int argc, closure _, object k, object p)"
-          "make_string(s, opaque_ptr(p));
-          return_closcall1(data, k, &s);")
+(define-syntax define-c-library
+     (syntax-rules ()
+       ((_ scheme-name headers object-name options)
+        (begin
+          (define scheme-name #t)
+          (pffi-shared-object-load headers)))))
 
 (define-syntax pffi-shared-object-load
   (er-macro-transformer
     (lambda (expr rename compare)
-      `(begin
-         ,@ (map
-              (lambda (header)
-                `(include-c-header ,(string-append "<" header ">")))
-              (cdr (car (cdr expr))))))))
-
-#;(define-c pffi-pointer-free
-          "(void *data, int argc, closure _, object k, object pointer)"
-          "free(opaque_ptr(pointer));
-          return_closcall1(data, k, make_boolean(boolean_t));")
+      (let* ((headers (cadr (cadr expr)))
+             (includes (map
+                         (lambda (header)
+                           `(include-c-header ,(string-append "<" header ">")))
+                         headers)))
+        `(,@includes)))))
 
 (define pffi-pointer-null?
   (lambda (pointer)

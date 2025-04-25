@@ -1,17 +1,15 @@
 (define-module retropikzel.pffi.gauche
                (export size-of-type
                        pffi-shared-object-load
-                       pffi-pointer-null
-                       pffi-pointer-null?
-                       pffi-pointer-allocate
+                       ;pffi-pointer-null
+                       ;pffi-pointer-null?
+                       make-c-bytevector
                        pffi-pointer-address
-                       pffi-pointer?
-                       pffi-pointer-free
+                       c-bytevector?
+                       c-free
                        pffi-pointer-set!
                        pffi-pointer-get
-                       pffi-string->pointer
-                       pffi-pointer->string
-                       pffi-define-function))
+                       define-c-procedure))
 
 (select-module retropikzel.pffi.gauche)
 (dynamic-load "retropikzel/pffi/gauche-pffi")
@@ -45,27 +43,15 @@
   (lambda (path options)
     (shared-object-load path)))
 
-(define pffi-pointer-null
-  (lambda ()
-    (pointer-null)))
-
-(define pffi-pointer-null?
-  (lambda (pointer)
-    (pointer-null? pointer)))
-
-(define pffi-pointer-allocate
+(define make-c-bytevector
   (lambda (size)
     (pointer-allocate size)))
 
-(define pffi-pointer-address
-  (lambda (object)
-    (pointer-address object)))
-
-(define pffi-pointer?
+(define c-bytevector?
   (lambda (pointer)
     (pointer? pointer)))
 
-(define pffi-pointer-free
+(define c-free
   (lambda (pointer)
     (pointer-free pointer)))
 
@@ -141,7 +127,7 @@
 (define argument->pointer
   (lambda (value type)
     (cond ((procedure? value) (scheme-procedure-to-pointer value))
-          (else (let ((pointer (pffi-pointer-allocate (size-of-type type))))
+          (else (let ((pointer (make-c-bytevector (size-of-type type))))
                   (pffi-pointer-set! pointer type 0 value)
                   pointer)))))
 
@@ -150,10 +136,10 @@
     (dlerror) ;; Clean all previous errors
     (let ((c-function (dlsym shared-object c-name))
           (maybe-dlerror (dlerror)))
-      (when (not (pffi-pointer-null? maybe-dlerror))
-        (error (pffi-pointer->string maybe-dlerror)))
+      #;(when (not (pffi-pointer-null? maybe-dlerror))
+        (error (c-bytevector->string maybe-dlerror)))
       (lambda arguments
-        (let ((return-value (pffi-pointer-allocate
+        (let ((return-value (make-c-bytevector
                               (if (equal? return-type 'void)
                                 0
                                 (size-of-type return-type)))))
@@ -168,7 +154,7 @@
           (cond ((not (equal? return-type 'void))
                  (pffi-pointer-get return-value return-type 0))))))))
 
-(define-syntax pffi-define-function
+(define-syntax define-c-procedure
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name

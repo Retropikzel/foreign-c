@@ -2,11 +2,11 @@
   (lambda (type)
     (error "Not defined")))
 
-(define pffi-pointer?
+(define c-bytevector?
   (lambda (object)
     (error "Not defined")))
 
-(define-syntax pffi-define-function
+(define-syntax define-c-procedure
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (error "Not defined"))))
@@ -15,32 +15,8 @@
   (lambda (type)
     (error "Not defined")))
 
-(define pffi-pointer-allocate
-  (lambda (size)
-    (error "Not defined")))
-
-(define pffi-pointer-null
-  (lambda ()
-    (error "Not defined")))
-
-#;(define pffi-string->pointer
-  (lambda (string-content)
-    (error "Not defined")))
-
-#;(define pffi-pointer->string
-  (lambda (pointer)
-    pointer))
-
 (define pffi-shared-object-load
   (lambda (header path)
-    (error "Not defined")))
-
-(define pffi-pointer-free
-  (lambda (pointer)
-    (error "Not defined")))
-
-(define pffi-pointer-null?
-  (lambda (pointer)
     (error "Not defined")))
 
 (define pffi-pointer-set!
@@ -50,8 +26,4 @@
 
 (define pffi-pointer-get
   (lambda (pointer type offset)
-    (error "Not defined")))
-
-(define pffi-pointer-deref
-  (lambda (pointer)
     (error "Not defined")))

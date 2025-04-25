@@ -1,75 +1,105 @@
 (cond-expand
-  (windows (pffi-define-library pffi-libc-stdlib
-                                '("stdlib.h")
-                                "ucrtbase"
-                                '((additional-versions ("0" "6")))))
-  (else (pffi-define-library pffi-libc-stdlib
-                             '("stdlib.h")
-                             "c"
-                             '((additional-versions ("0" "6"))))))
+  (windows (define-c-library libc
+                             '("stdlib.h" "string.h")
+                             "ucrtbase"
+                             '((additional-versions ("0" "6")))))
+  (else (define-c-library libc
+                          '("stdlib.h" "string.h")
+                          "c"
+                          '((additional-versions ("0" "6"))))))
 
-(cond-expand
-  (windows (pffi-define-library pffi-libc-stdio
-                                '("stdio.h")
-                                "ucrtbase"
-                                '((additional-versions ("0" "6")))))
-  (else (pffi-define-library pffi-libc-stdio
-                             '("stdio")
-                             "c"
-                             '((additional-versions ("0" "6"))))))
-;(pffi-define-function c-snprintf pffi-libc-stdio 'snprintf 'int '(pointer int pointer pointer))
-;(pffi-define-function c-strtol pffi-libc-stdio 'strtol 'uint64 '(pointer pointer int))
+(define-c-procedure c-strlen libc 'strlen 'int '(pointer))
+(define-c-procedure pffi-pointer-allocate-calloc libc 'calloc 'pointer '(int int))
+(define-c-procedure c-memset-address->pointer libc 'memset 'pointer '(uint64 uint8 int))
+(define-c-procedure c-memset-pointer->address libc 'memset 'uint64 '(pointer uint8 int))
+(define-c-procedure c-printf libc 'printf 'int '(pointer pointer))
+(define-c-procedure c-malloc libc 'malloc 'pointer '(int))
+(define-c-procedure c-strlen libc 'strlen 'int '(pointer))
 
 (cond-expand
   (chibi #t) ; FIXME
-  (else (pffi-define-function pffi-pointer-allocate pffi-libc-stdlib 'malloc 'pointer '(int))))
+  (else (define make-c-bytevector
+          (lambda (k . byte)
+            (if (null? byte)
+              (c-malloc k)
+              (bytevector->c-bytevector (make-bytevector k (car byte))))))))
 
-(pffi-define-function pffi-pointer-allocate-calloc pffi-libc-stdlib 'calloc 'pointer '(int int))
+(define c-bytevector
+  (lambda bytes
+    (bytevector->c-bytevector (apply bytevector bytes))))
 
 (cond-expand
   (chibi #t) ; FIXME
-  (else (pffi-define-function pffi-pointer-free pffi-libc-stdlib 'free 'void '(pointer))))
+  (else (define-c-procedure c-free libc 'free 'void '(pointer))))
 
-#;(define pffi-pointer-null
-  (lambda ()
-    (let ((pointer (pffi-pointer-allocate (pffi-size-of 'pointer))))
-      (pffi-pointer-set! pointer 'int 0 0)
+(define bytevector->c-bytevector
+  (lambda (bytes)
+    (letrec* ((bytes-length (bytevector-length bytes))
+              (pointer (make-c-bytevector bytes-length))
+              (looper (lambda (index)
+                        (when (< index bytes-length)
+                          (pffi-pointer-set! pointer
+                                             'uint8
+                                             index
+                                             (bytevector-u8-ref bytes index))
+                          (looper (+ index 1))))))
+      (looper 0)
       pointer)))
 
-#;(define pffi-pointer-null?
-  (lambda (pointer)
-    (let ((address
-            (let ((str (pffi-pointer-allocate 512)))
-              (c-snprintf str 512 (pffi-string->pointer "%p") pointer)
-              (display "Scheme: p1 address: ")
-              (write (pffi-pointer->string str))
-              (newline)
-              (display "Scheme: p1 address int: ")
-              (write (c-strtol str (pffi-pointer-null) 16))
-              (newline)
-              (c-strtol str (pffi-pointer-null) 16))))
-      (= address 0))))
+(define c-bytevector->bytevector
+  (lambda (pointer size)
+    (letrec* ((bytes (make-bytevector size))
+              (looper (lambda (index)
+                        (let ((byte (pffi-pointer-get pointer 'uint8 index)))
+                          (if (= index size)
+                            bytes
+                            (begin
+                              (bytevector-u8-set! bytes index byte)
+                              (looper (+ index 1))))))))
+      (looper 0))))
 
-#;(define pffi-pointer-address
+(define c-bytevector-string-length
+  (lambda (bytevector)
+    (c-strlen bytevector)))
+
+(define c-bytevector->string
   (lambda (pointer)
-    (let* ((address-number
-             (let ((str (pffi-pointer-allocate 512)))
-               (c-snprintf str 512 (pffi-string->pointer "%p") pointer)
-               (display "Scheme: p1 address: ")
-               (write (pffi-pointer->string str))
-               (newline)
-               (display "Scheme: p1 address int: ")
-               (write (c-strtol str (pffi-pointer-null) 16))
-               (newline)
-               (c-strtol str (pffi-pointer-null) 16)))
-           (address (pffi-pointer-allocate (pffi-size-of 'uint64))))
-               (display "Scheme: p2 address: ")
-               (write address)
-               (newline)
-      ;address-number
-      (pffi-pointer-set! address 'uint64 0 address-number)
-      ;address-number
-      ;(pffi-pointer-get address 'pointer 0)
-      address
-      )
-    ))
+    (when (not (c-bytevector? pointer))
+      (error "c-bytevector->string argument not c-bytevector" pointer))
+    (let ((size (c-strlen pointer)))
+      (utf8->string (c-bytevector->bytevector pointer size)))))
+
+(define string->c-bytevector
+  (lambda (text)
+    (when (not (string? text))
+      (error "string->bytevector argument not string" text))
+    (bytevector->c-bytevector (string->utf8 (string-append text (string #\null))))))
+
+(cond-expand
+  (kawa #t) ; FIXME
+  (chicken #t) ; FIXME
+  (else (define make-c-null
+          (lambda ()
+            (cond-expand (stklos (let ((pointer (make-c-bytevector 1)))
+                                   (free-bytes pointer)
+                                   pointer))
+                         (else (c-memset-address->pointer 0 0 0)))))))
+
+(cond-expand
+  (kawa #t) ; FIXME
+  (chicken #t) ; FIXME
+  (else (define c-null?
+          (lambda (pointer)
+            (if (c-bytevector? pointer)
+              (= (c-memset-pointer->address pointer 0 0) 0)
+              #f)))))
+
+(define-syntax call-with-address-of-c-bytevector
+  (syntax-rules ()
+    ((_ input-pointer thunk)
+     (let ((address-pointer (make-c-bytevector (c-size-of 'pointer))))
+       (pffi-pointer-set! address-pointer 'pointer 0 input-pointer)
+       (apply thunk (list address-pointer))
+       (set! input-pointer (pffi-pointer-get address-pointer 'pointer 0))
+       (c-free address-pointer)))))
+

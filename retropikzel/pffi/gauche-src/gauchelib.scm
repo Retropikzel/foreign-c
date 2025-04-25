@@ -71,8 +71,6 @@
  (define-cproc pointer-get-double (pointer offset::<int>) pointer_get_double)
  (define-cproc pointer-get-pointer (pointer offset::<int>) pointer_get_pointer)
 
- (define-cproc string->pointer (string-content) string_to_pointer)
- (define-cproc pointer->string (pointer) pointer_to_string)
  (define-cproc dlerror () pffi_dlerror)
  (define-cproc dlsym (shared-object c-name) pffi_dlsym)
  (define-cproc internal-ffi-call (nargs rtype atypes fn rvalue avalues) internal_ffi_call)

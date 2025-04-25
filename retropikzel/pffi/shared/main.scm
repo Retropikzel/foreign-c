@@ -1,4 +1,4 @@
-(cond-expand
+#;(cond-expand
   (mosh (define pffi-init (lambda () #t)))
   (chicken
    (define-syntax pffi-init
@@ -8,7 +8,7 @@
                   (chicken memory))
          #t))))
   (gambit #t)
-  (ypsilon
+  #;(ypsilon
     (define-syntax pffi-init
       (syntax-rules ()
         ((_)
@@ -22,36 +22,11 @@
       #f
       #t)))
 
-(define pffi-size-of
+(define c-size-of
   (lambda (object)
     (cond ((pffi-struct? object) (pffi-struct-size object))
           ((pffi-type? object) (size-of-type object))
           (else (error "Not pffi-struct, pffi-enum of pffi-type" object)))))
-
-(define pffi-string->pointer
-  (lambda (str)
-    (letrec* ((str-length (string-length str))
-              (pointer (pffi-pointer-allocate (+ str-length 1)))
-              (looper (lambda (index)
-                        (when (< index str-length)
-                          (pffi-pointer-set! pointer
-                                             'char
-                                             index
-                                             (string-ref str index))
-                          (looper (+ index 1))))))
-      (looper 0)
-      (pffi-pointer-set! pointer 'char str-length #\null)
-      pointer)))
-
-(define pffi-pointer->string
-  (lambda (pointer)
-    (letrec* ((looper (lambda (index str)
-                        (let ((c (pffi-pointer-get pointer 'char index)))
-                          (if (char=? c #\null)
-                            str
-                            (looper (+ index 1) (cons c str)))))))
-      (list->string (reverse (looper 0 (list)))))))
-
 
 (define pffi-types
   '(int8
@@ -75,7 +50,7 @@
      pointer
      void))
 
-(define string-split
+(define pffi:string-split
   (lambda (str mark)
     (let* ((str-l (string->list str))
            (res (list))
@@ -93,16 +68,11 @@
       res)))
 
 (cond-expand
-  (gambit #t)
-  ((or chicken cyclone)
-   (define-syntax pffi-define-library
-     (syntax-rules ()
-       ((_ scheme-name headers object-name options)
-        (begin
-          (define scheme-name #t)
-          (pffi-shared-object-load headers))))))
+  (gambit #t) ; Defined in pffi/gambit.scm
+  (chicken #t) ; Defined in pffi/chicken.scm
+  (cyclone #t) ; Defined in pffi/cyclone.scm
   (else
-    (define-syntax pffi-define-library
+    (define-syntax define-c-library
       (syntax-rules ()
         ((_ scheme-name headers object-name options)
          (define scheme-name
@@ -125,7 +95,7 @@
                         (windows
                           (append
                             (if (get-environment-variable "PFFI_LOAD_PATH")
-                              (string-split (get-environment-variable "PFFI_LOAD_PATH") #\;)
+                              (pffi:string-split (get-environment-variable "PFFI_LOAD_PATH") #\;)
                               (list))
                             (if (get-environment-variable "SYSTEM")
                               (list (get-environment-variable "SYSTEM"))
@@ -144,7 +114,7 @@
                               (list))
                             (list ".")
                             (if (get-environment-variable "PATH")
-                              (string-split (get-environment-variable "PATH") #\;)
+                              (pffi:string-split (get-environment-variable "PATH") #\;)
                               (list))
                             (if (get-environment-variable "PWD")
                               (list (get-environment-variable "PWD"))
@@ -152,7 +122,7 @@
                         (else
                           (append
                            (if (get-environment-variable "PFFI_LOAD_PATH")
-                              (string-split (get-environment-variable "PFFI_LOAD_PATH") #\:)
+                              (pffi:string-split (get-environment-variable "PFFI_LOAD_PATH") #\:)
                               (list))
                             ; Guix
                             (list (if (get-environment-variable "GUIX_ENVIRONMENT")
@@ -161,7 +131,7 @@
                                   "/run/current-system/profile/lib")
                             ; Debian
                             (if (get-environment-variable "LD_LIBRARY_PATH")
-                              (string-split (get-environment-variable "LD_LIBRARY_PATH") #\:)
+                              (pffi:string-split (get-environment-variable "LD_LIBRARY_PATH") #\:)
                               (list))
                             (list
                               ;;; x86-64

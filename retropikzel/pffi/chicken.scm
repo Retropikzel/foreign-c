@@ -25,11 +25,11 @@
           ((equal? type 'struct) 'c-pointer)
           (else (error "pffi-type->native-type -- No such pffi type" type)))) )
 
-(define pffi-pointer?
+(define c-bytevector?
   (lambda (object)
     (pointer? object)))
 
-(define-syntax pffi-define-function
+(define-syntax define-c-procedure
   (er-macro-transformer
     (lambda (expr rename compare)
       (let* ((pffi-type->native-type ; Chicken has this procedure in three places
@@ -136,17 +136,16 @@
           ((equal? type 'string) (foreign-value "sizeof(void*)" int))
           ((equal? type 'callback) (foreign-value "sizeof(void*)" int)))))
 
-#;(define pffi-pointer-allocate
-  (lambda (size)
-    (allocate size)))
-
-(define pffi-pointer-address
-  (lambda (pointer)
-    (pointer->address pointer)))
-
-(define pffi-pointer-null
+(define make-c-null
   (lambda ()
     (address->pointer 0)))
+
+(define-syntax define-c-library
+     (syntax-rules ()
+       ((_ scheme-name headers object-name options)
+        (begin
+          (define scheme-name #t)
+          (pffi-shared-object-load headers)))))
 
 (define-syntax pffi-shared-object-load
   (er-macro-transformer
@@ -158,13 +157,7 @@
                   `(foreign-declare ,(string-append "#include <" header ">")))
                 headers))))))
 
-#;(define pffi-pointer-free
-  (lambda (pointer)
-    (if (not (pointer? pointer))
-      (error "pffi-pointer-free -- Argument is not pointer" pointer))
-    (free pointer)))
-
-(define pffi-pointer-null?
+(define c-null?
   (lambda (pointer)
     (if (and (not (pointer? pointer))
              pointer)
@@ -215,8 +208,3 @@
       ((equal? type 'float) (pointer-f32-ref (pointer+ pointer offset)))
       ((equal? type 'double) (pointer-f64-ref (pointer+ pointer offset)))
       ((equal? type 'pointer) (address->pointer (pointer-u64-ref (pointer+ pointer offset)))))))
-
-(define pffi-struct-dereference
-  (lambda (struct)
-    (pffi-pointer-address (pffi-struct-pointer struct))))
-

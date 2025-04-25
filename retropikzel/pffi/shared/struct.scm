@@ -15,33 +15,13 @@
                 (size (cdr (assoc 'size size-and-offsets)))
                 (offsets (cdr (assoc 'offsets size-and-offsets)))
                 (pointer (if (and (not (null? arguments))
-                                  (pffi-pointer? (car arguments)))
+                                  (c-bytevector? (car arguments)))
                            (car arguments)
-                           (pffi-pointer-allocate size)))
+                           (make-c-bytevector size)))
                 (c-type-string (if (string? c-type) c-type (symbol->string c-type))))
            (struct-make c-type-string size pointer offsets)))))))
 
-#;(define pffi-struct-dereference
-  (lambda (struct)
-    (let ((pointer (pffi-pointer-allocate (pffi-struct-size struct)))
-          (offset 0))
-      (for-each
-        (lambda (struct-member)
-          (let* ((member-type (cadr struct-member))
-                 (member-name (car struct-member))
-                 (member-size (pffi-size-of member-type)))
-            (pffi-pointer-set! pointer
-                               member-type
-                               offset
-                               (pffi-struct-get struct member-name))
-            (set! offset (+ offset member-size))))
-        (pffi-struct-members struct))
-    ;(pffi-pointer-get (pffi-struct-pointer struct) 'pointer 0)
-    ;(pffi-pointer-get pointer 'pointer 0)
-    pointer
-    )))
-
-(define pffi-align-of
+(define c-align-of
   (lambda (type)
     (cond-expand
       ;(guile (alignof (pffi-type->native-type type)))
@@ -60,7 +40,7 @@
            (offsets (map (lambda (member)
                            (let* ((name (cdr member))
                                   (type (car member))
-                                  (type-alignment (pffi-align-of type)))
+                                  (type-alignment (c-align-of type)))
                              (when (> (size-of-type type) largest-member-size)
                                (set! largest-member-size (size-of-type type)))
                              (if (or (= size 0)
@@ -97,7 +77,7 @@
   (let* ((size-and-offsets (calculate-struct-size-and-offsets members))
          (size (cdr (assoc 'size size-and-offsets)))
          (offsets (cdr (assoc 'offsets size-and-offsets)))
-         (pointer (if (null? pointer) (pffi-pointer-allocate size) (car pointer)))
+         (pointer (if (null? pointer) (make-c-bytevector size) (car pointer)))
          (c-type (if (string? c-type) c-type (symbol->string c-type))))
     (struct-make c-type size pointer offsets))))
 

@@ -21,15 +21,14 @@
           ((equal? type 'pointer) _pointer)
           ((equal? type 'void) _void)
           ((equal? type 'callback) _pointer)
-          ((equal? type 'string) _pointer)
           ((equal? type 'struct) _pointer)
           (else #f))))
 
-(define pffi-pointer?
+(define c-bytevector?
   (lambda (object)
     (cpointer? object)))
 
-(define-syntax pffi-define-function
+(define-syntax define-c-procedure
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
@@ -53,31 +52,6 @@
         (ctype-sizeof native-type)
         #f))))
 
-#;(define pffi-pointer-allocate
-  (lambda (size)
-    (malloc 'raw size)))
-
-(define pffi-pointer-address
-  (lambda (pointer)
-    pointer))
-
-(define pffi-pointer-null
-  (lambda ()
-    #f )) ; #f is the null pointer on racket
-
-#;(define pffi-string->pointer
-  (lambda (string-content)
-    (let* ((size (string-length string-content))
-           (pointer (pffi-pointer-allocate (+ size 1))))
-      (memmove pointer (cast (string-append string-content "") _string _pointer) (+ size 1))
-      pointer)))
-
-#;(define pffi-pointer->string
-  (lambda (pointer)
-    (when (pffi-pointer-null? pointer)
-      (error "Can not make string from null pointer" pointer))
-    (string-copy (cast pointer _pointer _string))))
-
 (define pffi-shared-object-load
   (lambda (path options)
     (if (and (not (null? options))
@@ -86,14 +60,6 @@
                                                       options))
                                          (list #f))))
       (ffi-lib path))))
-
-#;(define pffi-pointer-free
-  (lambda (pointer)
-    (free pointer)))
-
-(define pffi-pointer-null?
-  (lambda (pointer)
-    (not pointer))) ; #f is the null pointer on racket
 
 (define pffi-pointer-set!
   (lambda (pointer type offset value)
@@ -114,7 +80,3 @@
       (if (equal? type 'char)
         (integer->char r)
         r))))
-
-#;(define pffi-struct-dereference
-  (lambda (struct)
-    (pffi-struct-pointer struct)))

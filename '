@@ -29,22 +29,32 @@
   (lambda (path options)
     (let ((shared-object (dlopen path RTLD-NOW))
           (maybe-error (dlerror)))
-      #;(when (not (pffi-pointer-null? maybe-error))
-        (error (c-bytevector->string maybe-error)))
+      (when (not (pffi-pointer-null? maybe-error))
+        (error (pffi-pointer->string maybe-error)))
       shared-object)))
 
-(define c-bytevector?
+#;(define pffi-pointer-null
+  (lambda ()
+    (pointer-null)))
+
+#;(define pffi-pointer-null?
+  (lambda (pointer)
+    (not pointer))) ; #f is null on Chibi
+
+(define pffi-pointer?
   (lambda (object)
     (or (equal? object #f) ; False can be null pointer
     (pointer? object))))
 
-(define make-c-bytevector
-  (lambda (k . byte)
-    (if (null? byte)
-    (pointer-allocate k)
-    (bytevector->c-bytevector (make-bytevector k byte)))))
+(define pffi-pointer-allocate
+  (lambda (size)
+    (pointer-allocate size)))
 
-(define c-free
+(define pffi-pointer-address
+  (lambda (pointer)
+    (pointer-address pointer)))
+
+(define pffi-pointer-free
   (lambda (pointer)
     (pointer-free pointer)))
 
@@ -92,6 +102,14 @@
           ((equal? type 'void) (pointer-ref-c-pointer pointer offset))
           ((equal? type 'pointer) (pointer-ref-c-pointer pointer offset)))))
 
+#;(define pffi-string->pointer
+  (lambda (string-content)
+    (string-to-pointer string-content)))
+
+#;(define pffi-pointer->string
+  (lambda (pointer)
+    (pointer-to-string pointer)))
+
 (define pffi-type->native-type
   (lambda (type)
     (cond ((equal? type 'int8) 'int8_t)
@@ -118,7 +136,7 @@
           ((equal? type 'callback) '(maybe-null void*))
           (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
-;; define-c-procedure
+;; pffi-define-function
 
 (define pffi-type->libffi-type
   (lambda (type)
@@ -148,7 +166,7 @@
 (define argument->pointer
   (lambda (value type)
     (cond ((procedure? value) (scheme-procedure-to-pointer value))
-          (else (let ((pointer (make-c-bytevector (size-of-type type))))
+          (else (let ((pointer (pffi-pointer-allocate (size-of-type type))))
                   (pffi-pointer-set! pointer type 0 value)
                   pointer)))))
 
@@ -157,10 +175,10 @@
     (dlerror) ;; Clean all previous errors
     (let ((c-function (dlsym shared-object c-name))
           (maybe-dlerror (dlerror)))
-      #;(when (not (pffi-pointer-null? maybe-dlerror))
-        (error (c-bytevector->string maybe-dlerror)))
+      (when (not (pffi-pointer-null? maybe-dlerror))
+        (error (pffi-pointer->string maybe-dlerror)))
       (lambda arguments
-        (let ((return-value (make-c-bytevector
+        (let ((return-value (pffi-pointer-allocate
                               (if (equal? return-type 'void)
                                 0
                                 (size-of-type return-type)))))
@@ -175,7 +193,7 @@
           (cond ((not (equal? return-type 'void))
                  (pffi-pointer-get return-value return-type 0))))))))
 
-(define-syntax define-c-procedure
+(define-syntax pffi-define-function
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name

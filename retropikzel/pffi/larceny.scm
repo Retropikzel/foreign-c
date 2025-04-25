@@ -1,6 +1,4 @@
 (require 'std-ffi)
-;(require "Standard/foreign-stdlib")
-;(require "Lib/Common/system-interface")
 
 ;; FIXME
 (define size-of-type
@@ -28,47 +26,10 @@
           ((eq? type 'callback) 4)
           (else (error "Can not get size of unknown type" type)))))
 
-(define c-malloc (foreign-procedure "malloc" '(int) 'void*))
-;(define c-malloc (stdlib/malloc rtd-void*))
-#;(define pffi-pointer-allocate
-  (lambda (size)
-    (c-malloc size)))
-
-#;(define c-free (foreign-procedure "free" '(void*) 'int))
-;(define c-malloc (stdlib/malloc rtd-void*))
-#;(define pffi-pointer-free
-  (lambda (pointer)
-    (c-free pointer)))
-
-(define pffi-pointer-null (lambda () 0))
-
-(define pffi-pointer-null?
-  (lambda (object)
-    (and (number? object)
-         (= object 0))))
-
-(define pffi-pointer?
+(define c-bytevector?
   (lambda (object)
     ;(void*? object)
     (number? object)
-    ))
-
-(define pffi-pointer-address
-  (lambda (pointer)
-    ;(void*->address pointer)
-    pointer
-    ))
-
-(define pffi-pointer->string
-  (lambda (pointer)
-    ;(char*->string pointer)
-    pointer
-    ))
-
-(define pffi-string->pointer
-  (lambda (string-content)
-    ;(string->char* string-content)
-    string-content
     ))
 
 (define pffi-shared-object-load
@@ -122,7 +83,7 @@
           ((equal? type 'void) (%peek-pointer (+ pointer offset)))
           ((equal? type 'pointer) (%peek-pointer (+ pointer offset))))))
 
-(define-syntax pffi-define-function
+(define-syntax define-c-procedure
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name

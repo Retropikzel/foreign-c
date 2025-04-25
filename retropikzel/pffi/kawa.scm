@@ -54,14 +54,14 @@
       ((equal? type 'struct) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
       (else #f))))
 
-(define pffi-pointer?
+(define c-bytevector?
   (lambda (object)
     (string=? (invoke (invoke object 'getClass) 'getName)
               "jdk.internal.foreign.NativeMemorySegmentImpl")))
 
-(define-syntax pffi-define-function
+(define-syntax define-c-procedure
   (syntax-rules ()
-    ((pffi-define-function scheme-name shared-object c-name return-type argument-types)
+    ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
        (lambda vals
          (invoke (invoke (cdr (assoc 'linker shared-object))
@@ -131,27 +131,9 @@
         (invoke native-type 'byteAlignment)
         #f))))
 
-#;(define pffi-pointer-allocate
-  (lambda (size)
-    (invoke (invoke arena 'allocate size 1) 'reinterpret size)))
-
-(define pffi-pointer-address
-  (lambda (pointer)
-    (invoke pointer 'address)))
-
-(define pffi-pointer-null
+(define make-c-null
   (lambda ()
     (static-field java.lang.foreign.MemorySegment 'NULL)))
-
-#;(define pffi-string->pointer
-  (lambda (string-content)
-    (let ((size (+ (invoke string-content 'length) 1)))
-      (invoke (invoke arena 'allocateFrom (invoke string-content 'toString))
-              'reinterpret size))))
-
-#;(define pffi-pointer->string
-  (lambda (pointer)
-    (invoke (invoke pointer 'reinterpret (static-field java.lang.Integer 'MAX_VALUE)) 'getString 0)))
 
 (define pffi-shared-object-load
   (lambda (path options)
@@ -169,11 +151,7 @@
       (list (cons 'linker linker)
             (cons 'lookup lookup)))))
 
-#;(define pffi-pointer-free
-  (lambda (pointer)
-    #t))
-
-(define pffi-pointer-null?
+(define c-null?
   (lambda (pointer)
     (invoke pointer 'equals (pffi-pointer-null))))
 
