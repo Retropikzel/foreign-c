@@ -29,6 +29,19 @@
   (lambda (object)
     (number? object)))
 
+(define c-bytevector-u8-set!
+  (lambda (c-bytevector k byte)
+    (bytevector-c-int8-set! (make-bytevector-mapping (+ c-bytevector k)
+                                                     (c-size-of 'uint8))
+                            0
+                            byte)))
+
+(define c-bytevector-u8-ref
+  (lambda (c-bytevector k)
+      (bytevector-c-int8-ref (make-bytevector-mapping (+ c-bytevector k)
+                                                      (c-size-of 'uint8))
+                             0)))
+
 (define pffi-pointer-set!
   (lambda (pointer type offset value)
     (let ((bv (make-bytevector-mapping (+ pointer offset) (c-size-of type))))

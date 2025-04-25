@@ -58,7 +58,7 @@ conforming to some specification.
         - [c-free](#c-free)
         - [pffi-pointer-set!](#pffi-pointer-set!)
         - [pffi-pointer-get](#pffi-pointer-get)
-        - [string->c-bytevector](#string-into-c-bytevector)
+        - [utf8->c-bytevector](#utf8-into-c-bytevector)
         - [c-bytevector->sring](#c-bytevector-into-string)
         - [pffi-struct-make](#pffi-struct-make)
         - [pffi-struct-pointer](#pffi-struct-pointer)
@@ -479,10 +479,10 @@ Gets the value from a pointer on given offset. For example:
     (pffi-pointer-get p 'int 64)
     > 100
 
-#### string->c-bytevector
-<a name="string-into-c-bytevector"></a>
+#### utf8->c-bytevector
+<a name="utf8-into-c-bytevector"></a>
 
-**string->c-bytevector** string -> pointer
+**utf8->c-bytevector** string -> pointer
 
 Makes pointer out of a given string.
 

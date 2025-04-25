@@ -446,20 +446,20 @@
 
 (define-c-procedure c-puts libc-stdlib 'puts 'int '(pointer))
 (debug c-puts)
-(define chars-written (c-puts (string->c-bytevector "puts: Hello from testing, I am C function puts")))
+(define chars-written (c-puts (string->c-utf8 "puts: Hello from testing, I am C function puts")))
 (debug chars-written)
 (assert = chars-written 47)
 
 (define-c-procedure c-atoi libc-stdlib 'atoi 'int '(pointer))
-(assert = (c-atoi (string->c-bytevector "100")) 100)
+(assert = (c-atoi (string->c-utf8 "100")) 100)
 
 (define-c-procedure c-fopen libc-stdio 'fopen 'pointer '(pointer pointer))
-(define output-file (c-fopen (string->c-bytevector "testfile.test")
-                              (string->c-bytevector "w")))
+(define output-file (c-fopen (string->c-utf8 "testfile.test")
+                              (string->c-utf8 "w")))
 (debug output-file)
 (define-c-procedure c-fprintf libc-stdio 'fprintf 'int '(pointer pointer))
 (define characters-written
-  (c-fprintf output-file (string->c-bytevector "Hello world")))
+  (c-fprintf output-file (string->c-utf8 "Hello world")))
 (debug characters-written)
 (assert equal? (= characters-written 11) #t)
 (define-c-procedure c-fclose libc-stdio 'fclose 'int '(pointer))
@@ -508,7 +508,7 @@
 (assert equal? (c-null? 100) #f)
 (assert equal? (c-null? 'bar) #f)
 
-;;make-c-bytevector
+;; make-c-bytevector
 
 (print-header 'make-c-bytevector )
 
@@ -520,8 +520,15 @@
 ;(assert equal? (c-bytevector? "Hello world") #f)
 (assert equal? (c-null? test-pointer) #f)
 
-;; call-with-address-of-c-bytevector
+(print-header "c-bytevector-u8-set! c-bytevector-u8-ref")
 
+(define u8-pointer (make-c-bytevector (c-size-of 'uint8)))
+(c-bytevector-u8-set! u8-pointer 0 42)
+(debug u8-pointer)
+(debug (c-bytevector-u8-ref u8-pointer 0))
+(assert equal? (= (c-bytevector-u8-ref u8-pointer 0) 42) #t)
+
+;; call-with-address-of-c-bytevector
 
 (print-header 'call-with-address-of-c-bytevector)
 
@@ -532,15 +539,15 @@
                       '(pointer pointer))
 
 (define input-pointer (make-c-bytevector (c-size-of 'int)))
-(pffi-pointer-set! input-pointer 'int 0 100)
-(debug (pffi-pointer-get input-pointer 'int 0))
+(c-bytevector-s32-native-set! input-pointer 0 100)
+(debug (c-bytevector-s32-native-ref input-pointer 0))
 (call-with-address-of-c-bytevector
   input-pointer
   (lambda (address)
     (test-passing-pointer-address input-pointer address)))
 (debug input-pointer)
-(debug (pffi-pointer-get input-pointer 'int 0))
-(assert equal? (= (pffi-pointer-get input-pointer 'int 0) 42) #t)
+(debug (c-bytevector-s32-native-ref input-pointer 0))
+(assert equal? (= (c-bytevector-s32-native-ref input-pointer 0) 42) #t)
 
 ;; c-free
 
@@ -550,59 +557,6 @@
 (debug pointer-to-be-freed)
 (c-free pointer-to-be-freed)
 (debug pointer-to-be-freed)
-
-;; pffi-pointer-set! and pffi-pointer-get 1/2
-
-(print-header "pffi-pointer-set! and pffi-pointer-get 1/2")
-
-(define set-pointer (make-c-bytevector 256))
-(define offset 64)
-(define value 1)
-(debug set-pointer)
-(debug offset)
-(debug value)
-
-(cond-expand
-  (gambit
-    (define test-type
-      (lambda (type)
-        (begin
-          (pffi-pointer-set! set-pointer type offset value)
-          (assert = (pffi-pointer-get set-pointer type offset) value)))))
-  (else
-    (define-syntax test-type
-      (syntax-rules ()
-        ((_ type)
-         (begin
-           (pffi-pointer-set! set-pointer type offset value)
-           (assert = (pffi-pointer-get set-pointer type offset) value)))))))
-
-(test-type 'int8)
-(test-type 'uint8)
-(test-type 'int16)
-(test-type 'uint16)
-(test-type 'int32)
-(test-type 'uint32)
-(test-type 'int64)
-(test-type 'uint64)
-(test-type 'short)
-(test-type 'unsigned-short)
-(test-type 'int)
-(test-type 'unsigned-int)
-(test-type 'long)
-(test-type 'unsigned-long)
-
-(pffi-pointer-set! set-pointer 'char offset #\X)
-(debug (pffi-pointer-get set-pointer 'char offset))
-(assert char=? (pffi-pointer-get set-pointer 'char offset) #\X)
-
-(pffi-pointer-set! set-pointer 'float offset 1.5)
-(debug (pffi-pointer-get set-pointer 'float offset))
-(assert = (pffi-pointer-get set-pointer 'float offset) 1.5)
-
-(pffi-pointer-set! set-pointer 'double offset 1.5)
-(debug (pffi-pointer-get set-pointer 'double offset))
-(assert = (pffi-pointer-get set-pointer 'double offset) 1.5)
 
 ; pffi-define-struct
 
@@ -672,86 +626,6 @@
 (debug (list bt1 bt2))
 (assert equal? bt1 bt2)
 
-;; string->c-bytevector
-
-(print-header 'string->c-bytevector)
-
-(define string-pointer (string->c-bytevector "Hello world"))
-(debug string-pointer)
-(debug (c-bytevector->string string-pointer))
-(assert equal? (c-bytevector? string-pointer) #t)
-(assert equal? (c-null? string-pointer) #f)
-(debug (pffi-pointer-get string-pointer 'char 0))
-(assert char=? (pffi-pointer-get string-pointer 'char 0) #\H)
-(debug (pffi-pointer-get string-pointer 'char 1))
-(assert char=? (pffi-pointer-get string-pointer 'char 1) #\e)
-(debug (pffi-pointer-get string-pointer 'char 2))
-(assert char=? (pffi-pointer-get string-pointer 'char 2) #\l)
-(debug (pffi-pointer-get string-pointer 'char 3))
-(assert char=? (pffi-pointer-get string-pointer 'char 3) #\l)
-(debug (pffi-pointer-get string-pointer 'char 4))
-(assert char=? (pffi-pointer-get string-pointer 'char 4) #\o)
-(debug (pffi-pointer-get string-pointer 'char 10))
-(assert char=? (pffi-pointer-get string-pointer 'char 10) #\d)
-
-;; c-bytevector->string
-
-(print-header 'c-bytevector->string)
-
-(define pointer-string (c-bytevector->string string-pointer))
-(debug pointer-string)
-(assert equal? (string? pointer-string) #t)
-(assert string=? pointer-string "Hello world")
-(assert string=? (c-bytevector->string (string->c-bytevector "https://scheme.org")) "https://scheme.org")
-(define test-url-string "https://scheme.org")
-(debug test-url-string)
-(define test-url (string->c-bytevector test-url-string))
-(debug test-url)
-(debug (c-bytevector->string test-url))
-(assert equal? (string=? (c-bytevector->string test-url) test-url-string) #t)
-
-;; pffi-pointer-get
-
-(print-header "pffi-pointer-get")
-
-(define hello-string "hello")
-(define hello-string-pointer (string->c-bytevector hello-string))
-
-(debug (pffi-pointer-get hello-string-pointer 'char 0))
-(assert char=? (pffi-pointer-get hello-string-pointer 'char 0) #\h)
-(debug (pffi-pointer-get hello-string-pointer 'char 1))
-(assert char=? (pffi-pointer-get hello-string-pointer 'char 1) #\e)
-(debug (pffi-pointer-get hello-string-pointer 'char 4))
-(assert char=? (pffi-pointer-get hello-string-pointer 'char 4) #\o)
-
-;; pffi-pointer-set! and pffi-pointer-get 2/2
-
-(print-header "pffi-pointer-set! and pffi-pointer-get 2/2")
-
-(define pointer-to-be-set (string->c-bytevector "FOOBAR"))
-(debug pointer-to-be-set)
-(debug (c-bytevector->string pointer-to-be-set))
-(pffi-pointer-set! set-pointer 'pointer offset pointer-to-be-set)
-
-(debug (pffi-pointer-get set-pointer 'pointer offset))
-(assert equal?
-        (c-bytevector? (pffi-pointer-get set-pointer 'pointer offset))
-        #t)
-(debug (c-bytevector->string (pffi-pointer-get set-pointer 'pointer offset)))
-(assert equal?
-        (string? (c-bytevector->string (pffi-pointer-get set-pointer 'pointer offset)))
-        #t)
-(debug (c-bytevector->string (pffi-pointer-get set-pointer 'pointer offset)))
-(assert equal?
-        (string=? (c-bytevector->string (pffi-pointer-get set-pointer 'pointer offset)) "FOOBAR")
-        #t)
-
-(define string-to-be-set "FOOBAR")
-(debug string-to-be-set)
-(pffi-pointer-set! set-pointer 'pointer offset (string->c-bytevector string-to-be-set))
-(assert string=? (c-bytevector->string (pffi-pointer-get set-pointer 'pointer offset)) "FOOBAR")
-
-
 ;; pffi-struct-get
 
 (print-header 'pffi-struct-get)
@@ -806,8 +680,8 @@
 (debug (pffi-struct-get struct-test 'f))
 (assert = (pffi-struct-get struct-test 'f) 6.0)
 (debug (pffi-struct-get struct-test 'g))
-(debug (c-bytevector->string (pffi-struct-get struct-test 'g)))
-(assert equal? (string=? (c-bytevector->string (pffi-struct-get struct-test 'g)) "FOOBAR")  #t)
+(debug (c-utf8->string (pffi-struct-get struct-test 'g)))
+(assert equal? (string=? (c-utf8->string (pffi-struct-get struct-test 'g)) "FOOBAR")  #t)
 (debug (pffi-struct-get struct-test 'h))
 (assert = (pffi-struct-get struct-test 'h) 8)
 (debug (pffi-struct-get struct-test 'i))
@@ -851,7 +725,7 @@
 (pffi-struct-set! struct-test1 'd #\d)
 (pffi-struct-set! struct-test1 'e (make-c-null))
 (pffi-struct-set! struct-test1 'f 6.0)
-(pffi-struct-set! struct-test1 'g (string->c-bytevector "foo"))
+(pffi-struct-set! struct-test1 'g (string->c-utf8 "foo"))
 (pffi-struct-set! struct-test1 'h 8)
 (pffi-struct-set! struct-test1 'i (make-c-null))
 (pffi-struct-set! struct-test1 'j 10)
@@ -900,8 +774,8 @@
 ;(assert equal? (c-null? (pffi-struct-get struct-test2 'e)) #t)
 ;(debug (pffi-struct-get struct-test2 'f))
 ;(assert = (pffi-struct-get struct-test2 'f) 6.0)
-;(debug (c-bytevector->string (pffi-struct-get struct-test2 'g)))
-;(assert equal? (string=? (c-bytevector->string (pffi-struct-get struct-test2 'g)) "FOOBAR") #t)
+;(debug (c-utf8->string (pffi-struct-get struct-test2 'g)))
+;(assert equal? (string=? (c-bytevector->utf8 (pffi-struct-get struct-test2 'g)) "FOOBAR") #t)
 ;(debug (pffi-struct-get struct-test2 'h))
 ;(assert = (pffi-struct-get struct-test2 'h) 8)
 ;(debug (pffi-struct-get struct-test2 'i))
@@ -961,8 +835,6 @@
 ;(debug (pffi-struct-set! struct-color 'a 103))
 ;(assert = (c-color-check-by-value (pffi-struct-dereference struct-color)) 0)
 
-(exit 0)
-
 ;(print-header "pffi-struct-dereference 2")
 
 ;(define-c-procedure c-test-check-by-value c-testlib 'test_check_by_value 'int '((struct . test)))
@@ -989,7 +861,7 @@
 ;(debug (pffi-struct-set! struct-test3 'd #\d))
 ;(debug (pffi-struct-set! struct-test3 'e (make-c-null)))
 ;(debug (pffi-struct-set! struct-test3 'f 6.0))
-;(debug (pffi-struct-set! struct-test3 'g (string->c-bytevector "foo")))
+;(debug (pffi-struct-set! struct-test3 'g (string->c-utf8 "foo")))
 ;(debug (pffi-struct-set! struct-test3 'h 8))
 ;(debug (pffi-struct-set! struct-test3 'i (make-c-null)))
 ;(debug (pffi-struct-set! struct-test3 'j 10))

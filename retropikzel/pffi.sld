@@ -2,131 +2,133 @@
   (retropikzel pffi) ; (foreign r7rs)? (foreign c)?
   (cond-expand
     (chibi
-      (import (except (scheme base) bytevector-copy!)
+      (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
               (scheme process-context)
               (chibi ast)
-              (chibi)
-              (r6rs bytevectors))
+              (scheme inexact)
+              (chibi))
       (include-shared "pffi/chibi-pffi"))
     (chicken
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
+              (scheme inexact)
               (scheme process-context)
               (chicken base)
               (chicken foreign)
               (chicken locative)
               (chicken syntax)
               (chicken memory)
-              (chicken random)
-              (r6rs bytevectors)))
+              (chicken random)))
     (cyclone
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
+              (scheme inexact)
               (scheme process-context)
               (cyclone foreign)
-              (scheme cyclone primitives)
-              (r6rs bytevectors)))
+              (scheme cyclone primitives)))
     (gambit
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
+              (scheme inexact)
               (scheme process-context)
-              (only (gambit) c-declare c-lambda c-define define-macro)
-              (r6rs bytevectors)))
+              (only (gambit) c-declare c-lambda c-define define-macro)))
     (gauche
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
+              (scheme inexact)
               (scheme process-context)
               (gauche base)
-              (retropikzel pffi gauche)
-              (r6rs bytevectors)))
+              (retropikzel pffi gauche)))
     (gerbil
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context)
-              (r6rs bytevectors)))
+              (scheme inexact)
+              (scheme process-context)))
     (guile
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
+              (scheme inexact)
               (scheme process-context)
               (system foreign)
               (system foreign-library)
-              (only (guile) include-from-path)
-              (rnrs bytevectors)))
+              (only (guile) include-from-path)))
     (kawa
-      (import (except (scheme base) bytevector-copy bytevector-copy!)
+      (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context)
-              (r6rs bytevectors)))
+              (scheme inexact)
+              (scheme process-context)))
     (larceny
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
+              (scheme inexact)
               (scheme process-context)
               (rename (primitives r5rs:require) (r5rs:require require))
               (primitives std-ffi)
               (primitives foreign-procedure)
               (primitives foreign-file)
-              (primitives foreign-stdlib)
-              (r6rs bytevectors)))
+              (primitives foreign-stdlib)))
     (mosh
-      (import (except (scheme base) bytevector-copy!)
+      (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
+              (scheme inexact)
+              (scheme inexact)
               (scheme process-context)
-              (mosh ffi)
-              (r6rs bytevectors)))
+              (mosh ffi)))
     (racket
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
+              (scheme inexact)
               (scheme process-context)
               (only (racket base) system-type)
               (ffi winapi)
               (compatibility mlist)
               (ffi unsafe)
-              (ffi vector)
-              (except (r6rs bytevectors) bytevector-copy!)))
+              (ffi vector)))
     (sagittarius
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
+              (scheme inexact)
               (scheme process-context)
               (except (sagittarius ffi) c-free c-malloc)
-              (sagittarius)
-              (r6rs bytevectors)))
+              (sagittarius)))
     (skint
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context)
-              (r6rs bytevectors)))
+              (scheme inexact)
+              (scheme process-context)))
     (stklos
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
+              (scheme inexact)
               (scheme process-context)
               (only (stklos)
                     make-external-function
@@ -172,8 +174,7 @@
                     pointer-ref-c-double
                     pointer-set-c-pointer!
                     pointer-ref-c-pointer
-                    void?)
-              (r6rs bytevectors))
+                    void?))
       (export make-external-function
               calculate-struct-size-and-offsets
               struct-make
@@ -183,22 +184,18 @@
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context)
-              (r6rs bytevectors)))
+              ;(scheme inexact)
+              (scheme process-context)))
     (ypsilon
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
+              (scheme inexact)
               (scheme process-context)
               (ypsilon c-ffi)
               (ypsilon c-types)
-              (only (core) define-macro syntax-case)
-              (except (rnrs bytevectors)
-                      bytevector-copy!
-                      bytevector-copy
-                      string->utf8
-                      utf8->string))))
+              (only (core) define-macro syntax-case))))
   (export ;; Primitives
           c-size-of
           define-c-library
@@ -207,19 +204,69 @@
           c-bytevector?
           pffi-pointer-set!;c-bytevector-u8-set! and so on
           pffi-pointer-get;c-bytevector-u8-ref and so on
+          native-endianness
+          ;; TODO Docs for all of these
+          c-bytevector->address
+          address->c-bytevector
+          c-bytevector-s8-set!
+          c-bytevector-s8-ref
+          c-bytevector-u8-set!
+          c-bytevector-u8-ref
+          c-bytevector-s16-set!
+          c-bytevector-s16-native-set!
+          c-bytevector-s16-ref
+          c-bytevector-s16-native-ref
+          c-bytevector-u16-set!
+          c-bytevector-u16-native-set!
+          c-bytevector-u16-ref
+          c-bytevector-u16-native-ref
+          c-bytevector-s32-set!
+          c-bytevector-s32-native-set!
+          c-bytevector-s32-ref
+          c-bytevector-s32-native-ref
+          c-bytevector-u32-set!
+          c-bytevector-u32-native-set!
+          c-bytevector-u32-ref
+          c-bytevector-u32-native-ref
+          c-bytevector-s64-set!
+          c-bytevector-s64-native-set!
+          c-bytevector-s64-ref
+          c-bytevector-s64-native-ref
+          c-bytevector-u64-set!
+          c-bytevector-u64-native-set!
+          c-bytevector-u64-ref
+          c-bytevector-u64-native-ref
+          c-bytevector-sint-set!
+          c-bytevector-sint-native-set!
+          c-bytevector-sint-ref
+          c-bytevector-sint-native-ref
+          c-bytevector-uint-set!
+          c-bytevector-uint-native-set!
+          c-bytevector-uint-ref
+          c-bytevector-uint-native-ref
+          c-bytevector-ieee-single-set!
+          c-bytevector-ieee-single-native-set!
+          c-bytevector-ieee-single-ref
+          c-bytevector-ieee-single-native-ref
+          c-bytevector-ieee-double-set!
+          c-bytevector-ieee-double-native-set!
+          c-bytevector-ieee-double-ref
+          c-bytevector-ieee-double-native-ref
 
           ;; c-bytevector
           make-c-bytevector
-          c-bytevector ;; TODO Documentation, Testing
+          ;c-bytevector ;; TODO docs, tests
           make-c-null
           c-null?
           c-free
-          c-bytevector-string-length ;; TODO Documentation, Testing
+
+
+          c-string-length ;; TODO Documentation, Testing
           bytevector->c-bytevector
           c-bytevector->bytevector
           call-with-address-of-c-bytevector ;; Todo Documentation
-          string->c-bytevector
-          c-bytevector->string
+          string->c-utf8
+          c-utf8->string
 
           ;c-bytevector-u8-ref ;; TODO Documentation, Testing
 
@@ -275,5 +322,6 @@
                (include-relative "pffi/shared/struct.scm"))
     (else (include "pffi/shared/main.scm")
           (include "pffi/shared/struct.scm")
+          (include "pffi/shared/c-bytevectors.scm")
           (include "pffi/shared/pointer.scm")
           (include "pffi/shared/array.scm"))))

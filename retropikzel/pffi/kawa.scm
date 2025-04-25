@@ -151,9 +151,25 @@
       (list (cons 'linker linker)
             (cons 'lookup lookup)))))
 
+(define null-pointer (make-c-null))
 (define c-null?
   (lambda (pointer)
-    (invoke pointer 'equals (pffi-pointer-null))))
+    (invoke pointer 'equals null-pointer)))
+
+(define u8-value-layout (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_BYTE) 'withByteAlignment 1))
+(define c-bytevector-u8-set!
+  (lambda (c-bytevector k byte)
+    (invoke (invoke c-bytevector 'reinterpret (static-field java.lang.Integer 'MAX_VALUE))
+            'set
+            u8-value-layout
+            k
+            byte)))
+(define c-bytevector-u8-ref
+  (lambda (c-bytevector k)
+    (invoke (invoke c-bytevector 'reinterpret (static-field java.lang.Integer 'MAX_VALUE))
+            'get
+            u8-value-layout
+            k)))
 
 (define pffi-pointer-set!
   (lambda (pointer type offset value)

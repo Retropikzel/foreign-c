@@ -4,9 +4,6 @@ DOCKER=docker run -it -v ${PWD}:/workdir
 DOCKER_INIT=cd /workdir && make clean &&
 VERSION=$(shell grep "version:" README.md | awk '{split\($0,a\); print a[2];}')
 
-snow:
-	snow-chibi --install-source-dir ./snow install "(r6rs bytevectors)"
-
 # apt-get install pandoc weasyprint
 docs:
 	mkdir -p documentation
@@ -72,7 +69,6 @@ test-compile-r7rs: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 	cp -r retropikzel tmp/test/
 	cp tests/compliance.scm tmp/test/
 	cp tests/c-include/libtest.h tmp/test/
-	cp -r snow/* tmp/test/
 	cd tmp/test && \
 		COMPILE_R7RS_GAMBIT="-cc-options \"-ltest -I. -L\" -ld-options \"-L.\"" \
 		COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." \

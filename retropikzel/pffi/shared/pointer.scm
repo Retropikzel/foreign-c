@@ -8,7 +8,6 @@
                           "c"
                           '((additional-versions ("0" "6"))))))
 
-(define-c-procedure c-strlen libc 'strlen 'int '(pointer))
 (define-c-procedure pffi-pointer-allocate-calloc libc 'calloc 'pointer '(int int))
 (define-c-procedure c-memset-address->pointer libc 'memset 'pointer '(uint64 uint8 int))
 (define-c-procedure c-memset-pointer->address libc 'memset 'uint64 '(pointer uint8 int))
@@ -38,10 +37,9 @@
               (pointer (make-c-bytevector bytes-length))
               (looper (lambda (index)
                         (when (< index bytes-length)
-                          (pffi-pointer-set! pointer
-                                             'uint8
-                                             index
-                                             (bytevector-u8-ref bytes index))
+                          (c-bytevector-u8-set! pointer
+                                                index
+                                                (bytevector-u8-ref bytes index))
                           (looper (+ index 1))))))
       (looper 0)
       pointer)))
@@ -50,7 +48,7 @@
   (lambda (pointer size)
     (letrec* ((bytes (make-bytevector size))
               (looper (lambda (index)
-                        (let ((byte (pffi-pointer-get pointer 'uint8 index)))
+                        (let ((byte (c-bytevector-u8-ref pointer index)))
                           (if (= index size)
                             bytes
                             (begin
@@ -58,22 +56,18 @@
                               (looper (+ index 1))))))))
       (looper 0))))
 
-(define c-bytevector-string-length
-  (lambda (bytevector)
-    (c-strlen bytevector)))
+(define c-string-length
+  (lambda (bytevector-var)
+    (c-strlen bytevector-var)))
 
-(define c-bytevector->string
-  (lambda (pointer)
-    (when (not (c-bytevector? pointer))
-      (error "c-bytevector->string argument not c-bytevector" pointer))
-    (let ((size (c-strlen pointer)))
-      (utf8->string (c-bytevector->bytevector pointer size)))))
+(define c-utf8->string
+  (lambda (c-bytevector)
+    (let ((size (c-strlen c-bytevector)))
+      (utf8->string (c-bytevector->bytevector c-bytevector size)))))
 
-(define string->c-bytevector
-  (lambda (text)
-    (when (not (string? text))
-      (error "string->bytevector argument not string" text))
-    (bytevector->c-bytevector (string->utf8 (string-append text (string #\null))))))
+(define string->c-utf8
+  (lambda (string-var)
+    (bytevector->c-bytevector (string->utf8 (string-append string-var (string #\null))))))
 
 (cond-expand
   (kawa #t) ; FIXME
@@ -94,12 +88,36 @@
               (= (c-memset-pointer->address pointer 0 0) 0)
               #f)))))
 
+(define c-bytevector->address
+  (lambda (c-bytevector)
+    (c-memset-pointer->address c-bytevector 0 0)))
+
+(define address->c-bytevector
+  (lambda (address)
+    (c-memset-address->pointer address 0 0)))
+
+(define c-bytevector-pointer-set!
+  (lambda (c-bytevector k pointer)
+    (c-bytevector-uint-set! c-bytevector
+                            0
+                            (c-bytevector->address pointer)
+                            (native-endianness)
+                            (c-size-of 'pointer))))
+
+(define c-bytevector-pointer-ref
+  (lambda (c-bytevector k)
+    (address->c-bytevector (c-bytevector-uint-ref c-bytevector
+                                                  0
+                                                  (native-endianness)
+                                                  (c-size-of 'pointer)))))
+
 (define-syntax call-with-address-of-c-bytevector
   (syntax-rules ()
     ((_ input-pointer thunk)
      (let ((address-pointer (make-c-bytevector (c-size-of 'pointer))))
-       (pffi-pointer-set! address-pointer 'pointer 0 input-pointer)
+       ;(pffi-pointer-set! address-pointer 'pointer 0 input-pointer)
+       (c-bytevector-pointer-set! address-pointer 0 input-pointer)
        (apply thunk (list address-pointer))
-       (set! input-pointer (pffi-pointer-get address-pointer 'pointer 0))
+       ;(set! input-pointer (pffi-pointer-get address-pointer 'pointer 0))
+       (set! input-pointer (c-bytevector-pointer-ref address-pointer 0))
        (c-free address-pointer)))))
-

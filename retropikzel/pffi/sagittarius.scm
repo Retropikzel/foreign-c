@@ -76,6 +76,10 @@
   (lambda (object)
     (pointer? object)))
 
+(define c-bytevector-u8-ref pointer-ref-c-uint8_t)
+(define c-bytevector-u8-set! pointer-set-c-uint8_t!)
+
+
 (define pffi-pointer-set!
   (lambda (pointer type offset value)
     (cond ((equal? type 'int8) (pointer-set-c-int8_t! pointer offset value))

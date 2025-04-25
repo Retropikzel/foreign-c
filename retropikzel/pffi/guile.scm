@@ -57,6 +57,16 @@
   (lambda (path options)
     (load-foreign-library path)))
 
+(define c-bytevector-u8-set!
+  (lambda (c-bytevector k byte)
+    (let ((p (pointer->bytevector c-bytevector (+ k 100))))
+      (bytevector-u8-set! p k byte))))
+
+(define c-bytevector-u8-ref
+  (lambda (c-bytevector k)
+    (let ((p (pointer->bytevector c-bytevector (+ k 100))))
+      (bytevector-u8-ref p k))))
+
 (define pffi-pointer-set!
   (lambda (pointer type offset value)
     (let ((p (pointer->bytevector pointer (+ offset 100))))

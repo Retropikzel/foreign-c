@@ -165,6 +165,14 @@
       (or (not pointer) ; #f counts as null pointer on Chicken
           (= (pointer->address pointer) 0)))))
 
+(define c-bytevector-u8-ref
+  (lambda (c-bytevector k)
+   (pointer-s8-ref (pointer+ c-bytevector k))))
+
+(define c-bytevector-u8-set!
+  (lambda (c-bytevector k byte)
+    (pointer-s8-set! (pointer+ c-bytevector k) byte)))
+
 (define pffi-pointer-set!
   (lambda (pointer type offset value)
     (cond

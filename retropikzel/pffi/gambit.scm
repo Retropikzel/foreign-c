@@ -66,6 +66,9 @@
           (lambda (x) #f)
           (lambda () (pointer? object)))))))
 
+(define c-bytevector-u8-set! (c-lambda ((pointer void) int unsigned-int8) void "*(uint8_t*)((char*)___arg1 + ___arg2) = ___arg3;"))
+(define c-bytevector-u8-ref (c-lambda ((pointer void) int) unsigned-int8 "___return(*(uint8_t*)((char*)___arg1 + ___arg2));"))
+
 (define pointer-set-c-int8_t! (c-lambda ((pointer void) int int8) void "*(int8_t*)((char*)___arg1 + ___arg2) = ___arg3;"))
 (define pointer-set-c-uint8_t! (c-lambda ((pointer void) int unsigned-int8) void "*(uint8_t*)((char*)___arg1 + ___arg2) = ___arg3;"))
 (define pointer-set-c-int16_t! (c-lambda ((pointer void) int int16) void "*(int16_t*)((char*)___arg1 + ___arg2) = ___arg3;"))
