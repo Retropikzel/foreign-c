@@ -20,7 +20,7 @@
           ((equal? type 'double) double)
           ((equal? type 'pointer) opaque)
           ((equal? type 'void) c-void)
-          ((equal? type 'struct) 'c-pointer)
+          ((equal? type 'callback) opaque)
           (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
 (define c-bytevector?
@@ -52,6 +52,7 @@
                        ((equal? type 'double) 'double)
                        ((equal? type 'pointer) 'opaque)
                        ((equal? type 'void) 'c-void)
+                       ((equal? type 'callback) 'opaque)
                        (else (error "pffi-type->native-type -- No such pffi type" type)))))
              (scheme-name (cadr expr))
              (c-name (symbol->string (car (cdr (car (cdr (cdr (cdr expr))))))))
@@ -66,7 +67,7 @@
           `(c-define ,scheme-name
                      ,return-type ,c-name ,@argument-types))))))
 
-(define pffi-define-callback
+(define define-c-callback
   (lambda (scheme-name return-type argument-types procedure)
     (error "pffi-define-callback not yet implemented on Cyclone")))
 

@@ -299,9 +299,7 @@
                        void)
                (include "c/primitives/chicken.scm"))
     (chicken-6 (include-relative "c/primitives/chicken.scm"))
-    (cyclone (export calculate-struct-size-and-offsets
-                     struct-make)
-             (include "c/primitives/cyclone.scm"))
+    (cyclone (include "c/primitives/cyclone.scm"))
     (gambit (include "c/primitives/gambit.scm"))
     (gauche (include "c/primitives/gauche.scm"))
     (gerbil (include "c/primitives/gerbil.scm"))
