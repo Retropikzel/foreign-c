@@ -67,7 +67,6 @@ ypsilon:
 test-compile-r7rs: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 	make ${COMPILE_R7RS}
 	cp -r retropikzel tmp/test/
-	cp tests/*.sld tmp/test/
 	cp tests/*.scm tmp/test/
 	cp tests/c-include/libtest.h tmp/test/
 	cd tmp/test && \

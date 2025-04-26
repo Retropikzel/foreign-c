@@ -74,6 +74,7 @@
  (define-cproc dlerror () pffi_dlerror)
  (define-cproc dlsym (shared-object c-name) pffi_dlsym)
  (define-cproc internal-ffi-call (nargs rtype atypes fn rvalue avalues) internal_ffi_call)
+ (define-cproc scheme-procedure-to-pointer (procedure) scheme_procedure_to_pointer)
 
  (define-cproc get-ffi-type-int8 () get_ffi_type_int8)
  (define-cproc get-ffi-type-uint8 () get_ffi_type_uint8)

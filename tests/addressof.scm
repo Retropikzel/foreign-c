@@ -1,3 +1,11 @@
+(import (scheme base)
+        (scheme write)
+        (scheme char)
+        (scheme file)
+        (scheme process-context)
+        (retropikzel pffi))
+
+;; util
 (define header-count 1)
 
 (define print-header
@@ -62,3 +70,30 @@
        (display ": ")
        (write value)
        (newline)))))
+
+;; call-with-address-of-c-bytevector
+
+(define-c-library c-testlib
+                     '("libtest.h")
+                     "test"
+                     '((additional-paths ("." "./tests"))))
+
+
+(print-header 'call-with-address-of-c-bytevector)
+
+(define-c-procedure test-passing-pointer-address
+                      c-testlib
+                      'test_passing_pointer_address
+                      'int
+                      '(pointer pointer))
+
+(define input-pointer (make-c-bytevector (c-size-of 'int)))
+(c-bytevector-s32-native-set! input-pointer 0 100)
+(debug (c-bytevector-s32-native-ref input-pointer 0))
+(call-with-address-of-c-bytevector
+  input-pointer
+  (lambda (address)
+    (test-passing-pointer-address input-pointer address)))
+(debug input-pointer)
+(debug (c-bytevector-s32-native-ref input-pointer 0))
+(assert equal? (= (c-bytevector-s32-native-ref input-pointer 0) 42) #t)

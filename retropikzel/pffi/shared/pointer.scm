@@ -120,13 +120,13 @@
         (let ((address (c-memset-pointer->address c-bytevector 0 0)))
           (c-memset-address (+ address k) byte 1))))))
 
-(define-syntax call-with-address-of-c-bytevector
-  (syntax-rules ()
-    ((_ input-pointer thunk)
-     (let ((address-pointer (make-c-bytevector (c-size-of 'pointer))))
-       ;(pffi-pointer-set! address-pointer 'pointer 0 input-pointer)
-       (c-bytevector-pointer-set! address-pointer 0 input-pointer)
-       (apply thunk (list address-pointer))
-       ;(set! input-pointer (pffi-pointer-get address-pointer 'pointer 0))
-       (set! input-pointer (c-bytevector-pointer-ref address-pointer 0))
-       (c-free address-pointer)))))
+(cond-expand
+  (kawa #t) ; Defined in kawa.scm
+  (else (define-syntax call-with-address-of-c-bytevector
+          (syntax-rules ()
+            ((_ input-pointer thunk)
+             (let ((address-pointer (make-c-bytevector (c-size-of 'pointer))))
+               (c-bytevector-pointer-set! address-pointer 0 input-pointer)
+               (apply thunk (list address-pointer))
+               (set! input-pointer (c-bytevector-pointer-ref address-pointer 0))
+               (c-free address-pointer)))))))

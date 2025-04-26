@@ -102,7 +102,6 @@
           ((equal? type 'pointer) 'void*)
           ((equal? type 'void) 'void)
           ((equal? type 'callback) 'void*)
-          ((equal? type 'struct) 'void*)
           (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
 (define-syntax define-c-procedure

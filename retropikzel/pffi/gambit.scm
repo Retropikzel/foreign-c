@@ -177,8 +177,7 @@
                         ((equal? type 'double) 'double)
                         ((equal? type 'pointer) '(pointer void))
                         ((equal? type 'void) 'void)
-                        ((equal? type 'callback) 'c-pointer)
-                        ((equal? type 'struct) 'c-pointer)
+                        ((equal? type 'callback) '(pointer void))
                         (else (error "pffi-type->native-type -- No such pffi type" type)))))
               (native-argument-types
                 (if (equal? '(list) argument-types)
@@ -207,3 +206,34 @@
          (c-lambda ,native-argument-types
                    ,native-return-type
                    ,c-code)))))
+
+(define-macro
+  (define-c-callback scheme-name return-type argument-types procedure)
+  (let* ((type->native-type
+           (lambda (type)
+             (cond ((equal? type 'int8) 'byte)
+                   ((equal? type 'uint8) 'unsigned-int8)
+                   ((equal? type 'int16) 'int16_t)
+                   ((equal? type 'uint16) 'uint16_t)
+                   ((equal? type 'int32) 'int32)
+                   ((equal? type 'uint32) 'unsigned-int32)
+                   ((equal? type 'int64) 'int64)
+                   ((equal? type 'uint64) 'unsigned-int64)
+                   ((equal? type 'char) 'char)
+                   ((equal? type 'unsigned-char) 'unsigned-char)
+                   ((equal? type 'short) 'short)
+                   ((equal? type 'unsigned-short) 'unsigned-short)
+                   ((equal? type 'int) 'int)
+                   ((equal? type 'unsigned-int) 'unsigned-int)
+                   ((equal? type 'long) 'long)
+                   ((equal? type 'unsigned-long) 'unsigned-long)
+                   ((equal? type 'float) 'float)
+                   ((equal? type 'double) 'double)
+                   ((equal? type 'pointer) '(pointer void))
+                   ((equal? type 'void) 'void)
+                   ((equal? type 'callback) '(pointer void))
+                   (else (error "pffi-type->native-type -- No such pffi type" type)))))
+         (native-return-type (type->native-type (cadr return-type)))
+         (native-argument-types (map type->native-type (cadr argument-types))))
+    `(define ,scheme-name ,procedure
+       #;(c-callback ,native-return-type ,native-argument-types ,procedure))))

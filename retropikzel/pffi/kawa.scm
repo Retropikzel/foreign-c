@@ -190,12 +190,11 @@
         (integer->char r)
         r))))
 
-#;(define pffi-struct-dereference
-  (lambda (struct)
-    ;; WIP
-    (pffi-struct-pointer struct)
-    #;(invoke (pffi-struct-pointer struct) 'reinterpret (static-field java.lang.Integer 'MAX_VALUE))
-    #;(invoke (pffi-struct-pointer struct)
-            'get
-            (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 1)
-            0)))
+(define-syntax call-with-address-of-c-bytevector
+          (syntax-rules ()
+            ((_ input-pointer thunk)
+             (let ((address-pointer (make-c-bytevector (c-size-of 'pointer))))
+               (pffi-pointer-set! address-pointer 'pointer 0 input-pointer)
+               (apply thunk (list address-pointer))
+               (set! input-pointer (pffi-pointer-get address-pointer 'pointer 0))
+               (c-free address-pointer)))))

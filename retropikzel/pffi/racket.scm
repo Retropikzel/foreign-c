@@ -21,7 +21,6 @@
           ((equal? type 'pointer) _pointer)
           ((equal? type 'void) _void)
           ((equal? type 'callback) _pointer)
-          ((equal? type 'struct) _pointer)
           (else #f))))
 
 (define c-bytevector?
