@@ -3,7 +3,7 @@
         (scheme char)
         (scheme file)
         (scheme process-context)
-        (retropikzel pffi))
+        (foreign c))
 
 ;; util
 (define header-count 1)

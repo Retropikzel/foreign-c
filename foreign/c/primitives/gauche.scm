@@ -1,4 +1,4 @@
-(define-module retropikzel.pffi.gauche
+(define-module foreign.c.primitives.gauche
                (export size-of-type
                        pffi-shared-object-load
                        c-bytevector-u8-set!
@@ -14,8 +14,8 @@
                        define-c-procedure
                        define-c-callback))
 
-(select-module retropikzel.pffi.gauche)
-(dynamic-load "retropikzel/pffi/gauche-pffi")
+(select-module foreign.c.primitives.gauche)
+(dynamic-load "foreign/c/lib/gauche")
 
 (define size-of-type
   (lambda (type)

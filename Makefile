@@ -9,64 +9,64 @@ docs:
 	mkdir -p documentation
 	pandoc --standalone \
 		--template templates/documentation.html README.md \
-		> documentation/R7RS-PFFI.html
+		> documentation/foreign-c.html
 	pandoc -t html5 \
 		--pdf-engine=weasyprint \
 		--css templates/css/pdf-documentation.css \
-		-o documentation/R7RS-PFFI.pdf \
+		-o documentation/foreign-c.pdf \
 		README.md
 
 chibi:
-	make -C retropikzel/pffi chibi
+	make -C foreign/c chibi
 
 chicken:
-	make -C retropikzel/pffi chicken
+	make -C foreign/c chicken
 
 cyclone:
-	make -C retropikzel/pffi cyclone
+	make -C foreign/c cyclone
 
 gambit:
-	make -C retropikzel/pffi gambit
+	make -C foreign/c gambit
 
 gauche:
-	make -C retropikzel/pffi gauche
+	make -C foreign/c gauche
 
 gerbil:
-	make -C retropikzel/pffi gerbil
+	make -C foreign/c gerbil
 
 guile:
-	make -C retropikzel/pffi guile
+	make -C foreign/c guile
 
 kawa:
-	make -C retropikzel/pffi kawa
+	make -C foreign/c kawa
 
 larceny:
-	make -C retropikzel/pffi larceny
+	make -C foreign/c larceny
 
 mosh:
-	make -C retropikzel/pffi mosh
+	make -C foreign/c mosh
 
 racket:
-	make -C retropikzel/pffi racket
+	make -C foreign/c racket
 
 sagittarius:
-	make -C retropikzel/pffi sagittarius
+	make -C foreign/c sagittarius
 
 skint:
-	make -C retropikzel/pffi skint
+	make -C foreign/c skint
 
 stklos:
-	make -C retropikzel/pffi stklos
+	make -C foreign/c stklos
 
 tr7:
-	make -C retropikzel/pffi tr7
+	make -C foreign/c tr7
 
 ypsilon:
-	make -C retropikzel/pffi tr7
+	make -C foreign/c tr7
 
 test-compile-r7rs: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 	make ${COMPILE_R7RS}
-	cp -r retropikzel tmp/test/
+	cp -r foreign tmp/test/
 	cp tests/*.scm tmp/test/
 	cp tests/c-include/libtest.h tmp/test/
 	cd tmp/test && \
@@ -93,29 +93,13 @@ tmp/test/libtest.a: tmp/test/libtest.o tests/c-src/libtest.c
 	ar rcs tmp/test/libtest.a tmp/test/libtest.o
 
 clean:
-	@rm -rf retropikzel/pffi/pffi.c
-	@rm -rf retropikzel/pffi/*.o*
-	@rm -rf retropikzel/pffi/*.so
-	@rm -rf retropikzel/pffi/*.meta
-	@rm -rf retropikzel/pffi/retropikzel.*
-	@rm -rf retropikzel/pffi/compiled
-	@rm -rf retropikzel.*
 	find . -name "*.meta" -delete
-	@rm -rf test/pffi-define
-	@rm -rf test/*gambit*
 	find . -name "*.link" -delete
 	find . -name "*.o" -delete
 	find . -name "*.o[1-9]" -delete
 	find . -name "*.so" -delete
 	find . -name "*.a" -delete
 	find . -name "*.class" -delete
-	@rm -rf test
 	find . -name "core.1" -delete
 	find . -name "*@gambit*" -delete
-	rm -rf retropikzel/pffi.c
-	rm -rf tests/compliance.c*
-	rm -rf tests/compliance.o
-	rm -rf tests/compliance.so
-	rm -rf tests/compliance
-	rm -rf tests/retropikzel.*.import.scm
 	rm -rf tmp

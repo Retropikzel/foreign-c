@@ -1,8 +1,9 @@
 CC=gcc
 
-chibi: chibi-src/pffi.stub
-	chibi-ffi chibi-src/pffi.stub
-	${CC} -g3 -o chibi-pffi.so chibi-src/pffi.c -fPIC -lffi -shared
+chibi: primitives/chibi/foreign-c.stub
+	chibi-ffi primitives/chibi/foreign-c.stub
+	mkdir -p lib
+	${CC} -g3 -o lib/chibi.so primitives/chibi/foreign-c.c -fPIC -lffi -shared
 
 chicken:
 	@echo "Nothing to build for Chicken"
@@ -13,13 +14,17 @@ cyclone:
 gambit:
 	@echo "Nothing to build for Gambit"
 
-gauche: gauche-src/gauche-pffi.c gauche-src/gauchelib.scm
+gauche: primitives/gauche/foreign-c-primitives-gauche.c primitives/gauche/gauchelib.scm
 	gauche-package compile \
-		--srcdir=gauche-src \
+		--srcdir=primitives/gauche \
 		--cc=${CC} \
-		--cflags="-I./include" \
+		--cflags="-I./primitives/include" \
 		--libs=-lffi \
-		gauche-pffi gauche-pffi.c gauchelib.scm
+		foreign-c-primitives-gauche foreign-c-primitives-gauche.c gauchelib.scm
+	mkdir -p lib
+	mv foreign-c-primitives-gauche.so lib/gauche.so
+	mv foreign-c-primitives-gauche.o lib/gauche.o
+
 
 gerbil:
 	@echo "Nothing to build for Gerbil"
@@ -53,3 +58,7 @@ tr7:
 
 ypsilon:
 	@echo "Nothing to build for Ypsilon"
+
+clean:
+	@rm -rf primitives/chibi/foreign-c.c
+	@rm -rf lib

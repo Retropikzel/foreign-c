@@ -1,7 +1,7 @@
-(in-module retropikzel.pffi.gauche)
+(in-module foreign.c.primitives.gauche)
 
 (inline-stub
- (.include "gauche-pffi.h")
+ (.include "foreign-c-primitives-gauche.h")
  (define-cproc size-of-int8 () size_of_int8)
  (define-cproc size-of-uint8 () size_of_uint8)
  (define-cproc size-of-int16 () size_of_int16)
@@ -71,8 +71,8 @@
  (define-cproc pointer-get-double (pointer offset::<int>) pointer_get_double)
  (define-cproc pointer-get-pointer (pointer offset::<int>) pointer_get_pointer)
 
- (define-cproc dlerror () pffi_dlerror)
- (define-cproc dlsym (shared-object c-name) pffi_dlsym)
+ (define-cproc dlerror () internal_dlerror)
+ (define-cproc dlsym (shared-object c-name) internal_dlsym)
  (define-cproc internal-ffi-call (nargs rtype atypes fn rvalue avalues) internal_ffi_call)
  (define-cproc scheme-procedure-to-pointer (procedure) scheme_procedure_to_pointer)
 
