@@ -24,7 +24,7 @@
               (chicken syntax)
               (chicken memory)
               (chicken random)))
-    (cyclone
+    #;(cyclone
       (import (scheme base)
               (scheme write)
               (scheme char)
@@ -33,7 +33,7 @@
               (scheme process-context)
               (cyclone foreign)
               (scheme cyclone primitives)))
-    (gambit
+    #;(gambit
       (import (scheme base)
               (scheme write)
               (scheme char)
@@ -50,7 +50,7 @@
               (scheme process-context)
               (gauche base)
               (foreign c primitives gauche)))
-    (gerbil
+    #;(gerbil
       (import (scheme base)
               (scheme write)
               (scheme char)
@@ -74,7 +74,7 @@
               (scheme file)
               (scheme inexact)
               (scheme process-context)))
-    (larceny
+    #;(larceny
       (import (scheme base)
               (scheme write)
               (scheme char)
@@ -117,7 +117,7 @@
               (scheme process-context)
               (except (sagittarius ffi) c-free c-malloc)
               (sagittarius)))
-    (skint
+    #;(skint
       (import (scheme base)
               (scheme write)
               (scheme char)
@@ -182,7 +182,7 @@
               pffi:string-split
               c-bytevector-pointer-set!
               c-bytevector-pointer-ref))
-    (tr7
+    #;(tr7
       (import (scheme base)
               (scheme write)
               (scheme char)
@@ -299,19 +299,19 @@
                        void)
                (include "c/primitives/chicken.scm"))
     (chicken-6 (include-relative "c/primitives/chicken.scm"))
-    (cyclone (include "c/primitives/cyclone.scm"))
-    (gambit (include "c/primitives/gambit.scm"))
+    ;(cyclone (include "c/primitives/cyclone.scm"))
+    ;(gambit (include "c/primitives/gambit.scm"))
     (gauche (include "c/primitives/gauche.scm"))
-    (gerbil (include "c/primitives/gerbil.scm"))
+    ;(gerbil (include "c/primitives/gerbil.scm"))
     (guile (include "c/primitives/guile.scm"))
     (kawa (include "c/primitives/kawa.scm"))
-    (larceny (include "c/primitives/larceny.scm"))
+    ;(larceny (include "c/primitives/larceny.scm"))
     (mosh (include "c/primitives/mosh.scm"))
     (racket (include "c/primitives/racket.scm"))
     (sagittarius (include "c/primitives/sagittarius.scm"))
-    (skint (include "c/primitives/skint.scm"))
+    ;(skint (include "c/primitives/skint.scm"))
     (stklos (include "c/primitives/stklos.scm"))
-    (tr7 (include "c/primitives/tr7.scm"))
+    ;(tr7 (include "c/primitives/tr7.scm"))
     (ypsilon (export c-function c-callback)
              (include "c/primitives/ypsilon.scm")))
   (cond-expand
