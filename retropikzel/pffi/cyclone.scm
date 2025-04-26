@@ -345,7 +345,7 @@
           "make_c_opaque(opq, (void*)opaque_ptr(pointer) + obj_obj2int(offset));
           return_closcall1(data, k, &opq);")
 
-(define c-bytevector-u8-set! pffi-pointer-uint8-set!)
+#;(define c-bytevector-u8-set! pffi-pointer-uint8-set!)
 (define c-bytevector-u8-ref pffi-pointer-uint8-get)
 
 (define pffi-pointer-get

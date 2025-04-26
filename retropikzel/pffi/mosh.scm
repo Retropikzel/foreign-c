@@ -32,7 +32,7 @@
   (lambda (object)
     (pointer? object)))
 
-(define c-bytevector-u8-set! pointer-set-c-uint8!)
+;(define c-bytevector-u8-set! pointer-set-c-uint8!)
 (define c-bytevector-u8-ref pointer-ref-c-uint8)
 
 (define pffi-pointer-set!
@@ -100,7 +100,6 @@
           ((equal? type 'float) 'float)
           ((equal? type 'double) 'double)
           ((equal? type 'pointer) 'void*)
-          ((equal? type 'string) 'char*)
           ((equal? type 'void) 'void)
           ((equal? type 'callback) 'void*)
           ((equal? type 'struct) 'void*)
@@ -115,7 +114,7 @@
                         c-name
                         (map pffi-type->native-type argument-types))))))
 
-(define-syntax pffi-define-callback
+(define-syntax define-c-callback
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
      (define scheme-name

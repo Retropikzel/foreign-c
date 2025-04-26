@@ -20,7 +20,6 @@
           ((equal? type 'double) double)
           ((equal? type 'pointer) '*)
           ((equal? type 'void) void)
-          ((equal? type 'string) '*)
           ((equal? type 'callback) '*)
           ((equal? type 'struct) '*)
           (else #f))))
@@ -38,7 +37,7 @@
                                  #:return-type (pffi-type->native-type return-type)
                                  #:arg-types (map pffi-type->native-type argument-types))))))
 
-(define-syntax pffi-define-callback
+(define-syntax define-c-callback
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
      (define scheme-name
@@ -57,7 +56,7 @@
   (lambda (path options)
     (load-foreign-library path)))
 
-(define c-bytevector-u8-set!
+#;(define c-bytevector-u8-set!
   (lambda (c-bytevector k byte)
     (let ((p (pointer->bytevector c-bytevector (+ k 100))))
       (bytevector-u8-set! p k byte))))

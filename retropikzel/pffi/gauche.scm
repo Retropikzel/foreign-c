@@ -1,15 +1,18 @@
 (define-module retropikzel.pffi.gauche
                (export size-of-type
                        pffi-shared-object-load
+                       c-bytevector-u8-set!
+                       c-bytevector-u8-ref
                        ;pffi-pointer-null
                        ;pffi-pointer-null?
                        make-c-bytevector
-                       pffi-pointer-address
+                       ;pffi-pointer-address
                        c-bytevector?
                        c-free
                        pffi-pointer-set!
                        pffi-pointer-get
-                       define-c-procedure))
+                       define-c-procedure
+                       define-c-callback))
 
 (select-module retropikzel.pffi.gauche)
 (dynamic-load "retropikzel/pffi/gauche-pffi")
@@ -55,6 +58,9 @@
   (lambda (pointer)
     (pointer-free pointer)))
 
+;(define c-bytevector-u8-set! pointer-set-uint8!)
+(define c-bytevector-u8-ref pointer-get-uint8)
+
 (define pffi-pointer-set!
   (lambda (pointer type offset value)
     (cond ((equal? type 'int8) (pointer-set-int8! pointer offset value))
@@ -99,7 +105,7 @@
           ((equal? type 'void) (pointer-get-pointer pointer offset))
           ((equal? type 'pointer) (pointer-get-pointer pointer offset)))))
 
-(define pffi-type->libffi-type
+(define type->libffi-type
   (lambda (type)
     (cond ((equal? type 'int8) (get-ffi-type-int8))
           ((equal? type 'uint8) (get-ffi-type-uint8))
@@ -144,8 +150,8 @@
                                 0
                                 (size-of-type return-type)))))
           (internal-ffi-call (length argument-types)
-                             (pffi-type->libffi-type return-type)
-                             (map pffi-type->libffi-type argument-types)
+                             (type->libffi-type return-type)
+                             (map type->libffi-type argument-types)
                              c-function
                              return-value
                              (map argument->pointer
@@ -167,7 +173,7 @@
   (lambda (return-type argument-types procedure)
     (scheme-procedure-to-pointer procedure)))
 
-(define-syntax pffi-define-callback
+(define-syntax define-c-callback
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
      (define scheme-name

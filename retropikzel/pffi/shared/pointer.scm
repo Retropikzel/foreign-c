@@ -11,6 +11,7 @@
 (define-c-procedure pffi-pointer-allocate-calloc libc 'calloc 'pointer '(int int))
 (define-c-procedure c-memset-address->pointer libc 'memset 'pointer '(uint64 uint8 int))
 (define-c-procedure c-memset-pointer->address libc 'memset 'uint64 '(pointer uint8 int))
+(define-c-procedure c-memset-address libc 'memset 'pointer '(uint64 uint8 int))
 (define-c-procedure c-printf libc 'printf 'int '(pointer pointer))
 (define-c-procedure c-malloc libc 'malloc 'pointer '(int))
 (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
@@ -110,6 +111,14 @@
                                                   0
                                                   (native-endianness)
                                                   (c-size-of 'pointer)))))
+
+(cond-expand
+  (kawa #t) ; Defined in kawa.scm
+  (else
+    (define c-bytevector-u8-set!
+      (lambda (c-bytevector k byte)
+        (let ((address (c-memset-pointer->address c-bytevector 0 0)))
+          (c-memset-address (+ address k) byte 1))))))
 
 (define-syntax call-with-address-of-c-bytevector
   (syntax-rules ()

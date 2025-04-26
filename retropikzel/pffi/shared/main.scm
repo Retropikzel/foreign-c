@@ -24,7 +24,8 @@
 
 (define c-size-of
   (lambda (object)
-    (cond ((pffi-struct? object) (pffi-struct-size object))
+    (size-of-type object)
+    #;(cond ((pffi-struct? object) (pffi-struct-size object))
           ((pffi-type? object) (size-of-type object))
           (else (error "Not pffi-struct, pffi-enum of pffi-type" object)))))
 

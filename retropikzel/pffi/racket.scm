@@ -37,7 +37,7 @@
                     (_cprocedure (mlist->list (map pffi-type->native-type argument-types))
                                  (pffi-type->native-type return-type)))))))
 
-(define-syntax pffi-define-callback
+(define-syntax define-c-callback
   (syntax-rules ()
     ((pffi-define-callback scheme-name return-type argument-types procedure)
      (define scheme-name (function-ptr procedure
@@ -61,7 +61,7 @@
                                          (list #f))))
       (ffi-lib path))))
 
-(define c-bytevector-u8-set!
+#;(define c-bytevector-u8-set!
   (lambda (c-bytevector k byte)
     (ptr-set! c-bytevector _uint8 'abs k byte)))
 

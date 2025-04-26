@@ -85,7 +85,8 @@
               (primitives std-ffi)
               (primitives foreign-procedure)
               (primitives foreign-file)
-              (primitives foreign-stdlib)))
+              (primitives foreign-stdlib)
+              (primitives system-interface)))
     (mosh
       (import (scheme base)
               (scheme write)
@@ -176,9 +177,11 @@
                     pointer-ref-c-pointer
                     void?))
       (export make-external-function
-              calculate-struct-size-and-offsets
-              struct-make
-              pffi:string-split))
+             ; calculate-struct-size-and-offsets
+              ;struct-make
+              pffi:string-split
+              c-bytevector-pointer-set!
+              c-bytevector-pointer-ref))
     (tr7
       (import (scheme base)
               (scheme write)
@@ -200,10 +203,13 @@
           c-size-of
           define-c-library
           define-c-procedure
-          ;pffi-define-callback; define-c-callback (?)
+          define-c-callback
           c-bytevector?
-          pffi-pointer-set!;c-bytevector-u8-set! and so on
-          pffi-pointer-get;c-bytevector-u8-ref and so on
+          c-bytevector-u8-ref
+
+          ;; c-bytevector
+          ;pffi-pointer-set!;c-bytevector-u8-set! and so on
+          ;pffi-pointer-get;c-bytevector-u8-ref and so on
           native-endianness
           ;; TODO Docs for all of these
           c-bytevector->address
@@ -211,7 +217,6 @@
           c-bytevector-s8-set!
           c-bytevector-s8-ref
           c-bytevector-u8-set!
-          c-bytevector-u8-ref
           c-bytevector-s16-set!
           c-bytevector-s16-native-set!
           c-bytevector-s16-ref
@@ -237,13 +242,9 @@
           c-bytevector-u64-ref
           c-bytevector-u64-native-ref
           c-bytevector-sint-set!
-          c-bytevector-sint-native-set!
           c-bytevector-sint-ref
-          c-bytevector-sint-native-ref
           c-bytevector-uint-set!
-          c-bytevector-uint-native-set!
           c-bytevector-uint-ref
-          c-bytevector-uint-native-ref
           c-bytevector-ieee-single-set!
           c-bytevector-ieee-single-native-set!
           c-bytevector-ieee-single-ref
@@ -271,22 +272,22 @@
           ;c-bytevector-u8-ref ;; TODO Documentation, Testing
 
           ;; c-struct
-          pffi-define-struct;define-c-struct
-          pffi-struct-pointer;c-struct-bytevector
-          pffi-struct-offset-get;c-struct-offset
-          pffi-struct-set!;c-struct-set!
-          pffi-struct-get;c-struct-get
+          ;pffi-define-struct;define-c-struct
+          ;pffi-struct-pointer;c-struct-bytevector
+          ;pffi-struct-offset-get;c-struct-offset
+          ;pffi-struct-set!;c-struct-set!
+          ;pffi-struct-get;c-struct-get
 
           ;; c-array
           ;define-c-array (?)
-          pffi-array-allocate;make-c-array
-          pffi-array-pointer;c-array-pointer
-          pffi-array?;c-array?
-          pffi-pointer->array;c-bytevector->array
-          pffi-array-get;c-array-get
-          pffi-array-set!;c-array-set!
-          pffi-list->array;list->c-array
-          pffi-array->list;c-array->list
+          ;pffi-array-allocate;make-c-array
+          ;pffi-array-pointer;c-array-pointer
+          ;pffi-array?;c-array?
+          ;pffi-pointer->array;c-bytevector->array
+          ;pffi-array-get;c-array-get
+          ;pffi-array-set!;c-array-set!
+          ;pffi-list->array;list->c-array
+          ;pffi-array->list;c-array->list
 
           ;; c-variable
           ;define-c-variable (?)
@@ -313,15 +314,17 @@
     (skint (include "pffi/skint.scm"))
     (stklos (include "pffi/stklos.scm"))
     (tr7 (include "pffi/tr7.scm"))
-    (ypsilon (export c-function)
+    (ypsilon (export c-function c-callback)
              (include "pffi/ypsilon.scm")))
   (cond-expand
     (chicken-6 (include-relative "pffi/shared/main.scm")
                (include-relative "pffi/shared/pointer.scm")
-               (include-relative "pffi/shared/array.scm")
-               (include-relative "pffi/shared/struct.scm"))
+               ;(include-relative "pffi/shared/array.scm")
+               ;(include-relative "pffi/shared/struct.scm")
+               )
     (else (include "pffi/shared/main.scm")
-          (include "pffi/shared/struct.scm")
+          ;(include "pffi/shared/struct.scm")
           (include "pffi/shared/c-bytevectors.scm")
           (include "pffi/shared/pointer.scm")
-          (include "pffi/shared/array.scm"))))
+          ;(include "pffi/shared/array.scm")
+          )))

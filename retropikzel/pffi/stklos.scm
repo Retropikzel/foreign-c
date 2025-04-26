@@ -1,4 +1,4 @@
-(define pffi-type->native-type
+(define type->native-type
   (lambda (type)
     (cond ((equal? type 'int8) :char)
           ((equal? type 'uint8) :char)
@@ -20,8 +20,8 @@
           ((equal? type 'double) :double)
           ((equal? type 'pointer) :pointer)
           ((equal? type 'void) :void)
-          ((equal? type 'struct) :void)
-          (else (error "pffi-type->native-type -- No such pffi type" type)))))
+          ((equal? type 'callback) :pointer)
+          (else (error "type->native-type -- No such pffi type" type)))))
 
 (define c-bytevector?
   (lambda (object)
@@ -31,39 +31,38 @@
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (begin
-       (define pffi-type->native-type
-  (lambda (type)
-    (cond ((equal? type 'int8) :int)
-          ((equal? type 'uint8) :uint)
-          ((equal? type 'int16) :int)
-          ((equal? type 'uint16) :uint)
-          ((equal? type 'int32) :int)
-          ((equal? type 'uint32) :uint)
-          ((equal? type 'int64) :int)
-          ((equal? type 'uint64) :uint)
-          ((equal? type 'char) :char)
-          ((equal? type 'unsigned-char) :uchar)
-          ((equal? type 'short) :short)
-          ((equal? type 'unsigned-short) :ushort)
-          ((equal? type 'int) :int)
-          ((equal? type 'unsigned-int) :uint)
-          ((equal? type 'long) :long)
-          ((equal? type 'unsigned-long) :ulong)
-          ((equal? type 'float) :float)
-          ((equal? type 'double) :double)
-          ((equal? type 'pointer) :pointer)
-          ((equal? type 'string) :string)
-          ((equal? type 'void) :void)
-          ((equal? type 'struct) :void)
-          (else (error "pffi-type->native-type -- No such pffi type" type)))))
-     (define scheme-name
-       (make-external-function
-         (symbol->string c-name)
-         (map pffi-type->native-type argument-types)
-         (pffi-type->native-type return-type)
-         shared-object))))))
+       (define type->native-type
+         (lambda (type)
+           (cond ((equal? type 'int8) :char)
+                 ((equal? type 'uint8) :char)
+                 ((equal? type 'int16) :short)
+                 ((equal? type 'uint16) :ushort)
+                 ((equal? type 'int32) :int)
+                 ((equal? type 'uint32) :uint)
+                 ((equal? type 'int64) :long)
+                 ((equal? type 'uint64) :ulong)
+                 ((equal? type 'char) :char)
+                 ((equal? type 'unsigned-char) :uchar)
+                 ((equal? type 'short) :short)
+                 ((equal? type 'unsigned-short) :ushort)
+                 ((equal? type 'int) :int)
+                 ((equal? type 'unsigned-int) :uint)
+                 ((equal? type 'long) :long)
+                 ((equal? type 'unsigned-long) :ulong)
+                 ((equal? type 'float) :float)
+                 ((equal? type 'double) :double)
+                 ((equal? type 'pointer) :pointer)
+                 ((equal? type 'void) :void)
+                 ((equal? type 'callback) :pointer)
+                 (else (error "type->native-type -- No such pffi type" type)))))
+       (define scheme-name
+         (make-external-function
+           (symbol->string c-name)
+           (map type->native-type argument-types)
+           (type->native-type return-type)
+           shared-object))))))
 
-(define pffi-define-callback
+(define define-c-callback
   (lambda ()
     (error "Not implemented")))
 
@@ -90,7 +89,7 @@
           ((equal? type 'double) 8)
           ((equal? type 'pointer) 8))))
 
-(define c-bytevector-u8-set! pointer-set-c-uint8_t!)
+;(define c-bytevector-u8-set! pointer-set-c-uint8_t!)
 (define c-bytevector-u8-ref pointer-ref-c-uint8_t)
 
 (define pffi-pointer-set!

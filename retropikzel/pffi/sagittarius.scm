@@ -20,7 +20,6 @@
           ((eq? type 'double) size-of-double)
           ((eq? type 'pointer) size-of-void*)
           ((eq? type 'void) 0)
-          ((eq? type 'string) size-of-void*)
           ((eq? type 'callback) size-of-void*)
           (else #f))))
 
@@ -49,10 +48,8 @@
           ((equal? type 'float) 'float)
           ((equal? type 'double) 'double)
           ((equal? type 'pointer) 'void*)
-          ((equal? type 'string) 'void*)
           ((equal? type 'void) 'void)
           ((equal? type 'callback) 'callback)
-          ((and (pair? type) (equal? 'struct (car type))) 'void*)
           (else #f))))
 
 (define-syntax define-c-procedure
@@ -64,7 +61,7 @@
                         c-name
                         (map pffi-type->native-type argument-types))))))
 
-(define-syntax pffi-define-callback
+(define-syntax define-c-callback
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
      (define scheme-name
@@ -76,9 +73,8 @@
   (lambda (object)
     (pointer? object)))
 
+;(define c-bytevector-u8-set! pointer-set-c-uint8_t!)
 (define c-bytevector-u8-ref pointer-ref-c-uint8_t)
-(define c-bytevector-u8-set! pointer-set-c-uint8_t!)
-
 
 (define pffi-pointer-set!
   (lambda (pointer type offset value)

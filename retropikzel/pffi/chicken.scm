@@ -1,13 +1,13 @@
 
-(define pffi-type->native-type ; Chicken has this procedure in three places
+(define type->native-type ; Chicken has this procedure in three places
   (lambda (type)
     (cond ((equal? type 'int8) 'byte)
           ((equal? type 'uint8) 'unsigned-byte)
-          ((equal? type 'int16) 'int16_t)
-          ((equal? type 'uint16) 'uint16_t)
-          ((equal? type 'int32) 'int32)
-          ((equal? type 'uint32) 'unsigned-int32)
-          ((equal? type 'int64) 'integer-64)
+          ((equal? type 'int16) 'short)
+          ((equal? type 'uint16) 'unsigned-short)
+          ((equal? type 'int32) 'integer32)
+          ((equal? type 'uint32) 'unsigned-integer32)
+          ((equal? type 'int64) 'integer64)
           ((equal? type 'uint64) 'unsigned-integer64)
           ((equal? type 'char) 'char)
           ((equal? type 'unsigned-char) 'unsigned-char)
@@ -23,7 +23,7 @@
           ((equal? type 'void) 'void)
           ((equal? type 'callback) 'c-pointer)
           ((equal? type 'struct) 'c-pointer)
-          (else (error "pffi-type->native-type -- No such pffi type" type)))) )
+          (else (error "type->native-type -- No such pffi type" type)))))
 
 (define c-bytevector?
   (lambda (object)
@@ -32,15 +32,15 @@
 (define-syntax define-c-procedure
   (er-macro-transformer
     (lambda (expr rename compare)
-      (let* ((pffi-type->native-type ; Chicken has this procedure in three places
+      (let* ((type->native-type ; Chicken has this procedure in three places
                (lambda (type)
                  (cond ((equal? type 'int8) 'byte)
                        ((equal? type 'uint8) 'unsigned-byte)
-                       ((equal? type 'int16) 'int16_t)
-                       ((equal? type 'uint16) 'uint16_t)
-                       ((equal? type 'int32) 'int32)
-                       ((equal? type 'uint32) 'unsigned-int32)
-                       ((equal? type 'int64) 'integer-64)
+                       ((equal? type 'int16) 'short)
+                       ((equal? type 'uint16) 'unsigned-short)
+                       ((equal? type 'int32) 'integer32)
+                       ((equal? type 'uint32) 'unsigned-integer32)
+                       ((equal? type 'int64) 'integer64)
                        ((equal? type 'uint64) 'unsigned-integer64)
                        ((equal? type 'char) 'char)
                        ((equal? type 'unsigned-char) 'unsigned-char)
@@ -56,13 +56,13 @@
                        ((equal? type 'void) 'void)
                        ((equal? type 'callback) 'c-pointer)
                        ((equal? type 'struct) 'c-pointer)
-                       (else (error "pffi-type->native-type -- No such pffi type" type)))))
+                       (else (error "type->native-type -- No such pffi type" type)))))
              (scheme-name (list-ref expr 1))
              (c-name (symbol->string (cadr (list-ref expr 3))))
-             (return-type (pffi-type->native-type (cadr (list-ref expr 4))))
+             (return-type (type->native-type (cadr (list-ref expr 4))))
              (argument-types (if (null? (cdr (list-ref expr 5)))
                                (list)
-                               (map pffi-type->native-type
+                               (map type->native-type
                                     (cadr (list-ref expr 5))))))
         (if (null? argument-types)
           `(define ,scheme-name
@@ -70,18 +70,18 @@
           `(define ,scheme-name
              (foreign-safe-lambda ,return-type ,c-name ,@ argument-types)))))))
 
-(define-syntax pffi-define-callback
+(define-syntax define-c-callback
   (er-macro-transformer
     (lambda (expr rename compare)
-      (let* ((pffi-type->native-type ; Chicken has this procedure in three places
+      (let* ((type->native-type ; Chicken has this procedure in three places
                (lambda (type)
                  (cond ((equal? type 'int8) 'byte)
                        ((equal? type 'uint8) 'unsigned-byte)
-                       ((equal? type 'int16) 'int16_t)
-                       ((equal? type 'uint16) 'uint16_t)
-                       ((equal? type 'int32) 'int32)
-                       ((equal? type 'uint32) 'unsigned-int32)
-                       ((equal? type 'int64) 'integer-64)
+                       ((equal? type 'int16) 'short)
+                       ((equal? type 'uint16) 'unsigned-short)
+                       ((equal? type 'int32) 'integer32)
+                       ((equal? type 'uint32) 'unsigned-integer32)
+                       ((equal? type 'int64) 'integer64)
                        ((equal? type 'uint64) 'unsigned-integer64)
                        ((equal? type 'char) 'char)
                        ((equal? type 'unsigned-char) 'unsigned-char)
@@ -97,10 +97,10 @@
                        ((equal? type 'void) 'void)
                        ((equal? type 'callback) 'c-pointer)
                        ((equal? type 'struct) 'c-pointer)
-                       (else (error "pffi-type->native-type -- No such pffi type" type)))))
+                       (else (error "type->native-type -- No such pffi type" type)))))
              (scheme-name (list-ref expr 1))
-             (return-type (pffi-type->native-type (cadr (list-ref expr 2))))
-             (argument-types (map pffi-type->native-type (cadr (list-ref expr 3))))
+             (return-type (type->native-type (cadr (list-ref expr 2))))
+             (argument-types (map type->native-type (cadr (list-ref expr 3))))
              (argument-names (cadr (list-ref expr 4)))
              (arguments (map
                           (lambda (name type)
@@ -145,9 +145,9 @@
        ((_ scheme-name headers object-name options)
         (begin
           (define scheme-name #t)
-          (pffi-shared-object-load headers)))))
+          (shared-object-load headers)))))
 
-(define-syntax pffi-shared-object-load
+(define-syntax shared-object-load
   (er-macro-transformer
     (lambda (expr rename compare)
       (let* ((headers (cadr (car (cdr expr)))))
@@ -167,13 +167,13 @@
 
 (define c-bytevector-u8-ref
   (lambda (c-bytevector k)
-   (pointer-s8-ref (pointer+ c-bytevector k))))
+   (pointer-u8-ref (pointer+ c-bytevector k))))
 
-(define c-bytevector-u8-set!
+#;(define c-bytevector-u8-set!
   (lambda (c-bytevector k byte)
-    (pointer-s8-set! (pointer+ c-bytevector k) byte)))
+    (pointer-u8-set! (pointer+ c-bytevector k) byte)))
 
-(define pffi-pointer-set!
+#;(define pffi-pointer-set!
   (lambda (pointer type offset value)
     (cond
       ((equal? type 'int8) (pointer-s8-set! (pointer+ pointer offset) value))
@@ -195,7 +195,7 @@
       ((equal? type 'double) (pointer-f64-set! (pointer+ pointer offset) value))
       ((equal? type 'pointer) (pointer-u64-set! (pointer+ pointer offset) (pointer->address value))))))
 
-(define pffi-pointer-get
+#;(define pffi-pointer-get
   (lambda (pointer type offset)
     (cond
       ((equal? type 'int8) (pointer-s8-ref (pointer+ pointer offset)))
