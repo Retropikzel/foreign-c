@@ -284,7 +284,11 @@
 (for-each
   (lambda (str)
     (debug str)
-    (assert equal? (string=? (c-utf8->string (string->c-utf8 str)) str) #t))
+    (let ((utf-eight (string->c-utf8 str)))
+      (debug utf-eight)
+      (let ((str1 (c-utf8->string utf-eight)))
+        (debug str1)
+        (assert equal? (string=? str1 str) #t))))
   (list "100" "Hello world" "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"))
 
 

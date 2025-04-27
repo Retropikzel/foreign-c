@@ -201,14 +201,14 @@
                                                  c-function
                                                  (size-of-type return-type)
                                                  arguments)))
-          (display "HERE: ")
+          (display "Calling C function: ")
+          (write c-name)
+          (newline)
+          (display "HERE SCM:")
           (write return-pointer)
           (newline)
-          (display "HERE2: ")
-          (write (pointer-get return-pointer return-type 0))
-          (newline)
-          (when (not (equal? return-type 'void))
-            (pointer-get return-pointer return-type 0)))))))
+          (cond ((not (equal? return-type 'void))
+                 (pointer-get return-pointer return-type 0))))))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()
