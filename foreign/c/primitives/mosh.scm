@@ -19,12 +19,11 @@
           ((eq? type 'float) size-of-float)
           ((eq? type 'double) size-of-double)
           ((eq? type 'pointer) size-of-pointer)
-          ((eq? type 'string) size-of-pointer)
           ((eq? type 'callback) size-of-pointer)
           ((eq? type 'void) 0)
           (else #f))))
 
-(define pffi-shared-object-load
+(define shared-object-load
   (lambda (path options)
     (open-shared-library path)))
 
@@ -32,10 +31,10 @@
   (lambda (object)
     (pointer? object)))
 
-;(define c-bytevector-u8-set! pointer-set-c-uint8!)
+(define c-bytevector-u8-set! pointer-set-c-uint8!)
 (define c-bytevector-u8-ref pointer-ref-c-uint8)
 
-(define pffi-pointer-set!
+#;(define pointer-set!
   (lambda (pointer type offset value)
     (cond ((equal? type 'int8) (pointer-set-c-int8! pointer offset value))
           ((equal? type 'uint8) (pointer-set-c-uint8! pointer offset value))
@@ -57,7 +56,7 @@
           ((equal? type 'void) (pointer-set-c-pointer! pointer offset value))
           ((equal? type 'pointer) (pointer-set-c-pointer! pointer offset value)))))
 
-(define pffi-pointer-get
+#;(define pointer-get
   (lambda (pointer type offset)
     (cond ((equal? type 'int8) (pointer-ref-c-int8 pointer offset))
           ((equal? type 'uint8) (pointer-ref-c-uint8 pointer offset))
@@ -79,7 +78,7 @@
           ((equal? type 'void) (pointer-ref-c-pointer pointer offset))
           ((equal? type 'pointer) (pointer-ref-c-pointer pointer offset)))))
 
-(define pffi-type->native-type
+(define type->native-type
   (lambda (type)
     (cond ((equal? type 'int8) 'int8_t)
           ((equal? type 'uint8) 'uint8_t)
@@ -102,21 +101,21 @@
           ((equal? type 'pointer) 'void*)
           ((equal? type 'void) 'void)
           ((equal? type 'callback) 'void*)
-          (else (error "pffi-type->native-type -- No such pffi type" type)))))
+          (else (error "type->native-type -- No such type" type)))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
        (make-c-function shared-object
-                        (pffi-type->native-type return-type)
+                        (type->native-type return-type)
                         c-name
-                        (map pffi-type->native-type argument-types))))))
+                        (map type->native-type argument-types))))))
 
 (define-syntax define-c-callback
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
      (define scheme-name
-       (make-c-callback (pffi-type->native-type return-type)
-                        (map pffi-type->native-type argument-types)
+       (make-c-callback (type->native-type return-type)
+                        (map type->native-type argument-types)
                         procedure)))))

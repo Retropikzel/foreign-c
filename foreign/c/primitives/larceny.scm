@@ -32,7 +32,7 @@
     ;(void*? object)
     (number? object)))
 
-(define pffi-shared-object-load
+(define shared-object-load
   (lambda (headers path . options)
     (foreign-file path)))
 
@@ -51,7 +51,7 @@
                         return-type
                         argument-types)))))
 
-(define-syntax pffi-define-callback
+(define-syntax define-c-callback
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
      (define scheme-name

@@ -8,7 +8,7 @@
                           "c"
                           '((additional-versions ("0" "6"))))))
 
-(define-c-procedure pffi-pointer-allocate-calloc libc 'calloc 'pointer '(int int))
+(define-c-procedure c-calloc libc 'calloc 'pointer '(int int))
 (define-c-procedure c-memset-address->pointer libc 'memset 'pointer '(uint64 uint8 int))
 (define-c-procedure c-memset-pointer->address libc 'memset 'uint64 '(pointer uint8 int))
 (define-c-procedure c-memset-address libc 'memset 'pointer '(uint64 uint8 int))
@@ -17,7 +17,7 @@
 (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
 
 (cond-expand
-  (chibi #t) ; FIXME
+  ;(chibi #t) ; FIXME
   (else (define make-c-bytevector
           (lambda (k . byte)
             (if (null? byte)
@@ -29,7 +29,6 @@
     (bytevector->c-bytevector (apply bytevector bytes))))
 
 (cond-expand
-  (chibi #t) ; FIXME
   (else (define-c-procedure c-free libc 'free 'void '(pointer))))
 
 (define bytevector->c-bytevector
@@ -112,16 +111,18 @@
                                                   (native-endianness)
                                                   (c-size-of 'pointer)))))
 
-(cond-expand
+#;(cond-expand
   (kawa #t) ; Defined in kawa.scm
+  (chibi #t)
   (else
     (define c-bytevector-u8-set!
       (lambda (c-bytevector k byte)
-        (let ((address (c-memset-pointer->address c-bytevector 0 0)))
-          (c-memset-address (+ address k) byte 1))))))
+        (c-memset-address (+ (c-memset-pointer->address c-bytevector 0 0) k)
+                          byte
+                          1)))))
 
 (cond-expand
-  (kawa #t) ; Defined in kawa.scm
+  ;(kawa #t) ; Defined in kawa.scm
   (else (define-syntax call-with-address-of-c-bytevector
           (syntax-rules ()
             ((_ input-pointer thunk)

@@ -15,18 +15,18 @@ The new readme is a work in progress.
 
 ## Primitives
 
-|                  | c-size-of    | define-c-library    | c-bytevector? | define-c-procedure  | define-c-callbck | c-bytevector-u8-ref |
-|------------------|:------------:|:-------------------:|:-------------:|:-------------------:|:----------------:|:-------------------:|
-| Chibi            | X            | X                   | X             | X                   |                  | X                   |
-| **Chicken**      | X            | X                   | X             | X                   | X                | X                   |
-| Gauche           | X            | X                   | X             | X                   |                  |                     |
-| **Guile**        | X            | X                   | X             | X                   | X                | X                   |
-| Kawa             | X            | X                   | X             | X                   |                  | X                   |
-| **Mosh**         | X            | X                   | X             | X                   | X                | X                   |
-| **Racket**       | X            | X                   | X             | X                   | X                | X                   |
-| **Saggittarius** | X            | X                   | X             | X                   | X                | X                   |
-| Stklos           | X            | X                   | X             | X                   |                  | X                   |
-| **Ypsilon**      | X            | X                   | X             | X                   | X                | X                   |
+|                  | c-size-of    | c-bytevector-u8-set! |c-bytevector-u8-ref | define-c-library    | c-bytevector? | define-c-procedure  | define-c-callback |
+|------------------|:------------:|:------------------- :|-------------------:|:-------------------:|:-------------:|:-------------------:|:-----------------:|
+| Chibi            | X            | X                    |X                   | X                   | X             | X                   |                   |
+| **Chicken**      | X            | X                    |X                   | X                   | X             | X                   | X                 |
+| Gauche           | X            | X                    |X                   | X                   | X             | X                   |                   |
+| **Guile**        | X            | X                    |X                   | X                   | X             | X                   | X                 |
+| Kawa             | X            | X                    |X                   | X                   | X             | X                   |                   |
+| **Mosh**         | X            | X                    |X                   | X                   | X             | X                   | X                 |
+| **Racket**       | X            | X                    |X                   | X                   | X             | X                   | X                 |
+| **Saggittarius** | X            | X                    |X                   | X                   | X             | X                   | X                 |
+| Stklos           | X            | X                    |X                   | X                   | X             | X                   |                   |
+| **Ypsilon**      | X            | X                    |X                   | X                   | X             | X                   | X                 |
 
 ## Test files pass
 
@@ -36,7 +36,7 @@ The new readme is a work in progress.
 | **Chicken**      | X              | X             |
 | Gauche           |                |               |
 | **Guile**        | X              | X             |
-| Kawa             |                | X             |
+| Kawa             |                |               |
 | Mosh             | X              |               |
 | Racket           | X              |               |
 | **Saggittarius** | X              | X             |

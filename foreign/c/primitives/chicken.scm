@@ -169,7 +169,7 @@
   (lambda (c-bytevector k)
    (pointer-u8-ref (pointer+ c-bytevector k))))
 
-#;(define c-bytevector-u8-set!
+(define c-bytevector-u8-set!
   (lambda (c-bytevector k byte)
     (pointer-u8-set! (pointer+ c-bytevector k) byte)))
 

@@ -212,31 +212,19 @@
 
 ;; define-c-library
 
-(print-header 'pffi-define-library)
+(print-header 'define-c-library)
 
 (cond-expand
-  (windows (define-c-library libc-stdlib
-                                '("stdlib.h")
+  (windows (define-c-library libc
+                                '("stdio.h" "string.h")
                                 "ucrtbase"
                                 '((additional-versions ("0" "6")))))
-  (else (define-c-library libc-stdlib
-                             '("stdlib.h")
+  (else (define-c-library libc
+                             '("stdio.h" "string.h")
                              "c"
                              '((additional-versions ("0" "6"))))))
 
-(debug libc-stdlib)
-
-(cond-expand
-  (windows (define-c-library libc-stdio
-                                '("stdio.h")
-                                "ucrtbase"
-                                '((additional-versions ("0" "6")))))
-  (else (define-c-library libc-stdio
-                             '("stdio.h")
-                             "c"
-                             '((additional-versions ("0" "6"))))))
-
-(debug libc-stdio)
+(debug libc)
 
 (define-c-library c-testlib
                      '("libtest.h")
@@ -245,42 +233,14 @@
 
 (debug c-testlib)
 
-;; define-c-procedure
+;; define-c-procedure 1
+(print-header "define-c-procedure 1")
 
-(print-header 'define-c-procedure)
-
-(define-c-procedure c-abs libc-stdlib 'abs 'int '(int))
+(define-c-procedure c-abs libc 'abs 'int '(int))
 (debug c-abs)
 (define absoluted (c-abs -2))
 (debug absoluted)
 (assert = absoluted 2)
-
-(define-c-procedure c-puts libc-stdlib 'puts 'int '(pointer))
-(debug c-puts)
-(define chars-written (c-puts (string->c-utf8 "puts: Hello from testing, I am C function puts")))
-(debug chars-written)
-(assert = chars-written 47)
-
-(define-c-procedure c-atoi libc-stdlib 'atoi 'int '(pointer))
-(assert = (c-atoi (string->c-utf8 "100")) 100)
-
-(define-c-procedure c-fopen libc-stdio 'fopen 'pointer '(pointer pointer))
-(define output-file (c-fopen (string->c-utf8 "testfile.test")
-                              (string->c-utf8 "w")))
-(debug output-file)
-(define-c-procedure c-fprintf libc-stdio 'fprintf 'int '(pointer pointer))
-(define characters-written
-  (c-fprintf output-file (string->c-utf8 "Hello world")))
-(debug characters-written)
-(assert equal? (= characters-written 11) #t)
-(define-c-procedure c-fclose libc-stdio 'fclose 'int '(pointer))
-(define closed-status (c-fclose output-file))
-(debug closed-status)
-(assert equal? (= closed-status 0) #t)
-(assert equal? (file-exists? "testfile.test") #t)
-(assert equal? (string=? (with-input-from-file "testfile.test"
-                                               (lambda () (read-line)))
-                         "Hello world") #t)
 
 (define-c-procedure c-takes-no-args c-testlib 'takes_no_args 'void '())
 (debug c-takes-no-args)
@@ -291,25 +251,81 @@
 (define takes-no-args-returns-int-result (c-takes-no-args-returns-int))
 (assert equal? (= takes-no-args-returns-int-result 0) #t)
 
-;; c-bytevector?
-
-(print-header 'c-bytevector?)
+;; make-c-bytevector and c-bytevector?
+(print-header "make-c-bytevector and c-bytevector?")
+(define bytes (make-c-bytevector 100))
+(debug bytes)
+(assert equal? (c-bytevector? bytes) #t)
 
 (define is-pointer (make-c-bytevector 100))
 (debug is-pointer)
 (assert equal? (c-bytevector? is-pointer) #t)
+; FIXME Ypsilon
 ;(assert equal? (c-bytevector? 100) #f)
+; FIXME Chibi
+;(assert equal? (c-bytevector? #f) #f)
+(assert equal? (c-bytevector? "Hello") #f)
 (assert equal? (c-bytevector? 'bar) #f)
 
-;; c-bytevector-u8-ref
-
-(print-header "c-bytevector-u8-ref")
+;; c-bytevector-u8-set! and c-bytevector-u8-ref
+(print-header "c-bytevector-u8-set! and c-bytevector-u8-ref")
 
 (define u8-pointer (make-c-bytevector (c-size-of 'uint8)))
+(debug u8-pointer)
+(debug (c-bytevector? u8-pointer))
+(assert equal? (c-bytevector? u8-pointer) #t)
 (c-bytevector-u8-set! u8-pointer 0 42)
 (debug u8-pointer)
 (debug (c-bytevector-u8-ref u8-pointer 0))
 (assert equal? (= (c-bytevector-u8-ref u8-pointer 0) 42) #t)
+
+;; string->-utf8 c-utf8->string
+(print-header "string->c-utf8 c-utf8->string")
+(for-each
+  (lambda (str)
+    (debug str)
+    (assert equal? (string=? (c-utf8->string (string->c-utf8 str)) str) #t))
+  (list "100" "Hello world" "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"))
+
+
+;; define-c-procedure 2
+(print-header "define-c-procedure 2")
+
+
+(define-c-procedure c-atoi libc 'atoi 'int '(pointer))
+(assert = (c-atoi (string->c-utf8 "100")) 100)
+
+(define-c-procedure c-puts libc 'puts 'int '(pointer))
+(debug c-puts)
+(define chars-written (c-puts (string->c-utf8 "puts: Hello from testing, I am C function puts")))
+(debug chars-written)
+(assert = chars-written 47)
+
+(define-c-procedure c-strcat libc 'strcat 'pointer '(pointer pointer))
+(define c-string1 (string->c-utf8 "test123"))
+(debug (c-utf8->string c-string1))
+(debug (c-utf8->string (c-strcat (string->c-utf8 "con1") (string->c-utf8 "cat1"))))
+(assert equal? (string=? (c-utf8->string (c-strcat (string->c-utf8 "con2")
+                                                   (string->c-utf8 "cat2")))
+                    "con2cat2") #t)
+
+(define-c-procedure c-fopen libc 'fopen 'pointer '(pointer pointer))
+(define output-file (c-fopen (string->c-utf8 "testfile.test")
+                              (string->c-utf8 "w")))
+(debug output-file)
+(define-c-procedure c-fprintf libc 'fprintf 'int '(pointer pointer))
+(define characters-written
+  (c-fprintf output-file (string->c-utf8 "Hello world")))
+(debug characters-written)
+(assert equal? (= characters-written 11) #t)
+(define-c-procedure c-fclose libc 'fclose 'int '(pointer))
+(define closed-status (c-fclose output-file))
+(debug closed-status)
+(assert equal? (= closed-status 0) #t)
+(assert equal? (file-exists? "testfile.test") #t)
+(assert equal? (string=? (with-input-from-file "testfile.test"
+                                               (lambda () (read-line)))
+                         "Hello world") #t)
 
 ;; define-c-callback
 
@@ -320,7 +336,7 @@
 (c-bytevector-s32-native-set! array (* (c-size-of 'int) 1) 2)
 (c-bytevector-s32-native-set! array (* (c-size-of 'int) 2) 1)
 
-(define-c-procedure qsort libc-stdlib 'qsort 'void '(pointer int int callback))
+(define-c-procedure qsort libc 'qsort 'void '(pointer int int callback))
 
 (define-c-callback compare
                    'int

@@ -2,6 +2,7 @@
 
 (c-system-include "stdint.h")
 (c-system-include "dlfcn.h")
+(c-system-include "stdio.h")
 (c-system-include "ffi.h")
 
 ;; c-size-of
@@ -47,7 +48,7 @@
 (define-c int (size-of-double size_of_double) ())
 (define-c int (size-of-pointer size_of_pointer) ())
 
-;; pffi-shared-object-load
+;; shared-object-load
 (define-c-const int (RTLD-NOW "RTLD_NOW"))
 (define-c (maybe-null pointer void*) dlopen (string int))
 (define-c (maybe-null pointer void*) dlerror ())
@@ -71,14 +72,14 @@
 (define-c sexp (pointer? is_pointer) (sexp))
 
 (c-declare "void* pointer_address(struct sexp_struct* pointer) {
-            return (void*)&sexp_cpointer_value(pointer);
+            return &sexp_cpointer_value(pointer);
            }")
 (define-c (maybe-null pointer void*) (pointer-address pointer_address) (sexp))
 
 (c-declare "void pointer_free(void* pointer) { free(pointer); }")
 (define-c void (pointer-free pointer_free) ((maybe-null pointer void*)))
 
-;; pffi-pointer-set!
+;; pointer-set!
 (c-declare "void pointer_set_c_int8_t(void* pointer, int offset, int8_t value) { *(int8_t*)((char*)pointer + offset) = value; }")
 (define-c void (pointer-set-c-int8_t! pointer_set_c_int8_t) ((pointer void*) int int8_t))
 (c-declare "void pointer_set_c_uint8_t(void* pointer, int offset, uint8_t value) { *(uint8_t*)((char*)pointer + offset) = value; }")
@@ -128,7 +129,7 @@
 (c-declare "void pointer_set_c_pointer(void* pointer, int offset, void* value) { char* p = (char*)pointer + offset; *(char**)p = value; }")
 (define-c void (pointer-set-c-pointer! pointer_set_c_pointer) ((pointer void*) int (maybe-null pointer void*)))
 
-;; pffi-pointer-get
+;; pointer-get
 (c-declare "int8_t pointer_ref_c_int8_t(void* pointer, int offset) { return *(int8_t*)((char*)pointer + offset); }")
 (define-c int8_t (pointer-ref-c-int8_t pointer_ref_c_int8_t) ((pointer void*) int))
 (c-declare "uint8_t pointer_ref_c_uint8_t(void* pointer, int offset) { return *(uint8_t*)((char*)pointer + offset); }")
@@ -237,28 +238,114 @@
 (define-c (pointer void*) (get-ffi-type-pointer get_ffi_type_pointer) ())
 
 (define-c-const int (FFI-OK "FFI_OK"))
-(c-declare
+#;(c-declare
   "int internal_ffi_prep_cif(unsigned int nargs, void* rtype, void* atypes[]) {
     printf(\"A1: %u, A2: %u, nargs: %u\\n\", &ffi_type_pointer, atypes[0], nargs);
     return ffi_prep_cif(&cif, FFI_DEFAULT_ABI, nargs, (ffi_type*)rtype, (ffi_type**)atypes);
   }")
-(define-c int (internal-ffi-prep-cif internal_ffi_prep_cif) (unsigned-int (pointer void*) (array void*)))
+;(define-c int (internal-ffi-prep-cif internal_ffi_prep_cif) (unsigned-int (pointer void*) (array void*)))
 (c-declare
-  "void internal_ffi_call(unsigned int nargs, void* rtype, void** atypes, void* fn, void* rvalue, struct sexp_struct* avalues[]) {
-    ffi_prep_cif(&cif, FFI_DEFAULT_ABI, nargs, (ffi_type*)rtype, (ffi_type**)atypes);
+  "void* internal_ffi_call(
+      unsigned int nargs,
+      unsigned int rtype,
+      unsigned int atypes[],
+      void* fn,
+      unsigned int rvalue_size,
+      struct sexp_struct* avalues[])
+    {
+    ffi_type* c_atypes[nargs];
+    void* temps[nargs];
     void* c_avalues[nargs];
+
     for(int i = 0; i < nargs; i++) {
-      c_avalues[i] = sexp_cpointer_value(avalues[i]);
+      void* arg = NULL;
+      switch(atypes[i]) {
+        //case 1: c_atypes[i] = &ffi_type_sint8; arg = sexp_sint_value(avalues[i]); break;
+        case 2:
+          c_atypes[i] = &ffi_type_uint8;
+          temps[i] = sexp_uint_value(avalues[i]);
+          c_avalues[i] = &temps[i];
+        break;
+        //case 3: c_atypes[i] = &ffi_type_sint16; arg = sexp_sint_value(avalues[i]); break;
+        //case 4: c_atypes[i] = &ffi_type_uint16; arg = sexp_uint_value(avalues[i]); break;
+        //case 5: c_atypes[i] = &ffi_type_sint32; arg = sexp_sint_value(avalues[i]); break;
+        //case 6: c_atypes[i] = &ffi_type_uint32; arg = sexp_uint_value(avalues[i]); break;
+        //case 7: c_atypes[i] = &ffi_type_sint64; arg = sexp_sint_value(avalues[i]); break;
+        case 8:
+          c_atypes[i] = &ffi_type_uint64;
+          temps[i] = sexp_uint_value(avalues[i]);
+          c_avalues[i] = &temps[i];
+        break;
+        //case 9: c_atypes[i] = &ffi_type_schar; arg = sexp_sint_value(avalues[i]); break;
+        //case 10: c_atypes[i] = &ffi_type_uchar; arg = sexp_uint_value(avalues[i]); break;
+        //case 11: c_atypes[i] = &ffi_type_sshort; arg = sexp_sint_value(avalues[i]); break;
+        //case 12: c_atypes[i] = &ffi_type_ushort; arg = sexp_uint_value(avalues[i]); break;
+        case 13:
+          c_atypes[i] = &ffi_type_sint;
+          temps[i] = sexp_sint_value(avalues[i]);
+          c_avalues[i] = &temps[i];
+        break;
+        //case 14: c_atypes[i] = &ffi_type_uint; arg = sexp_uint_value(avalues[i]); break;
+        //case 15: c_atypes[i] = &ffi_type_slong; arg = sexp_sint_value(avalues[i]); break;
+        //case 16: c_atypes[i] = &ffi_type_ulong; arg = sexp_uint_value(avalues[i]); break;
+        // FIXME
+        //case 17: c_atypes[i] = &ffi_type_float; arg = sexp_flonum_value(avalues[i]); break;
+        // FIXME
+        //case 18: c_atypes[i] = &ffi_type_double; arg = sexp_flonum_value(avalues[i]); break;
+        //case 19: c_atypes[i] = &ffi_type_void; arg = NULL; break;
+        case 20:
+          c_atypes[i] = &ffi_type_pointer;
+          c_avalues[i] = &sexp_cpointer_value(avalues[i]);
+          //printf(\"Pointer value: %s\\n\", sexp_cpointer_maybe_null_value(avalues[i]));
+        break;
+        default:
+          printf(\"Undefined argument type integer: %i, index: %i\\n\", atypes[i], i);
+          //c_avalues[i] = sexp_cpointer_value(avalues[i]);
+        break;
+      }
     }
+
+    ffi_type* c_rtype = &ffi_type_void;
+    switch(rtype) {
+      case 1: c_rtype = &ffi_type_sint8; break;
+      case 2: c_rtype = &ffi_type_uint8; break;
+      case 3: c_rtype = &ffi_type_sint16; break;
+      case 4: c_rtype = &ffi_type_uint16; break;
+      case 5: c_rtype = &ffi_type_sint32; break;
+      case 6: c_rtype = &ffi_type_uint32; break;
+      case 7: c_rtype = &ffi_type_sint64; break;
+      case 8: c_rtype = &ffi_type_uint64; break;
+      case 9: c_rtype = &ffi_type_schar; break;
+      case 10: c_rtype = &ffi_type_uchar; break;
+      case 11: c_rtype = &ffi_type_sshort; break;
+      case 12: c_rtype = &ffi_type_ushort; break;
+      case 13: c_rtype = &ffi_type_sint; break;
+      case 14: c_rtype = &ffi_type_uint; break;
+      case 15: c_rtype = &ffi_type_slong; break;
+      case 16: c_rtype = &ffi_type_ulong; break;
+      case 17: c_rtype = &ffi_type_float; break;
+      case 18: c_rtype = &ffi_type_double; break;
+      case 19: c_rtype = &ffi_type_void; break;
+      case 20: c_rtype = &ffi_type_pointer; break;
+      default:
+        printf(\"Undefined return type: %i\\n\", rtype);
+        c_rtype = &ffi_type_pointer;
+      break;
+    }
+
+    int r = ffi_prep_cif(&cif, FFI_DEFAULT_ABI, nargs, c_rtype, c_atypes);
+
+    void* rvalue = malloc(rvalue_size);
     ffi_call(&cif, FFI_FN(fn), rvalue, c_avalues);
+    return rvalue;
   }")
-(define-c void
+(define-c (maybe-null pointer void*)
           (internal-ffi-call internal_ffi_call)
           (unsigned-int
+            unsigned-int
+            (array unsigned-int)
             (pointer void*)
-            (array void*)
-            (pointer void*)
-            (pointer void*)
+            unsigned-int
             (array sexp)))
 
 (c-declare

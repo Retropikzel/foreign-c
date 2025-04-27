@@ -1,4 +1,4 @@
-(define pffi-type->native-type
+(define type->native-type
   (lambda (type)
     (cond ((equal? type 'int8) int)
           ((equal? type 'uint8) int)
@@ -21,7 +21,7 @@
           ((equal? type 'pointer) opaque)
           ((equal? type 'void) c-void)
           ((equal? type 'callback) opaque)
-          (else (error "pffi-type->native-type -- No such pffi type" type)))))
+          (else (error "type->native-type -- No such type" type)))))
 
 (define c-bytevector?
   (lambda (object)
@@ -30,7 +30,7 @@
 (define-syntax define-c-procedure
   (er-macro-transformer
     (lambda (expr rename compare)
-      (let* ((pffi-type->native-type
+      (let* ((type->native-type
                (lambda (type)
                  (cond ((equal? type 'int8) 'int)
                        ((equal? type 'uint8) 'int)
@@ -53,15 +53,15 @@
                        ((equal? type 'pointer) 'opaque)
                        ((equal? type 'void) 'c-void)
                        ((equal? type 'callback) 'opaque)
-                       (else (error "pffi-type->native-type -- No such pffi type" type)))))
+                       (else (error "type->native-type -- No such type" type)))))
              (scheme-name (cadr expr))
              (c-name (symbol->string (car (cdr (car (cdr (cdr (cdr expr))))))))
-             (return-type (pffi-type->native-type (car (cdr (car (cdr (cdr (cdr (cdr expr)))))))))
+             (return-type (type->native-type (car (cdr (car (cdr (cdr (cdr (cdr expr)))))))))
              (argument-types
                (let ((types (cadr (car (cdr (cdr (cdr (cdr (cdr expr)))))))))
                  (if (null? types)
                    '()
-                   (map pffi-type->native-type types)))))
+                   (map type->native-type types)))))
         (if (null? argument-types)
           `(c-define ,scheme-name ,return-type ,c-name)
           `(c-define ,scheme-name
@@ -69,7 +69,7 @@
 
 (define define-c-callback
   (lambda (scheme-name return-type argument-types procedure)
-    (error "pffi-define-callback not yet implemented on Cyclone")))
+    (error "define-callback not yet implemented on Cyclone")))
 
 (define size-of-type
   (lambda (type)
@@ -93,12 +93,12 @@
           ((equal? type 'double) (c-value "sizeof(double)" int))
           ((equal? type 'pointer) (c-value "sizeof(void*)" int)))))
 
-(define-c pffi-pointer-address
+(define-c pointer-address
           "(void *data, int argc, closure _, object k, object pointer)"
           "make_c_opaque(opq, &(void*)opaque_ptr(pointer));
           return_closcall1(data, k, &opq);")
 
-(define pffi-pointer-null
+(define pointer-null
   (lambda ()
     (make-opaque)))
 
@@ -107,9 +107,9 @@
        ((_ scheme-name headers object-name options)
         (begin
           (define scheme-name #t)
-          (pffi-shared-object-load headers)))))
+          (shared-object-load headers)))))
 
-(define-syntax pffi-shared-object-load
+(define-syntax shared-object-load
   (er-macro-transformer
     (lambda (expr rename compare)
       (let* ((headers (cadr (cadr expr)))
@@ -119,254 +119,254 @@
                          headers)))
         `(,@includes)))))
 
-(define pffi-pointer-null?
+(define pointer-null?
   (lambda (pointer)
     (and (opaque? pointer)
          (opaque-null? pointer))))
 
-(define-c pffi-pointer-int8-set!
+(define-c pointer-int8-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
           "int8_t* p = opaque_ptr(pointer) + obj_obj2int(offset);
           *p = obj_obj2int(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define-c pffi-pointer-uint8-set!
+(define-c pointer-uint8-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
           "uint8_t* p = opaque_ptr(pointer) + obj_obj2int(offset);
           *p = obj_obj2int(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define-c pffi-pointer-int16-set!
+(define-c pointer-int16-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
           "int16_t* p = opaque_ptr(pointer) + obj_obj2int(offset);
           *p = obj_obj2int(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define-c pffi-pointer-uint16-set!
+(define-c pointer-uint16-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
           "uint16_t* p = opaque_ptr(pointer) + obj_obj2int(offset);
           *p = obj_obj2int(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define-c pffi-pointer-int32-set!
+(define-c pointer-int32-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
           "int32_t* p = opaque_ptr(pointer) + obj_obj2int(offset);
           *p = obj_obj2int(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define-c pffi-pointer-uint32-set!
+(define-c pointer-uint32-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
           "uint32_t* p = opaque_ptr(pointer) + obj_obj2int(offset);
           *p = obj_obj2int(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define-c pffi-pointer-int64-set!
+(define-c pointer-int64-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
           "int64_t* p = opaque_ptr(pointer) + obj_obj2int(offset);
           *p = obj_obj2int(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define-c pffi-pointer-uint64-set!
+(define-c pointer-uint64-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
           "uint64_t* p = opaque_ptr(pointer) + obj_obj2int(offset);
           *p = obj_obj2int(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define-c pffi-pointer-char-set!
+(define-c pointer-char-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
           "char* p = opaque_ptr(pointer) + obj_obj2int(offset);
           *p = obj_obj2char(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define-c pffi-pointer-short-set!
+(define-c pointer-short-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
           "short* p = opaque_ptr(pointer) + obj_obj2int(offset);
           *p = obj_obj2int(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define-c pffi-pointer-unsigned-short-set!
+(define-c pointer-unsigned-short-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
           "unsigned short* p = opaque_ptr(pointer) + obj_obj2int(offset);
           *p = obj_obj2int(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define-c pffi-pointer-int-set!
+(define-c pointer-int-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
           "int* p = opaque_ptr(pointer) + obj_obj2int(offset);
           *p = obj_obj2int(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define-c pffi-pointer-unsigned-int-set!
+(define-c pointer-unsigned-int-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
           "unsigned int* p = opaque_ptr(pointer) + obj_obj2int(offset);
           *p = obj_obj2int(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define-c pffi-pointer-long-set!
+(define-c pointer-long-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
           "long* p = opaque_ptr(pointer) + obj_obj2int(offset);
           *p = obj_obj2int(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define-c pffi-pointer-unsigned-long-set!
+(define-c pointer-unsigned-long-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
           "unsigned long* p = opaque_ptr(pointer) + obj_obj2int(offset);
           *p = obj_obj2int(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define-c pffi-pointer-float-set!
+(define-c pointer-float-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
           "float* p = opaque_ptr(pointer) + obj_obj2int(offset);
           *p = double_value(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define-c pffi-pointer-double-set!
+(define-c pointer-double-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
           "double* p = opaque_ptr(pointer) + obj_obj2int(offset);
           *p = double_value(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define-c pffi-pointer-pointer-set!
+(define-c pointer-pointer-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
           "uintptr_t* p = opaque_ptr(pointer) + obj_obj2int(offset);
           *p = (uintptr_t)&opaque_ptr(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define pffi-pointer-set!
+(define pointer-set!
   (lambda (pointer type offset value)
     (cond
-      ((equal? type 'int8) (pffi-pointer-int8-set! pointer offset value))
-      ((equal? type 'uint8) (pffi-pointer-uint8-set! pointer offset value))
-      ((equal? type 'int16) (pffi-pointer-int16-set! pointer offset value))
-      ((equal? type 'uint16) (pffi-pointer-uint16-set! pointer offset value))
-      ((equal? type 'int32) (pffi-pointer-int32-set! pointer offset value))
-      ((equal? type 'uint32) (pffi-pointer-uint32-set! pointer offset value))
-      ((equal? type 'int64) (pffi-pointer-int64-set! pointer offset value))
-      ((equal? type 'uint64) (pffi-pointer-uint64-set! pointer offset value))
-      ((equal? type 'char) (pffi-pointer-char-set! pointer offset value))
-      ((equal? type 'short) (pffi-pointer-short-set! pointer offset value))
-      ((equal? type 'unsigned-short) (pffi-pointer-unsigned-short-set! pointer offset value))
-      ((equal? type 'int) (pffi-pointer-int-set! pointer offset value))
-      ((equal? type 'unsigned-int) (pffi-pointer-unsigned-int-set! pointer offset value))
-      ((equal? type 'long) (pffi-pointer-long-set! pointer offset value))
-      ((equal? type 'unsigned-long) (pffi-pointer-unsigned-long-set! pointer offset value))
-      ((equal? type 'float) (pffi-pointer-float-set! pointer offset value))
-      ((equal? type 'double) (pffi-pointer-double-set! pointer offset value))
-      ((equal? type 'pointer) (pffi-pointer-pointer-set! pointer offset value)))))
+      ((equal? type 'int8) (pointer-int8-set! pointer offset value))
+      ((equal? type 'uint8) (pointer-uint8-set! pointer offset value))
+      ((equal? type 'int16) (pointer-int16-set! pointer offset value))
+      ((equal? type 'uint16) (pointer-uint16-set! pointer offset value))
+      ((equal? type 'int32) (pointer-int32-set! pointer offset value))
+      ((equal? type 'uint32) (pointer-uint32-set! pointer offset value))
+      ((equal? type 'int64) (pointer-int64-set! pointer offset value))
+      ((equal? type 'uint64) (pointer-uint64-set! pointer offset value))
+      ((equal? type 'char) (pointer-char-set! pointer offset value))
+      ((equal? type 'short) (pointer-short-set! pointer offset value))
+      ((equal? type 'unsigned-short) (pointer-unsigned-short-set! pointer offset value))
+      ((equal? type 'int) (pointer-int-set! pointer offset value))
+      ((equal? type 'unsigned-int) (pointer-unsigned-int-set! pointer offset value))
+      ((equal? type 'long) (pointer-long-set! pointer offset value))
+      ((equal? type 'unsigned-long) (pointer-unsigned-long-set! pointer offset value))
+      ((equal? type 'float) (pointer-float-set! pointer offset value))
+      ((equal? type 'double) (pointer-double-set! pointer offset value))
+      ((equal? type 'pointer) (pointer-pointer-set! pointer offset value)))))
 
-(define-c pffi-pointer-int8-get
+(define-c pointer-int8-get
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
           "int8_t* p = opaque_ptr(pointer) + obj_obj2int(offset);
           return_closcall1(data, k, obj_int2obj(*p));")
 
-(define-c pffi-pointer-uint8-get
+(define-c pointer-uint8-get
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
           "uint8_t* p = opaque_ptr(pointer) + obj_obj2int(offset);
           return_closcall1(data, k, obj_int2obj(*p));")
 
-(define-c pffi-pointer-int16-get
+(define-c pointer-int16-get
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
           "int16_t* p = opaque_ptr(pointer) + obj_obj2int(offset);
           return_closcall1(data, k, obj_int2obj(*p));")
 
-(define-c pffi-pointer-uint16-get
+(define-c pointer-uint16-get
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
           "uint16_t* p = opaque_ptr(pointer) + obj_obj2int(offset);
           return_closcall1(data, k, obj_int2obj(*p));")
 
-(define-c pffi-pointer-int32-get
+(define-c pointer-int32-get
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
           "int32_t* p = opaque_ptr(pointer) + obj_obj2int(offset);
           return_closcall1(data, k, obj_int2obj(*p));")
 
-(define-c pffi-pointer-uint32-get
+(define-c pointer-uint32-get
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
           "uint32_t* p = opaque_ptr(pointer) + obj_obj2int(offset);
           return_closcall1(data, k, obj_int2obj(*p));")
 
-(define-c pffi-pointer-int64-get
+(define-c pointer-int64-get
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
           "int64_t* p = opaque_ptr(pointer) + obj_obj2int(offset);
           return_closcall1(data, k, obj_int2obj(*p));")
 
-(define-c pffi-pointer-uint64-get
+(define-c pointer-uint64-get
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
           "uint64_t* p = opaque_ptr(pointer) + obj_obj2int(offset);
           return_closcall1(data, k, obj_int2obj(*p));")
 
-(define-c pffi-pointer-char-get
+(define-c pointer-char-get
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
           "char* p = opaque_ptr(pointer) + obj_obj2int(offset);
           return_closcall1(data, k, obj_char2obj(*p));")
 
-(define-c pffi-pointer-short-get
+(define-c pointer-short-get
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
           "short* p = opaque_ptr(pointer) + obj_obj2int(offset);
           return_closcall1(data, k, obj_int2obj(*p));")
 
-(define-c pffi-pointer-unsigned-short-get
+(define-c pointer-unsigned-short-get
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
           "unsigned short* p = opaque_ptr(pointer) + obj_obj2int(offset);
           return_closcall1(data, k, obj_int2obj(*p));")
 
-(define-c pffi-pointer-int-get
+(define-c pointer-int-get
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
           "int* p = opaque_ptr(pointer) + obj_obj2int(offset);
           return_closcall1(data, k, obj_int2obj(*p));")
 
-(define-c pffi-pointer-unsigned-int-get
+(define-c pointer-unsigned-int-get
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
           "unsigned int* p = opaque_ptr(pointer) + obj_obj2int(offset);
           return_closcall1(data, k, obj_int2obj(*p));")
 
-(define-c pffi-pointer-long-get
+(define-c pointer-long-get
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
           "long* p = opaque_ptr(pointer) + obj_obj2int(offset);
           return_closcall1(data, k, obj_int2obj(*p));")
 
-(define-c pffi-pointer-unsigned-long-get
+(define-c pointer-unsigned-long-get
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
           "unsigned long* p = opaque_ptr(pointer) + obj_obj2int(offset);
           return_closcall1(data, k, obj_int2obj(*p));")
 
-(define-c pffi-pointer-float-get
+(define-c pointer-float-get
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
           "float* p = opaque_ptr(pointer) + obj_obj2int(offset);
           alloca_double(d, *p);
           return_closcall1(data, k, d);")
 
-(define-c pffi-pointer-double-get
+(define-c pointer-double-get
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
           "double* p = opaque_ptr(pointer) + obj_obj2int(offset);
           alloca_double(d, *p);
           return_closcall1(data, k, d);")
 
-(define-c pffi-pointer-pointer-get
+(define-c pointer-pointer-get
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
           "make_c_opaque(opq, (void*)opaque_ptr(pointer) + obj_obj2int(offset));
           return_closcall1(data, k, &opq);")
 
-#;(define c-bytevector-u8-set! pffi-pointer-uint8-set!)
-(define c-bytevector-u8-ref pffi-pointer-uint8-get)
+#;(define c-bytevector-u8-set! pointer-uint8-set!)
+(define c-bytevector-u8-ref pointer-uint8-get)
 
-(define pffi-pointer-get
+(define pointer-get
   (lambda (pointer type offset)
     (cond
-      ((equal? type 'int8) (pffi-pointer-int8-get pointer offset))
-      ((equal? type 'uint8) (pffi-pointer-uint8-get pointer offset))
-      ((equal? type 'int16) (pffi-pointer-int16-get pointer offset))
-      ((equal? type 'uint16) (pffi-pointer-uint16-get pointer offset))
-      ((equal? type 'int32) (pffi-pointer-int32-get pointer offset))
-      ((equal? type 'uint32) (pffi-pointer-uint32-get pointer offset))
-      ((equal? type 'int64) (pffi-pointer-int64-get pointer offset))
-      ((equal? type 'uint64) (pffi-pointer-uint64-get pointer offset))
-      ((equal? type 'char) (pffi-pointer-char-get pointer offset))
-      ((equal? type 'short) (pffi-pointer-short-get pointer offset))
-      ((equal? type 'unsigned-short) (pffi-pointer-unsigned-short-get pointer offset))
-      ((equal? type 'int) (pffi-pointer-int-get pointer offset))
-      ((equal? type 'unsigned-int) (pffi-pointer-unsigned-int-get pointer offset))
-      ((equal? type 'long) (pffi-pointer-long-get pointer offset))
-      ((equal? type 'unsigned-long) (pffi-pointer-unsigned-long-get pointer offset))
-      ((equal? type 'float) (pffi-pointer-float-get pointer offset))
-      ((equal? type 'double) (pffi-pointer-double-get pointer offset))
-      ((equal? type 'pointer) (pffi-pointer-pointer-get pointer offset)))))
+      ((equal? type 'int8) (pointer-int8-get pointer offset))
+      ((equal? type 'uint8) (pointer-uint8-get pointer offset))
+      ((equal? type 'int16) (pointer-int16-get pointer offset))
+      ((equal? type 'uint16) (pointer-uint16-get pointer offset))
+      ((equal? type 'int32) (pointer-int32-get pointer offset))
+      ((equal? type 'uint32) (pointer-uint32-get pointer offset))
+      ((equal? type 'int64) (pointer-int64-get pointer offset))
+      ((equal? type 'uint64) (pointer-uint64-get pointer offset))
+      ((equal? type 'char) (pointer-char-get pointer offset))
+      ((equal? type 'short) (pointer-short-get pointer offset))
+      ((equal? type 'unsigned-short) (pointer-unsigned-short-get pointer offset))
+      ((equal? type 'int) (pointer-int-get pointer offset))
+      ((equal? type 'unsigned-int) (pointer-unsigned-int-get pointer offset))
+      ((equal? type 'long) (pointer-long-get pointer offset))
+      ((equal? type 'unsigned-long) (pointer-unsigned-long-get pointer offset))
+      ((equal? type 'float) (pointer-float-get pointer offset))
+      ((equal? type 'double) (pointer-double-get pointer offset))
+      ((equal? type 'pointer) (pointer-pointer-get pointer offset)))))

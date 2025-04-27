@@ -132,7 +132,7 @@
               (scheme inexact)
               (scheme process-context)
               (only (stklos)
-                    make-external-function
+                    %make-callback
                     allocate-bytes
                     free-bytes
                     cpointer?
@@ -176,10 +176,9 @@
                     pointer-set-c-pointer!
                     pointer-ref-c-pointer
                     void?))
-      (export make-external-function
-             ; calculate-struct-size-and-offsets
+      (export ; calculate-struct-size-and-offsets
               ;struct-make
-              pffi:string-split
+              foreign-c:string-split
               c-bytevector-pointer-set!
               c-bytevector-pointer-ref))
     #;(tr7
@@ -208,8 +207,6 @@
           c-bytevector-u8-ref
 
           ;; c-bytevector
-          ;pffi-pointer-set!;c-bytevector-u8-set! and so on
-          ;pffi-pointer-get;c-bytevector-u8-ref and so on
           native-endianness
           ;; TODO Docs for all of these
           c-bytevector->address

@@ -1,4 +1,4 @@
-(define pffi-type->native-type
+(define type->native-type
   (lambda (type)
     (cond ((equal? type 'int8) int8)
           ((equal? type 'uint8) uint8)
@@ -34,29 +34,29 @@
      (define scheme-name
        (foreign-library-function shared-object
                                  (symbol->string c-name)
-                                 #:return-type (pffi-type->native-type return-type)
-                                 #:arg-types (map pffi-type->native-type argument-types))))))
+                                 #:return-type (type->native-type return-type)
+                                 #:arg-types (map type->native-type argument-types))))))
 
 (define-syntax define-c-callback
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
      (define scheme-name
-       (procedure->pointer (pffi-type->native-type return-type)
+       (procedure->pointer (type->native-type return-type)
                            procedure
-                           (map pffi-type->native-type argument-types))))))
+                           (map type->native-type argument-types))))))
 
 (define size-of-type
   (lambda (type)
-    (let ((native-type (pffi-type->native-type type)))
+    (let ((native-type (type->native-type type)))
       (cond ((equal? native-type void) 0)
             (native-type (sizeof native-type))
             (else #f)))))
 
-(define pffi-shared-object-load
+(define shared-object-load
   (lambda (path options)
     (load-foreign-library path)))
 
-#;(define c-bytevector-u8-set!
+(define c-bytevector-u8-set!
   (lambda (c-bytevector k byte)
     (let ((p (pointer->bytevector c-bytevector (+ k 100))))
       (bytevector-u8-set! p k byte))))
@@ -66,7 +66,7 @@
     (let ((p (pointer->bytevector c-bytevector (+ k 100))))
       (bytevector-u8-ref p k))))
 
-(define pffi-pointer-set!
+(define pointer-set!
   (lambda (pointer type offset value)
     (let ((p (pointer->bytevector pointer (+ offset 100))))
       (cond ((equal? type 'int8) (bytevector-s8-set! p offset value))
@@ -88,7 +88,7 @@
             ((equal? type 'double) (bytevector-ieee-double-set! p offset value (native-endianness)))
             ((equal? type 'pointer) (bytevector-sint-set! p offset (pointer-address value) (native-endianness) (size-of-type type)))))))
 
-(define pffi-pointer-get
+(define pointer-get
   (lambda (pointer type offset)
     (let ((p (pointer->bytevector pointer (+ offset 100))))
       (cond ((equal? type 'int8) (bytevector-s8-ref p offset))

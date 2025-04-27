@@ -26,7 +26,7 @@
            (java.lang.Char value))
           (else value))))
 
-(define pffi-type->native-type
+(define type->native-type
   (lambda (type)
     (cond
       ((equal? type 'int8) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_BYTE) 'withByteAlignment 1))
@@ -71,10 +71,10 @@
                                  'orElseThrow)
                          (if (equal? return-type 'void)
                            (apply (class-methods java.lang.foreign.FunctionDescriptor 'ofVoid)
-                                  (map pffi-type->native-type argument-types))
+                                  (map type->native-type argument-types))
                            (apply (class-methods java.lang.foreign.FunctionDescriptor 'of)
-                                  (pffi-type->native-type return-type)
-                                  (map pffi-type->native-type argument-types))))
+                                  (type->native-type return-type)
+                                  (map type->native-type argument-types))))
                  'invokeWithArguments
                  (map value->object vals argument-types)))))))
 
@@ -103,10 +103,10 @@
                 (let ((function-descriptor
                         (if (equal? return-type 'void)
                           (apply (class-methods java.lang.foreign.FunctionDescriptor 'ofVoid)
-                                 (map pffi-type->native-type argument-types))
+                                 (map type->native-type argument-types))
                           (apply (class-methods java.lang.foreign.FunctionDescriptor 'of)
-                                 (pffi-type->native-type return-type)
-                                 (map pffi-type->native-type argument-types)))))
+                                 (type->native-type return-type)
+                                 (map type->native-type argument-types)))))
                   (write function-descriptor)
                   (newline)
                   (write (invoke function-descriptor 'getClass))
@@ -125,7 +125,7 @@
 
 (define size-of-type
   (lambda (type)
-    (let ((native-type (pffi-type->native-type type)))
+    (let ((native-type (type->native-type type)))
       (if native-type
         (invoke native-type 'byteAlignment)
         #f))))
@@ -134,7 +134,7 @@
   (lambda ()
     (static-field java.lang.foreign.MemorySegment 'NULL)))
 
-(define pffi-shared-object-load
+(define shared-object-load
   (lambda (path options)
     (let* ((library-file (make java.io.File path))
            (file-name (invoke library-file 'getName))
@@ -170,31 +170,31 @@
             u8-value-layout
             k)))
 
-(define pffi-pointer-set!
+(define pointer-set!
   (lambda (pointer type offset value)
     (invoke (invoke pointer 'reinterpret (static-field java.lang.Integer 'MAX_VALUE))
             'set
-            (pffi-type->native-type type)
+            (type->native-type type)
             offset
             (if (equal? type 'char)
               (char->integer value)
               value))))
 
-(define pffi-pointer-get
+(define pointer-get
   (lambda (pointer type offset)
     (let ((r (invoke (invoke pointer 'reinterpret (static-field java.lang.Integer 'MAX_VALUE))
                      'get
-                     (pffi-type->native-type type)
+                     (type->native-type type)
                      offset)))
       (if (equal? type 'char)
         (integer->char r)
         r))))
 
-(define-syntax call-with-address-of-c-bytevector
+#;(define-syntax call-with-address-of-c-bytevector
           (syntax-rules ()
             ((_ input-pointer thunk)
              (let ((address-pointer (make-c-bytevector (c-size-of 'pointer))))
-               (pffi-pointer-set! address-pointer 'pointer 0 input-pointer)
+               (pointer-set! address-pointer 'pointer 0 input-pointer)
                (apply thunk (list address-pointer))
-               (set! input-pointer (pffi-pointer-get address-pointer 'pointer 0))
+               (set! input-pointer (pointer-get address-pointer 'pointer 0))
                (c-free address-pointer)))))

@@ -23,7 +23,7 @@
  (define-cproc size-of-string () size_of_string)
  (define-cproc size-of-pointer () size_of_pointer)
  (define-cproc size-of-void () size_of_void)
- (define-cproc shared-object-load (path::<string>) shared_object_load)
+ (define-cproc shared-object-load (path::<string> options) shared_object_load)
  (define-cproc pointer-null () pointer_null)
  (define-cproc pointer-null? (pointer) is_pointer_null)
  (define-cproc pointer-allocate (size::<int>) pointer_allocate)

@@ -28,7 +28,7 @@
   (lambda (object)
     (number? object)))
 
-#;(define c-bytevector-u8-set!
+(define c-bytevector-u8-set!
   (lambda (c-bytevector k byte)
     (bytevector-c-int8-set! (make-bytevector-mapping (+ c-bytevector k)
                                                      (c-size-of 'uint8))
@@ -41,7 +41,7 @@
                                                       (c-size-of 'uint8))
                              0)))
 
-(define pffi-pointer-set!
+(define pointer-set!
   (lambda (pointer type offset value)
     (let ((bv (make-bytevector-mapping (+ pointer offset) (c-size-of type))))
       (cond ((equal? type 'int8) (bytevector-c-int8-set! bv 0 value))
@@ -64,7 +64,7 @@
             ((equal? type 'void) (bytevector-c-void*-set! bv 0 value))
             ((equal? type 'pointer) (bytevector-c-void*-set! bv 0 value))))))
 
-(define pffi-pointer-get
+(define pointer-get
   (lambda (pointer type offset)
     (let ((bv (make-bytevector-mapping (+ pointer offset) (c-size-of type))))
       (cond ((equal? type 'int8) (bytevector-c-int8-ref bv 0))
@@ -87,7 +87,7 @@
             ((equal? type 'void) (bytevector-c-void*-ref bv 0))
             ((equal? type 'pointer) (bytevector-c-void*-ref bv 0))))))
 
-(define pffi-shared-object-load
+(define shared-object-load
   (lambda (path options)
     (load-shared-object path)))
 
@@ -114,7 +114,7 @@
          ((equal? ,type 'pointer) 'void*)
          ((equal? ,type 'void) 'void)
          ;((equal? ,type 'callback) 'void*)
-         (else (error "type->native-type -- No such pffi type" ,type))))
+         (else (error "type->native-type -- No such type" ,type))))
 
 (define-macro
   (define-c-procedure scheme-name shared-object c-name return-type argument-types)
@@ -142,7 +142,7 @@
                     ((equal? type 'pointer) 'void*)
                     ((equal? type 'void) 'void)
                     ((equal? type 'callback) 'void*)
-                    (else (error "type->native-type -- No such pffi type" type))))))
+                    (else (error "type->native-type -- No such type" type))))))
       `(define ,scheme-name
          (c-function ,(type->native-type (cadr return-type))
                      ,(cadr c-name)
@@ -173,7 +173,7 @@
                    ((equal? type 'pointer) 'void*)
                    ((equal? type 'void) 'void)
                    ((equal? type 'callback) 'void*)
-                   (else (error "type->native-type -- No such pffi type" type)))))
+                   (else (error "type->native-type -- No such type" type)))))
          (native-return-type (type->native-type (cadr return-type)))
          (native-argument-types (map type->native-type (cadr argument-types))))
     `(define ,scheme-name

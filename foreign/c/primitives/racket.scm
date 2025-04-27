@@ -1,4 +1,4 @@
-(define pffi-type->native-type
+(define type->native-type
   (lambda (type)
     (cond ((equal? type 'int8) _int8)
           ((equal? type 'uint8) _uint8)
@@ -33,25 +33,22 @@
      (define scheme-name
        (get-ffi-obj c-name
                     shared-object
-                    (_cprocedure (mlist->list (map pffi-type->native-type argument-types))
-                                 (pffi-type->native-type return-type)))))))
+                    (_cprocedure (mlist->list (map type->native-type argument-types))
+                                 (type->native-type return-type)))))))
 
 (define-syntax define-c-callback
   (syntax-rules ()
-    ((pffi-define-callback scheme-name return-type argument-types procedure)
+    ((_ scheme-name return-type argument-types procedure)
      (define scheme-name (function-ptr procedure
                                        (_cprocedure
-                                         (mlist->list (map pffi-type->native-type argument-types))
-                                         (pffi-type->native-type return-type)))))))
+                                         (mlist->list (map type->native-type argument-types))
+                                         (type->native-type return-type)))))))
 
 (define size-of-type
   (lambda (type)
-    (let ((native-type (pffi-type->native-type type)))
-      (if native-type
-        (ctype-sizeof native-type)
-        #f))))
+    (ctype-sizeof (type->native-type type))))
 
-(define pffi-shared-object-load
+(define shared-object-load
   (lambda (path options)
     (if (and (not (null? options))
              (assoc 'additional-versions options))
@@ -60,7 +57,7 @@
                                          (list #f))))
       (ffi-lib path))))
 
-#;(define c-bytevector-u8-set!
+(define c-bytevector-u8-set!
   (lambda (c-bytevector k byte)
     (ptr-set! c-bytevector _uint8 'abs k byte)))
 
@@ -68,22 +65,31 @@
   (lambda (c-bytevector k)
     (ptr-ref c-bytevector _uint8 'abs k)))
 
-(define pffi-pointer-set!
+#;(define pointer-set!
   (lambda (pointer type offset value)
     (ptr-set! pointer
-              (pffi-type->native-type type)
+              (type->native-type type)
               'abs
               offset
               (if (equal? type 'char)
                 (char->integer value)
                 value))))
 
-(define pffi-pointer-get
+#;(define pointer-get
   (lambda (pointer type offset)
     (let ((r (ptr-ref pointer
-                      (pffi-type->native-type type)
+                      (type->native-type type)
                       'abs
                       offset)))
       (if (equal? type 'char)
         (integer->char r)
         r))))
+
+#;(define-syntax call-with-address-of-c-bytevector
+  (syntax-rules ()
+    ((_ input-pointer thunk)
+     (let ((address-pointer (make-c-bytevector (c-size-of 'pointer))))
+       (c-bytevector-pointer-set! address-pointer 0 input-pointer)
+       (apply thunk (list address-pointer))
+       (set! input-pointer (c-bytevector-pointer-ref address-pointer 0))
+       (c-free address-pointer)))))

@@ -1,16 +1,16 @@
 (define-module foreign.c.primitives.gauche
                (export size-of-type
-                       pffi-shared-object-load
+                       shared-object-load
                        c-bytevector-u8-set!
                        c-bytevector-u8-ref
-                       ;pffi-pointer-null
-                       ;pffi-pointer-null?
+                       ;pointer-null
+                       ;pointer-null?
                        make-c-bytevector
-                       ;pffi-pointer-address
+                       ;pointer-address
                        c-bytevector?
                        c-free
-                       pffi-pointer-set!
-                       pffi-pointer-get
+                       pointer-set!
+                       pointer-get
                        define-c-procedure
                        define-c-callback))
 
@@ -42,7 +42,7 @@
       ((equal? type 'pointer) (size-of-pointer))
       ((equal? type 'void) (size-of-void)))))
 
-(define pffi-shared-object-load
+#;(define shared-object-load
   (lambda (path options)
     (shared-object-load path)))
 
@@ -58,10 +58,10 @@
   (lambda (pointer)
     (pointer-free pointer)))
 
-;(define c-bytevector-u8-set! pointer-set-uint8!)
+(define c-bytevector-u8-set! pointer-set-uint8!)
 (define c-bytevector-u8-ref pointer-get-uint8)
 
-(define pffi-pointer-set!
+(define pointer-set!
   (lambda (pointer type offset value)
     (cond ((equal? type 'int8) (pointer-set-int8! pointer offset value))
           ((equal? type 'uint8) (pointer-set-uint8! pointer offset value))
@@ -83,7 +83,7 @@
           ((equal? type 'void) (pointer-set-pointer! pointer offset value))
           ((equal? type 'pointer) (pointer-set-pointer! pointer offset value)))))
 
-(define pffi-pointer-get
+(define pointer-get
   (lambda (pointer type offset)
     (cond ((equal? type 'int8) (pointer-get-int8 pointer offset))
           ((equal? type 'uint8) (pointer-get-uint8 pointer offset))
@@ -134,7 +134,7 @@
   (lambda (value type)
     (cond ((procedure? value) (scheme-procedure-to-pointer value))
           (else (let ((pointer (make-c-bytevector (size-of-type type))))
-                  (pffi-pointer-set! pointer type 0 value)
+                  (pointer-set! pointer type 0 value)
                   pointer)))))
 
 (define make-c-function
@@ -142,7 +142,7 @@
     (dlerror) ;; Clean all previous errors
     (let ((c-function (dlsym shared-object c-name))
           (maybe-dlerror (dlerror)))
-      #;(when (not (pffi-pointer-null? maybe-dlerror))
+      #;(when (not (pointer-null? maybe-dlerror))
         (error (c-bytevector->string maybe-dlerror)))
       (lambda arguments
         (let ((return-value (make-c-bytevector
@@ -158,7 +158,7 @@
                                   arguments
                                   argument-types))
           (cond ((not (equal? return-type 'void))
-                 (pffi-pointer-get return-value return-type 0))))))))
+                 (pointer-get return-value return-type 0))))))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()

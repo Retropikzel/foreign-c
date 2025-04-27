@@ -1,57 +1,8 @@
-#;(cond-expand
-  (mosh (define pffi-init (lambda () #t)))
-  (chicken
-   (define-syntax pffi-init
-     (er-macro-transformer
-       (lambda (expr rename compare)
-         '(import (chicken foreign)
-                  (chicken memory))
-         #t))))
-  (gambit #t)
-  #;(ypsilon
-    (define-syntax pffi-init
-      (syntax-rules ()
-        ((_)
-         (import (ypsilon ffi)
-                 (ypsilon c-types))))))
-  (else (define pffi-init (lambda () #t))))
-
-(define pffi-type?
-  (lambda (object)
-    (if (equal? (size-of-type object) #f)
-      #f
-      #t)))
-
 (define c-size-of
   (lambda (object)
-    (size-of-type object)
-    #;(cond ((pffi-struct? object) (pffi-struct-size object))
-          ((pffi-type? object) (size-of-type object))
-          (else (error "Not pffi-struct, pffi-enum of pffi-type" object)))))
+    (size-of-type object)))
 
-(define pffi-types
-  '(int8
-     uint8
-     int16
-     uint16
-     int32
-     uint32
-     int64
-     uint64
-     char
-     unsigned-char
-     short
-     unsigned-short
-     int
-     unsigned-int
-     long
-     unsigned-long
-     float
-     double
-     pointer
-     void))
-
-(define pffi:string-split
+(define foreign-c:string-split
   (lambda (str mark)
     (let* ((str-l (string->list str))
            (res (list))
@@ -69,9 +20,9 @@
       res)))
 
 (cond-expand
-  (gambit #t) ; Defined in pffi/gambit.scm
-  (chicken #t) ; Defined in pffi/chicken.scm
-  (cyclone #t) ; Defined in pffi/cyclone.scm
+  (gambit #t) ; Defined in gambit.scm
+  (chicken #t) ; Defined in chicken.scm
+  (cyclone #t) ; Defined in cyclone.scm
   (else
     (define-syntax define-c-library
       (syntax-rules ()
@@ -95,8 +46,8 @@
                       (cond-expand
                         (windows
                           (append
-                            (if (get-environment-variable "PFFI_LOAD_PATH")
-                              (pffi:string-split (get-environment-variable "PFFI_LOAD_PATH") #\;)
+                            (if (get-environment-variable "FOREIGN_C_LOAD_PATH")
+                              (foreign-c:string-split (get-environment-variable "FOREIGN_C_LOAD_PATH") #\;)
                               (list))
                             (if (get-environment-variable "SYSTEM")
                               (list (get-environment-variable "SYSTEM"))
@@ -115,15 +66,15 @@
                               (list))
                             (list ".")
                             (if (get-environment-variable "PATH")
-                              (pffi:string-split (get-environment-variable "PATH") #\;)
+                              (foreign-c:string-split (get-environment-variable "PATH") #\;)
                               (list))
                             (if (get-environment-variable "PWD")
                               (list (get-environment-variable "PWD"))
                               (list))))
                         (else
                           (append
-                           (if (get-environment-variable "PFFI_LOAD_PATH")
-                              (pffi:string-split (get-environment-variable "PFFI_LOAD_PATH") #\:)
+                           (if (get-environment-variable "FOREIGN_C_LOAD_PATH")
+                              (foreign-c:string-split (get-environment-variable "FOREIGN_C_LOAD_PATH") #\:)
                               (list))
                             ; Guix
                             (list (if (get-environment-variable "GUIX_ENVIRONMENT")
@@ -132,7 +83,7 @@
                                   "/run/current-system/profile/lib")
                             ; Debian
                             (if (get-environment-variable "LD_LIBRARY_PATH")
-                              (pffi:string-split (get-environment-variable "LD_LIBRARY_PATH") #\:)
+                              (foreign-c:string-split (get-environment-variable "LD_LIBRARY_PATH") #\:)
                               (list))
                             (list
                               ;;; x86-64
@@ -207,5 +158,5 @@
                  (exit 1))
                (cond-expand
                  (stklos shared-object)
-                 (else (pffi-shared-object-load shared-object
+                 (else (shared-object-load shared-object
                                         `((additional-versions ,additional-versions)))))))))))))

@@ -19,39 +19,30 @@
           ((eq? type 'float) (size-of-float))
           ((eq? type 'double) (size-of-double))
           ((eq? type 'pointer) (size-of-pointer))
-          ((eq? type 'string) (size-of-pointer))
-          ((eq? type 'struct) (size-of-pointer))
+          ((eq? type 'pointer-address) (size-of-pointer))
           ((eq? type 'callback) (size-of-pointer))
           ((eq? type 'void) 0)
           (else #f))))
 
-(define pffi-shared-object-load
+(define shared-object-load
   (lambda (path options)
     (let ((shared-object (dlopen path RTLD-NOW))
           (maybe-error (dlerror)))
-      #;(when (not (pffi-pointer-null? maybe-error))
-        (error (c-bytevector->string maybe-error)))
       shared-object)))
 
 (define c-bytevector?
   (lambda (object)
     (or (equal? object #f) ; False can be null pointer
-    (pointer? object))))
+        (pointer? object))))
 
-(define make-c-bytevector
-  (lambda (k . byte)
-    (if (null? byte)
-    (pointer-allocate k)
-    (bytevector->c-bytevector (make-bytevector k byte)))))
+#;(define c-free
+(lambda (pointer)
+  (pointer-free pointer)))
 
-(define c-free
-  (lambda (pointer)
-    (pointer-free pointer)))
-
+(define c-bytevector-u8-set! pointer-set-c-uint8_t!)
 (define c-bytevector-u8-ref pointer-ref-c-uint8_t)
-;(define c-bytevector-u8-set! pointer-set-c-uint8_t!)
 
-(define pffi-pointer-set!
+(define pointer-set!
   (lambda (pointer type offset value)
     (cond ((equal? type 'int8) (pointer-set-c-int8_t! pointer offset value))
           ((equal? type 'uint8) (pointer-set-c-uint8_t! pointer offset value))
@@ -73,7 +64,7 @@
           ((equal? type 'void) (pointer-set-c-pointer! pointer offset value))
           ((equal? type 'pointer) (pointer-set-c-pointer! pointer offset value)))))
 
-(define pffi-pointer-get
+(define pointer-get
   (lambda (pointer type offset)
     (cond ((equal? type 'int8) (pointer-ref-c-int8_t pointer offset))
           ((equal? type 'uint8) (pointer-ref-c-uint8_t pointer offset))
@@ -116,14 +107,14 @@
           ((equal? type 'float) 'float)
           ((equal? type 'double) 'double)
           ((equal? type 'pointer) '(maybe-null void*))
-          ((equal? type 'string) 'string)
+          ((equal? type 'pointer-address) '(maybe-null void*))
           ((equal? type 'void) 'void)
           ((equal? type 'callback) '(maybe-null void*))
           (else (error "pffi-type->native-type -- No such pffi type" type)))))
 
 ;; define-c-procedure
 
-(define pffi-type->libffi-type
+#;(define type->libffi-type
   (lambda (type)
     (cond ((equal? type 'int8) (get-ffi-type-int8))
           ((equal? type 'uint8) (get-ffi-type-uint8))
@@ -146,13 +137,40 @@
           ((equal? type 'double) (get-ffi-type-double))
           ((equal? type 'void) (get-ffi-type-void))
           ((equal? type 'pointer) (get-ffi-type-pointer))
+          ((equal? type 'pointer-address) 1)
           ((equal? type 'callback) (get-ffi-type-pointer)))))
 
-(define argument->pointer
+(define type->libffi-type
+  (lambda (type)
+    (cond ((equal? type 'int8) 1)
+          ((equal? type 'uint8) 2)
+          ((equal? type 'int16) 3)
+          ((equal? type 'uint16) 4)
+          ((equal? type 'int32) 5)
+          ((equal? type 'uint32) 6)
+          ((equal? type 'int64) 7)
+          ((equal? type 'uint64) 8)
+          ((equal? type 'char) 9)
+          ((equal? type 'unsigned-char) 10)
+          ((equal? type 'short) 11)
+          ((equal? type 'unsigned-short) 12)
+          ((equal? type 'int) 13)
+          ((equal? type 'unsigned-int) 14)
+          ((equal? type 'long) 15)
+          ((equal? type 'unsigned-long) 16)
+          ((equal? type 'float) 17)
+          ((equal? type 'double) 18)
+          ((equal? type 'void) 19)
+          ((equal? type 'pointer) 20)
+          ((equal? type 'pointer-address) 21)
+          ((equal? type 'callback) 22)
+          (else (error "Undefined type" type)))))
+
+#;(define argument->pointer
   (lambda (value type)
     (cond ((procedure? value) (scheme-procedure-to-pointer value))
-          (else (let ((pointer (make-c-bytevector (size-of-type type))))
-                  (pffi-pointer-set! pointer type 0 value)
+          (else (let ((pointer (pointer-allocate (size-of-type type))))
+                  (pointer-set! pointer type 0 value)
                   pointer)))))
 
 (define make-c-function
@@ -160,23 +178,16 @@
     (dlerror) ;; Clean all previous errors
     (let ((c-function (dlsym shared-object c-name))
           (maybe-dlerror (dlerror)))
-      #;(when (not (pffi-pointer-null? maybe-dlerror))
-        (error (c-bytevector->string maybe-dlerror)))
       (lambda arguments
-        (let ((return-value (make-c-bytevector
-                              (if (equal? return-type 'void)
-                                0
-                                (size-of-type return-type)))))
-          (internal-ffi-call (length argument-types)
-                             (pffi-type->libffi-type return-type)
-                             (map pffi-type->libffi-type argument-types)
-                             c-function
-                             return-value
-                             (map argument->pointer
-                                  arguments
-                                  argument-types))
-          (cond ((not (equal? return-type 'void))
-                 (pffi-pointer-get return-value return-type 0))))))))
+        (let* ((return-pointer
+                 (internal-ffi-call (length argument-types)
+                                    (type->libffi-type return-type)
+                                    (map type->libffi-type argument-types)
+                                    c-function
+                                    (c-size-of return-type)
+                                    arguments)))
+          (when (not (equal? return-type 'void))
+            (pointer-get return-pointer return-type 0)))))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()
@@ -191,7 +202,7 @@
   (lambda (return-type argument-types procedure)
     (scheme-procedure-to-pointer procedure)))
 
-(define-syntax pffi-define-callback
+(define-syntax define-c-callback
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
      (define scheme-name

@@ -23,11 +23,11 @@
           ((eq? type 'callback) size-of-void*)
           (else #f))))
 
-(define pffi-shared-object-load
+(define shared-object-load
   (lambda (path options)
     (open-shared-library path)))
 
-(define pffi-type->native-type
+(define type->native-type
   (lambda (type)
     (cond ((equal? type 'int8) 'int8_t)
           ((equal? type 'uint8) 'uint8_t)
@@ -57,26 +57,26 @@
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
        (make-c-function shared-object
-                        (pffi-type->native-type return-type)
+                        (type->native-type return-type)
                         c-name
-                        (map pffi-type->native-type argument-types))))))
+                        (map type->native-type argument-types))))))
 
 (define-syntax define-c-callback
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
      (define scheme-name
-       (make-c-callback (pffi-type->native-type return-type)
-                        (map pffi-type->native-type argument-types)
+       (make-c-callback (type->native-type return-type)
+                        (map type->native-type argument-types)
                         procedure)))))
 
 (define c-bytevector?
   (lambda (object)
     (pointer? object)))
 
-;(define c-bytevector-u8-set! pointer-set-c-uint8_t!)
+(define c-bytevector-u8-set! pointer-set-c-uint8_t!)
 (define c-bytevector-u8-ref pointer-ref-c-uint8_t)
 
-(define pffi-pointer-set!
+(define pointer-set!
   (lambda (pointer type offset value)
     (cond ((equal? type 'int8) (pointer-set-c-int8_t! pointer offset value))
           ((equal? type 'uint8) (pointer-set-c-uint8_t! pointer offset value))
@@ -98,7 +98,7 @@
           ((equal? type 'void) (pointer-set-c-pointer! pointer offset value))
           ((equal? type 'pointer) (pointer-set-c-pointer! pointer offset value)))))
 
-(define pffi-pointer-get
+(define pointer-get
   (lambda (pointer type offset)
     (cond ((equal? type 'int8) (pointer-ref-c-int8_t pointer offset))
           ((equal? type 'uint8) (pointer-ref-c-uint8_t pointer offset))
