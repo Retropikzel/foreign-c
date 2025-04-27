@@ -195,14 +195,24 @@
     (let ((c-function (dlsym shared-object c-name))
           (maybe-dlerror (dlerror)))
       (lambda arguments
+          (display "Calling: ")
+          (write c-name)
+          (newline)
         (let ((return-pointer (internal-ffi-call (length argument-types)
                                                  (type->libffi-type-number return-type)
                                                  (map type->libffi-type-number argument-types)
                                                  c-function
                                                  (size-of-type return-type)
                                                  arguments)))
-          (cond #;((equal? return-type 'pointer) return-pointer)
+          (cond ((equal? return-type 'pointer)
+                 (display "SCM return value: ")
+                 (write return-pointer)
+                 (newline)
+                 return-pointer)
                 ((not (equal? return-type 'void))
+                 (display "SCM return value: ")
+                 (write (pointer-get return-pointer return-type 0))
+                 (newline)
                  (pointer-get return-pointer return-type 0))))))))
 
 (define-syntax define-c-procedure
