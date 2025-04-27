@@ -309,6 +309,8 @@
 (define c-string1 (string->c-utf8 "test123"))
 (debug (c-utf8->string c-string1))
 (debug (c-utf8->string (c-strcat (string->c-utf8 "con1") (string->c-utf8 "cat1"))))
+(debug (c-utf8->string (c-strcat (string->c-utf8 "con2")
+                                                   (string->c-utf8 "cat2"))))
 (assert equal? (string=? (c-utf8->string (c-strcat (string->c-utf8 "con2")
                                                    (string->c-utf8 "cat2")))
                     "con2cat2") #t)
