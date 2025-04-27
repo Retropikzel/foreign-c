@@ -290,6 +290,9 @@
           ;define-c-variable (?)
           )
   (cond-expand
+    (chicken-6 (include-relative "c/types.scm"))
+    (else (include "c/types.scm")))
+  (cond-expand
     (chibi (include "c/primitives/chibi.scm"))
     (chicken-5 (export foreign-declare
                        foreign-safe-lambda

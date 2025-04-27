@@ -5,17 +5,44 @@
                        c-bytevector-u8-ref
                        ;pointer-null
                        ;pointer-null?
-                       make-c-bytevector
+                       ;make-c-bytevector
                        ;pointer-address
                        c-bytevector?
                        c-free
-                       pointer-set!
-                       pointer-get
+                       ;pointer-set!
+                       ;pointer-get
                        define-c-procedure
                        define-c-callback))
 
 (select-module foreign.c.primitives.gauche)
 (dynamic-load "foreign/c/lib/gauche")
+
+;; FIXME This is copied from types.scm
+(define type->libffi-type-number
+  (lambda (type)
+    (cond ((equal? type 'int8) 1)
+          ((equal? type 'uint8) 2)
+          ((equal? type 'int16) 3)
+          ((equal? type 'uint16) 4)
+          ((equal? type 'int32) 5)
+          ((equal? type 'uint32) 6)
+          ((equal? type 'int64) 7)
+          ((equal? type 'uint64) 8)
+          ((equal? type 'char) 9)
+          ((equal? type 'unsigned-char) 10)
+          ((equal? type 'short) 11)
+          ((equal? type 'unsigned-short) 12)
+          ((equal? type 'int) 13)
+          ((equal? type 'unsigned-int) 14)
+          ((equal? type 'long) 15)
+          ((equal? type 'unsigned-long) 16)
+          ((equal? type 'float) 17)
+          ((equal? type 'double) 18)
+          ((equal? type 'void) 19)
+          ((equal? type 'pointer) 20)
+          ((equal? type 'pointer-address) 21)
+          ((equal? type 'callback) 22)
+          (else (error "Undefined type" type)))))
 
 (define size-of-type
   (lambda (type)
@@ -46,7 +73,7 @@
   (lambda (path options)
     (shared-object-load path)))
 
-(define make-c-bytevector
+#;(define make-c-bytevector
   (lambda (size)
     (pointer-allocate size)))
 
@@ -54,7 +81,7 @@
   (lambda (pointer)
     (pointer? pointer)))
 
-(define c-free
+#;(define c-free
   (lambda (pointer)
     (pointer-free pointer)))
 
@@ -105,7 +132,7 @@
           ((equal? type 'void) (pointer-get-pointer pointer offset))
           ((equal? type 'pointer) (pointer-get-pointer pointer offset)))))
 
-(define type->libffi-type
+#;(define type->libffi-type
   (lambda (type)
     (cond ((equal? type 'int8) (get-ffi-type-int8))
           ((equal? type 'uint8) (get-ffi-type-uint8))
@@ -130,7 +157,32 @@
           ((equal? type 'pointer) (get-ffi-type-pointer))
           ((equal? type 'callback) (get-ffi-type-pointer)))))
 
-(define argument->pointer
+#;(define type->libffi-type
+  (lambda (type)
+    (cond ((equal? type 'int8) 1)
+          ((equal? type 'uint8) 2)
+          ((equal? type 'int16) 3)
+          ((equal? type 'uint16) 4)
+          ((equal? type 'int32) 5)
+          ((equal? type 'uint32) 6)
+          ((equal? type 'int64) 7)
+          ((equal? type 'uint64) 8)
+          ((equal? type 'char) 9)
+          ((equal? type 'unsigned-char) 10)
+          ((equal? type 'bool) 11)
+          ((equal? type 'short) 12)
+          ((equal? type 'unsigned-short) 13)
+          ((equal? type 'int) 14)
+          ((equal? type 'unsigned-int) 15)
+          ((equal? type 'long) 16)
+          ((equal? type 'unsigned-long) 17)
+          ((equal? type 'float) 18)
+          ((equal? type 'double) 19)
+          ((equal? type 'void) 20)
+          ((equal? type 'pointer) 21)
+          ((equal? type 'callback) 21))))
+
+#;(define argument->pointer
   (lambda (value type)
     (cond ((procedure? value) (scheme-procedure-to-pointer value))
           (else (let ((pointer (make-c-bytevector (size-of-type type))))
@@ -142,23 +194,21 @@
     (dlerror) ;; Clean all previous errors
     (let ((c-function (dlsym shared-object c-name))
           (maybe-dlerror (dlerror)))
-      #;(when (not (pointer-null? maybe-dlerror))
-        (error (c-bytevector->string maybe-dlerror)))
       (lambda arguments
-        (let ((return-value (make-c-bytevector
-                              (if (equal? return-type 'void)
-                                0
-                                (size-of-type return-type)))))
-          (internal-ffi-call (length argument-types)
-                             (type->libffi-type return-type)
-                             (map type->libffi-type argument-types)
-                             c-function
-                             return-value
-                             (map argument->pointer
-                                  arguments
-                                  argument-types))
-          (cond ((not (equal? return-type 'void))
-                 (pointer-get return-value return-type 0))))))))
+        (let ((return-pointer (internal-ffi-call (length argument-types)
+                                                 (type->libffi-type-number return-type)
+                                                 (map type->libffi-type-number argument-types)
+                                                 c-function
+                                                 (size-of-type return-type)
+                                                 arguments)))
+          (display "HERE: ")
+          (write return-pointer)
+          (newline)
+          (display "HERE2: ")
+          (write (pointer-get return-pointer return-type 0))
+          (newline)
+          (when (not (equal? return-type 'void))
+            (pointer-get return-pointer return-type 0)))))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()

@@ -16,13 +16,11 @@
 (define-c-procedure c-malloc libc 'malloc 'pointer '(int))
 (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
 
-(cond-expand
-  ;(chibi #t) ; FIXME
-  (else (define make-c-bytevector
-          (lambda (k . byte)
-            (if (null? byte)
-              (c-malloc k)
-              (bytevector->c-bytevector (make-bytevector k (car byte))))))))
+(define make-c-bytevector
+  (lambda (k . byte)
+    (if (null? byte)
+      (c-malloc k)
+      (bytevector->c-bytevector (make-bytevector k (car byte))))))
 
 (define c-bytevector
   (lambda bytes
@@ -110,16 +108,6 @@
                                                   0
                                                   (native-endianness)
                                                   (c-size-of 'pointer)))))
-
-#;(cond-expand
-  (kawa #t) ; Defined in kawa.scm
-  (chibi #t)
-  (else
-    (define c-bytevector-u8-set!
-      (lambda (c-bytevector k byte)
-        (c-memset-address (+ (c-memset-pointer->address c-bytevector 0 0) k)
-                          byte
-                          1)))))
 
 (cond-expand
   ;(kawa #t) ; Defined in kawa.scm

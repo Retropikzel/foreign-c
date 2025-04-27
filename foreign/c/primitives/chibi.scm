@@ -140,7 +140,7 @@
           ((equal? type 'pointer-address) 1)
           ((equal? type 'callback) (get-ffi-type-pointer)))))
 
-(define type->libffi-type
+#;(define type->libffi-type
   (lambda (type)
     (cond ((equal? type 'int8) 1)
           ((equal? type 'uint8) 2)
@@ -181,8 +181,8 @@
       (lambda arguments
         (let* ((return-pointer
                  (internal-ffi-call (length argument-types)
-                                    (type->libffi-type return-type)
-                                    (map type->libffi-type argument-types)
+                                    (type->libffi-type-number return-type)
+                                    (map type->libffi-type-number argument-types)
                                     c-function
                                     (c-size-of return-type)
                                     arguments)))
