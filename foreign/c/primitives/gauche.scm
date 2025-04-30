@@ -3,6 +3,8 @@
                        shared-object-load
                        c-bytevector-u8-set!
                        c-bytevector-u8-ref
+                       c-bytevector-pointer-set!
+                       c-bytevector-pointer-ref
                        ;pointer-null
                        ;pointer-null?
                        ;make-c-bytevector
@@ -11,38 +13,15 @@
                        c-free
                        ;pointer-set!
                        ;pointer-get
-                       define-c-procedure
-                       define-c-callback))
+                       ;define-c-procedure
+                       define-c-callback
+                       dlerror
+                       dlsym
+                       internal-ffi-call
+                       ))
 
 (select-module foreign.c.primitives.gauche)
 (dynamic-load "foreign/c/lib/gauche")
-
-;; FIXME This is copied from types.scm
-(define type->libffi-type-number
-  (lambda (type)
-    (cond ((equal? type 'int8) 1)
-          ((equal? type 'uint8) 2)
-          ((equal? type 'int16) 3)
-          ((equal? type 'uint16) 4)
-          ((equal? type 'int32) 5)
-          ((equal? type 'uint32) 6)
-          ((equal? type 'int64) 7)
-          ((equal? type 'uint64) 8)
-          ((equal? type 'char) 9)
-          ((equal? type 'unsigned-char) 10)
-          ((equal? type 'short) 11)
-          ((equal? type 'unsigned-short) 12)
-          ((equal? type 'int) 13)
-          ((equal? type 'unsigned-int) 14)
-          ((equal? type 'long) 15)
-          ((equal? type 'unsigned-long) 16)
-          ((equal? type 'float) 17)
-          ((equal? type 'double) 18)
-          ((equal? type 'void) 19)
-          ((equal? type 'pointer) 20)
-          ((equal? type 'pointer-address) 21)
-          ((equal? type 'callback) 22)
-          (else (error "Undefined type" type)))))
 
 (define size-of-type
   (lambda (type)
@@ -87,8 +66,10 @@
 
 (define c-bytevector-u8-set! pointer-set-uint8!)
 (define c-bytevector-u8-ref pointer-get-uint8)
+(define c-bytevector-pointer-set! pointer-set-pointer!)
+(define c-bytevector-pointer-ref pointer-get-pointer)
 
-(define pointer-set!
+#;(define pointer-set!
   (lambda (pointer type offset value)
     (cond ((equal? type 'int8) (pointer-set-int8! pointer offset value))
           ((equal? type 'uint8) (pointer-set-uint8! pointer offset value))
@@ -110,7 +91,7 @@
           ((equal? type 'void) (pointer-set-pointer! pointer offset value))
           ((equal? type 'pointer) (pointer-set-pointer! pointer offset value)))))
 
-(define pointer-get
+#;(define pointer-get
   (lambda (pointer type offset)
     (cond ((equal? type 'int8) (pointer-get-int8 pointer offset))
           ((equal? type 'uint8) (pointer-get-uint8 pointer offset))
@@ -189,40 +170,6 @@
                   (pointer-set! pointer type 0 value)
                   pointer)))))
 
-(define make-c-function
-  (lambda (shared-object c-name return-type argument-types)
-    (dlerror) ;; Clean all previous errors
-    (let ((c-function (dlsym shared-object c-name))
-          (maybe-dlerror (dlerror)))
-      (lambda arguments
-          (display "Calling: ")
-          (write c-name)
-          (newline)
-        (let ((return-pointer (internal-ffi-call (length argument-types)
-                                                 (type->libffi-type-number return-type)
-                                                 (map type->libffi-type-number argument-types)
-                                                 c-function
-                                                 (size-of-type return-type)
-                                                 arguments)))
-          (cond ((equal? return-type 'pointer)
-                 (display "SCM return value: ")
-                 (write return-pointer)
-                 (newline)
-                 return-pointer)
-                ((not (equal? return-type 'void))
-                 (display "SCM return value: ")
-                 (write (pointer-get return-pointer return-type 0))
-                 (newline)
-                 (pointer-get return-pointer return-type 0))))))))
-
-(define-syntax define-c-procedure
-  (syntax-rules ()
-    ((_ scheme-name shared-object c-name return-type argument-types)
-     (define scheme-name
-       (make-c-function shared-object
-                        (symbol->string c-name)
-                        return-type
-                        argument-types)))))
 
 (define make-c-callback
   (lambda (return-type argument-types procedure)

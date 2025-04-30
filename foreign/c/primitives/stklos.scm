@@ -97,8 +97,10 @@
 
 (define c-bytevector-u8-set! pointer-set-c-uint8_t!)
 (define c-bytevector-u8-ref pointer-ref-c-uint8_t)
+(define c-bytevector-pointer-set! pointer-set-c-pointer!)
+(define c-bytevector-pointer-ref pointer-ref-c-pointer)
 
-(define pffi-pointer-set!
+#;(define pffi-pointer-set!
   (lambda (pointer type offset value)
     (cond ((equal? type 'int8) (pointer-set-c-int8_t! pointer offset value))
           ((equal? type 'uint8) (pointer-set-c-uint8_t! pointer offset value))
@@ -120,7 +122,7 @@
           ((equal? type 'void) (pointer-set-c-pointer! pointer offset value))
           ((equal? type 'pointer) (pointer-set-c-pointer! pointer offset value)))))
 
-(define pffi-pointer-get
+#;(define pffi-pointer-get
   (lambda (pointer type offset)
     (cond ((equal? type 'int8) (pointer-ref-c-int8_t pointer offset))
           ((equal? type 'uint8) (pointer-ref-c-uint8_t pointer offset))

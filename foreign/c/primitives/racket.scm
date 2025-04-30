@@ -65,25 +65,13 @@
   (lambda (c-bytevector k)
     (ptr-ref c-bytevector _uint8 'abs k)))
 
-#;(define pointer-set!
-  (lambda (pointer type offset value)
-    (ptr-set! pointer
-              (type->native-type type)
-              'abs
-              offset
-              (if (equal? type 'char)
-                (char->integer value)
-                value))))
+(define c-bytevector-pointer-set!
+  (lambda (c-bytevector k pointer)
+    (ptr-set! c-bytevector _pointer 'abs k pointer)))
 
-#;(define pointer-get
-  (lambda (pointer type offset)
-    (let ((r (ptr-ref pointer
-                      (type->native-type type)
-                      'abs
-                      offset)))
-      (if (equal? type 'char)
-        (integer->char r)
-        r))))
+(define c-bytevector-pointer-ref
+  (lambda (c-bytevector k)
+    (ptr-ref c-bytevector _pointer 'abs k)))
 
 #;(define-syntax call-with-address-of-c-bytevector
   (syntax-rules ()

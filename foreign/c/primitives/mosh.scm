@@ -33,6 +33,8 @@
 
 (define c-bytevector-u8-set! pointer-set-c-uint8!)
 (define c-bytevector-u8-ref pointer-ref-c-uint8)
+(define c-bytevector-pointer-set! pointer-set-c-pointer!)
+(define c-bytevector-pointer-ref pointer-ref-c-pointer)
 
 #;(define pointer-set!
   (lambda (pointer type offset value)

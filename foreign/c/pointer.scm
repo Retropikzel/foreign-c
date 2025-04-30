@@ -11,8 +11,8 @@
 (define-c-procedure c-calloc libc 'calloc 'pointer '(int int))
 (define-c-procedure c-memset-address->pointer libc 'memset 'pointer '(uint64 uint8 int))
 (define-c-procedure c-memset-pointer->address libc 'memset 'uint64 '(pointer uint8 int))
-(define-c-procedure c-memset-address libc 'memset 'pointer '(uint64 uint8 int))
-(define-c-procedure c-printf libc 'printf 'int '(pointer pointer))
+;(define-c-procedure c-memset-address libc 'memset 'pointer '(uint64 uint8 int))
+;(define-c-procedure c-printf libc 'printf 'int '(pointer pointer))
 (define-c-procedure c-malloc libc 'malloc 'pointer '(int))
 (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
 
@@ -86,15 +86,15 @@
               (= (c-memset-pointer->address pointer 0 0) 0)
               #f)))))
 
-(define c-bytevector->address
+#;(define c-bytevector->address
   (lambda (c-bytevector)
     (c-memset-pointer->address c-bytevector 0 0)))
 
-(define address->c-bytevector
+#;(define address->c-bytevector
   (lambda (address)
     (c-memset-address->pointer address 0 0)))
 
-(define c-bytevector-pointer-set!
+#;(define c-bytevector-pointer-set!
   (lambda (c-bytevector k pointer)
     (c-bytevector-uint-set! c-bytevector
                             0
@@ -102,7 +102,7 @@
                             (native-endianness)
                             (c-size-of 'pointer))))
 
-(define c-bytevector-pointer-ref
+#;(define c-bytevector-pointer-ref
   (lambda (c-bytevector k)
     (address->c-bytevector (c-bytevector-uint-ref c-bytevector
                                                   0
@@ -116,6 +116,7 @@
             ((_ input-pointer thunk)
              (let ((address-pointer (make-c-bytevector (c-size-of 'pointer))))
                (c-bytevector-pointer-set! address-pointer 0 input-pointer)
-               (apply thunk (list address-pointer))
-               (set! input-pointer (c-bytevector-pointer-ref address-pointer 0))
-               (c-free address-pointer)))))))
+               (let ((result (apply thunk (list address-pointer))))
+                 (set! input-pointer (c-bytevector-pointer-ref address-pointer 0))
+                 (c-free address-pointer)
+                 result)))))))

@@ -88,8 +88,6 @@
                       '(pointer pointer))
 
 (define input-pointer (make-c-bytevector (c-size-of 'int)))
-(debug (c-bytevector->address input-pointer))
-(assert equal? (number? (c-bytevector->address input-pointer)) #t)
 (c-bytevector-s32-native-set! input-pointer 0 100)
 (assert equal? (= (c-bytevector-s32-native-ref input-pointer 0) 100) #t)
 (debug (c-bytevector-s32-native-ref input-pointer 0))

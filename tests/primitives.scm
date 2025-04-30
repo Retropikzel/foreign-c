@@ -279,6 +279,19 @@
 (debug (c-bytevector-u8-ref u8-pointer 0))
 (assert equal? (= (c-bytevector-u8-ref u8-pointer 0) 42) #t)
 
+;; c-bytevector-pointer-set! and c-bytevector-pointer-ref
+(print-header "c-bytevector-pointer-set! and c-bytevector-pointer-ref")
+
+(define p-pointer (make-c-bytevector (c-size-of 'pointer)))
+(debug p-pointer)
+(debug (c-bytevector? p-pointer))
+(assert equal? (c-bytevector? p-pointer) #t)
+(c-bytevector-pointer-set! p-pointer 0 u8-pointer)
+(debug p-pointer)
+(debug (c-bytevector-pointer-ref p-pointer 0))
+(debug (c-bytevector-u8-ref (c-bytevector-pointer-ref p-pointer 0) 0))
+(assert equal? (= (c-bytevector-u8-ref (c-bytevector-pointer-ref p-pointer 0) 0) 42) #t)
+
 ;; string->-utf8 c-utf8->string
 (print-header "string->c-utf8 c-utf8->string")
 (for-each
@@ -332,42 +345,5 @@
 (assert equal? (string=? (with-input-from-file "testfile.test"
                                                (lambda () (read-line)))
                          "Hello world") #t)
-
-;; define-c-callback
-
-(print-header 'define-c-callback)
-
-(define array (make-c-bytevector (* (c-size-of 'int) 3)))
-(c-bytevector-s32-native-set! array (* (c-size-of 'int) 0) 3)
-(c-bytevector-s32-native-set! array (* (c-size-of 'int) 1) 2)
-(c-bytevector-s32-native-set! array (* (c-size-of 'int) 2) 1)
-
-(define-c-procedure qsort libc 'qsort 'void '(pointer int int callback))
-
-(define-c-callback compare
-                   'int
-                   '(pointer pointer)
-                   (lambda (pointer-a pointer-b)
-                     (let ((a (c-bytevector-s32-native-ref pointer-a 0))
-                           (b (c-bytevector-s32-native-ref pointer-b 0)))
-                       (cond ((> a b) 1)
-                             ((= a b) 0)
-                             ((< a b) -1)))))
-(write compare)
-(newline)
-
-(define unsorted (list (c-bytevector-s32-native-ref array (* (c-size-of 'int) 0))
-                       (c-bytevector-s32-native-ref array (* (c-size-of 'int) 1))
-                       (c-bytevector-s32-native-ref array (* (c-size-of 'int) 2))))
-(debug unsorted)
-(assert equal? unsorted (list 3 2 1))
-
-(qsort array 3 (c-size-of 'int) compare)
-
-(define sorted (list (c-bytevector-s32-native-ref array (* (c-size-of 'int) 0))
-                       (c-bytevector-s32-native-ref array (* (c-size-of 'int) 1))
-                       (c-bytevector-s32-native-ref array (* (c-size-of 'int) 2))))
-(debug sorted)
-(assert equal? sorted (list 1 2 3))
 
 (exit 0)

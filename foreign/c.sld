@@ -66,7 +66,10 @@
               (scheme process-context)
               (system foreign)
               (system foreign-library)
-              (only (guile) include-from-path)))
+              (only (guile) include-from-path)
+              (only (rnrs bytevectors)
+                    bytevector-uint-set!
+                    bytevector-uint-ref)))
     (kawa
       (import (scheme base)
               (scheme write)
@@ -133,12 +136,15 @@
               (scheme process-context)
               (only (stklos)
                     %make-callback
+                    make-external-function
                     allocate-bytes
                     free-bytes
                     cpointer?
                     cpointer-null?
                     cpointer-data
                     cpointer-data-set!
+                    ;c-bytevector-s8-set!
+                    ;c-bytevector-s8-set!
                     pointer-set-c-int8_t!
                     pointer-ref-c-int8_t
                     pointer-set-c-uint8_t!
@@ -178,6 +184,9 @@
                     void?))
       (export ; calculate-struct-size-and-offsets
               ;struct-make
+              get-environment-variable
+              file-exists?
+              make-external-function
               foreign-c:string-split
               c-bytevector-pointer-set!
               c-bytevector-pointer-ref))
@@ -204,39 +213,41 @@
           define-c-procedure
           define-c-callback
           c-bytevector?
+          c-bytevector-u8-set!
           c-bytevector-u8-ref
+          c-bytevector-pointer-set!
+          c-bytevector-pointer-ref
 
           ;; c-bytevector
           native-endianness
           ;; TODO Docs for all of these
-          c-bytevector->address
-          address->c-bytevector
-          c-bytevector-s8-set!
-          c-bytevector-s8-ref
-          c-bytevector-u8-set!
+          ;c-bytevector->address
+          ;address->c-bytevector
+          ;c-bytevector-s8-set!
+          ;c-bytevector-s8-ref
           c-bytevector-s16-set!
-          c-bytevector-s16-native-set!
           c-bytevector-s16-ref
+          c-bytevector-s16-native-set!
           c-bytevector-s16-native-ref
           c-bytevector-u16-set!
-          c-bytevector-u16-native-set!
           c-bytevector-u16-ref
+          c-bytevector-u16-native-set!
           c-bytevector-u16-native-ref
           c-bytevector-s32-set!
-          c-bytevector-s32-native-set!
           c-bytevector-s32-ref
+          c-bytevector-s32-native-set!
           c-bytevector-s32-native-ref
           c-bytevector-u32-set!
-          c-bytevector-u32-native-set!
           c-bytevector-u32-ref
+          c-bytevector-u32-native-set!
           c-bytevector-u32-native-ref
           c-bytevector-s64-set!
-          c-bytevector-s64-native-set!
           c-bytevector-s64-ref
+          c-bytevector-s64-native-set!
           c-bytevector-s64-native-ref
           c-bytevector-u64-set!
-          c-bytevector-u64-native-set!
           c-bytevector-u64-ref
+          c-bytevector-u64-native-set!
           c-bytevector-u64-native-ref
           c-bytevector-sint-set!
           c-bytevector-sint-ref
@@ -290,8 +301,10 @@
           ;define-c-variable (?)
           )
   (cond-expand
-    (chicken-6 (include-relative "c/types.scm"))
-    (else (include "c/types.scm")))
+    (chicken-6 (include-relative "c/types.scm")
+               (include-relative "c/c-bytevector-get.scm"))
+    (else (include "c/types.scm")
+          (include "c/c-bytevector-get.scm")))
   (cond-expand
     (chibi (include "c/primitives/chibi.scm"))
     (chicken-5 (export foreign-declare
@@ -301,7 +314,7 @@
     (chicken-6 (include-relative "c/primitives/chicken.scm"))
     ;(cyclone (include "c/primitives/cyclone.scm"))
     ;(gambit (include "c/primitives/gambit.scm"))
-    (gauche (include "c/primitives/gauche.scm"))
+    (gauche (include "c/primitives/gauche/define-c-procedure.scm"))
     ;(gerbil (include "c/primitives/gerbil.scm"))
     (guile (include "c/primitives/guile.scm"))
     (kawa (include "c/primitives/kawa.scm"))

@@ -173,6 +173,14 @@
   (lambda (c-bytevector k byte)
     (pointer-u8-set! (pointer+ c-bytevector k) byte)))
 
+(define c-bytevector-pointer-ref
+  (lambda (c-bytevector k)
+   (address->pointer (pointer-u64-ref (pointer+ c-bytevector k)))))
+
+(define c-bytevector-pointer-set!
+  (lambda (c-bytevector k pointer)
+    (pointer-u64-set! (pointer+ c-bytevector k) (pointer->address pointer))))
+
 #;(define pffi-pointer-set!
   (lambda (pointer type offset value)
     (cond

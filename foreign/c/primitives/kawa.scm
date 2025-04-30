@@ -170,25 +170,21 @@
             u8-value-layout
             k)))
 
-(define pointer-set!
-  (lambda (pointer type offset value)
-    (invoke (invoke pointer 'reinterpret (static-field java.lang.Integer 'MAX_VALUE))
+(define pointer-value-layout (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
+(define c-bytevector-pointer-set!
+  (lambda (c-bytevector k pointer)
+    (invoke (invoke c-bytevector 'reinterpret (static-field java.lang.Integer 'MAX_VALUE))
             'set
-            (type->native-type type)
-            offset
-            (if (equal? type 'char)
-              (char->integer value)
-              value))))
+            pointer-value-layout
+            k
+            pointer)))
 
-(define pointer-get
-  (lambda (pointer type offset)
-    (let ((r (invoke (invoke pointer 'reinterpret (static-field java.lang.Integer 'MAX_VALUE))
-                     'get
-                     (type->native-type type)
-                     offset)))
-      (if (equal? type 'char)
-        (integer->char r)
-        r))))
+(define c-bytevector-pointer-ref
+  (lambda (c-bytevector k)
+    (invoke (invoke c-bytevector 'reinterpret (static-field java.lang.Integer 'MAX_VALUE))
+            'get
+            pointer-value-layout
+            k)))
 
 #;(define-syntax call-with-address-of-c-bytevector
           (syntax-rules ()

@@ -39,10 +39,10 @@
 (lambda (pointer)
   (pointer-free pointer)))
 
-(define c-bytevector-u8-set! pointer-set-c-uint8_t!)
-(define c-bytevector-u8-ref pointer-ref-c-uint8_t)
+;(define c-bytevector-u8-set! pointer-set-c-uint8_t!)
+;(define c-bytevector-u8-ref pointer-ref-c-uint8_t)
 
-(define pointer-set!
+#;(define pointer-set!
   (lambda (pointer type offset value)
     (cond ((equal? type 'int8) (pointer-set-c-int8_t! pointer offset value))
           ((equal? type 'uint8) (pointer-set-c-uint8_t! pointer offset value))
@@ -64,7 +64,7 @@
           ((equal? type 'void) (pointer-set-c-pointer! pointer offset value))
           ((equal? type 'pointer) (pointer-set-c-pointer! pointer offset value)))))
 
-(define pointer-get
+#;(define pointer-get
   (lambda (pointer type offset)
     (cond ((equal? type 'int8) (pointer-ref-c-int8_t pointer offset))
           ((equal? type 'uint8) (pointer-ref-c-uint8_t pointer offset))
@@ -186,8 +186,7 @@
                                     c-function
                                     (c-size-of return-type)
                                     arguments)))
-          (when (not (equal? return-type 'void))
-            (pointer-get return-pointer return-type 0)))))))
+          (c-bytevector-get return-pointer return-type 0))))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()
