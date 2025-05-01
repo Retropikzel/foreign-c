@@ -1,5 +1,10 @@
 (require 'std-ffi)
 (require 'ffi-load)
+(require 'foreign-ctools)
+(require 'foreign-cenums)
+(require 'foreign-stdlib)
+(require 'foreign-sugar)
+(require 'system-interface)
 
 ;; FIXME
 (define size-of-type
@@ -36,9 +41,21 @@
   (lambda (headers path . options)
     (foreign-file path)))
 
+(define c-bytevector-u8-set!
+  (lambda (c-bytevector k byte)
+    (syscall syscall:poke-bytes c-bytevector k (c-size-of 'uint8) byte)))
+
 (define c-bytevector-u8-ref
   (lambda (c-bytevector k)
-    (peek-bytes c-bytevector k (c-size-of 'uint8))))
+    (syscall syscall:peek-bytes c-bytevector k (c-size-of 'uint8))))
+
+(define c-bytevector-pointer-set!
+  (lambda (c-bytevector k pointer)
+    (syscall syscall:poke-bytes c-bytevector k (c-size-of 'pointer) pointer)))
+
+(define c-bytevector-pointer-ref
+  (lambda (c-bytevector k)
+    (syscall syscall:peek-bytes c-bytevector k (c-size-of 'pointer))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()

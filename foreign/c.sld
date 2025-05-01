@@ -223,8 +223,8 @@
           ;; TODO Docs for all of these
           ;c-bytevector->address
           ;address->c-bytevector
-          ;c-bytevector-s8-set!
-          ;c-bytevector-s8-ref
+          c-bytevector-s8-set!
+          c-bytevector-s8-ref
           c-bytevector-s16-set!
           c-bytevector-s16-ref
           c-bytevector-s16-native-set!
