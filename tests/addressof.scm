@@ -71,7 +71,7 @@
        (write value)
        (newline)))))
 
-;; call-with-address-of-c-bytevector
+;; call-with-address-of
 
 (define-c-library c-testlib
                      '("libtest.h")
@@ -79,7 +79,7 @@
                      '((additional-paths ("." "./tests"))))
 
 
-(print-header 'call-with-address-of-c-bytevector)
+(print-header 'call-with-address-of)
 
 (define-c-procedure test-passing-pointer-address
                       c-testlib
@@ -92,7 +92,7 @@
 (assert equal? (= (c-bytevector-s32-native-ref input-pointer 0) 100) #t)
 (debug (c-bytevector-s32-native-ref input-pointer 0))
 (debug input-pointer)
-(call-with-address-of-c-bytevector
+(call-with-address-of
   input-pointer
   (lambda (address)
     (test-passing-pointer-address input-pointer address)))

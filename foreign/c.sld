@@ -207,7 +207,7 @@
               (ypsilon c-ffi)
               (ypsilon c-types)
               (only (core) define-macro syntax-case))))
-  (export ;; Primitives
+  (export ;;;; Primitives
           c-size-of
           define-c-library
           define-c-procedure
@@ -218,11 +218,12 @@
           c-bytevector-pointer-set!
           c-bytevector-pointer-ref
 
-          ;; c-bytevector
+          ;;;; c-bytevector
+          make-c-bytevector
+          make-c-null
+          c-null?
+          c-free
           native-endianness
-          ;; TODO Docs for all of these
-          ;c-bytevector->address
-          ;address->c-bytevector
           c-bytevector-s8-set!
           c-bytevector-s8-ref
           c-bytevector-s16-set!
@@ -261,23 +262,14 @@
           c-bytevector-ieee-double-native-set!
           c-bytevector-ieee-double-ref
           c-bytevector-ieee-double-native-ref
-
-          ;; c-bytevector
-          make-c-bytevector
-          ;c-bytevector ;; TODO docs, tests
-          make-c-null
-          c-null?
-          c-free
-
-
-          c-string-length ;; TODO Documentation, Testing
           bytevector->c-bytevector
           c-bytevector->bytevector
-          call-with-address-of-c-bytevector ;; Todo Documentation
+          call-with-address-of
+
           string->c-utf8
           c-utf8->string
 
-          ;c-bytevector-u8-ref ;; TODO Documentation, Testing
+          ;c-string-length ;; TODO Documentation, Testing
 
           ;; c-struct
           ;pffi-define-struct;define-c-struct
@@ -301,10 +293,8 @@
           ;define-c-variable (?)
           )
   (cond-expand
-    (chicken-6 (include-relative "c/types.scm")
-               (include-relative "c/c-bytevector-get.scm"))
-    (else (include "c/types.scm")
-          (include "c/c-bytevector-get.scm")))
+    (chicken-6 (include-relative "c/internal.scm"))
+    (else (include "c/internal.scm")))
   (cond-expand
     (chibi (include "c/primitives/chibi.scm"))
     (chicken-5 (export foreign-declare

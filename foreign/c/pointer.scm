@@ -111,7 +111,7 @@
 
 (cond-expand
   ;(kawa #t) ; Defined in kawa.scm
-  (else (define-syntax call-with-address-of-c-bytevector
+  (else (define-syntax call-with-address-of
           (syntax-rules ()
             ((_ input-pointer thunk)
              (let ((address-pointer (make-c-bytevector (c-size-of 'pointer))))
