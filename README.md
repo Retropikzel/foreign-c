@@ -112,8 +112,11 @@ Types are given as symbols, for example 'int8 or 'pointer.
 - float
 - double
 - pointer
+    - c-bytevector on Scheme side
 - callback
     - Callback function
+- void
+    - Can not be argument type, only return type
 
 ### Primitives 1
 
@@ -179,19 +182,19 @@ Defines a new foreign function to be used from Scheme code.
 Example:
 
     (cond-expand
-        (windows (define-c-library libc-stdlib '("stdlib.h") "ucrtbase" '("")))
-        (else (define-c-library libc-stdlib '("stdlib.h")  "c" '("" "6"))))
+        (windows (define-c-library libc-stdlib '("stdlib.h") "ucrtbase" '()))
+        (else (define-c-library libc-stdlib '("stdlib.h")  "c" '("6"))))
     (define-c-procedure c-puts libc-stdlib 'puts 'int '(pointer))
-    (c-puts "Message brought to you by FFI!")
+    (c-puts "Message brought to you by foreign-c!")
 
 #### Notes
 
 - Pass the return-types using quote
     - As '(...) and not (list...)
 
-(**c-bytevector?** _object_)
+(**c-bytevector?** _obj_)
 
-Returns #t of object is c-bytevector, otherwise returns #f.
+Returns **#t** if _obj_ is c-bytevector, otherwise returns **#f**.
 
 (**c-bytevector-u8-set!** _c-bytevector_ _k_ _byte_)
 
@@ -218,14 +221,76 @@ If K is not a valid index of c-bytevector the behaviour is undefined.
 Returns the pointer(which is also c-bytevector) at index k of c-bytevector.
 
 ### Primitives 2
-define-c-callback
+(**define-c-callback** _scheme-name_ _return-type_ _argument-types_ _procedure_)
 
+Takes scheme-name to bind the Scheme procedure to, return-type, argument-types
+and procedure as in place lambda.
+
+Defines a new Sceme function to be used as callback to C code.
+
+Example:
+
+    ; Load the shared library
+    (cond-expand
+        (windows (define-c-library libc-stdlib '("stdlib.h") "ucrtbase" '()))
+        (else (define-c-library '("stdlib.h") "c" '("" "6"))))
+
+    ; Define C function that takes a callback
+    (define-c-procedure qsort libc-stdlib 'qsort 'void '(pointer int int callback))
+
+    ; Define our callback
+    (pffi-define-callback compare
+                          'int
+                          '(pointer pointer)
+                          (lambda (pointer-a pointer-b)
+                            (let ((a (pffi-pointer-get pointer-a 'int 0))
+                                  (b (pffi-pointer-get pointer-b 'int 0)))
+                              (cond ((> a b) 1)
+                                    ((= a b) 0)
+                                    ((< a b) -1)))))
+
+    ; Create new array of ints to be sorted
+    (define array (make-c-bytevector (* (c-size-of 'int) 3)))
+    (pffi-pointer-set! array 'int (* (c-size-of 'int) 0) 3)
+    (pffi-pointer-set! array 'int (* (c-size-of 'int) 1) 2)
+    (pffi-pointer-set! array 'int (* (c-size-of 'int) 2) 1)
+
+    (display array)
+    (newline)
+    ;> (3 2 1)
+
+    ; Sort the array
+    (qsort array 3 (c-size-of 'int) compare)
+
+    (display array)
+    (newline)
+    ;> (1 2 3)
 
 ### c-bytevector
-make-c-bytevector
-make-c-null
-c-null?
-c-free
+
+(**make-c-bytevector** _k_)
+(**make-c-bytevector** _k_ _fill_)
+
+Returns a newly allocated c-bytevector of _k_ bytes.
+
+If the _fill_ argument is missing, the initial contents of the
+returned c-bytevector are unspecified.
+
+If the _fill_ argument is present, it's value must confine to C uint8_t values
+, it specifies the initial value for the bytes of the c-bytevector
+
+(**make-c-null**)
+
+Returns a null C pointer.
+
+(**c-null?** _obj_)
+
+Returns **#t** if _obj_ is a null C pointer, otherwise returns **#f**.
+
+(**c-free** _c-bytevector_)
+
+Frees _c-bytevector_ from memory.
+
 native-endianness
 c-bytevector-s8-set!
 c-bytevector-s8-ref
