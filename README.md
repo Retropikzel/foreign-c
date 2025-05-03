@@ -24,7 +24,7 @@ being portable by conforming to some specification.
 
 ## Implementation support tables
 
-### Primitives 1
+### Primitives 1 table
 
 |                  | c-size-of    | c-bytevector-u8-set! |c-bytevector-u8-ref | define-c-library    | c-bytevector? | define-c-procedure  |
 |------------------|:------------:|:--------------------:|:------------------:|:-------------------:|:-------------:|:-------------------:|
@@ -39,7 +39,7 @@ being portable by conforming to some specification.
 | **Stklos**       | X            | X                    |X                   | X                   | X             | X                   |
 | **Ypsilon**      | X            | X                    |X                   | X                   | X             | X                   |
 
-### Primitives 2
+### Primitives 2 table
 
 |                  | define-c-callback |
 |------------------|:-----------------:|
