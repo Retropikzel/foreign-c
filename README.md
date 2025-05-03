@@ -73,7 +73,7 @@ to being portable by conforming to some specification.
 
 Either download the latest release from
 [https://git.sr.ht/~retropikzel/foreign-c/refs](https://git.sr.ht/~retropikzel/foreign-c/refs) or git clone
-, preferably with a tag, and copy the "foreign" directory to your library
+, preferably with a tag, and copy the _foreign_ directory to your library
 directory.
 
 As an example assuming you have a project and your libraries live in directory
