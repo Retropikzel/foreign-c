@@ -1,6 +1,5 @@
 ---
 title: foreign-c a portable foreign function interface for R7RS
-
 version: 0.10.0
 ---
 
