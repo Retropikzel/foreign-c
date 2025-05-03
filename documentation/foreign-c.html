@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>(foreign c) a portable foreign function interface for
+        <title>foreign-c a portable foreign function interface for
 R7RS - 0.10.0</title>
         <style>
             table { width: 250%; }
@@ -12,12 +12,19 @@ R7RS - 0.10.0</title>
         </style>
     </head>
     <body>
-        <h1 id="foreign-c">(foreign c)</h1>
-        <p>(foreign c) is a C foreign function interface (FFI) library
-        for R7RS. It is portable in the sense that it supports multiple
+        <h1 id="foreign-c">foreign-c</h1>
+        <p>foreign-c is a C foreign function interface (FFI) library for
+        R7RS. It is portable in the sense that it supports multiple
         implementations, as opposed to being portable by conforming to
         some specification.</p>
-        <p>The new readme is a work in progress.</p>
+        <p><a
+        href="https://todo.sr.ht/~retropikzel/r7rs-pffi">Project</a></p>
+        <p><a href="https://sr.ht/~retropikzel/r7rs-pffi/trackers">Issue
+        trackers</a></p>
+        <p><a href="https://sr.ht/~retropikzel/r7rs-pffi/lists">Maling
+        lists</a></p>
+        <p><a
+        href="https://jenkins.scheme.org/job/r7rs_pffi/job/r7rs-pffi/">Jenkins</a></p>
         <ul>
         <li><a href="#installation">Installation</a></li>
         <li><a href="#documentation">Documentation</a>
@@ -272,9 +279,9 @@ R7RS - 0.10.0</title>
         </table>
         <h3 id="installation">Installation</h3>
         <p>Either download the latest release from <a
-        href="https://git.sr.ht/~retropikzel/foreign-c/refs">releases
-        page</a> or git clone , preferably with a tag, and copy the
-        “foreign” directory to your library directory.</p>
+        href="https://git.sr.ht/~retropikzel/foreign-c/refs">https://git.sr.ht/~retropikzel/foreign-c/refs</a>
+        or git clone , preferably with a tag, and copy the “foreign”
+        directory to your library directory.</p>
         <p>As an example assuming you have a project and your libraries
         live in directory called snow in it:</p>
         <pre><code>git clone https://git.sr.ht/~retropikzel/foreign-c --branch LATEST_VERSION
@@ -317,10 +324,56 @@ make -C snow/foreign/c &lt;SCHEME_IMPLEMENTATION_NAME&gt;</code></pre>
         <p>(<strong>c-type-size</strong> <em>type</em>)</p>
         <p>Returns the size of given C type.</p>
         <p>(<strong>define-c-library</strong> <em>scheme-name</em>
-        <em>headers</em> <em>object-name</em> <em>options</em>)
-        define-c-procedure define-c-callback c-bytevector?
-        c-bytevector-u8-set! c-bytevector-u8-ref
-        c-bytevector-pointer-set! c-bytevector-pointer-ref</p>
+        <em>headers</em> <em>object-name</em> <em>options</em>)</p>
+        <p>Takes a scheme-name to bind the library to, list of C headers
+        as strings, shared-object name and options.</p>
+        <p>The C header strings should not contain “&lt;” or “&gt;”,
+        they are added automatically.</p>
+        <p>The name of the shared object should not contain suffix like
+        .so or .dll. Nor should it contain any prefix like “lib”.</p>
+        <p>The options are:</p>
+        <ul>
+        <li>additional-versions
+        <ul>
+        <li>Search for additional versions of shared object, given
+        shared object “c” and additional versions “6” “7” on linux the
+        files “libc”, “libc.6”, “libc.7” are searched for.</li>
+        <li>Can be either numbers or strings</li>
+        </ul></li>
+        <li>additional-paths
+        <ul>
+        <li>Give additional paths to search shared objects from</li>
+        </ul></li>
+        </ul>
+        <p>Example:</p>
+        <pre><code>(cond-expand
+  (windows (define-c-library libc-stdlib
+                                &#39;(&quot;stdlib.h&quot;)
+                                &quot;ucrtbase&quot;
+                                &#39;((additional-versions (&quot;0&quot; &quot;6&quot;))
+                                  (additiona-paths (&quot;.&quot;)))))
+  (else (define-c-library libc-stdlib
+                             (list &quot;stdlib.h&quot;)
+                             &quot;c&quot;
+                             &#39;((additional-versions (&quot;0&quot; &quot;6&quot;))
+                               (additiona-paths (&quot;.&quot;))))))</code></pre>
+        <h4 id="notes">Notes</h4>
+        <ul>
+        <li>Do not cond-expand inside the arguments, that might lead to
+        problems on some implementations.</li>
+        <li>Do not store options in variables, that might lead to
+        problems on some implementations.</li>
+        <li>Do pass the headers using quote
+        <ul>
+        <li>As ’(… and not (list…</li>
+        </ul></li>
+        <li>Do pass the options using quote
+        <ul>
+        <li>As ’(… and not (list… define-c-procedure define-c-callback
+        c-bytevector? c-bytevector-u8-set! c-bytevector-u8-ref
+        c-bytevector-pointer-set! c-bytevector-pointer-ref</li>
+        </ul></li>
+        </ul>
         <h3 id="c-bytevector">c-bytevector</h3>
         <p>make-c-bytevector make-c-null c-null? c-free
         native-endianness c-bytevector-s8-set! c-bytevector-s8-ref
