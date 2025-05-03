@@ -394,15 +394,15 @@ If the _fill_ argument is present, it's value must confine to C uint8_t values
 
 (**c-bytevector-s8-set!** _c-bytevector_ _k_ _byte_)
 
-If K is not a valid index of c-bytevector the behaviour is undefined.
+If _k_ is not a valid index of c-bytevector the behaviour is undefined.
 
-Stores the byte in element k of c-bytevector.
+Stores the _byte_ in element _k_ of _c-bytevector_.
 
-(**c-bytevector-s8-ref** _c-bytevector_ _k_ _byte_)
+(**c-bytevector-s8-ref** _c-bytevector_ _k_)
 
-If K is not a valid index of c-bytevector the behaviour is undefined.
+If _k_ is not a valid index of c-bytevector the behaviour is undefined.
 
-Returns the byte at index k of c-bytevector.
+Returns the byte at index _k_ of _c-bytevector_.
 
 (**c-bytevector-uint-ref** _c-bytevector_ _k_ _endianness_ _size_)</br>
 (**c-bytevector-sint-ref** _c-bytevector_ _k_ _endianness_ _size_)</br>
