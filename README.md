@@ -371,6 +371,7 @@ Returns the endianness symbol associated implementation’s preferred endianness
 \<endianness symbol\>, including a symbol other than big and little.
 
 (**make-c-bytevector** _k_)
+
 (**make-c-bytevector** _k_ _fill_)
 
 Returns a newly allocated c-bytevector of _k_ bytes.
@@ -395,9 +396,13 @@ If K is not a valid index of c-bytevector the behaviour is undefined.
 Returns the byte at index k of c-bytevector.
 
 (**c-bytevector-sint-set!** _bytevector_ _k_ _endianness_ _size_)
+
 (**c-bytevector-sint-ref** _bytevector_ _k_ _endianness_ _size_)
+
 (**c-bytevector-uint-set!** _bytevector_ _k_ _endianness_ _size_)
+
 (**c-bytevector-uint-ref** _bytevector_ _k_ _endianness_ _size_)
+
 
 Size must be a positive exact integer object. If K , . . . , k +
 size − 1 is not valid indices of bytevector the behavior is unspecified.
