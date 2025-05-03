@@ -1,5 +1,5 @@
 ---
-title: Portable Foreign Function Interface for R7RS Documentation
+title: (foreign c) a portable foreign function interface for R7RS
 version: 0.10.0
 ---
 
@@ -63,11 +63,11 @@ The new readme is a work in progress.
 
 ### Primitives
 
-(c-type-size _type_)
+(*c-type-size* _type_)
 
 Returns the size of given C type.
 
-define-c-library
+(define-c-library)
 define-c-procedure
 define-c-callback
 c-bytevector?
