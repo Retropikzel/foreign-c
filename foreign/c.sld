@@ -237,6 +237,7 @@
           c-bytevector-s8-ref
           ;; TODO c-bytevector->u8-list
           ;; TODO u8-list->c-bytevector
+
           c-bytevector-uint-ref
           c-bytevector-sint-ref
           c-bytevector-sint-set!
@@ -245,6 +246,7 @@
           ;; TODO bytevector->sint-list
           ;; TODO uint-list->bytevector
           ;; TODO sint-list->bytevector
+
           c-bytevector-u16-ref
           c-bytevector-s16-ref
           c-bytevector-u16-native-ref
@@ -253,14 +255,16 @@
           c-bytevector-s16-set!
           c-bytevector-u16-native-set!
           c-bytevector-s16-native-set!
-          c-bytevector-s32-set!
+
+          c-bytevector-u32-ref
           c-bytevector-s32-ref
-          c-bytevector-s32-native-set!
+          c-bytevector-u32-native-ref
           c-bytevector-s32-native-ref
           c-bytevector-u32-set!
-          c-bytevector-u32-ref
+          c-bytevector-s32-set!
           c-bytevector-u32-native-set!
-          c-bytevector-u32-native-ref
+          c-bytevector-s32-native-set!
+
           c-bytevector-s64-set!
           c-bytevector-s64-ref
           c-bytevector-s64-native-set!
@@ -269,14 +273,17 @@
           c-bytevector-u64-ref
           c-bytevector-u64-native-set!
           c-bytevector-u64-native-ref
+
           c-bytevector-ieee-single-set!
           c-bytevector-ieee-single-native-set!
           c-bytevector-ieee-single-ref
           c-bytevector-ieee-single-native-ref
+
           c-bytevector-ieee-double-set!
           c-bytevector-ieee-double-native-set!
           c-bytevector-ieee-double-ref
           c-bytevector-ieee-double-native-ref
+
           bytevector->c-bytevector
           c-bytevector->bytevector
 

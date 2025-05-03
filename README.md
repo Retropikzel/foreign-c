@@ -430,12 +430,12 @@ Examples:
 
 (**c-bytevector-u16-ref** _bytevector_ _k_ _endianness_)
 (**c-bytevector-s16-ref** _bytevector_ _k_ _endianness_)
-(**c-bytevector-u16-native-ref** _bytevector_ _k_ _endianness_)
-(**c-bytevector-s16-native-ref** _bytevector_ _k_ _endianness_)
+(**c-bytevector-u16-native-ref** _bytevector_ _k_)
+(**c-bytevector-s16-native-ref** _bytevector_ _k_)
 (**c-bytevector-u16-set!** _bytevector_ _k_ _n_ _endianness_)
 (**c-bytevector-s16-set!** _bytevector_ _k_ _n_ _endianness_)
-(**c-bytevector-u16-native-set!** _bytevector_ _k_ _n_ _endianness_)
-(**c-bytevector-s16-native-set!** _bytevector_ _k_ _n_ _endianness_)
+(**c-bytevector-u16-native-set!** _bytevector_ _k_ _n_)
+(**c-bytevector-s16-native-set!** _bytevector_ _k_ _n_)
 
 _K_ must be a valid index of _c-bytevector_ ; so must _k_ + 1.  For
 c-bytevector-u16-set! and c-bytevector-u16-native-set!, _n_ must be an exact
@@ -443,14 +443,30 @@ integer object in the interval {0,...,216 − 1}. For c-bytevector-s16-set! and
 c-bytevector-s16-native-set!, _n_ must be an exact integer object in the
 interval {−215,...,215 − 1}.
 
-(**c-bytevector-s32-set!**)
-(**c-bytevector-s32-ref**)
-(**c-bytevector-s32-native-set!**)
-(**c-bytevector-s32-native-ref**)
-(**c-bytevector-u32-set!**)
-(**c-bytevector-u32-ref**)
-(**c-bytevector-u32-native-set!**)
-(**c-bytevector-u32-native-ref**)
+These retrieve and set two-byte representations of numbers at indices _k_ and
+_k_ + 1, according to the endianness specified by _endianness_. The procedures
+with u16 in their names deal with the unsigned representation; those with s16
+in their names deal with the two’s-complement representation.
+
+The procedures with native in their names employ the native endianness, and
+work only at aligned indices: _k_ must be a multiple of 2.  The ...-set!
+procedures return unspecified values.
+
+(**c-bytevector-u32-ref** _bytevector_ _k_ _endianness_)
+(**c-bytevector-s32-ref** _bytevector_ _k_ _endianness_)
+(**c-bytevector-u32-native-ref** _bytevector_ _k_)
+(**c-bytevector-s32-native-ref** _bytevector_ _k_)
+(**c-bytevector-u32-set!** _bytevector_ _k_ _n_ _endianness_)
+(**c-bytevector-s32-set!** _bytevector_ _k_ _n_ _endianness_)
+(**c-bytevector-u32-native-set!** _bytevector_ _k_ _n_)
+(**c-bytevector-s32-native-set!** _bytevector_ _k_ _n_)
+
+_K_,...,_k_ + 3 must be valid indices of bytevector.  For c-bytevector-u32-set!
+and bytevector-u32-native-set!, _n_ must be an exact integer object in the
+interval {0,...,232 − 1}. For bytevector-s32-set! and
+bytevector-s32-native-set!, _n_ must be an exact integer object in the
+interval {−231,...,232 − 1}.
+
 (**c-bytevector-s64-set!**)
 (**c-bytevector-s64-ref**)
 (**c-bytevector-s64-native-set!**)
@@ -459,16 +475,20 @@ interval {−215,...,215 − 1}.
 (**c-bytevector-u64-ref**)
 (**c-bytevector-u64-native-set!**)
 (**c-bytevector-u64-native-ref**)
+
 (**c-bytevector-ieee-single-set!**)
 (**c-bytevector-ieee-single-native-set!**)
 (**c-bytevector-ieee-single-ref**)
 (**c-bytevector-ieee-single-native-ref**)
+
 (**c-bytevector-ieee-double-set!**)
 (**c-bytevector-ieee-double-native-set!**)
 (**c-bytevector-ieee-double-ref**)
 (**c-bytevector-ieee-double-native-ref**)
+
 (**bytevector->c-bytevector**)
 (**c-bytevector->bytevector**)
+
 (**string->c-utf8**)
 (**c-utf8->string**)
 
