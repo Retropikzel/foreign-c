@@ -13,6 +13,10 @@ The new readme is a work in progress.
 
 - [Installation](#installation)
 - [Documentation](#documentation)
+    - [Types](#types)
+    - [Primitives](#primitives)
+    - [c-bytevector](#c-bytevector)
+    - [Environment variables](#environment-variables)
 
 
 ## Implementation support tables
@@ -115,6 +119,50 @@ Types are given as symbols, for example 'int8 or 'pointer.
 Returns the size of given C type.
 
 (**define-c-library** _scheme-name_ _headers_ _object-name_ _options_)
+
+Takes a scheme-name to bind the library to, list of C headers as
+strings, Shared-object name and options.
+
+The C header strings should not contain "<" or ">", they are added
+automatically.
+
+The name of the shared object should not contain suffix like .so or .dll.
+Nor should it contain any prefix like "lib".
+
+The options are:
+
+- additional-versions
+    - Search for additional versions of shared object, given shared object "c"
+    and additional versions "6" "7" on linux the files "libc", "libc.6",
+    "libc.7" are searched for.
+    - Can be either numbers or strings
+- additional-paths
+    - Give additional paths to search shared objects from
+
+Example:
+
+    (cond-expand
+      (windows (define-c-library libc-stdlib
+                                    '("stdlib.h")
+                                    "ucrtbase"
+                                    '((additional-versions ("0" "6"))
+                                      (additiona-paths (".")))))
+      (else (define-c-library libc-stdlib
+                                 (list "stdlib.h")
+                                 "c"
+                                 '((additional-versions ("0" "6"))
+                                   (additiona-paths ("."))))))
+
+#### Notes
+
+- Do not cond-expand inside the arguments, that might lead to problems on some
+implementations.
+- Do not store options in variables, that might lead to problems on some
+implementations.
+- Do pass the headers using quote
+    - As '(... and not (list...
+- Do pass the options using quote
+    - As '(... and not (list...
 define-c-procedure
 define-c-callback
 c-bytevector?
@@ -174,3 +222,15 @@ call-with-address-of
 
 string->c-utf8
 c-utf8->string
+
+### Environment variables
+
+Setting environment variables like this on Windows works for this library:
+
+    set "PFFI_LOAD_PATH=C:\Program Files (x86)/foo/bar"
+
+#### PFFI\_LOAD\_PATH
+
+To add more paths to where pffi looks for libraries set PFFI\_LOAD\_PATH to
+paths separated by ; on windows, and : on other operating systems.
+

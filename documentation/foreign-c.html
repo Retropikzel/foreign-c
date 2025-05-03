@@ -18,7 +18,19 @@ R7RS - 0.10.0</title>
         implementations, as opposed to being portable by conforming to
         some specification.</p>
         <p>The new readme is a work in progress.</p>
-        <h2 id="implementation-table">Implementation table</h2>
+        <ul>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#documentation">Documentation</a>
+        <ul>
+        <li><a href="#types">Types</a></li>
+        <li><a href="#primitives">Primitives</a></li>
+        <li><a href="#c-bytevector">c-bytevector</a></li>
+        <li><a href="#environment-variables">Environment
+        variables</a></li>
+        </ul></li>
+        </ul>
+        <h2 id="implementation-support-tables">Implementation support
+        tables</h2>
         <h3 id="primitives-1">Primitives 1</h3>
         <table>
         <colgroup>
@@ -258,6 +270,20 @@ R7RS - 0.10.0</title>
         </tr>
         </tbody>
         </table>
+        <h3 id="installation">Installation</h3>
+        <p>Either download the latest release from <a
+        href="https://git.sr.ht/~retropikzel/foreign-c/refs">releases
+        page</a> or git clone , preferably with a tag, and copy the
+        “foreign” directory to your library directory.</p>
+        <p>As an example assuming you have a project and your libraries
+        live in directory called snow in it:</p>
+        <pre><code>git clone https://git.sr.ht/~retropikzel/foreign-c --branch LATEST_VERSION
+mkdir -p snow
+cp -r foreign-c/foreign snow/
+make -C snow/foreign/c &lt;SCHEME_IMPLEMENTATION_NAME&gt;</code></pre>
+        <p>With most implementations the make command does not compile
+        anything. When that is the case it will say “Nothing to build on
+        SCHEME_IMPLEMENTATION_NAME.”</p>
         <h2 id="documentation">Documentation</h2>
         <h3 id="types">Types</h3>
         <p>Types are given as symbols, for example ’int8 or
@@ -321,5 +347,13 @@ R7RS - 0.10.0</title>
         bytevector-&gt;c-bytevector c-bytevector-&gt;bytevector
         call-with-address-of</p>
         <p>string-&gt;c-utf8 c-utf8-&gt;string</p>
+        <h3 id="environment-variables">Environment variables</h3>
+        <p>Setting environment variables like this on Windows works for
+        this library:</p>
+        <pre><code>set &quot;PFFI_LOAD_PATH=C:\Program Files (x86)/foo/bar&quot;</code></pre>
+        <h4 id="pffi_load_path">PFFI_LOAD_PATH</h4>
+        <p>To add more paths to where pffi looks for libraries set
+        PFFI_LOAD_PATH to paths separated by ; on windows, and : on
+        other operating systems.</p>
     </body>
 </html>
