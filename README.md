@@ -396,36 +396,53 @@ If K is not a valid index of c-bytevector the behaviour is undefined.
 
 Returns the byte at index k of c-bytevector.
 
-(**c-bytevector-sint-set!** _bytevector_ _k_ _endianness_ _size_)</br>
-(**c-bytevector-sint-ref** _bytevector_ _k_ _endianness_ _size_)</br>
-(**c-bytevector-uint-set!** _bytevector_ _k_ _endianness_ _size_)</br>
 (**c-bytevector-uint-ref** _bytevector_ _k_ _endianness_ _size_)
+(**c-bytevector-sint-ref** _bytevector_ _k_ _endianness_ _size_)</br>
+(**c-bytevector-uint-set!** _bytevector_ _k_ _n_ _endianness_ _size_)</br>
+(**c-bytevector-sint-set!** _bytevector_ _k_ _n_ _endianness_ _size_)</br>
 
-Size must be a positive exact integer object. If K , . . . , k +
-size − 1 is not valid indices of bytevector the behavior is unspecified.
+Size must be a positive exact integer object. If _k_,...,_k_ + _size_ − 1 is
+not valid indices of c-bytevector the behavior is unspecified.
 
 The c-bytevector-uint-ref procedure retrieves the exact integer object
 corresponding to the unsigned representation of size _size_ and specified by
 _endianness_ at indices _k_,...,_k_ + _size_ − 1.
 
 The c-bytevector-sint-ref procedure retrieves the exact integer object
-corresponding to the two’s-complement representation of size size and
-specified by endianness at indices k , . . . , k + size − 1.  For
-c-bytevector-uint-set!, n must be an exact integer object in the interval
-{0, . . . , 256size − 1}.
+corresponding to the two’s-complement representation of size _size_ and
+specified by _endianness_ at indices _k_,...,_k_ + _size_ − 1.  For
+c-bytevector-uint-set!, _n_ must be an exact integer object in the interval
+{0,...,256^_size_ − 1}.
 
 The c-bytevector-uint-set! procedure stores the unsigned representation of
-size size and specified by endianness into bytevector at indices
-k , . . . , k + size − 1.
+size _size_ and specified by _endianness_ into c-bytevector at indices
+_k_,...,_k_ + size − 1.
 
-(**c-bytevector-s16-set!**)
-(**c-bytevector-s16-ref**)
-(**c-bytevector-s16-native-set!**)
-(**c-bytevector-s16-native-ref**)
-(**c-bytevector-u16-set!**)
-(**c-bytevector-u16-ref**)
-(**c-bytevector-u16-native-set!**)
-(**c-bytevector-u16-native-ref**)
+The . . . -set! procedures return unspecified values.
+
+Examples:
+
+    (define cbv (make-c-bytevector (c-type-size 'int)))
+    (c-bytevector-sint-set! cbv 0 100 (native-endianness) (c-type-size 'int))
+    (c-bytevector-sint-ref cbv 0 (native-endianness) (c-type-size 'int))
+    > 100
+
+
+(**c-bytevector-u16-ref** _bytevector_ _k_ _endianness_)
+(**c-bytevector-s16-ref** _bytevector_ _k_ _endianness_)
+(**c-bytevector-u16-native-ref** _bytevector_ _k_ _endianness_)
+(**c-bytevector-s16-native-ref** _bytevector_ _k_ _endianness_)
+(**c-bytevector-u16-set!** _bytevector_ _k_ _n_ _endianness_)
+(**c-bytevector-s16-set!** _bytevector_ _k_ _n_ _endianness_)
+(**c-bytevector-u16-native-set!** _bytevector_ _k_ _n_ _endianness_)
+(**c-bytevector-s16-native-set!** _bytevector_ _k_ _n_ _endianness_)
+
+_K_ must be a valid index of _c-bytevector_ ; so must _k_ + 1.  For
+c-bytevector-u16-set! and c-bytevector-u16-native-set!, _n_ must be an exact
+integer object in the interval {0,...,216 − 1}. For c-bytevector-s16-set! and
+c-bytevector-s16-native-set!, _n_ must be an exact integer object in the
+interval {−215,...,215 − 1}.
+
 (**c-bytevector-s32-set!**)
 (**c-bytevector-s32-ref**)
 (**c-bytevector-s32-native-set!**)
