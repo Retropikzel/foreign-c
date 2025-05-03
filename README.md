@@ -11,7 +11,7 @@ being portable by conforming to some specification.
 
 The new readme is a work in progress.
 
-## Implementation table
+## Implementation support tables
 
 ### Primitives 1
 
@@ -58,8 +58,51 @@ The new readme is a work in progress.
 | Stklos           | X              | X             |              |
 | Ypsilon          | X              | X             |              |
 
+### Installation
+
+Either download the latest release from
+[releases page](https://git.sr.ht/~retropikzel/foreign-c/refs) or git clone
+, preferably with a tag, and copy the "foreign" directory to your library
+directory.
+
+As an example assuming you have a project and your libraries live in directory
+called snow in it:
+
+    git clone https://git.sr.ht/~retropikzel/foreign-c --branch LATEST_VERSION
+    mkdir -p snow
+    cp -r foreign-c/foreign snow/
+    make -C snow/foreign/c <SCHEME_IMPLEMENTATION_NAME>
+
+With most implementations the make command does not compile anything. When that
+is the case it will say "Nothing to build on SCHEME\_IMPLEMENTATION\_NAME."
 
 ## Documentation
+
+### Types
+
+Types are given as symbols, for example 'int8 or 'pointer.
+
+- int8
+- uint8
+- int16
+- uint16
+- int32
+- uint32
+- int64
+- uint64
+- char
+- unsigned-char
+- short
+- unsigned-short
+- int
+- unsigned-int
+- long
+- unsigned-long
+- float
+- double
+- pointer
+- callback
+    - Callback function
 
 ### Primitives
 
@@ -67,7 +110,7 @@ The new readme is a work in progress.
 
 Returns the size of given C type.
 
-(define-c-library)
+(**define-c-library** _scheme-name_ _headers_ _object-name_ _options_)
 define-c-procedure
 define-c-callback
 c-bytevector?
