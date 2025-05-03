@@ -16,7 +16,8 @@ being portable by conforming to some specification.
 - [Installation](#installation)
 - [Documentation](#documentation)
     - [Types](#types)
-    - [Primitives](#primitives-1)
+    - [Primitives 1](#primitives-1)
+    - [Primitives 2](#primitives-2)
     - [c-bytevector](#c-bytevector)
     - [Environment variables](#environment-variables)
 
@@ -166,8 +167,8 @@ implementations.
 - Pass the options using quote
     - As '(...) and not (list...)
 
-(**define-c-procedure** scheme-name shared-object c-name return-type
-argument-types)
+(**define-c-procedure** _scheme-name_ _shared-object_ _c-name_ _return-type_
+_argument-type_)
 
 Takes a scheme-name to bind the C procedure to, shared-object where the function
 is looked from, c-name of the function as symbol, return-type and argument-types.
@@ -188,12 +189,36 @@ Example:
 - Pass the return-types using quote
     - As '(...) and not (list...)
 
+(**c-bytevector?** _object_)
+
+Returns #t of object is c-bytevector, otherwise returns #f.
+
+(**c-bytevector-u8-set!** _c-bytevector_ _k_ _byte_)
+
+If K is not a valid index of c-bytevector the behaviour is undefined.
+
+Stores the byte in element k of c-bytevector.
+
+(**c-bytevector-u8-ref** _c-bytevector_ _k_)
+
+If K is not a valid index of c-bytevector the behaviour is undefined.
+
+Returns the byte at index k of c-bytevector.
+
+(**c-bytevector-pointer-set!** _c-bytevector_ _k_ _pointer_)
+
+If K is not a valid index of c-bytevector the behaviour is undefined.
+
+Stores the pointer(which is also c-bytevector) in element k of c-bytevector.
+
+(**c-bytevector-pointer-ref**  _c-bytevector_ _k_ _pointer_)
+
+If K is not a valid index of c-bytevector the behaviour is undefined.
+
+Returns the pointer(which is also c-bytevector) at index k of c-bytevector.
+
+### Primitives 2
 define-c-callback
-c-bytevector?
-c-bytevector-u8-set!
-c-bytevector-u8-ref
-c-bytevector-pointer-set!
-c-bytevector-pointer-ref
 
 
 ### c-bytevector
