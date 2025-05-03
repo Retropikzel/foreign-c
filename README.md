@@ -521,7 +521,7 @@ These procedures return the inexact real number object that best represents the
 IEEE-754 single-precision number represented by the four bytes beginning at
 index _k_.
 
-(**c-bytevector-ieee-double-native-ref**)
+(**c-bytevector-ieee-double-native-ref**)</br>
 (**c-bytevector-ieee-double-ref**)
 
 _K_,...,_k_ + 7 must be valid indices of _c-bytevector_. For
@@ -531,7 +531,7 @@ These procedures return the inexact real number object that best represents the
 IEEE-754 double-precision number represented by the eight bytes beginning at
 index _k_.
 
-(**c-bytevector-ieee-single-native-set!**)
+(**c-bytevector-ieee-single-native-set!**)</br>
 (**c-bytevector-ieee-single-set!**)
 
 _K_,...,_k_ + 3 must be valid indices of _c-bytevector_. For
@@ -540,7 +540,7 @@ c-bytevector-ieee-single-native-set!, _k_ must be a multiple of 4.
 These procedures store an IEEE-754 single-precision representation of x into
 elements _k_ through _k_ + 3 of bytevector, and return unspecified values.
 
-(**c-bytevector-ieee-double-native-set!**)
+(**c-bytevector-ieee-double-native-set!**)</br>
 (**c-bytevector-ieee-double-set!**)
 
 _K_,...,_k_ + 7 must be valid indices of bytevector. For
