@@ -226,6 +226,9 @@
           c-free
           call-with-address-of
 
+          bytevector->c-bytevector
+          c-bytevector->bytevector
+
           ;; TODO endianness
           native-endianness
           make-c-bytevector
@@ -265,30 +268,35 @@
           c-bytevector-u32-native-set!
           c-bytevector-s32-native-set!
 
-          c-bytevector-s64-set!
-          c-bytevector-s64-ref
-          c-bytevector-s64-native-set!
-          c-bytevector-s64-native-ref
-          c-bytevector-u64-set!
           c-bytevector-u64-ref
-          c-bytevector-u64-native-set!
+          c-bytevector-s64-ref
+          c-bytevector-s64-native-ref
           c-bytevector-u64-native-ref
+          c-bytevector-u64-set!
+          c-bytevector-s64-set!
+          c-bytevector-u64-native-set!
+          c-bytevector-s64-native-set!
 
-          c-bytevector-ieee-single-set!
-          c-bytevector-ieee-single-native-set!
-          c-bytevector-ieee-single-ref
           c-bytevector-ieee-single-native-ref
+          c-bytevector-ieee-single-ref
 
-          c-bytevector-ieee-double-set!
-          c-bytevector-ieee-double-native-set!
-          c-bytevector-ieee-double-ref
           c-bytevector-ieee-double-native-ref
+          c-bytevector-ieee-double-ref
 
-          bytevector->c-bytevector
-          c-bytevector->bytevector
+          c-bytevector-ieee-single-native-set!
+          c-bytevector-ieee-single-set!
+
+          c-bytevector-ieee-double-native-set!
+          c-bytevector-ieee-double-set!
 
           string->c-utf8
+          ;; TODO string->c-utf16
+          ;; TODO string->c-utf32
+
           c-utf8->string
+          ;; TODO c-utf16->string
+          ;; TODO c-utf32->string
+
 
           ;c-string-length ;; TODO Documentation, Testing
 
