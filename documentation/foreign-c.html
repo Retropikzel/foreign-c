@@ -337,7 +337,7 @@ Schemes - 0.10.0</title>
         </tr>
         </tbody>
         </table>
-        <h3 id="installation">Installation</h3>
+        <h2 id="installation">Installation</h2>
         <p>Either download the latest release from <a
         href="https://git.sr.ht/~retropikzel/foreign-c/refs">https://git.sr.ht/~retropikzel/foreign-c/refs</a>
         or git clone , preferably with a tag, and copy the
@@ -540,7 +540,10 @@ make -C snow/foreign/c SCHEME_IMPLEMENTATION_NAME</code></pre>
         pointer, otherwise returns <strong>#f</strong>.</p>
         <p>(<strong>c-free</strong> <em>c-bytevector</em>)</p>
         <p>Frees <em>c-bytevector</em> from memory.</p>
-        <p>(<strong>call-with-address-of</strong>)</p>
+        <p>(<strong>call-with-address-of</strong> <em>c-bytevector</em>
+        <em>thunk</em>)</p>
+        <p>Calls <em>thunk</em> with address pointer of
+        <em>c-bytevector</em>.</p>
         <p>Since the support for calling C functions taking pointer
         address arguments, the ones you would prefix with &amp;, varies,
         some additional ceremony is needed on the Scheme side.</p>
@@ -558,6 +561,13 @@ func(&amp;i);</code></pre>
         <p>The passed c-bytevector, in example named cbv, should only be
         used <strong>after</strong> call to call-with-addres-of
         ends.</p>
+        <p>(<strong>bytevector-&gt;c-bytevector</strong>
+        <em>bytevector</em>)</p>
+        <p>Returns a newly allocated c-bytevector of the bytes of
+        <em>bytevector</em>.</p>
+        <p>(<strong>c-bytevector-&gt;bytevector</strong>)</p>
+        <p>Returns a newly allocated bytevector of the bytes of
+        <em>c-bytevector</em>.</p>
         <p>(<strong>native-endianness</strong>)</p>
         <p>Returns the endianness symbol associated implementation’s
         preferred endianness (usually that of the underlying machine
@@ -583,66 +593,173 @@ func(&amp;i);</code></pre>
         <p>If K is not a valid index of c-bytevector the behaviour is
         undefined.</p>
         <p>Returns the byte at index k of c-bytevector.</p>
-        <p>(<strong>c-bytevector-sint-set!</strong> <em>bytevector</em>
+        <p>(<strong>c-bytevector-uint-ref</strong> <em>c-bytevector</em>
         <em>k</em> <em>endianness</em> <em>size</em>)</br>
-        (<strong>c-bytevector-sint-ref</strong> <em>bytevector</em>
+        (<strong>c-bytevector-sint-ref</strong> <em>c-bytevector</em>
         <em>k</em> <em>endianness</em> <em>size</em>)</br>
-        (<strong>c-bytevector-uint-set!</strong> <em>bytevector</em>
-        <em>k</em> <em>endianness</em> <em>size</em>)</br>
-        (<strong>c-bytevector-uint-ref</strong> <em>bytevector</em>
-        <em>k</em> <em>endianness</em> <em>size</em>)</p>
-        <p>Size must be a positive exact integer object. If K , . . . ,
-        k + size − 1 is not valid indices of bytevector the behavior is
-        unspecified.</p>
+        (<strong>c-bytevector-uint-set!</strong> <em>c-bytevector</em>
+        <em>k</em> <em>n</em> <em>endianness</em> <em>size</em>)</br>
+        (<strong>c-bytevector-sint-set!</strong> <em>c-bytevector</em>
+        <em>k</em> <em>n</em> <em>endianness</em> <em>size</em>)</p>
+        <p>Size must be a positive exact integer object. If
+        <em>k</em>,…,<em>k</em> + <em>size</em> − 1 is not valid indices
+        of c-bytevector the behavior is unspecified.</p>
         <p>The c-bytevector-uint-ref procedure retrieves the exact
         integer object corresponding to the unsigned representation of
         size <em>size</em> and specified by <em>endianness</em> at
         indices <em>k</em>,…,<em>k</em> + <em>size</em> − 1.</p>
         <p>The c-bytevector-sint-ref procedure retrieves the exact
         integer object corresponding to the two’s-complement
-        representation of size size and specified by endianness at
-        indices k , . . . , k + size − 1. For c-bytevector-uint-set!, n
-        must be an exact integer object in the interval {0, . . . ,
-        256size − 1}.</p>
+        representation of size <em>size</em> and specified by
+        <em>endianness</em> at indices <em>k</em>,…,<em>k</em> +
+        <em>size</em> − 1. For c-bytevector-uint-set!, <em>n</em> must
+        be an exact integer object in the interval
+        {0,…,256^<em>size</em> − 1}.</p>
         <p>The c-bytevector-uint-set! procedure stores the unsigned
-        representation of size size and specified by endianness into
-        bytevector at indices k , . . . , k + size − 1.</p>
-        <p>(<strong>c-bytevector-s16-set!</strong>)
-        (<strong>c-bytevector-s16-ref</strong>)
-        (<strong>c-bytevector-s16-native-set!</strong>)
-        (<strong>c-bytevector-s16-native-ref</strong>)
-        (<strong>c-bytevector-u16-set!</strong>)
-        (<strong>c-bytevector-u16-ref</strong>)
-        (<strong>c-bytevector-u16-native-set!</strong>)
-        (<strong>c-bytevector-u16-native-ref</strong>)
-        (<strong>c-bytevector-s32-set!</strong>)
-        (<strong>c-bytevector-s32-ref</strong>)
-        (<strong>c-bytevector-s32-native-set!</strong>)
-        (<strong>c-bytevector-s32-native-ref</strong>)
-        (<strong>c-bytevector-u32-set!</strong>)
-        (<strong>c-bytevector-u32-ref</strong>)
-        (<strong>c-bytevector-u32-native-set!</strong>)
-        (<strong>c-bytevector-u32-native-ref</strong>)
-        (<strong>c-bytevector-s64-set!</strong>)
-        (<strong>c-bytevector-s64-ref</strong>)
-        (<strong>c-bytevector-s64-native-set!</strong>)
-        (<strong>c-bytevector-s64-native-ref</strong>)
-        (<strong>c-bytevector-u64-set!</strong>)
-        (<strong>c-bytevector-u64-ref</strong>)
-        (<strong>c-bytevector-u64-native-set!</strong>)
-        (<strong>c-bytevector-u64-native-ref</strong>)
-        (<strong>c-bytevector-ieee-single-set!</strong>)
-        (<strong>c-bytevector-ieee-single-native-set!</strong>)
-        (<strong>c-bytevector-ieee-single-ref</strong>)
-        (<strong>c-bytevector-ieee-single-native-ref</strong>)
-        (<strong>c-bytevector-ieee-double-set!</strong>)
-        (<strong>c-bytevector-ieee-double-native-set!</strong>)
-        (<strong>c-bytevector-ieee-double-ref</strong>)
-        (<strong>c-bytevector-ieee-double-native-ref</strong>)
-        (<strong>bytevector-&gt;c-bytevector</strong>)
-        (<strong>c-bytevector-&gt;bytevector</strong>)
-        (<strong>string-&gt;c-utf8</strong>)
-        (<strong>c-utf8-&gt;string</strong>)</p>
+        representation of size <em>size</em> and specified by
+        <em>endianness</em> into c-bytevector at indices
+        <em>k</em>,…,<em>k</em> + size − 1.</p>
+        <p>The . . . -set! procedures return unspecified values.</p>
+        <p>Examples:</p>
+        <pre><code>(define cbv (make-c-bytevector (c-type-size &#39;int)))
+(c-bytevector-sint-set! cbv 0 100 (native-endianness) (c-type-size &#39;int))
+(c-bytevector-sint-ref cbv 0 (native-endianness) (c-type-size &#39;int))
+&gt; 100</code></pre>
+        <p>(<strong>c-bytevector-u16-ref</strong> <em>c-bytevector</em>
+        <em>k</em> <em>endianness</em>)</br>
+        (<strong>c-bytevector-s16-ref</strong> <em>c-bytevector</em>
+        <em>k</em> <em>endianness</em>)</br>
+        (<strong>c-bytevector-u16-native-ref</strong>
+        <em>c-bytevector</em> <em>k</em>)</br>
+        (<strong>c-bytevector-s16-native-ref</strong>
+        <em>c-bytevector</em> <em>k</em>)</br>
+        (<strong>c-bytevector-u16-set!</strong> <em>c-bytevector</em>
+        <em>k</em> <em>n</em> <em>endianness</em>)</br>
+        (<strong>c-bytevector-s16-set!</strong> <em>c-bytevector</em>
+        <em>k</em> <em>n</em> <em>endianness</em>)</br>
+        (<strong>c-bytevector-u16-native-set!</strong>
+        <em>c-bytevector</em> <em>k</em> <em>n</em>)</br>
+        (<strong>c-bytevector-s16-native-set!</strong>
+        <em>c-bytevector</em> <em>k</em> <em>n</em>)</p>
+        <p><em>K</em> must be a valid index of <em>c-bytevector</em> ;
+        so must <em>k</em> + 1. For c-bytevector-u16-set! and
+        c-bytevector-u16-native-set!, <em>n</em> must be an exact
+        integer object in the interval {0,…,216 − 1}. For
+        c-bytevector-s16-set! and c-bytevector-s16-native-set!,
+        <em>n</em> must be an exact integer object in the interval
+        {−215,…,215 − 1}.</p>
+        <p>These retrieve and set two-byte representations of numbers at
+        indices <em>k</em> and <em>k</em> + 1, according to the
+        endianness specified by <em>endianness</em>. The procedures with
+        u16 in their names deal with the unsigned representation; those
+        with s16 in their names deal with the two’s-complement
+        representation.</p>
+        <p>The procedures with native in their names employ the native
+        endianness, and work only at aligned indices: <em>k</em> must be
+        a multiple of 2.</p>
+        <p>The …-set! procedures return unspecified values.</p>
+        <p>(<strong>c-bytevector-u32-ref</strong> <em>c-bytevector</em>
+        <em>k</em> <em>endianness</em>)</br>
+        (<strong>c-bytevector-s32-ref</strong> <em>c-bytevector</em>
+        <em>k</em> <em>endianness</em>)</br>
+        (<strong>c-bytevector-u32-native-ref</strong>
+        <em>c-bytevector</em> <em>k</em>)</br>
+        (<strong>c-bytevector-s32-native-ref</strong>
+        <em>c-bytevector</em> <em>k</em>)</br>
+        (<strong>c-bytevector-u32-set!</strong> <em>c-bytevector</em>
+        <em>k</em> <em>n</em> <em>endianness</em>)</br>
+        (<strong>c-bytevector-s32-set!</strong> <em>c-bytevector</em>
+        <em>k</em> <em>n</em> <em>endianness</em>)</br>
+        (<strong>c-bytevector-u32-native-set!</strong>
+        <em>c-bytevector</em> <em>k</em> <em>n</em>)</br>
+        (<strong>c-bytevector-s32-native-set!</strong>
+        <em>c-bytevector</em> <em>k</em> <em>n</em>)</p>
+        <p><em>K</em>,…,<em>k</em> + 3 must be valid indices of
+        bytevector. For c-bytevector-u32-set! and
+        bytevector-u32-native-set!, <em>n</em> must be an exact integer
+        object in the interval {0,…,232 − 1}. For bytevector-s32-set!
+        and bytevector-s32-native-set!, <em>n</em> must be an exact
+        integer object in the interval {−231,…,232 − 1}.</p>
+        <p>These retrieve and set four-byte representations of numbers
+        at indices <em>k</em>,…,<em>k</em> + 3, according to the
+        endianness specified by <em>endianness</em>. The procedures with
+        u32 in their names deal with the unsigned representation; those
+        with s32 with the two’s-complement representation.</p>
+        <p>The procedures with native in their names employ the native
+        endianness, and work only at aligned indices: <em>k</em> must be
+        a multiple of 4.</p>
+        <p>The …-set! procedures return unspecified values.</p>
+        <p>(<strong>c-bytevector-u64-ref</strong> <em>c-bytevector</em>
+        <em>k</em> <em>endianness</em>)</br>
+        (<strong>c-bytevector-s64-ref</strong> <em>c-bytevector</em>
+        <em>k</em> <em>endianness</em>)</br>
+        (<strong>c-bytevector-u64-native-ref</strong>
+        <em>c-bytevector</em> <em>k</em>)</br>
+        (<strong>c-bytevector-s64-native-ref</strong>
+        <em>c-bytevector</em> <em>k</em>)</br>
+        (<strong>c-bytevector-u64-set!</strong> <em>c-bytevector</em>
+        <em>k</em> <em>n</em> <em>endianness</em>)</br>
+        (<strong>c-bytevector-s64-set!</strong> <em>c-bytevector</em>
+        <em>k</em> <em>n</em> <em>endianness</em>)</br>
+        (<strong>c-bytevector-u64-native-set!</strong>
+        <em>c-bytevector</em> <em>k</em> <em>n</em>)</br>
+        (<strong>c-bytevector-s64-native-set!</strong>
+        <em>c-bytevector</em> <em>k</em> <em>n</em>)</p>
+        <p><em>K</em>,…,<em>k</em> + 7 must be valid indices of
+        <em>c-bytevector</em>. For c-bytevector-u64-set! and
+        c-bytevector-u64-native-set!, <em>n</em> must be an exact
+        integer object in the interval {0,…,264 − 1}. For
+        c-bytevector-s64-set! and c-bytevector-s64-native-set!,
+        <em>n</em> must be an exact integer object in the interval
+        {−263,…,264 − 1}.</p>
+        <p>These retrieve and set eight-byte representations of numbers
+        at indices <em>k</em>,…,<em>k</em> + 7, according to the
+        endianness specified by <em>endianness</em>. The procedures with
+        u64 in their names deal with the unsigned representation; those
+        with s64 with the two’s-complement representation.</p>
+        <p>The procedures with native in their names employ the native
+        endianness, and work only at aligned indices: <em>k</em> must be
+        a multiple of 8.</p>
+        <p>The …-set! procedures return unspecified values.</p>
+        <p>(<strong>c-bytevector-ieee-single-native-ref</strong>)</br>
+        (<strong>c-bytevector-ieee-single-ref</strong>)</br></p>
+        <p><em>K</em>,…,<em>k</em> + 3 must be valid indices of
+        <em>c-bytevector</em>. For c-bytevector-ieee-single-native-ref,
+        <em>k</em> must be a multiple of 4.</p>
+        <p>These procedures return the inexact real number object that
+        best represents the IEEE-754 single-precision number represented
+        by the four bytes beginning at index <em>k</em>.</p>
+        <p>(<strong>c-bytevector-ieee-double-native-ref</strong>)</br>
+        (<strong>c-bytevector-ieee-double-ref</strong>)</p>
+        <p><em>K</em>,…,<em>k</em> + 7 must be valid indices of
+        <em>c-bytevector</em>. For c-bytevector-ieee-double-native-ref,
+        <em>k</em> must be a multiple of 8.</p>
+        <p>These procedures return the inexact real number object that
+        best represents the IEEE-754 double-precision number represented
+        by the eight bytes beginning at index <em>k</em>.</p>
+        <p>(<strong>c-bytevector-ieee-single-native-set!</strong>)</br>
+        (<strong>c-bytevector-ieee-single-set!</strong>)</p>
+        <p><em>K</em>,…,<em>k</em> + 3 must be valid indices of
+        <em>c-bytevector</em>. For c-bytevector-ieee-single-native-set!,
+        <em>k</em> must be a multiple of 4.</p>
+        <p>These procedures store an IEEE-754 single-precision
+        representation of x into elements <em>k</em> through <em>k</em>
+        + 3 of bytevector, and return unspecified values.</p>
+        <p>(<strong>c-bytevector-ieee-double-native-set!</strong>)</br>
+        (<strong>c-bytevector-ieee-double-set!</strong>)</p>
+        <p><em>K</em>,…,<em>k</em> + 7 must be valid indices of
+        bytevector. For c-bytevector-ieee-double-native-set!, <em>k</em>
+        must be a multiple of 8.</p>
+        <p>These procedures store an IEEE-754 double-precision
+        representation of x into elements <em>k</em> through <em>k</em>
+        + 7 of bytevector, andreturn unspecified values.</p>
+        <p>(<strong>string-&gt;c-utf8</strong> <em>string</em>)</p>
+        <p>Returns a newly allocated (unless empty) c-bytevector that
+        contains the UTF-8 encoding of the given string.</p>
+        <p>(<strong>c-utf8-&gt;string</strong>
+        <em>c-bytevector</em>)</p>
+        <p>Returns a newly allocated (unless empty) string whose
+        character sequence is encoded by the given c-bytevector.</p>
         <h3 id="environment-variables">Environment variables</h3>
         <p>Setting environment variables like this on Windows works for
         this library:</p>

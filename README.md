@@ -126,12 +126,12 @@ to being portable by conforming to some specification.
 | Stklos           | X              | X             |              |
 | Ypsilon          | X              | X             |              |
 
-### Installation
+## Installation
 
 Either download the latest release from
-[https://git.sr.ht/~retropikzel/foreign-c/refs](https://git.sr.ht/~retropikzel/foreign-c/refs) or git clone
-, preferably with a tag, and copy the _foreign_ directory to your library
-directory.
+[https://git.sr.ht/~retropikzel/foreign-c/refs](https://git.sr.ht/~retropikzel/foreign-c/refs)
+or git clone, preferably with a tag, and copy the _foreign_ directory to your
+library directory.
 
 Example assuming libraries in directory _snow_:
 
