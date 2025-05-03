@@ -28,7 +28,54 @@ to being portable by conforming to some specification.
     - [Primitives 2](#primitives-2)
         - define-c-callback
     - [c-bytevector](#c-bytevector)
-        - [Accessors](#accessors)
+        - make-c-null
+        - c-null?
+        - c-free
+        - make-c-bytevector
+        - call-with-address-of
+        - native-endianness
+        - c-bytevector-s8-set!
+        - c-bytevector-s8-ref
+        - c-bytevector-s16-set!
+        - c-bytevector-s16-ref
+        - c-bytevector-s16-native-set!
+        - c-bytevector-s16-native-ref
+        - c-bytevector-u16-set!
+        - c-bytevector-u16-ref
+        - c-bytevector-u16-native-set!
+        - c-bytevector-u16-native-ref
+        - c-bytevector-s32-set!
+        - c-bytevector-s32-ref
+        - c-bytevector-s32-native-set!
+        - c-bytevector-s32-native-ref
+        - c-bytevector-u32-set!
+        - c-bytevector-u32-ref
+        - c-bytevector-u32-native-set!
+        - c-bytevector-u32-native-ref
+        - c-bytevector-s64-set!
+        - c-bytevector-s64-ref
+        - c-bytevector-s64-native-set!
+        - c-bytevector-s64-native-ref
+        - c-bytevector-u64-set!
+        - c-bytevector-u64-ref
+        - c-bytevector-u64-native-set!
+        - c-bytevector-u64-native-ref
+        - c-bytevector-sint-set!
+        - c-bytevector-sint-ref
+        - c-bytevector-uint-set!
+        - c-bytevector-uint-ref
+        - c-bytevector-ieee-single-set!
+        - c-bytevector-ieee-single-native-set!
+        - c-bytevector-ieee-single-ref
+        - c-bytevector-ieee-single-native-ref
+        - c-bytevector-ieee-double-set!
+        - c-bytevector-ieee-double-native-set!
+        - c-bytevector-ieee-double-ref
+        - c-bytevector-ieee-double-native-ref
+        - bytevector-\>c-bytevector
+        - c-bytevector-\>bytevector
+        - string-\>c-utf8
+        - c-utf8-\>string
     - [Environment variables](#environment-variables)
 
 
@@ -292,6 +339,37 @@ Returns **#t** if _obj_ is a null C pointer, otherwise returns **#f**.
 
 Frees _c-bytevector_ from memory.
 
+(**call-with-address-of**)
+
+Since the support for calling C functions taking pointer address arguments, the
+ones you would prefix with &, varies, some additional ceremony is needed on
+the Scheme side.
+
+Example:
+
+Calling from C:
+
+    //void func(int** i);
+    func(&i);
+
+Calling from Scheme:
+
+    (define cbv (make-bytevector (c-type-size 'int)))
+    (call-with-address-of
+     cbv
+     (lambda (address)
+      (func address)))
+    ; Use cbv here
+
+The passed c-bytevector, in example named cbv, should only be used **after**
+call to call-with-addres-of ends.
+
+(**native-endianness**)
+
+Returns the endianness symbol associated implementation’s preferred endianness
+(usually that of the underlying machine architecture).  This may be any
+\<endianness symbol\>, including a symbol other than big and little.
+
 (**make-c-bytevector** _k_)
 (**make-c-bytevector** _k_ _fill_)
 
@@ -304,14 +382,6 @@ If the _fill_ argument is present, it's value must confine to C uint8_t values
 , it specifies the initial value for the bytes of the c-bytevector
 
 
-#### Accessors
-
-(**native-endianness**)
-
-Returns the endianness symbol associated implementation’s preferred endianness
-(usually that of the underlying machine architecture).  This may be any
-endianness symbol, including a symbol other than big and little.
-
 (**c-bytevector-s8-set!** _c-bytevector_ _k_ _byte_)
 
 If K is not a valid index of c-bytevector the behaviour is undefined.
@@ -323,48 +393,65 @@ Stores the byte in element k of c-bytevector.
 If K is not a valid index of c-bytevector the behaviour is undefined.
 
 Returns the byte at index k of c-bytevector.
-c-bytevector-s16-set!
-c-bytevector-s16-ref
-c-bytevector-s16-native-set!
-c-bytevector-s16-native-ref
-c-bytevector-u16-set!
-c-bytevector-u16-ref
-c-bytevector-u16-native-set!
-c-bytevector-u16-native-ref
-c-bytevector-s32-set!
-c-bytevector-s32-ref
-c-bytevector-s32-native-set!
-c-bytevector-s32-native-ref
-c-bytevector-u32-set!
-c-bytevector-u32-ref
-c-bytevector-u32-native-set!
-c-bytevector-u32-native-ref
-c-bytevector-s64-set!
-c-bytevector-s64-ref
-c-bytevector-s64-native-set!
-c-bytevector-s64-native-ref
-c-bytevector-u64-set!
-c-bytevector-u64-ref
-c-bytevector-u64-native-set!
-c-bytevector-u64-native-ref
-c-bytevector-sint-set!
-c-bytevector-sint-ref
-c-bytevector-uint-set!
-c-bytevector-uint-ref
-c-bytevector-ieee-single-set!
-c-bytevector-ieee-single-native-set!
-c-bytevector-ieee-single-ref
-c-bytevector-ieee-single-native-ref
-c-bytevector-ieee-double-set!
-c-bytevector-ieee-double-native-set!
-c-bytevector-ieee-double-ref
-c-bytevector-ieee-double-native-ref
-bytevector->c-bytevector
-c-bytevector->bytevector
-call-with-address-of
 
-string->c-utf8
-c-utf8->string
+(**c-bytevector-sint-set!** _bytevector_ _k_ _endianness_ _size_)
+(**c-bytevector-sint-ref** _bytevector_ _k_ _endianness_ _size_)
+(**c-bytevector-uint-set!** _bytevector_ _k_ _endianness_ _size_)
+(**c-bytevector-uint-ref** _bytevector_ _k_ _endianness_ _size_)
+
+Size must be a positive exact integer object. If K , . . . , k +
+size − 1 is not valid indices of bytevector the behavior is unspecified.
+
+The c-bytevector-uint-ref procedure retrieves the exact integer object
+corresponding to the unsigned representation of size _size_ and specified by
+_endianness_ at indices _k_,...,_k_ + _size_ − 1.
+
+The c-bytevector-sint-ref procedure retrieves the exact integer object
+corresponding to the two’s-complement representation of size size and
+specified by endianness at indices k , . . . , k + size − 1.  For
+c-bytevector-uint-set!, n must be an exact integer object in the interval
+{0, . . . , 256size − 1}.
+
+The c-bytevector-uint-set! procedure stores the unsigned representation of
+size size and specified by endianness into bytevector at indices
+k , . . . , k + size − 1.
+
+(**c-bytevector-s16-set!**)
+(**c-bytevector-s16-ref**)
+(**c-bytevector-s16-native-set!**)
+(**c-bytevector-s16-native-ref**)
+(**c-bytevector-u16-set!**)
+(**c-bytevector-u16-ref**)
+(**c-bytevector-u16-native-set!**)
+(**c-bytevector-u16-native-ref**)
+(**c-bytevector-s32-set!**)
+(**c-bytevector-s32-ref**)
+(**c-bytevector-s32-native-set!**)
+(**c-bytevector-s32-native-ref**)
+(**c-bytevector-u32-set!**)
+(**c-bytevector-u32-ref**)
+(**c-bytevector-u32-native-set!**)
+(**c-bytevector-u32-native-ref**)
+(**c-bytevector-s64-set!**)
+(**c-bytevector-s64-ref**)
+(**c-bytevector-s64-native-set!**)
+(**c-bytevector-s64-native-ref**)
+(**c-bytevector-u64-set!**)
+(**c-bytevector-u64-ref**)
+(**c-bytevector-u64-native-set!**)
+(**c-bytevector-u64-native-ref**)
+(**c-bytevector-ieee-single-set!**)
+(**c-bytevector-ieee-single-native-set!**)
+(**c-bytevector-ieee-single-ref**)
+(**c-bytevector-ieee-single-native-ref**)
+(**c-bytevector-ieee-double-set!**)
+(**c-bytevector-ieee-double-native-set!**)
+(**c-bytevector-ieee-double-ref**)
+(**c-bytevector-ieee-double-native-ref**)
+(**bytevector->c-bytevector**)
+(**c-bytevector->bytevector**)
+(**string->c-utf8**)
+(**c-utf8->string**)
 
 ### Environment variables
 

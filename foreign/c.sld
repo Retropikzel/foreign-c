@@ -224,10 +224,23 @@
           make-c-null
           c-null?
           c-free
-          make-c-bytevector
+          call-with-address-of
+
+          ;; TODO endianness
           native-endianness
+          make-c-bytevector
+          ;; TODO c-bytevector=?
+          ;; TODO c-bytevector-fill!
+          ;; TODO c-bytevector-copy!
+          ;; TODO c-bytevector-copy
           c-bytevector-s8-set!
           c-bytevector-s8-ref
+          ;; TODO c-bytevector->u8-list
+          ;; TODO u8-list->c-bytevector
+          c-bytevector-sint-set!
+          c-bytevector-sint-ref
+          c-bytevector-uint-set!
+          c-bytevector-uint-ref
           c-bytevector-s16-set!
           c-bytevector-s16-ref
           c-bytevector-s16-native-set!
@@ -252,10 +265,6 @@
           c-bytevector-u64-ref
           c-bytevector-u64-native-set!
           c-bytevector-u64-native-ref
-          c-bytevector-sint-set!
-          c-bytevector-sint-ref
-          c-bytevector-uint-set!
-          c-bytevector-uint-ref
           c-bytevector-ieee-single-set!
           c-bytevector-ieee-single-native-set!
           c-bytevector-ieee-single-ref
@@ -266,7 +275,6 @@
           c-bytevector-ieee-double-native-ref
           bytevector->c-bytevector
           c-bytevector->bytevector
-          call-with-address-of
 
           string->c-utf8
           c-utf8->string
