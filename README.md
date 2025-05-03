@@ -268,6 +268,9 @@ Example:
 
 ### c-bytevector
 
+Foreign-c c-bytevector interface is copied from R6RS bytevectors, with some
+added functionality for C null pointers.
+
 (**make-c-null**)
 
 Returns a null C pointer.
@@ -296,9 +299,33 @@ If the _fill_ argument is present, it's value must confine to C uint8_t values
 
 (**native-endianness**)
 
+Returns the endianness symbol associated implementation’s preferred endianness
+(usually that of the underlying machine architecture).  This may be any
+endianness symbol, including a symbol other than big and little.
 
-c-bytevector-s8-set!
-c-bytevector-s8-ref
+(**c-bytevector-s8-set!** _c-bytevector_ _k_ _byte_)
+
+If K is not a valid index of c-bytevector the behaviour is undefined.
+
+Stores the byte in element k of c-bytevector.
+
+(**c-bytevector-s8-ref** _c-bytevector_ _k_ _byte_)
+
+If K is not a valid index of c-bytevector the behaviour is undefined.
+
+Returns the byte at index k of c-bytevector.
+
+(**c-bytevector-u8-set!** _c-bytevector_ _k_ _byte_)
+
+If K is not a valid index of c-bytevector the behaviour is undefined.
+
+Stores the byte in element k of c-bytevector.
+
+(**c-bytevector-u8-ref** _c-bytevector_ _k_)
+
+If K is not a valid index of c-bytevector the behaviour is undefined.
+
+Returns the byte at index k of c-bytevector.
 c-bytevector-s16-set!
 c-bytevector-s16-ref
 c-bytevector-s16-native-set!
