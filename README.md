@@ -81,7 +81,7 @@ Example assuming libraries in directory _snow_:
     git clone https://git.sr.ht/~retropikzel/foreign-c --branch LATEST_VERSION
     mkdir -p snow
     cp -r foreign-c/foreign snow/
-    make -C snow/foreign/c <SCHEME_IMPLEMENTATION_NAME>
+    make -C snow/foreign/c SCHEME_IMPLEMENTATION_NAME
 
 With most implementations the make command does not compile anything. When that
 is the case it will say "Nothing to build on SCHEME\_IMPLEMENTATION\_NAME."
@@ -123,6 +123,8 @@ Types are given as symbols, for example 'int8 or 'pointer.
 
 Returns the size of given C type.
 
+***
+
 (**define-c-library** _scheme-name_ _headers_ _object-name_ _options_)
 
 Takes a scheme-name to bind the library to, list of C headers as
@@ -134,7 +136,7 @@ automatically.
 The name of the shared object should not contain suffix like .so or .dll.
 Nor should it contain any prefix like "lib".
 
-The options are:
+Options:
 
 - additional-versions
     - Search for additional versions of shared object, given shared object "c"
