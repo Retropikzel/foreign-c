@@ -11,8 +11,8 @@ being portable by conforming to some specification.
 
 The new readme is a work in progress.
 
-- [Installation](#Installation)
-- [Documentation](#Documentation)
+- [Installation](#installation)
+- [Documentation](#documentation)
 
 
 ## Implementation support tables
