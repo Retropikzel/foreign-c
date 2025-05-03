@@ -3,13 +3,19 @@ title: (foreign c) a portable foreign function interface for R7RS
 version: 0.10.0
 ---
 
-# (foreign c)
+# foreign-c
 
-(foreign c) is a C foreign function interface (FFI) library for R7RS. It is
+foreign-c is a C foreign function interface (FFI) library for R7RS. It is
 portable in the sense that it supports multiple implementations, as opposed to
 being portable by conforming to some specification.
 
-The new readme is a work in progress.
+[Project](https://todo.sr.ht/~retropikzel/r7rs-pffi)
+
+[Issue trackers](https://sr.ht/~retropikzel/r7rs-pffi/trackers)
+
+[Maling lists](https://sr.ht/~retropikzel/r7rs-pffi/lists)
+
+[Jenkins](https://jenkins.scheme.org/job/r7rs_pffi/job/r7rs-pffi/)
 
 - [Installation](#installation)
 - [Documentation](#documentation)
@@ -69,7 +75,7 @@ The new readme is a work in progress.
 ### Installation
 
 Either download the latest release from
-[releases page](https://git.sr.ht/~retropikzel/foreign-c/refs) or git clone
+[https://git.sr.ht/~retropikzel/foreign-c/refs](https://git.sr.ht/~retropikzel/foreign-c/refs) or git clone
 , preferably with a tag, and copy the "foreign" directory to your library
 directory.
 
@@ -121,7 +127,7 @@ Returns the size of given C type.
 (**define-c-library** _scheme-name_ _headers_ _object-name_ _options_)
 
 Takes a scheme-name to bind the library to, list of C headers as
-strings, Shared-object name and options.
+strings, shared-object name and options.
 
 The C header strings should not contain "<" or ">", they are added
 automatically.
