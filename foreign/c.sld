@@ -219,10 +219,10 @@
           c-bytevector-pointer-ref
 
           ;;;; c-bytevector
-          make-c-bytevector
           make-c-null
           c-null?
           c-free
+          make-c-bytevector
           native-endianness
           c-bytevector-s8-set!
           c-bytevector-s8-ref

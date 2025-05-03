@@ -123,8 +123,6 @@ Types are given as symbols, for example 'int8 or 'pointer.
 
 Returns the size of given C type.
 
-***
-
 (**define-c-library** _scheme-name_ _headers_ _object-name_ _options_)
 
 Takes a scheme-name to bind the library to, list of C headers as
@@ -269,16 +267,7 @@ Example:
 
 ### c-bytevector
 
-(**make-c-bytevector** _k_)
-(**make-c-bytevector** _k_ _fill_)
-
-Returns a newly allocated c-bytevector of _k_ bytes.
-
-If the _fill_ argument is missing, the initial contents of the
-returned c-bytevector are unspecified.
-
-If the _fill_ argument is present, it's value must confine to C uint8_t values
-, it specifies the initial value for the bytes of the c-bytevector
+#### Creation and deletion
 
 (**make-c-null**)
 
@@ -292,7 +281,23 @@ Returns **#t** if _obj_ is a null C pointer, otherwise returns **#f**.
 
 Frees _c-bytevector_ from memory.
 
-native-endianness
+(**make-c-bytevector** _k_)
+(**make-c-bytevector** _k_ _fill_)
+
+Returns a newly allocated c-bytevector of _k_ bytes.
+
+If the _fill_ argument is missing, the initial contents of the
+returned c-bytevector are unspecified.
+
+If the _fill_ argument is present, it's value must confine to C uint8_t values
+, it specifies the initial value for the bytes of the c-bytevector
+
+
+#### Accessors
+
+(**native-endianness**)
+
+
 c-bytevector-s8-set!
 c-bytevector-s8-ref
 c-bytevector-s16-set!
