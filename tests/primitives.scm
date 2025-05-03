@@ -72,140 +72,140 @@
        (newline)))))
 
 
-;; c-size-of
+;; c-type-size
 
-(print-header 'c-size-of)
+(print-header 'c-type-size)
 
-(define size-int8 (c-size-of 'int8))
+(define size-int8 (c-type-size 'int8))
 (debug size-int8)
 (assert equal? (number? size-int8) #t)
 (assert = size-int8 1)
 
-(define size-uint8 (c-size-of 'uint8))
+(define size-uint8 (c-type-size 'uint8))
 (debug size-uint8)
 (assert equal? (number? size-uint8) #t)
 (assert = size-uint8 1)
 
-(assert equal? (number? (c-size-of 'uint8)) #t)
-(define size-int16 (c-size-of 'int16))
+(assert equal? (number? (c-type-size 'uint8)) #t)
+(define size-int16 (c-type-size 'int16))
 (debug size-int16)
 (assert equal? (number? size-int16) #t)
 (assert = size-int16 2)
 
-(assert equal? (number? (c-size-of 'int16)) #t)
-(define size-uint16 (c-size-of 'uint16))
+(assert equal? (number? (c-type-size 'int16)) #t)
+(define size-uint16 (c-type-size 'uint16))
 (debug size-uint16)
 (assert equal? (number? size-uint16) #t)
 (assert = size-uint16 2)
 
-(assert equal? (number? (c-size-of 'uint16)) #t)
-(define size-int32 (c-size-of 'int32))
+(assert equal? (number? (c-type-size 'uint16)) #t)
+(define size-int32 (c-type-size 'int32))
 (debug size-int32)
 (assert equal? (number? size-int32) #t)
 (assert = size-int32 4)
 
-(assert equal? (number? (c-size-of 'int32)) #t)
-(define size-uint32 (c-size-of 'uint32))
+(assert equal? (number? (c-type-size 'int32)) #t)
+(define size-uint32 (c-type-size 'uint32))
 (debug size-uint32)
 (assert equal? (number? size-uint32) #t)
 (assert = size-uint32 4)
 
-(assert equal? (number? (c-size-of 'uint32)) #t)
-(define size-int64 (c-size-of 'int64))
+(assert equal? (number? (c-type-size 'uint32)) #t)
+(define size-int64 (c-type-size 'int64))
 (debug size-int64)
 (assert equal? (number? size-int64) #t)
 (assert = size-int64 8)
 
-(assert equal? (number? (c-size-of 'int64)) #t)
-(define size-uint64 (c-size-of 'uint64))
+(assert equal? (number? (c-type-size 'int64)) #t)
+(define size-uint64 (c-type-size 'uint64))
 (debug size-uint64)
 (assert equal? (number? size-uint64) #t)
 (assert = size-uint64 8)
 
-(assert equal? (number? (c-size-of 'uint64)) #t)
-(define size-char (c-size-of 'char))
+(assert equal? (number? (c-type-size 'uint64)) #t)
+(define size-char (c-type-size 'char))
 (debug size-char)
 (assert equal? (number? size-char) #t)
 (assert = size-char 1)
 
-(assert equal? (number? (c-size-of 'char)) #t)
-(define size-unsigned-char (c-size-of 'unsigned-char))
+(assert equal? (number? (c-type-size 'char)) #t)
+(define size-unsigned-char (c-type-size 'unsigned-char))
 (debug size-unsigned-char)
 (assert equal? (number? size-unsigned-char) #t)
 (assert = size-unsigned-char 1)
 
-(assert equal? (number? (c-size-of 'unsigned-char)) #t)
-(define size-short (c-size-of 'short))
+(assert equal? (number? (c-type-size 'unsigned-char)) #t)
+(define size-short (c-type-size 'short))
 (debug size-short)
 (assert equal? (number? size-short) #t)
 (assert = size-short 2)
 
-(assert equal? (number? (c-size-of 'short)) #t)
-(define size-unsigned-short (c-size-of 'unsigned-short))
+(assert equal? (number? (c-type-size 'short)) #t)
+(define size-unsigned-short (c-type-size 'unsigned-short))
 (debug size-unsigned-short)
 (assert equal? (number? size-unsigned-short) #t)
 (assert = size-unsigned-short 2)
 
-(assert equal? (number? (c-size-of 'unsigned-short)) #t)
-(define size-int (c-size-of 'int))
+(assert equal? (number? (c-type-size 'unsigned-short)) #t)
+(define size-int (c-type-size 'int))
 (debug size-int)
 (assert equal? (number? size-int) #t)
 (assert = size-int 4)
 
-(assert equal? (number? (c-size-of 'int)) #t)
-(define size-unsigned-int (c-size-of 'unsigned-int))
+(assert equal? (number? (c-type-size 'int)) #t)
+(define size-unsigned-int (c-type-size 'unsigned-int))
 (debug size-unsigned-int)
 (assert equal? (number? size-unsigned-int) #t)
 (assert = size-unsigned-int 4)
 
 (cond-expand
   (i386
-    (assert equal? (number? (c-size-of 'long)) #t)
-    (define size-long (c-size-of 'long))
+    (assert equal? (number? (c-type-size 'long)) #t)
+    (define size-long (c-type-size 'long))
     (debug size-long)
     (assert equal? (number? size-long) #t)
     (assert = size-long 4))
   (else
-    (assert equal? (number? (c-size-of 'long)) #t)
-    (define size-long (c-size-of 'long))
+    (assert equal? (number? (c-type-size 'long)) #t)
+    (define size-long (c-type-size 'long))
     (debug size-long)
     (assert equal? (number? size-long) #t)
     (assert = size-long 8)))
 
 (cond-expand
   (i386
-    (assert equal? (number? (c-size-of 'unsigned-long)) #t)
-    (define size-unsigned-long (c-size-of 'unsigned-long))
+    (assert equal? (number? (c-type-size 'unsigned-long)) #t)
+    (define size-unsigned-long (c-type-size 'unsigned-long))
     (debug size-unsigned-long)
     (assert equal? (number? size-unsigned-long) #t)
     (assert = size-unsigned-long 4))
   (else
-    (assert equal? (number? (c-size-of 'long)) #t)
-    (define size-unsigned-long (c-size-of 'unsigned-long))
+    (assert equal? (number? (c-type-size 'long)) #t)
+    (define size-unsigned-long (c-type-size 'unsigned-long))
     (debug size-unsigned-long)
     (assert equal? (number? size-unsigned-long) #t)
     (assert = size-unsigned-long 8)))
 
-(assert equal? (number? (c-size-of 'float)) #t)
-(define size-float (c-size-of 'float))
+(assert equal? (number? (c-type-size 'float)) #t)
+(define size-float (c-type-size 'float))
 (debug size-float)
 (assert equal? (number? size-float) #t)
 (assert = size-float 4)
 
-(assert equal? (number? (c-size-of 'double)) #t)
-(define size-double (c-size-of 'double))
+(assert equal? (number? (c-type-size 'double)) #t)
+(define size-double (c-type-size 'double))
 (debug size-double)
 (assert equal? (number? size-double) #t)
 (assert = size-double 8)
 
 (cond-expand
   (i386
-    (define size-pointer (c-size-of 'pointer))
+    (define size-pointer (c-type-size 'pointer))
     (debug size-pointer)
     (assert equal? (number? size-pointer) #t)
     (assert = size-pointer 4))
   (else
-    (define size-pointer (c-size-of 'pointer))
+    (define size-pointer (c-type-size 'pointer))
     (debug size-pointer)
     (assert equal? (number? size-pointer) #t)
     (assert = size-pointer 8)))
@@ -270,7 +270,7 @@
 ;; c-bytevector-u8-set! and c-bytevector-u8-ref
 (print-header "c-bytevector-u8-set! and c-bytevector-u8-ref")
 
-(define u8-pointer (make-c-bytevector (c-size-of 'uint8)))
+(define u8-pointer (make-c-bytevector (c-type-size 'uint8)))
 (debug u8-pointer)
 (debug (c-bytevector? u8-pointer))
 (assert equal? (c-bytevector? u8-pointer) #t)
@@ -282,7 +282,7 @@
 ;; c-bytevector-pointer-set! and c-bytevector-pointer-ref
 (print-header "c-bytevector-pointer-set! and c-bytevector-pointer-ref")
 
-(define p-pointer (make-c-bytevector (c-size-of 'pointer)))
+(define p-pointer (make-c-bytevector (c-type-size 'pointer)))
 (debug p-pointer)
 (debug (c-bytevector? p-pointer))
 (assert equal? (c-bytevector? p-pointer) #t)

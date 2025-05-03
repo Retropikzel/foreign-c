@@ -1,6 +1,6 @@
-(define c-size-of
-  (lambda (object)
-    (size-of-type object)))
+(define c-type-size
+  (lambda (type)
+    (size-of-type type)))
 
 (define foreign-c:string-split
   (lambda (str mark)

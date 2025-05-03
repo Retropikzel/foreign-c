@@ -208,7 +208,7 @@
               (ypsilon c-types)
               (only (core) define-macro syntax-case))))
   (export ;;;; Primitives
-          c-size-of
+          c-type-size
           define-c-library
           define-c-procedure
           define-c-callback
