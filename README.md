@@ -449,8 +449,9 @@ with u16 in their names deal with the unsigned representation; those with s16
 in their names deal with the two’s-complement representation.
 
 The procedures with native in their names employ the native endianness, and
-work only at aligned indices: _k_ must be a multiple of 2.  The ...-set!
-procedures return unspecified values.
+work only at aligned indices: _k_ must be a multiple of 2.
+
+The ...-set!  procedures return unspecified values.
 
 (**c-bytevector-u32-ref** _bytevector_ _k_ _endianness_)
 (**c-bytevector-s32-ref** _bytevector_ _k_ _endianness_)
@@ -466,6 +467,16 @@ and bytevector-u32-native-set!, _n_ must be an exact integer object in the
 interval {0,...,232 − 1}. For bytevector-s32-set! and
 bytevector-s32-native-set!, _n_ must be an exact integer object in the
 interval {−231,...,232 − 1}.
+
+These retrieve and set four-byte representations of numbers at indices
+_k_,...,_k_ + 3, according to the endianness specified by _endianness_.
+The procedures with u32 in their names deal with the unsigned representation;
+those with s32 with the two’s-complement representation.
+
+The procedures with native in their names employ the native endianness, and
+work only at aligned indices: _k_ must be a multiple of 4.
+
+The ...-set!  procedures return unspecified values.
 
 (**c-bytevector-s64-set!**)
 (**c-bytevector-s64-ref**)
