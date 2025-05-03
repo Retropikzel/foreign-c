@@ -17,7 +17,16 @@ to being portable by conforming to some specification.
 - [Documentation](#documentation)
     - [Types](#types)
     - [Primitives 1](#primitives-1)
+        - c-type-size
+        - define-c-library
+        - define-c-procedure
+        - c-bytevector?
+        - c-bytevector-u8-set!
+        - c-bytevector-u8-ref
+        - c-bytevector-pointer-set!
+        - c-bytevector-pointer-ref
     - [Primitives 2](#primitives-2)
+        - define-c-callback
     - [c-bytevector](#c-bytevector)
         - [Accessors](#accessors)
     - [Environment variables](#environment-variables)
@@ -310,18 +319,6 @@ If K is not a valid index of c-bytevector the behaviour is undefined.
 Stores the byte in element k of c-bytevector.
 
 (**c-bytevector-s8-ref** _c-bytevector_ _k_ _byte_)
-
-If K is not a valid index of c-bytevector the behaviour is undefined.
-
-Returns the byte at index k of c-bytevector.
-
-(**c-bytevector-u8-set!** _c-bytevector_ _k_ _byte_)
-
-If K is not a valid index of c-bytevector the behaviour is undefined.
-
-Stores the byte in element k of c-bytevector.
-
-(**c-bytevector-u8-ref** _c-bytevector_ _k_)
 
 If K is not a valid index of c-bytevector the behaviour is undefined.
 

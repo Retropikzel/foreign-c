@@ -207,16 +207,18 @@
               (ypsilon c-ffi)
               (ypsilon c-types)
               (only (core) define-macro syntax-case))))
-  (export ;;;; Primitives
+  (export ;;;; Primitives 1
           c-type-size
           define-c-library
           define-c-procedure
-          define-c-callback
           c-bytevector?
           c-bytevector-u8-set!
           c-bytevector-u8-ref
           c-bytevector-pointer-set!
           c-bytevector-pointer-ref
+
+          ;;;; Primitives 2
+          define-c-callback
 
           ;;;; c-bytevector
           make-c-null
