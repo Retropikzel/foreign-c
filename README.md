@@ -339,7 +339,9 @@ Returns **#t** if _obj_ is a null C pointer, otherwise returns **#f**.
 
 Frees _c-bytevector_ from memory.
 
-(**call-with-address-of**)
+(**call-with-address-of** _c-bytevector_ _thunk_)
+
+Calls _thunk_ with address pointer of _c-bytevector_.
 
 Since the support for calling C functions taking pointer address arguments, the
 ones you would prefix with &, varies, some additional ceremony is needed on
