@@ -76,8 +76,7 @@ Either download the latest release from
 , preferably with a tag, and copy the _foreign_ directory to your library
 directory.
 
-As an example assuming you have a project and your libraries live in directory
-called snow in it:
+Example assuming libraries in directory _snow_:
 
     git clone https://git.sr.ht/~retropikzel/foreign-c --branch LATEST_VERSION
     mkdir -p snow
