@@ -19,6 +19,7 @@ to being portable by conforming to some specification.
     - [Primitives 1](#primitives-1)
     - [Primitives 2](#primitives-2)
     - [c-bytevector](#c-bytevector)
+        - [Accessors](#accessors)
     - [Environment variables](#environment-variables)
 
 
@@ -266,8 +267,6 @@ Example:
     ;> (1 2 3)
 
 ### c-bytevector
-
-#### Creation and deletion
 
 (**make-c-null**)
 
