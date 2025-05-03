@@ -63,7 +63,7 @@ The new readme is a work in progress.
 
 ### Primitives
 
-(*c-type-size* _type_)
+(**c-type-size** _type_)
 
 Returns the size of given C type.
 
