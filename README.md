@@ -128,7 +128,7 @@ to being portable by conforming to some specification.
 
 ## Installation
 
-Either download the latest release from
+Eithe download the latest release from
 [https://git.sr.ht/~retropikzel/foreign-c/refs](https://git.sr.ht/~retropikzel/foreign-c/refs)
 or git clone, preferably with a tag, and copy the _foreign_ directory to your
 library directory.
@@ -325,7 +325,7 @@ Example:
 ### c-bytevector
 
 Foreign-c c-bytevector interface is copied from R6RS bytevectors, with some
-added functionality for C null pointers.
+added functionality for C null pointers and manual memory management.
 
 (**make-c-null**)
 
@@ -343,8 +343,8 @@ Frees _c-bytevector_ from memory.
 
 Calls _thunk_ with address pointer of _c-bytevector_.
 
-Since the support for calling C functions taking pointer address arguments, the
-ones you would prefix with &, varies, some additional ceremony is needed on
+Since the support for calling C functions taking pointer address arguments,
+ones prefixrd with & in C, varies, some additional ceremony is needed on
 the Scheme side.
 
 Example:
