@@ -16,7 +16,7 @@ being portable by conforming to some specification.
 - [Installation](#installation)
 - [Documentation](#documentation)
     - [Types](#types)
-    - [Primitives](#primitives)
+    - [Primitives](#primitives-1)
     - [c-bytevector](#c-bytevector)
     - [Environment variables](#environment-variables)
 
@@ -114,7 +114,7 @@ Types are given as symbols, for example 'int8 or 'pointer.
 - callback
     - Callback function
 
-### Primitives
+### Primitives 1
 
 (**c-type-size** _type_)
 
@@ -161,11 +161,33 @@ Example:
 implementations.
 - Do not store options in variables, that might lead to problems on some
 implementations.
-- Do pass the headers using quote
-    - As '(... and not (list...
-- Do pass the options using quote
-    - As '(... and not (list...
-define-c-procedure
+- Pass the headers using quote
+    - As '(...) and not (list...)
+- Pass the options using quote
+    - As '(...) and not (list...)
+
+(**define-c-procedure** scheme-name shared-object c-name return-type
+argument-types)
+
+Takes a scheme-name to bind the C procedure to, shared-object where the function
+is looked from, c-name of the function as symbol, return-type and argument-types.
+
+Defines a new foreign function to be used from Scheme code.
+
+
+Example:
+
+    (cond-expand
+        (windows (define-c-library libc-stdlib '("stdlib.h") "ucrtbase" '("")))
+        (else (define-c-library libc-stdlib '("stdlib.h")  "c" '("" "6"))))
+    (define-c-procedure c-puts libc-stdlib 'puts 'int '(pointer))
+    (c-puts "Message brought to you by FFI!")
+
+#### Notes
+
+- Pass the return-types using quote
+    - As '(...) and not (list...)
+
 define-c-callback
 c-bytevector?
 c-bytevector-u8-set!
