@@ -68,9 +68,7 @@
      (define scheme-name
        (%make-callback procedure
                        (map type->native-type argument-types)
-                       (type->native-type return-type))
-
-     ))))
+                       (type->native-type return-type))))))
 
 ; FIXME
 (define size-of-type
@@ -95,10 +93,10 @@
           ((equal? type 'double) 8)
           ((equal? type 'pointer) 8))))
 
-(define c-bytevector-u8-set! pointer-set-c-uint8_t!)
-(define c-bytevector-u8-ref pointer-ref-c-uint8_t)
-(define c-bytevector-pointer-set! pointer-set-c-pointer!)
-(define c-bytevector-pointer-ref pointer-ref-c-pointer)
+(define c-bytevector-u8-set! cpointer-set-uint8_t!)
+(define c-bytevector-u8-ref cpointer-ref-uint8_t)
+(define c-bytevector-pointer-set! cpointer-set-pointer!)
+(define c-bytevector-pointer-ref cpointer-ref-pointer)
 
 #;(define pffi-pointer-set!
   (lambda (pointer type offset value)

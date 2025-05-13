@@ -4,6 +4,35 @@ DOCKER=docker run -it -v ${PWD}:/workdir
 DOCKER_INIT=cd /workdir && make clean &&
 VERSION=$(shell grep "version:" README.md | awk '{split\($0,a\); print a[2];}')
 
+test-compile-r7rs: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
+	make ${COMPILE_R7RS}
+	cp -r foreign tmp/test/
+	cp tests/*.scm tmp/test/
+	cp tests/c-include/libtest.h tmp/test/
+	cd tmp/test && \
+		COMPILE_R7RS_GAMBIT="-cc-options \"-ltest -I. -L\" -ld-options \"-L.\"" \
+		COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." \
+		compile-r7rs -I . -o ${TESTNAME} ${TESTNAME}.scm
+	cd tmp/test && \
+		LD_LIBRARY_PATH=. \
+		./${TESTNAME}
+
+test-compile-r7rs-docker:
+	docker build --build-arg COMPILE_R7RS=${COMPILE_R7RS} --tag=r7rs-pffi-test-${COMPILE_R7RS} -f dockerfiles/test .
+	docker run -v "${PWD}":/workdir -w /workdir -t r7rs-pffi-test-${COMPILE_R7RS} sh -c "make COMPILE_R7RS=${COMPILE_R7RS} test-compile-r7rs"
+
+tmp/test/libtest.o: tests/c-src/libtest.c
+	mkdir -p tmp/test
+	${CC} -o tmp/test/libtest.o -fPIC -c tests/c-src/libtest.c -I./include
+
+tmp/test/libtest.so: tests/c-src/libtest.c
+	mkdir -p tmp/test
+	${CC} -o tmp/test/libtest.so -shared -fPIC tests/c-src/libtest.c -I./include
+
+tmp/test/libtest.a: tmp/test/libtest.o tests/c-src/libtest.c
+	ar rcs tmp/test/libtest.a tmp/test/libtest.o
+
+
 # apt-get install pandoc weasyprint
 docs:
 	mkdir -p documentation
@@ -63,34 +92,6 @@ tr7:
 
 ypsilon:
 	make -C foreign/c tr7
-
-test-compile-r7rs: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
-	make ${COMPILE_R7RS}
-	cp -r foreign tmp/test/
-	cp tests/*.scm tmp/test/
-	cp tests/c-include/libtest.h tmp/test/
-	cd tmp/test && \
-		COMPILE_R7RS_GAMBIT="-cc-options \"-ltest -I. -L\" -ld-options \"-L.\"" \
-		COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." \
-		compile-r7rs -I . -o ${TESTNAME} ${TESTNAME}.scm
-	cd tmp/test && \
-		LD_LIBRARY_PATH=. \
-		./${TESTNAME}
-
-test-compile-r7rs-docker:
-	docker build --build-arg COMPILE_R7RS=${COMPILE_R7RS} --tag=r7rs-pffi-test-${COMPILE_R7RS} -f dockerfiles/test .
-	docker run -v "${PWD}":/workdir -w /workdir -t r7rs-pffi-test-${COMPILE_R7RS} sh -c "make COMPILE_R7RS=${COMPILE_R7RS} test-compile-r7rs"
-
-tmp/test/libtest.o: tests/c-src/libtest.c
-	mkdir -p tmp/test
-	${CC} -o tmp/test/libtest.o -fPIC -c tests/c-src/libtest.c -I./include
-
-tmp/test/libtest.so: tests/c-src/libtest.c
-	mkdir -p tmp/test
-	${CC} -o tmp/test/libtest.so -shared -fPIC tests/c-src/libtest.c -I./include
-
-tmp/test/libtest.a: tmp/test/libtest.o tests/c-src/libtest.c
-	ar rcs tmp/test/libtest.a tmp/test/libtest.o
 
 clean:
 	find . -name "*.meta" -delete
