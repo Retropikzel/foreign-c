@@ -21,15 +21,15 @@ test-compile-r7rs-docker:
 	docker build --build-arg COMPILE_R7RS=${COMPILE_R7RS} --tag=r7rs-pffi-test-${COMPILE_R7RS} -f Dockerfile.test .
 	docker run -v "${PWD}":/workdir -w /workdir -t r7rs-pffi-test-${COMPILE_R7RS} sh -c "make COMPILE_R7RS=${COMPILE_R7RS} test-compile-r7rs"
 
-tmp/test/libtest.o:
+tmp/test/libtest.o: tests/c-src/libtest.c
 	mkdir -p tmp/test
 	${CC} -o tmp/test/libtest.o -fPIC -c tests/c-src/libtest.c -I./include
 
-tmp/test/libtest.so:
+tmp/test/libtest.so: tests/c-src/libtest.c
 	mkdir -p tmp/test
 	${CC} -o tmp/test/libtest.so -shared -fPIC tests/c-src/libtest.c -I./include
 
-tmp/test/libtest.a: tmp/test/libtest.o
+tmp/test/libtest.a: tmp/test/libtest.o tests/c-src/libtest.c
 	ar rcs tmp/test/libtest.a tmp/test/libtest.o
 
 
