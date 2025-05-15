@@ -8,19 +8,16 @@ pipeline {
 
     stages {
         stage('Chibi primitives') {
-            environment { SCHEME="chibi" }
-            agent { dockerfile { filename 'Dockerfile.test'; additionalBuildArgs '--build-arg COMPILE_R7RS=${SCHEME}' } }
-            steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=${SCHEME} TESTNAME=primitives' } }
+            agent { dockerfile { filename 'Dockerfile.test'; additionalBuildArgs '--build-arg COMPILE_R7RS=chibi' } }
+            steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=chibi TESTNAME=primitives' } }
         }
         stage('Chibi addressof') {
-            environment { SCHEME="chibi" }
-            agent { dockerfile { filename 'Dockerfile.test'; additionalBuildArgs '--build-arg COMPILE_R7RS=${SCHEME}' } }
-            steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=${SCHEME} TESTNAME=addressof' } }
+            agent { dockerfile { filename 'Dockerfile.test'; additionalBuildArgs '--build-arg COMPILE_R7RS=chibi' } }
+            steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=chibi TESTNAME=addressof' } }
         }
         stage('Chibi callback') {
-            environment { SCHEME="chibi" }
-            agent { dockerfile { filename 'Dockerfile.test'; additionalBuildArgs '--build-arg COMPILE_R7RS=${SCHEME}' } }
-            steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=${SCHEME} TESTNAME=callback' } }
+            agent { dockerfile { filename 'Dockerfile.test'; additionalBuildArgs '--build-arg COMPILE_R7RS=chibi' } }
+            steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=chibi TESTNAME=callback' } }
         }
     }
 }
