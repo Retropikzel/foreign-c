@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        dockerfile {
+            filepath 'dockerfiles/jenkins'
+            args '--user=root'
+        }
+    }
 
     options {
         disableConcurrentBuilds()
