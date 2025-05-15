@@ -10,7 +10,7 @@ pipeline {
         stage('Chibi primitives') {
             agent {
                 dockerfile {
-                    filename 'dockerfiles/test'
+                    filename 'Dockerfile.test'
                     additionalBuildArgs '--build-arg COMPILE_R7RS=chibi'
                 }
             }
