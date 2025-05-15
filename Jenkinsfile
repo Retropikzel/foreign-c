@@ -11,7 +11,7 @@ pipeline {
             agent {
                 dockerfile {
                     filename 'dockerfiles/test'
-                    additionalbuildArgs '--build-arg COMPILE_R7RS=chibi'
+                    additionalBuildArgs '--build-arg COMPILE_R7RS=chibi'
                 }
             }
             environment {
