@@ -8,11 +8,18 @@ pipeline {
 
     stages {
         stage('Chibi primitives') {
-            agent { docker { image 'schemers/chibi' } }
+            agent {
+                docker {
+                    filename 'Dockerfile.test'
+                    additionalBuildArgs '--build-arg COMPILE_R7RS=chibi'
+                }
+            }
+            environment {
+                COMPILE_R7RS = "chibi"
+            }
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'apt update && apt install -y make'
-                    sh 'make test-compile-r7rs-docker COMPILE_R7RS=chibi TESTNAME=primitives'
+                    sh 'make test-compile-r7rs COMPILE_R7RS=chibi TESTNAME=primitives'
                 }
             }
         }
