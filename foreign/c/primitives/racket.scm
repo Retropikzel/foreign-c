@@ -76,7 +76,7 @@
 #;(define-syntax call-with-address-of-c-bytevector
   (syntax-rules ()
     ((_ input-pointer thunk)
-     (let ((address-pointer (make-c-bytevector (c-size-of 'pointer))))
+     (let ((address-pointer (make-c-bytevector (c-type-size 'pointer))))
        (c-bytevector-pointer-set! address-pointer 0 input-pointer)
        (apply thunk (list address-pointer))
        (set! input-pointer (c-bytevector-pointer-ref address-pointer 0))

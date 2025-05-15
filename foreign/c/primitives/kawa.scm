@@ -189,7 +189,7 @@
 #;(define-syntax call-with-address-of-c-bytevector
           (syntax-rules ()
             ((_ input-pointer thunk)
-             (let ((address-pointer (make-c-bytevector (c-size-of 'pointer))))
+             (let ((address-pointer (make-c-bytevector (c-type-size 'pointer))))
                (pointer-set! address-pointer 'pointer 0 input-pointer)
                (apply thunk (list address-pointer))
                (set! input-pointer (pointer-get address-pointer 'pointer 0))

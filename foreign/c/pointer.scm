@@ -100,21 +100,21 @@
                             0
                             (c-bytevector->address pointer)
                             (native-endianness)
-                            (c-size-of 'pointer))))
+                            (c-type-size 'pointer))))
 
 #;(define c-bytevector-pointer-ref
   (lambda (c-bytevector k)
     (address->c-bytevector (c-bytevector-uint-ref c-bytevector
                                                   0
                                                   (native-endianness)
-                                                  (c-size-of 'pointer)))))
+                                                  (c-type-size 'pointer)))))
 
 (cond-expand
   ;(kawa #t) ; Defined in kawa.scm
   (else (define-syntax call-with-address-of
           (syntax-rules ()
             ((_ input-pointer thunk)
-             (let ((address-pointer (make-c-bytevector (c-size-of 'pointer))))
+             (let ((address-pointer (make-c-bytevector (c-type-size 'pointer))))
                (c-bytevector-pointer-set! address-pointer 0 input-pointer)
                (let ((result (apply thunk (list address-pointer))))
                  (set! input-pointer (c-bytevector-pointer-ref address-pointer 0))

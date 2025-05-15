@@ -184,7 +184,7 @@
                                     (type->libffi-type-number return-type)
                                     (map type->libffi-type-number argument-types)
                                     c-function
-                                    (c-size-of return-type)
+                                    (c-type-size return-type)
                                     arguments)))
           (c-bytevector-get return-pointer return-type 0))))))
 

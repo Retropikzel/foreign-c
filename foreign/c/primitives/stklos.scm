@@ -93,8 +93,8 @@
           ((equal? type 'double) 8)
           ((equal? type 'pointer) 8))))
 
-(define c-bytevector-u8-set! cpointer-set-uint8_t!)
-(define c-bytevector-u8-ref cpointer-ref-uint8_t)
+(define c-bytevector-u8-set! cpointer-set-uint8!)
+(define c-bytevector-u8-ref cpointer-ref-uint8)
 (define c-bytevector-pointer-set! cpointer-set-pointer!)
 (define c-bytevector-pointer-ref cpointer-ref-pointer)
 

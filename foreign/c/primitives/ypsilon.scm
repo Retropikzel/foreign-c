@@ -31,27 +31,27 @@
 (define c-bytevector-u8-set!
   (lambda (c-bytevector k byte)
     (bytevector-c-int8-set! (make-bytevector-mapping (+ c-bytevector k)
-                                                     (c-size-of 'uint8))
+                                                     (c-type-size 'uint8))
                             0
                             byte)))
 
 (define c-bytevector-u8-ref
   (lambda (c-bytevector k)
       (bytevector-c-int8-ref (make-bytevector-mapping (+ c-bytevector k)
-                                                      (c-size-of 'uint8))
+                                                      (c-type-size 'uint8))
                              0)))
 (define c-bytevector-pointer-set!
   (lambda (c-bytevector k pointer)
-    (let ((bv (make-bytevector-mapping (+ c-bytevector k) (c-size-of 'pointer))))
+    (let ((bv (make-bytevector-mapping (+ c-bytevector k) (c-type-size 'pointer))))
       (bytevector-c-void*-set! bv 0 pointer))))
 (define c-bytevector-pointer-ref
   (lambda (c-bytevector k)
-    (let ((bv (make-bytevector-mapping (+ c-bytevector k) (c-size-of 'pointer))))
+    (let ((bv (make-bytevector-mapping (+ c-bytevector k) (c-type-size 'pointer))))
       (bytevector-c-void*-ref bv 0))))
 
 #;(define pointer-set!
   (lambda (pointer type offset value)
-    (let ((bv (make-bytevector-mapping (+ pointer offset) (c-size-of type))))
+    (let ((bv (make-bytevector-mapping (+ pointer offset) (c-type-size type))))
       (cond ((equal? type 'int8) (bytevector-c-int8-set! bv 0 value))
             ((equal? type 'uint8) (bytevector-c-int8-set! bv 0 value))
             ((equal? type 'int16) (bytevector-c-int16-set! bv 0 value))
@@ -74,7 +74,7 @@
 
 #;(define pointer-get
   (lambda (pointer type offset)
-    (let ((bv (make-bytevector-mapping (+ pointer offset) (c-size-of type))))
+    (let ((bv (make-bytevector-mapping (+ pointer offset) (c-type-size type))))
       (cond ((equal? type 'int8) (bytevector-c-int8-ref bv 0))
             ((equal? type 'uint8) (bytevector-c-uint8-ref bv 0))
             ((equal? type 'int16) (bytevector-c-int16-ref bv 0))

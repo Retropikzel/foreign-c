@@ -43,19 +43,19 @@
 
 (define c-bytevector-u8-set!
   (lambda (c-bytevector k byte)
-    (syscall syscall:poke-bytes c-bytevector k (c-size-of 'uint8) byte)))
+    (syscall syscall:poke-bytes c-bytevector k (c-type-size 'uint8) byte)))
 
 (define c-bytevector-u8-ref
   (lambda (c-bytevector k)
-    (syscall syscall:peek-bytes c-bytevector k (c-size-of 'uint8))))
+    (syscall syscall:peek-bytes c-bytevector k (c-type-size 'uint8))))
 
 (define c-bytevector-pointer-set!
   (lambda (c-bytevector k pointer)
-    (syscall syscall:poke-bytes c-bytevector k (c-size-of 'pointer) pointer)))
+    (syscall syscall:poke-bytes c-bytevector k (c-type-size 'pointer) pointer)))
 
 (define c-bytevector-pointer-ref
   (lambda (c-bytevector k)
-    (syscall syscall:peek-bytes c-bytevector k (c-size-of 'pointer))))
+    (syscall syscall:peek-bytes c-bytevector k (c-type-size 'pointer))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()

@@ -5,7 +5,7 @@
 (c-system-include "stdio.h")
 (c-system-include "ffi.h")
 
-;; c-size-of
+;; c-type-size
 (c-declare "
     int size_of_int8_t() { return sizeof(int8_t); }
     int size_of_uint8_t() { return sizeof(uint8_t); }
