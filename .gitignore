@@ -2,6 +2,8 @@
 !include/pffi-gauche.h
 !include/libtest.h
 *.c
+!tests/c-src/*.c
+!tests/c-include/*.h
 !src/libtest.c
 !src/gauche/pffi.c
 *.swp
@@ -39,10 +41,7 @@ dockerfiles/build
 .scheme_testrunner
 core
 testfile.test
-tests/compliance
-tests/retropikzel
 *.rkt
 testfile.test
-tests/testfile.test
 snow
 foreign/c/lib

@@ -93,10 +93,21 @@
           ((equal? type 'double) 8)
           ((equal? type 'pointer) 8))))
 
-(define c-bytevector-u8-set! cpointer-set-uint8!)
-(define c-bytevector-u8-ref cpointer-ref-uint8)
-(define c-bytevector-pointer-set! cpointer-set-pointer!)
-(define c-bytevector-pointer-ref cpointer-ref-pointer)
+(define c-bytevector-u8-set!
+  (lambda (pointer offset value)
+  (cpointer-set! pointer :uint8 value offset)))
+
+(define c-bytevector-u8-ref
+  (lambda (pointer offset)
+    (cpointer-ref pointer :uint8 offset)))
+
+(define c-bytevector-pointer-set!
+  (lambda (pointer offset value)
+    (cpointer-set! pointer :pointer value offset)))
+
+(define c-bytevector-pointer-ref
+  (lambda (pointer offset)
+    (cpointer-ref pointer :pointer offset)))
 
 #;(define pffi-pointer-set!
   (lambda (pointer type offset value)

@@ -1,2 +1,0 @@
-FROM schemers/chibi
-RUN apt-get update && apt-get install -y build-essential

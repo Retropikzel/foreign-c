@@ -143,44 +143,8 @@
                     cpointer-null?
                     cpointer-data
                     cpointer-data-set!
-                    ;c-bytevector-s8-set!
-                    ;c-bytevector-s8-set!
-                    cpointer-set-int8!
-                    cpointer-ref-int8
-                    cpointer-set-uint8!
-                    cpointer-ref-uint8
-                    cpointer-set-int16!
-                    cpointer-ref-int16
-                    cpointer-set-uint16!
-                    cpointer-ref-uint16
-                    cpointer-set-int32!
-                    cpointer-ref-int32
-                    cpointer-set-uint32!
-                    cpointer-ref-uint32
-                    cpointer-set-int64!
-                    cpointer-ref-int64
-                    cpointer-set-uint64!
-                    cpointer-ref-uint64
-                    cpointer-set-char!
-                    cpointer-ref-char
-                    cpointer-set-short!
-                    cpointer-ref-short
-                    cpointer-set-unsigned-short!
-                    cpointer-ref-unsigned-short
-                    cpointer-set-int!
-                    cpointer-ref-int
-                    cpointer-set-unsigned-int!
-                    cpointer-ref-unsigned-int
-                    cpointer-set-long!
-                    cpointer-ref-long
-                    cpointer-set-unsigned-long!
-                    cpointer-ref-unsigned-long
-                    cpointer-set-float!
-                    cpointer-ref-float
-                    cpointer-set-double!
-                    cpointer-ref-double
-                    cpointer-set-pointer!
-                    cpointer-ref-pointer
+                    cpointer-set!
+                    cpointer-ref
                     void?))
       (export ; calculate-struct-size-and-offsets
               ;struct-make
