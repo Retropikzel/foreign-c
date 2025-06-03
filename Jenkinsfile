@@ -60,5 +60,18 @@ pipeline {
             steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=guile TESTNAME=callback' } }
         }
 
+        stage('Kawa primitives') {
+            agent { dockerfile { filename 'Dockerfile.test'; additionalBuildArgs '--build-arg COMPILE_R7RS=kawa' } }
+            steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=kawa TESTNAME=primitives' } }
+        }
+        stage('Kawa addressof') {
+            agent { dockerfile { filename 'Dockerfile.test'; additionalBuildArgs '--build-arg COMPILE_R7RS=kawa' } }
+            steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=kawa TESTNAME=addressof' } }
+        }
+        stage('Kawa callback') {
+            agent { dockerfile { filename 'Dockerfile.test'; additionalBuildArgs '--build-arg COMPILE_R7RS=kawa' } }
+            steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=kawa TESTNAME=callback' } }
+        }
+
     }
 }
