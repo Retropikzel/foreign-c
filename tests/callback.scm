@@ -92,10 +92,10 @@
 
 (print-header 'define-c-callback)
 
-(define array (make-c-bytevector (* (c-size-of 'int) 3)))
-(c-bytevector-s32-native-set! array (* (c-size-of 'int) 0) 3)
-(c-bytevector-s32-native-set! array (* (c-size-of 'int) 1) 2)
-(c-bytevector-s32-native-set! array (* (c-size-of 'int) 2) 1)
+(define array (make-c-bytevector (* (c-type-size 'int) 3)))
+(c-bytevector-s32-native-set! array (* (c-type-size 'int) 0) 3)
+(c-bytevector-s32-native-set! array (* (c-type-size 'int) 1) 2)
+(c-bytevector-s32-native-set! array (* (c-type-size 'int) 2) 1)
 
 (define-c-procedure qsort libc 'qsort 'void '(pointer int int callback))
 
@@ -111,17 +111,17 @@
 (write compare)
 (newline)
 
-(define unsorted (list (c-bytevector-s32-native-ref array (* (c-size-of 'int) 0))
-                       (c-bytevector-s32-native-ref array (* (c-size-of 'int) 1))
-                       (c-bytevector-s32-native-ref array (* (c-size-of 'int) 2))))
+(define unsorted (list (c-bytevector-s32-native-ref array (* (c-type-size 'int) 0))
+                       (c-bytevector-s32-native-ref array (* (c-type-size 'int) 1))
+                       (c-bytevector-s32-native-ref array (* (c-type-size 'int) 2))))
 (debug unsorted)
 (assert equal? unsorted (list 3 2 1))
 
-(qsort array 3 (c-size-of 'int) compare)
+(qsort array 3 (c-type-size 'int) compare)
 
-(define sorted (list (c-bytevector-s32-native-ref array (* (c-size-of 'int) 0))
-                       (c-bytevector-s32-native-ref array (* (c-size-of 'int) 1))
-                       (c-bytevector-s32-native-ref array (* (c-size-of 'int) 2))))
+(define sorted (list (c-bytevector-s32-native-ref array (* (c-type-size 'int) 0))
+                       (c-bytevector-s32-native-ref array (* (c-type-size 'int) 1))
+                       (c-bytevector-s32-native-ref array (* (c-type-size 'int) 2))))
 (debug sorted)
 (assert equal? sorted (list 1 2 3))
 
