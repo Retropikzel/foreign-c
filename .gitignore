@@ -45,3 +45,4 @@ testfile.test
 testfile.test
 snow
 foreign/c/lib
+!foreign/c/primitives/gauche/*.c
