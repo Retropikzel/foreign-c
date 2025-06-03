@@ -46,3 +46,4 @@ testfile.test
 snow
 foreign/c/lib
 !foreign/c/primitives/gauche/*.c
+!foreign/c/primitives/include/*.h
