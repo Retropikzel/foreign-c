@@ -7,6 +7,7 @@ pipeline {
     }
 
     stages {
+
         stage('Chibi primitives') {
             agent { dockerfile { filename 'Dockerfile.test'; additionalBuildArgs '--build-arg COMPILE_R7RS=chibi' } }
             steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=chibi TESTNAME=primitives' } }
@@ -19,6 +20,7 @@ pipeline {
             agent { dockerfile { filename 'Dockerfile.test'; additionalBuildArgs '--build-arg COMPILE_R7RS=chibi' } }
             steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=chibi TESTNAME=callback' } }
         }
+
         stage('Chicken primitives') {
             agent { dockerfile { filename 'Dockerfile.test'; additionalBuildArgs '--build-arg COMPILE_R7RS=chicken' } }
             steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=chicken TESTNAME=primitives' } }
@@ -31,5 +33,19 @@ pipeline {
             agent { dockerfile { filename 'Dockerfile.test'; additionalBuildArgs '--build-arg COMPILE_R7RS=chicken' } }
             steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=chicken TESTNAME=callback' } }
         }
+
+        stage('Gauche primitives') {
+            agent { dockerfile { filename 'Dockerfile.test'; additionalBuildArgs '--build-arg COMPILE_R7RS=gauche' } }
+            steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=gauche TESTNAME=primitives' } }
+        }
+        stage('Gauche addressof') {
+            agent { dockerfile { filename 'Dockerfile.test'; additionalBuildArgs '--build-arg COMPILE_R7RS=gauche' } }
+            steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=gauche TESTNAME=addressof' } }
+        }
+        stage('Gauche callback') {
+            agent { dockerfile { filename 'Dockerfile.test'; additionalBuildArgs '--build-arg COMPILE_R7RS=gauche' } }
+            steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=gauche TESTNAME=callback' } }
+        }
+
     }
 }
