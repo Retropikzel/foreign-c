@@ -83,7 +83,7 @@ to being portable by conforming to some specification.
 
 ### Primitives 1 table
 
-|                  | c-size-of    | c-bytevector-u8-set! |c-bytevector-u8-ref | define-c-library    | c-bytevector? | define-c-procedure  |
+|                  | c-type-size  | c-bytevector-u8-set! |c-bytevector-u8-ref | define-c-library    | c-bytevector? | define-c-procedure  |
 |------------------|:------------:|:--------------------:|:------------------:|:-------------------:|:-------------:|:-------------------:|
 | **Chibi**        | X            | X                    |X                   | X                   | X             | X                   |
 | **Chicken**      | X            | X                    |X                   | X                   | X             | X                   |
@@ -306,17 +306,17 @@ Example:
                                     ((< a b) -1)))))
 
     ; Create new array of ints to be sorted
-    (define array (make-c-bytevector (* (c-size-of 'int) 3)))
-    (pffi-pointer-set! array 'int (* (c-size-of 'int) 0) 3)
-    (pffi-pointer-set! array 'int (* (c-size-of 'int) 1) 2)
-    (pffi-pointer-set! array 'int (* (c-size-of 'int) 2) 1)
+    (define array (make-c-bytevector (* (c-type-size 'int) 3)))
+    (pffi-pointer-set! array 'int (* (c-type-size 'int) 0) 3)
+    (pffi-pointer-set! array 'int (* (c-type-size 'int) 1) 2)
+    (pffi-pointer-set! array 'int (* (c-type-size 'int) 2) 1)
 
     (display array)
     (newline)
     ;> (3 2 1)
 
     ; Sort the array
-    (qsort array 3 (c-size-of 'int) compare)
+    (qsort array 3 (c-type-size 'int) compare)
 
     (display array)
     (newline)
