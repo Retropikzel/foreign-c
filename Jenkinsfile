@@ -73,5 +73,17 @@ pipeline {
             steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=kawa TESTNAME=callback' } }
         }
 
+        stage('Mosh primitives') {
+            agent { dockerfile { filename 'Dockerfile.test'; additionalBuildArgs '--build-arg COMPILE_R7RS=mosh' } }
+            steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=mosh TESTNAME=primitives' } }
+        }
+        stage('Mosh addressof') {
+            agent { dockerfile { filename 'Dockerfile.test'; additionalBuildArgs '--build-arg COMPILE_R7RS=mosh' } }
+            steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=mosh TESTNAME=addressof' } }
+        }
+        stage('Mosh callback') {
+            agent { dockerfile { filename 'Dockerfile.test'; additionalBuildArgs '--build-arg COMPILE_R7RS=mosh' } }
+            steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') { sh 'make test-compile-r7rs COMPILE_R7RS=mosh TESTNAME=callback' } }
+
     }
 }
