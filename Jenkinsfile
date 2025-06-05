@@ -16,8 +16,8 @@ pipeline {
                     implementations.each { implementation ->
                         stage("${implementation} primitives") {
                             sh "docker build --build-arg COMPILE_R7RS=${implementation} --tag=r7rs-pffi-test-${implementation} -f Dockerfile.test ."
-                            //sh "docker run -v ${PWD}:/workdir -w /workdir -t r7rs-pffi-test-${implementation} sh -c \"make COMPILE_R7RS=${implementation} TESTNAME=primitives test-compile-r7rs\""
-                            sh "docker run -v ${PWD}:/workdir -w /workdir -t r7rs-pffi-test-${implementation} sh -c \"ls\""
+                            //sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t r7rs-pffi-test-${implementation} sh -c \"make COMPILE_R7RS=${implementation} TESTNAME=primitives test-compile-r7rs\""
+                            sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t r7rs-pffi-test-${implementation} sh -c \"ls\""
                         }
                     }
                 }
