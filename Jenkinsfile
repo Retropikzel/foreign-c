@@ -1,5 +1,4 @@
-def implementations = ['chibi', 'sagittarius']
-def tests = ['primitives']
+def tests = ['primitives', 'addressof', 'callback']
 
 pipeline {
     agent any
