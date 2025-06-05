@@ -20,7 +20,7 @@ pipeline {
                 script {
                     implementations.each { implementation ->
                         stage("${implementation} primitives") {
-                            echo "make test-compile-r7rs-docker COMPILE_R7RS=${implementation} TESTNAME=primitives"
+                            sh "make test-compile-r7rs-docker COMPILE_R7RS=${implementation} TESTNAME=primitives"
                         }
                     }
                 }
