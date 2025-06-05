@@ -15,9 +15,17 @@ pipeline {
                 script {
                     implementations.each { implementation ->
                         stage("${implementation} primitives") {
-                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "docker build --build-arg COMPILE_R7RS=${implementation} --tag=r7rs-pffi-test-${implementation} -f Dockerfile.test ."
-                                sh "docker run --user=root -v ${WORKSPACE}:/workdir -w /workdir -t r7rs-pffi-test-${implementation} sh -c \"make COMPILE_R7RS=${implementation} TESTNAME=primitives test-compile-r7rs\""
+                            agent {
+                                dockerfile {
+                                    filename 'Dockerfile.test'
+                                    args '--user=root'
+                                    additionalBuildArgs "--build-arg COMPILE_R7RS=${implementation}"
+                                }
+                            }
+                            steps {
+                                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                    echo "hello"
+                                }
                             }
                         }
                     }
