@@ -1,4 +1,15 @@
-def implementations = ['chibi', 'chicken']
+def implementations = [
+    'chibi',
+    'chicken',
+    'gauche'
+    'guile',
+    'kawa',
+    'mosh',
+    'racket',
+    'sagittarius',
+    'stklos'
+    'ypsilon'
+    ]
 
 pipeline {
     agent {
