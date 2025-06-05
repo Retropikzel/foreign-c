@@ -18,8 +18,8 @@ pipeline {
                     tests.each { test ->
                         stage("${STAGE_NAME} ${test}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "make test-compile-r7rs-docker COMPILE_R7RS=${env.IMPLEMENTATION} TESTNAME=${test}"
-                                sh "cat tmp/test/primitives"
+                                sh "docker build --build-arg COMPILE_R7RS=${env.IMPLEMENTATION} --tag=r7rs-pffi-test-${env.IMPLEMENTATION} -f Dockerfile.test ."
+                                sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t r7rs-pffi-test-${COMPILE_R7RS} sh -c \"make COMPILE_R7RS=${env.IMPLEMENTATION} TESTNAME=primitives test-compile-r7rs\""
                             }
                         }
                     }
