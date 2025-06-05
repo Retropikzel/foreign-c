@@ -18,7 +18,7 @@ pipeline {
         stage('Testing') {
             steps {
                 script {
-                    implementations.each { implementations ->
+                    implementations.each { implementation ->
                         stage("Testing to ${implementation}") {
                             echo "Testing"
                         }
