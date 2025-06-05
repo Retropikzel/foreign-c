@@ -13,7 +13,9 @@ test-compile-r7rs: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 		COMPILE_R7RS_GAMBIT="-cc-options \"-ltest -I. -L\" -ld-options \"-L.\"" \
 		COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." \
 		compile-r7rs -I . -o ${TESTNAME} ${TESTNAME}.scm
-	#cd tmp/test && LD_LIBRARY_PATH=. ./${TESTNAME}
+	cd tmp/test && \
+		LD_LIBRARY_PATH=. \
+		./${TESTNAME}
 
 test-compile-r7rs-docker:
 	docker build --build-arg COMPILE_R7RS=${COMPILE_R7RS} --tag=r7rs-pffi-test-${COMPILE_R7RS} -f Dockerfile.test .
