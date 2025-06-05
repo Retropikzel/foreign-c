@@ -13,7 +13,7 @@ pipeline {
             steps {
                 script {
                     for (int i = 0; i < tests.size(); ++i) {
-                        echo "Testing the ${test[i]} browser"
+                        echo "Testing the ${test[i]}"
                     }
                 }
             }
