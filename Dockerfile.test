@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
     libffi-dev \
     libmbedtls-dev
 COPY --from=build /usr/local-other /usr/local-other
-ENV PATH=/usr/local-other/bin:${PATH}
+ENV PATH=${PATH}:/usr/local-other/bin
 RUN git clone https://gitea.scheme.org/Retropikzel/compile-r7rs.git --depth=1
 RUN cd compile-r7rs && make && make install
 
