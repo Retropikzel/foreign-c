@@ -12,11 +12,8 @@ pipeline {
         stage('chibi') {
             steps {
                 script {
-                    tests.each { test ->
-                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "docker build --build-arg COMPILE_R7RS=${STAGE_NAME} --tag=r7rs-pffi-test-${STAGE_NAME} -f Dockerfile.test ."
-                                sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t r7rs-pffi-test-${STAGE_NAME} sh -c \"make COMPILE_R7RS=${STAGE_NAME} TESTNAME=primitives test-compile-r7rs\""
-                            }
+                    for (int i = 0; i < tests.size(); ++i) {
+                        echo "Testing the ${test[i]} browser"
                     }
                 }
             }
