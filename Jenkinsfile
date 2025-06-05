@@ -22,7 +22,7 @@ pipeline {
                     tests.each { test ->
                         stage("${STAGE_NAME} ${test}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                echo "hello"
+                                sh "make test-compile-r7rs COMPILE_R7RS=${ṢTAGE_NAME} TESTNAME=${test}"
                             }
                         }
                     }
