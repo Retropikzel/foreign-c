@@ -1,7 +1,7 @@
 def implementations = [
     'chibi',
     'chicken',
-    'gauche'
+    'gauche',
     'guile',
     'kawa',
     'mosh',
