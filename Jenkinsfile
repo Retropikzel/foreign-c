@@ -1,4 +1,4 @@
-def implementations = ['chibi']
+def implementations = ['chibi', 'sagittarius']
 def tests = ['primitives']
 
 pipeline {
