@@ -15,7 +15,7 @@ pipeline {
                 script {
                     implementations.each { implementation->
                         tests.each { test ->
-                            stage("${STAGE_NAME} ${test}") {
+                            stage("${implementation} ${test}") {
                                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                     sh "docker build --build-arg COMPILE_R7RS=${implementation} --tag=r7rs-pffi-test-${implementation} -f Dockerfile.test ."
                                     sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t r7rs-pffi-test-${implementation} sh -c \"make COMPILE_R7RS=${implementation} TESTNAME=primitives test-compile-r7rs\""
