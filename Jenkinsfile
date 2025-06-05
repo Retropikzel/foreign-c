@@ -1,7 +1,11 @@
 def implementations = ['chibi', 'chicken']
 
 pipeline {
-    agent any
+    agent {
+        dockefile {
+            filename 'Dockerfile.jenkins'
+        }
+    }
     stages {
         stage('Testing') {
             steps {
