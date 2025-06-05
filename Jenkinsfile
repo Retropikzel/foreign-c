@@ -1,3 +1,4 @@
+def implementations = ['chibi']
 def tests = ['primitives', 'addressof', 'callback']
 
 pipeline {
@@ -9,17 +10,17 @@ pipeline {
     }
 
     stages {
-        stage('chibi') {
-            environment {
-                IMPLEMENTATION="${STAGE_NAME}"
+        stage('Tests') {
             }
             steps {
                 script {
-                    tests.each { test ->
-                        stage("${STAGE_NAME} ${test}") {
-                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "docker build --build-arg COMPILE_R7RS=${env.IMPLEMENTATION} --tag=r7rs-pffi-test-${env.IMPLEMENTATION} -f Dockerfile.test ."
-                                sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t r7rs-pffi-test-${env.IMPLEMENTATION} sh -c \"make COMPILE_R7RS=${env.IMPLEMENTATION} TESTNAME=primitives test-compile-r7rs\""
+                    implementations.each { implementation->
+                        tests.each { test ->
+                            stage("${STAGE_NAME} ${test}") {
+                                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                    sh "docker build --build-arg COMPILE_R7RS=${implementation} --tag=r7rs-pffi-test-${implementation} -f Dockerfile.test ."
+                                    sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t r7rs-pffi-test-${implementation} sh -c \"make COMPILE_R7RS=${implementation} TESTNAME=primitives test-compile-r7rs\""
+                                }
                             }
                         }
                     }
