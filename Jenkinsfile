@@ -7,7 +7,7 @@ def implementations = [
     'mosh',
     'racket',
     'sagittarius',
-    'stklos'
+    'stklos',
     'ypsilon'
     ]
 
