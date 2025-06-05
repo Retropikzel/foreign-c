@@ -1,2 +1,2 @@
-FROM docker:dind
-RUN apk add make gzip
+FROM debian:bookworm
+RUN apt-get update && apt-get install -y make docker.io

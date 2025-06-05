@@ -1,7 +1,12 @@
 def tests = ['primitives']
 
 pipeline {
-    agent any
+    agent {
+        dockerfile {
+            filename 'Dockerfile.jenkins'
+            args '--user=root -v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
 
     options {
         disableConcurrentBuilds()
