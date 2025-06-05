@@ -1,4 +1,15 @@
-def tests = ['primitives']
+def implementations = [
+    'chibi',
+    'chicken',
+    'gauche',
+    'guile',
+    'kawa',
+    'mosh',
+    'racket',
+    'sagittarius',
+    'stklos',
+    'ypsilon'
+    ]
 
 pipeline {
     agent {
@@ -14,14 +25,13 @@ pipeline {
     }
 
     stages {
-        stage('Chibi') {
-            agent { dockerfile { filename 'Dockerfile.test'; args '--user=root' additionalBuildArgs "--build-arg COMPILE_R7RS=${STAGE_NAME}" } }
+        stage('Testing') {
             steps {
                 script {
-                    tests.each { test ->
-                        stage("Test ${ṢTAGE_NAME} primitives") {
+                    implementations.each { implementation ->
+                        stage("Test ${implementation} primitives") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "make test-compile-r7rs COMPILE_R7RS=${STAGE_NAME} TESTNAME=${test}"
+                                sh "make test-compile-r7rs-docker COMPILE_R7RS=${implementation} TESTNAME=primitives"
                             }
                         }
                     }
