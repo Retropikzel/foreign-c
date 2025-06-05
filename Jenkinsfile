@@ -14,18 +14,16 @@ pipeline {
             steps {
                 script {
                     implementations.each { implementation ->
-                        stage("${implementation} primitives") {
-                            agent {
-                                dockerfile {
-                                    filename 'Dockerfile.test'
+                        agent {
+                            dockerfile {
+                                filename 'Dockerfile.test'
                                     args '--user=root'
                                     additionalBuildArgs "--build-arg COMPILE_R7RS=${implementation}"
-                                }
                             }
-                            steps {
-                                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                    echo "hello"
-                                }
+                        }
+                        stage("${implementation} primitives") {
+                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                echo "hello"
                             }
                         }
                     }
