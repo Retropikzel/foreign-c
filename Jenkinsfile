@@ -1,4 +1,15 @@
-def implementations = ['chibi']
+def implementations = [
+    'chibi',
+    'chicken',
+    'gauche',
+    'guile',
+    'kawa',
+    'mosh',
+    'racket',
+    'sagittarius',
+    'stklos',
+    'ypsilon'
+]
 def tests = ['primitives', 'addressof', 'callback']
 
 pipeline {
