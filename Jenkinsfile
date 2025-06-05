@@ -2,16 +2,11 @@ def implementations = ['chibi']
 def tests = ['primitives']
 
 pipeline {
-    agent {
-        dockerfile {
-            filename 'Dockerfile.jenkins'
-                args '--user=root -v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
 
     options {
         disableConcurrentBuilds()
-            buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
+        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
     }
 
     stages {
