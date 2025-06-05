@@ -1,15 +1,4 @@
-def implementations = [
-    'chibi',
-    'chicken',
-    'gauche',
-    'guile',
-    'kawa',
-    'mosh',
-    'racket',
-    'sagittarius',
-    'stklos',
-    'ypsilon'
-    ]
+def tests = ['primitives']
 
 pipeline {
     agent any
@@ -20,16 +9,14 @@ pipeline {
     }
 
     stages {
-        stage('Testing') {
+        stage('chibi') {
             steps {
                 script {
-                    implementations.each { implementation ->
-                        stage("Test ${implementation} primitives") {
+                    tests.each { test ->
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "docker build --build-arg COMPILE_R7RS=${implementation} --tag=r7rs-pffi-test-${implementation} -f Dockerfile.test ."
-                                sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t r7rs-pffi-test-${implementation} sh -c \"make COMPILE_R7RS=${implementation} TESTNAME=primitives test-compile-r7rs\""
+                                sh "docker build --build-arg COMPILE_R7RS=${STAGE_NAME} --tag=r7rs-pffi-test-${STAGE_NAME} -f Dockerfile.test ."
+                                sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t r7rs-pffi-test-${STAGE_NAME} sh -c \"make COMPILE_R7RS=${STAGE_NAME} TESTNAME=primitives test-compile-r7rs\""
                             }
-                        }
                     }
                 }
             }
