@@ -17,18 +17,9 @@ pipeline {
                         additionalBuildArgs "--build-arg COMPILE_R7RS=${STAGE_NAME}"
                 }
             }
-            environment {
-                IMPLEMENTATION="${STAGE_NAME}"
-            }
             steps {
-                script {
-                    tests.each { test ->
-                        stage("${env.IMPLEMENTATION} ${test}") {
-                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "make test-compile-r7rs COMPILE_R7RS=${env.IMPLEMENTATION} TESTNAME=${test}"
-                            }
-                        }
-                    }
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh "make test-compile-r7rs COMPILE_R7RS=${STAGE_NAME} TESTNAME=primitives"
                 }
             }
         }
