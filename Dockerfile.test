@@ -1,8 +1,8 @@
 ARG COMPILE_R7RS=chibi
 FROM schemers/sagittarius AS build
-#RUN apt-get update && apt-get install -y build-essential git make cmake libgc-dev zlib1g-dev libffi-dev libssl-dev
-#RUN git clone https://bitbucket.org/ktakashi/sagittarius-scheme.git --branch=version_0.9.12 --depth=1
-#RUN cd sagittarius-scheme && ./dist.sh gen && mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX=/usr/local-other .. && make && make install
+RUN apt-get update && apt-get install -y build-essential git make cmake libgc-dev zlib1g-dev libffi-dev libssl-dev
+RUN git clone https://bitbucket.org/ktakashi/sagittarius-scheme.git --branch=version_0.9.12 --depth=1
+RUN cd sagittarius-scheme && ./dist.sh gen && mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX=/usr/local-other .. && make && make install
 
 FROM schemers/${COMPILE_R7RS}
 RUN apt-get update && apt-get install -y \
@@ -18,7 +18,6 @@ RUN apt-get update && apt-get install -y \
     libmbedtls-dev
 COPY --from=build /usr/local /usr/local-other/
 ENV PATH=${PATH}:/usr/local-other/bin
-ENV LD_LIBRARY_PATH=/usr/local-other/lib
 RUN git clone https://github.com/Retropikzel/compile-r7rs.git --depth=1
 RUN cd compile-r7rs && make && make install
 
