@@ -1,2 +1,2 @@
 FROM docker:dind
-RUN apk add make
+RUN apk add make gzip
