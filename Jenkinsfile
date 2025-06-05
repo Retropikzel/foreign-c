@@ -15,6 +15,7 @@ pipeline {
 
     stages {
         stage('Chibi') {
+            agent { dockerfile { filename 'Dockerfile.test'; args '--user=root' additionalBuildArgs '--build-arg COMPILE_R7RS=chibi' } }
             steps {
                 script {
                     tests.each { test ->
