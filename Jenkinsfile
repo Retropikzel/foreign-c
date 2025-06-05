@@ -17,12 +17,15 @@ pipeline {
                         additionalBuildArgs "--build-arg COMPILE_R7RS=${STAGE_NAME}"
                 }
             }
+            environment {
+                IMPLEMENTATION="${STAGE_NAME}"
+            }
             steps {
                 script {
                     tests.each { test ->
-                        stage("${STAGE_NAME} ${test}") {
+                        stage("${env.IMPLEMENTATION} ${test}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "make test-compile-r7rs COMPILE_R7RS=${ṢTAGE_NAME} TESTNAME=${test}"
+                                sh "make test-compile-r7rs COMPILE_R7RS=${env.IMPLEMENTATION} TESTNAME=${test}"
                             }
                         }
                     }
