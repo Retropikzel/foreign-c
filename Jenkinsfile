@@ -2,10 +2,17 @@ def implementations = ['chibi', 'chicken']
 
 pipeline {
     agent {
-        dockefile {
+        dockerfile {
             filename 'Dockerfile.jenkins'
+            args '--user=root'
         }
     }
+
+    options {
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
+    }
+
     stages {
         stage('Testing') {
             steps {
