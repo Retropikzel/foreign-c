@@ -299,7 +299,7 @@
     ;(gambit (include "c/primitives/gambit.scm"))
     (gauche (include "c/primitives/gauche/define-c-procedure.scm"))
     ;(gerbil (include "c/primitives/gerbil.scm"))
-    (guile (include "c/primitives/guile.scm"))
+    (guile (include "./c/primitives/guile.scm"))
     (kawa (include "c/primitives/kawa.scm"))
     ;(larceny (include "c/primitives/larceny.scm"))
     (mosh (include "c/primitives/mosh.scm"))
