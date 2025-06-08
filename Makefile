@@ -5,6 +5,8 @@ DOCKER_INIT=cd /workdir && make clean &&
 VERSION=$(shell grep "version:" README.md | awk '{split\($0,a\); print a[2];}')
 TESTNAME=primitives
 
+all: chibi chicken cyclone gambit gauche gerbil guile kawa larceny mosh racket sagittarius skint stklos tr7 ypsilon
+
 test-compile-r7rs: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 	make ${COMPILE_R7RS}
 	cp -r foreign tmp/test/
