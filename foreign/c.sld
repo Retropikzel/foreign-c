@@ -205,6 +205,11 @@
           ;; TODO c-bytevector->u8-list
           ;; TODO u8-list->c-bytevector
 
+          c-bytevector-uchar-ref
+          c-bytevector-char-ref
+          c-bytevector-char-set!
+          c-bytevector-uchar-set!
+
           c-bytevector-uint-ref
           c-bytevector-sint-ref
           c-bytevector-sint-set!

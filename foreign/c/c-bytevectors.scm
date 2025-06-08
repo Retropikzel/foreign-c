@@ -520,6 +520,18 @@
       (c-bytevector-u8-set! b i (car vals)))
     b))
 
+(define (c-bytevector-uchar-ref c-bytevector index)
+  (integer->char (c-bytevector-u8-ref c-bytevector index)))
+
+(define (c-bytevector-uchar-set! c-bytevector index char)
+  (c-bytevector-u8-set! c-bytevector index (char->integer char)))
+
+(define (c-bytevector-char-ref c-bytevector index)
+  (integer->char (c-bytevector-s8-ref c-bytevector index)))
+
+(define (c-bytevector-char-set! c-bytevector index char)
+  (c-bytevector-s8-set! c-bytevector index (char->integer char)))
+
 (define (c-bytevector-uint-ref c-bytevector index endness size)
   (case endness
    ((big)

@@ -21,6 +21,8 @@ Schemes - 0.10.0</title>
         tracker</a></p>
         <p><a href="https://sr.ht/~retropikzel/foreign-c/lists">Maling
         lists</a></p>
+        <p><a
+        href="https://jenkins.scheme.org/job/foreign_c/job/foreign-c/">Jenkins</a></p>
         <ul>
         <li><a href="#installation">Installation</a></li>
         <li><a href="#documentation">Documentation</a>
@@ -594,6 +596,30 @@ func(&amp;i);</code></pre>
         <p>If <em>k</em> is not a valid index of c-bytevector the
         behaviour is undefined.</p>
         <p>Returns the byte at index <em>k</em> of
+        <em>c-bytevector</em>.</p>
+        <p>(<strong>c-bytevector-char-set!</strong>
+        <em>c-bytevector</em> <em>k</em> <em>char</em>)</p>
+        <p>If <em>k</em> is not a valid index of c-bytevector the
+        behaviour is undefined.</p>
+        <p>Stores the <em>char</em> in element <em>k</em> of
+        <em>c-bytevector</em>.</p>
+        <p>(<strong>c-bytevector-char-ref</strong> <em>c-bytevector</em>
+        <em>k</em>)</p>
+        <p>If <em>k</em> is not a valid index of c-bytevector the
+        behaviour is undefined.</p>
+        <p>Returns the char at index <em>k</em> of
+        <em>c-bytevector</em>.</p>
+        <p>(<strong>c-bytevector-uchar-set!</strong>
+        <em>c-bytevector</em> <em>k</em> <em>char</em>)</p>
+        <p>If <em>k</em> is not a valid index of c-bytevector the
+        behaviour is undefined.</p>
+        <p>Stores the unsigned <em>char</em> in element <em>k</em> of
+        <em>c-bytevector</em>.</p>
+        <p>(<strong>c-bytevector-uchar-ref</strong>
+        <em>c-bytevector</em> <em>k</em>)</p>
+        <p>If <em>k</em> is not a valid index of c-bytevector the
+        behaviour is undefined.</p>
+        <p>Returns the unsigned char at index <em>k</em> of
         <em>c-bytevector</em>.</p>
         <p>(<strong>c-bytevector-uint-ref</strong> <em>c-bytevector</em>
         <em>k</em> <em>endianness</em> <em>size</em>)</br>

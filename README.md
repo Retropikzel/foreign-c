@@ -406,6 +406,30 @@ If _k_ is not a valid index of c-bytevector the behaviour is undefined.
 
 Returns the byte at index _k_ of _c-bytevector_.
 
+(**c-bytevector-char-set!** _c-bytevector_ _k_ _char_)
+
+If _k_ is not a valid index of c-bytevector the behaviour is undefined.
+
+Stores the _char_ in element _k_ of _c-bytevector_.
+
+(**c-bytevector-char-ref** _c-bytevector_ _k_)
+
+If _k_ is not a valid index of c-bytevector the behaviour is undefined.
+
+Returns the char at index _k_ of _c-bytevector_.
+
+(**c-bytevector-uchar-set!** _c-bytevector_ _k_ _char_)
+
+If _k_ is not a valid index of c-bytevector the behaviour is undefined.
+
+Stores the unsigned _char_ in element _k_ of _c-bytevector_.
+
+(**c-bytevector-uchar-ref** _c-bytevector_ _k_)
+
+If _k_ is not a valid index of c-bytevector the behaviour is undefined.
+
+Returns the unsigned char at index _k_ of _c-bytevector_.
+
 (**c-bytevector-uint-ref** _c-bytevector_ _k_ _endianness_ _size_)</br>
 (**c-bytevector-sint-ref** _c-bytevector_ _k_ _endianness_ _size_)</br>
 (**c-bytevector-uint-set!** _c-bytevector_ _k_ _n_ _endianness_ _size_)</br>
