@@ -112,7 +112,7 @@ Schemes - 0.10.0</title>
         <thead>
         <tr class="header">
         <th></th>
-        <th style="text-align: center;">c-size-of</th>
+        <th style="text-align: center;">c-type-size</th>
         <th style="text-align: center;">c-bytevector-u8-set!</th>
         <th style="text-align: center;">c-bytevector-u8-ref</th>
         <th style="text-align: center;">define-c-library</th>
@@ -338,9 +338,9 @@ Schemes - 0.10.0</title>
         </tbody>
         </table>
         <h2 id="installation">Installation</h2>
-        <p>Either download the latest release from <a
+        <p>Eithe download the latest release from <a
         href="https://git.sr.ht/~retropikzel/foreign-c/refs">https://git.sr.ht/~retropikzel/foreign-c/refs</a>
-        or git clone , preferably with a tag, and copy the
+        or git clone, preferably with a tag, and copy the
         <em>foreign</em> directory to your library directory.</p>
         <p>Example assuming libraries in directory <em>snow</em>:</p>
         <pre><code>git clone https://git.sr.ht/~retropikzel/foreign-c --branch LATEST_VERSION
@@ -503,36 +503,36 @@ make -C snow/foreign/c SCHEME_IMPLEMENTATION_NAME</code></pre>
 (define-c-procedure qsort libc-stdlib &#39;qsort &#39;void &#39;(pointer int int callback))
 
 ; Define our callback
-(pffi-define-callback compare
+(define-c-callback compare
                       &#39;int
                       &#39;(pointer pointer)
                       (lambda (pointer-a pointer-b)
-                        (let ((a (pffi-pointer-get pointer-a &#39;int 0))
-                              (b (pffi-pointer-get pointer-b &#39;int 0)))
+                        (let ((a (c-bytevector-sint-get pointer-a (native-endianness) 0))
+                              (b (c-bytevector-sint-get pointer-b (native-endianness) 0)))
                           (cond ((&gt; a b) 1)
                                 ((= a b) 0)
                                 ((&lt; a b) -1)))))
 
 ; Create new array of ints to be sorted
-(define array (make-c-bytevector (* (c-size-of &#39;int) 3)))
-(pffi-pointer-set! array &#39;int (* (c-size-of &#39;int) 0) 3)
-(pffi-pointer-set! array &#39;int (* (c-size-of &#39;int) 1) 2)
-(pffi-pointer-set! array &#39;int (* (c-size-of &#39;int) 2) 1)
+(define array (make-c-bytevector (* (c-type-size &#39;int) 3)))
+(c-bytevector-s32-native-set! array (* (c-type-size &#39;int) 0) 3)
+(c-bytevector-s32-native-set! array (* (c-type-size &#39;int) 1) 2)
+(c-bytevector-s32-native-set! array (* (c-type-size &#39;int) 2) 1)
 
 (display array)
 (newline)
 ;&gt; (3 2 1)
 
 ; Sort the array
-(qsort array 3 (c-size-of &#39;int) compare)
+(qsort array 3 (c-type-size &#39;int) compare)
 
 (display array)
 (newline)
 ;&gt; (1 2 3)</code></pre>
         <h3 id="c-bytevector">c-bytevector</h3>
         <p>Foreign-c c-bytevector interface is copied from R6RS
-        bytevectors, with some added functionality for C null
-        pointers.</p>
+        bytevectors, with some added functionality for C null pointers
+        and manual memory management.</p>
         <p>(<strong>make-c-null</strong>)</p>
         <p>Returns a null C pointer.</p>
         <p>(<strong>c-null?</strong> <em>obj</em>)</p>
@@ -545,8 +545,8 @@ make -C snow/foreign/c SCHEME_IMPLEMENTATION_NAME</code></pre>
         <p>Calls <em>thunk</em> with address pointer of
         <em>c-bytevector</em>.</p>
         <p>Since the support for calling C functions taking pointer
-        address arguments, the ones you would prefix with &amp;, varies,
-        some additional ceremony is needed on the Scheme side.</p>
+        address arguments, ones prefixrd with &amp; in C, varies, some
+        additional ceremony is needed on the Scheme side.</p>
         <p>Example:</p>
         <p>Calling from C:</p>
         <pre><code>//void func(int** i);
@@ -585,14 +585,16 @@ func(&amp;i);</code></pre>
         the bytes of the c-bytevector</p>
         <p>(<strong>c-bytevector-s8-set!</strong> <em>c-bytevector</em>
         <em>k</em> <em>byte</em>)</p>
-        <p>If K is not a valid index of c-bytevector the behaviour is
-        undefined.</p>
-        <p>Stores the byte in element k of c-bytevector.</p>
+        <p>If <em>k</em> is not a valid index of c-bytevector the
+        behaviour is undefined.</p>
+        <p>Stores the <em>byte</em> in element <em>k</em> of
+        <em>c-bytevector</em>.</p>
         <p>(<strong>c-bytevector-s8-ref</strong> <em>c-bytevector</em>
-        <em>k</em> <em>byte</em>)</p>
-        <p>If K is not a valid index of c-bytevector the behaviour is
-        undefined.</p>
-        <p>Returns the byte at index k of c-bytevector.</p>
+        <em>k</em>)</p>
+        <p>If <em>k</em> is not a valid index of c-bytevector the
+        behaviour is undefined.</p>
+        <p>Returns the byte at index <em>k</em> of
+        <em>c-bytevector</em>.</p>
         <p>(<strong>c-bytevector-uint-ref</strong> <em>c-bytevector</em>
         <em>k</em> <em>endianness</em> <em>size</em>)</br>
         (<strong>c-bytevector-sint-ref</strong> <em>c-bytevector</em>
@@ -763,10 +765,10 @@ func(&amp;i);</code></pre>
         <h3 id="environment-variables">Environment variables</h3>
         <p>Setting environment variables like this on Windows works for
         this library:</p>
-        <pre><code>set &quot;PFFI_LOAD_PATH=C:\Program Files (x86)/foo/bar&quot;</code></pre>
-        <h4 id="pffi_load_path">PFFI_LOAD_PATH</h4>
-        <p>To add more paths to where pffi looks for libraries set
-        PFFI_LOAD_PATH to paths separated by ; on windows, and : on
+        <pre><code>set &quot;FOREIGN_C_LOAD_PATH=C:\Program Files (x86)/foo/bar&quot;</code></pre>
+        <h4 id="foreign_c__load_path">FOREIGN_C__LOAD_PATH</h4>
+        <p>To add more paths to where foreign c looks for libraries set
+        FOREIGN_C_LOAD_PATH to paths separated by ; on windows, and : on
         other operating systems.</p>
     </body>
 </html>

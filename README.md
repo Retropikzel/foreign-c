@@ -13,6 +13,8 @@ to being portable by conforming to some specification.
 
 [Maling lists](https://sr.ht/~retropikzel/foreign-c/lists)
 
+[Jenkins](https://jenkins.scheme.org/job/foreign_c/job/foreign-c/)
+
 - [Installation](#installation)
 - [Documentation](#documentation)
     - [Types](#types)
@@ -295,21 +297,21 @@ Example:
     (define-c-procedure qsort libc-stdlib 'qsort 'void '(pointer int int callback))
 
     ; Define our callback
-    (pffi-define-callback compare
+    (define-c-callback compare
                           'int
                           '(pointer pointer)
                           (lambda (pointer-a pointer-b)
-                            (let ((a (pffi-pointer-get pointer-a 'int 0))
-                                  (b (pffi-pointer-get pointer-b 'int 0)))
+                            (let ((a (c-bytevector-sint-get pointer-a (native-endianness) 0))
+                                  (b (c-bytevector-sint-get pointer-b (native-endianness) 0)))
                               (cond ((> a b) 1)
                                     ((= a b) 0)
                                     ((< a b) -1)))))
 
     ; Create new array of ints to be sorted
     (define array (make-c-bytevector (* (c-type-size 'int) 3)))
-    (pffi-pointer-set! array 'int (* (c-type-size 'int) 0) 3)
-    (pffi-pointer-set! array 'int (* (c-type-size 'int) 1) 2)
-    (pffi-pointer-set! array 'int (* (c-type-size 'int) 2) 1)
+    (c-bytevector-s32-native-set! array (* (c-type-size 'int) 0) 3)
+    (c-bytevector-s32-native-set! array (* (c-type-size 'int) 1) 2)
+    (c-bytevector-s32-native-set! array (* (c-type-size 'int) 2) 1)
 
     (display array)
     (newline)
@@ -564,10 +566,11 @@ encoded by the given c-bytevector.
 
 Setting environment variables like this on Windows works for this library:
 
-    set "PFFI_LOAD_PATH=C:\Program Files (x86)/foo/bar"
+    set "FOREIGN_C_LOAD_PATH=C:\Program Files (x86)/foo/bar"
 
-#### PFFI\_LOAD\_PATH
+#### FOREIGN_C_\_LOAD\_PATH
 
-To add more paths to where pffi looks for libraries set PFFI\_LOAD\_PATH to
-paths separated by ; on windows, and : on other operating systems.
+To add more paths to where foreign c looks for libraries set
+FOREIGN_C\_LOAD\_PATH to paths separated by ; on windows, and : on other
+operating systems.
 
