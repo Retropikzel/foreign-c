@@ -3,4 +3,5 @@ secrets:
   - 19cc24de-d15b-4590-b7c3-73fd65d6b24a
 tasks:
     - trigger-jenkins-build: |
-        curl --netrc-file ${HOME}/netrc-scheme-jenkins -X POST "https://jenkins.scheme.org/job/foreign_c/job/foreign-c/job/master/build?delay=0sec"
+        branch=$(echo "$GIT_REF" | awk '{split($0,a,"/"); print(a[3])}')
+        curl --netrc-file ${HOME}/netrc-scheme-jenkins -X POST "https://jenkins.scheme.org/job/foreign_c/job/foreign-c/job/${branch}/build?delay=0sec"
