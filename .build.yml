@@ -1,4 +1,4 @@
 image: alpine/edge
 tasks:
     - trigger-jenkins-build: |
-        curl --netrc-file ${HOME}/.netrc -X POST "https://jenkins.scheme.org/job/foreign_c/job/foreign-c/job/master/build?delay=0sec"
+        curl --netrc-file /etc/netrc/scheme-jenkins -X POST "https://jenkins.scheme.org/job/foreign_c/job/foreign-c/job/master/build?delay=0sec"
