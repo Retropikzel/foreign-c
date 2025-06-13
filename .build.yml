@@ -1,6 +1,6 @@
 image: alpine/edge
 secrets:
-  - 5975b08d-5ff4-4953-ab51-1a62e81e00d0
+  - 19cc24de-d15b-4590-b7c3-73fd65d6b24a
 tasks:
     - trigger-jenkins-build: |
-        curl --netrc-file /etc/netrc/scheme-jenkins -X POST "https://jenkins.scheme.org/job/foreign_c/job/foreign-c/job/master/build?delay=0sec"
+        curl --netrc-file ${HOME}/netrc-scheme-jenkins -X POST "https://jenkins.scheme.org/job/foreign_c/job/foreign-c/job/master/build?delay=0sec"
