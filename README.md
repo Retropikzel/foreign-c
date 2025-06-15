@@ -83,6 +83,11 @@ to being portable by conforming to some specification.
 
 ## Implementation support tables
 
+Notes:
+
+- STklos
+  - Needed features WIP [https://github.com/Retropikzel/STklos](https://github.com/Retropikzel/STklos)
+
 ### Primitives 1 table
 
 |                  | c-type-size  | c-bytevector-u8-set! |c-bytevector-u8-ref | define-c-library    | c-bytevector? | define-c-procedure  |
@@ -95,7 +100,7 @@ to being portable by conforming to some specification.
 | **Mosh**         | X            | X                    |X                   | X                   | X             | X                   |
 | **Racket**       | X            | X                    |X                   | X                   | X             | X                   |
 | **Saggittarius** | X            | X                    |X                   | X                   | X             | X                   |
-| **Stklos**       | X            | X                    |X                   | X                   | X             | X                   |
+| **STklos**       | X            | X                    |X                   | X                   | X             | X                   |
 | **Ypsilon**      | X            | X                    |X                   | X                   | X             | X                   |
 
 ### Primitives 2 table
@@ -110,7 +115,7 @@ to being portable by conforming to some specification.
 | **Mosh**         | X                 |
 | **Racket**       | X                 |
 | **Saggittarius** | X                 |
-| Stklos           |                   |
+| STklos           |                   |
 | **Ypsilon**      | X                 |
 
 ### Test files pass
@@ -125,7 +130,7 @@ to being portable by conforming to some specification.
 | Mosh             | X              | X             |              |
 | Racket           | X              |               |              |
 | **Saggittarius** | X              | X             | X            |
-| Stklos           | X              | X             |              |
+| STklos           | X              | X             |              |
 | Ypsilon          | X              | X             |              |
 
 ## Installation
