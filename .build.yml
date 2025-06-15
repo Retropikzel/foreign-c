@@ -4,4 +4,4 @@ secrets:
 tasks:
     - trigger-jenkins-build: |
         branch=$(echo "$GIT_REF" | awk '{split($0,a,"/"); print(a[3])}')
-        curl --netrc-file ${HOME}/netrc-scheme-jenkins -X POST "https://jenkins.scheme.org/job/foreign_c/job/foreign-c/job/${branch}/build?delay=0sec"
+        curl --netrc-file ${HOME}/netrc-scheme-jenkins -X POST "https://jenkins.scheme.org/job/retropikzel/job/foreign-c/job/${branch}/build?delay=0sec"
