@@ -2,10 +2,30 @@
 CC=gcc
 DOCKER=docker run -it -v ${PWD}:/workdir
 DOCKER_INIT=cd /workdir && make clean &&
-VERSION=$(shell grep "version:" README.md | awk '{split\($0,a\); print a[2];}')
+VERSION=$(shell awk '/version:/{ print $$2 }' README.md )
 TESTNAME=primitives
 
-all: chibi chicken cyclone gambit gauche gerbil guile kawa larceny mosh racket sagittarius skint stklos tr7 ypsilon
+chibi: foreign/c/primitives/chibi/foreign-c.stub
+	chibi-ffi foreign/c/primitives/chibi/foreign-c.stub
+	${CC} \
+		-g3 \
+		-o foreign/c/primitives/chibi/foreign-c.so \
+		foreign/c/primitives/chibi/foreign-c.c \
+		-fPIC \
+		-lffi \
+		-shared
+
+package:
+	markdown README.md > README.html
+	snow-chibi package \
+		--version=${VERSION} \
+		--authors="Retropikzel" \
+		--doc=README.html \
+		--description="Portable foreign function interface for R7RS Schemes" \
+	foreign/c.sld
+
+clean-package:
+	rm -rf *.tgz
 
 test-compile-r7rs: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 	make ${COMPILE_R7RS}
@@ -46,6 +66,7 @@ tmp/test/libtest.so: tests/c-src/libtest.c
 tmp/test/libtest.a: tmp/test/libtest.o tests/c-src/libtest.c
 	ar rcs tmp/test/libtest.a tmp/test/libtest.o
 
+documentation/foreign-c.html:
 
 # apt-get install pandoc weasyprint
 docs:
@@ -58,54 +79,6 @@ docs:
 		--css templates/css/pdf-documentation.css \
 		-o documentation/foreign-c.pdf \
 		README.md
-
-chibi:
-	make -C foreign/c chibi
-
-chicken:
-	make -C foreign/c chicken
-
-cyclone:
-	make -C foreign/c cyclone
-
-gambit:
-	make -C foreign/c gambit
-
-gauche:
-	make -C foreign/c gauche
-
-gerbil:
-	make -C foreign/c gerbil
-
-guile:
-	make -C foreign/c guile
-
-kawa:
-	make -C foreign/c kawa
-
-larceny:
-	make -C foreign/c larceny
-
-mosh:
-	make -C foreign/c mosh
-
-racket:
-	make -C foreign/c racket
-
-sagittarius:
-	make -C foreign/c sagittarius
-
-skint:
-	make -C foreign/c skint
-
-stklos:
-	make -C foreign/c stklos
-
-tr7:
-	make -C foreign/c tr7
-
-ypsilon:
-	make -C foreign/c tr7
 
 clean:
 	find . -name "*.meta" -delete

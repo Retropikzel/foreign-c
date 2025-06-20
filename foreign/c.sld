@@ -10,7 +10,7 @@
               (chibi ast)
               (scheme inexact)
               (chibi))
-      (include-shared "c/lib/chibi"))
+      (include-shared "c/primitives/chibi/foreign-c"))
     (chicken
       (import (scheme base)
               (scheme write)

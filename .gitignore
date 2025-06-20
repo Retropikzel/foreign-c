@@ -47,3 +47,6 @@ snow
 foreign/c/lib
 !foreign/c/primitives/gauche/*.c
 !foreign/c/primitives/include/*.h
+README.html
+*.tgz
+*.tar.gz
