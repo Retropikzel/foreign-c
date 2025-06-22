@@ -27,6 +27,15 @@ package:
 clean-package:
 	rm -rf *.tgz
 
+test-java: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
+	mkdir -p tmp/test
+	cp kawa.jar tmp/test/
+	cp -r foreign tmp/test/
+	cp tests/*.scm tmp/test/
+	cp tests/c-include/libtest.h tmp/test/
+	cd tmp/test \
+	&& ${JAVA_HOME}/bin/java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=*.sld:./snow/*.sld:./snow/retropikzel/*.sld ${TESTNAME}.scm
+
 test-compile-r7rs: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 	make ${COMPILE_R7RS}
 	cp -r foreign tmp/test/

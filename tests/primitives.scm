@@ -214,18 +214,6 @@
 
 (print-header 'define-c-library)
 
-(cond-expand
-  (windows (define-c-library libc
-                                '("stdio.h" "string.h")
-                                "ucrtbase"
-                                '((additional-versions ("0" "6")))))
-  (else (define-c-library libc
-                             '("stdio.h" "string.h")
-                             "c"
-                             '((additional-versions ("0" "6"))))))
-
-(debug libc)
-
 (define-c-library c-testlib
                      '("libtest.h")
                      "test"

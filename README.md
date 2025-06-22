@@ -210,17 +210,13 @@ Options:
 
 Example:
 
-    (cond-expand
-      (windows (define-c-library libc-stdlib
-                                    '("stdlib.h")
-                                    "ucrtbase"
-                                    '((additional-versions ("0" "6"))
-                                      (additiona-paths (".")))))
-      (else (define-c-library libc-stdlib
-                                 (list "stdlib.h")
-                                 "c"
-                                 '((additional-versions ("0" "6"))
-                                   (additiona-paths ("."))))))
+    (define-c-library libc
+                      (list "stdlib.h")
+                      "c"
+                      '((additional-versions ("" "0" "6"))
+                        (additional-paths ("."))))
+
+Note that libc is exported by this library so you might not need to load it.
 
 #### Notes
 
@@ -245,9 +241,9 @@ Defines a new foreign function to be used from Scheme code.
 Example:
 
     (cond-expand
-        (windows (define-c-library libc-stdlib '("stdlib.h") "ucrtbase" '()))
-        (else (define-c-library libc-stdlib '("stdlib.h")  "c" '("6"))))
-    (define-c-procedure c-puts libc-stdlib 'puts 'int '(pointer))
+        (windows (define-c-library libc '("stdlib.h") "ucrtbase" '()))
+        (else (define-c-library libc '("stdlib.h")  "c" '("6"))))
+    (define-c-procedure c-puts libc 'puts 'int '(pointer))
     (c-puts "Message brought to you by foreign-c!")
 
 #### Notes
@@ -590,6 +586,24 @@ UTF-8 encoding of the given string.
 
 Returns a newly allocated (unless empty) string whose character sequence is
 encoded by the given c-bytevector.
+
+### Utilities
+
+**libc**
+
+Since the library uses C standard internally, and that is most likely library
+to have different name on different operating systems. For example libc.so on
+Linux, ucrtbase.dll on windows and libroot.so on Haiku. It makes sense to
+export it, saving the users the trouble of figuring out which named shared
+library they should load.
+
+See foreign/c/libc.scm to see which headers are included and what shared
+libraries are loaded.
+
+Example:
+
+    (define-c-procedure c-puts libc 'puts 'int '(pointer))
+    (c-puts "Message brought to you by foreign-c!")
 
 ### Environment variables
 
