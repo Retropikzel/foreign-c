@@ -1,0 +1,24 @@
+ARG COMPILE_R7RS=chibi
+FROM debian:bookworm AS build
+RUN apt-get update && apt-get install -y wget build-essential make git
+RUN git clone https://github.com/Retropikzel/chibi-scheme.git --branch=snow-chibi-foreign-depends
+RUN cd chibi-scheme && make PREFIX=/usr/local-other && make PREFIX=/usr/local-other install
+
+FROM schemers/${COMPILE_R7RS}
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    git \
+    make \
+    libffi8 \
+    libgc1 \
+    libssl3 \
+    libuv1 \
+    build-essential \
+    libffi-dev \
+    libmbedtls-dev
+COPY --from=build /usr/local-other /usr/local-other
+RUN rm -rf /usr/local/bin/snow-chibi
+ENV PATH=${PATH}:/usr/local-other/bin
+RUN git clone https://gitea.scheme.org/Retropikzel/compile-r7rs.git --depth=1
+RUN cd compile-r7rs && make && make install
+
