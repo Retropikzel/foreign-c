@@ -83,10 +83,10 @@ to being portable by conforming to some specification.
 
 ## Implementation support tables
 
-Notes:
+Required versions:
 
-- STklos
-  - Needed features WIP [https://github.com/Retropikzel/STklos](https://github.com/Retropikzel/STklos)
+- Guile >= 3
+- STklos > 2.10
 
 ### Primitives 1 table
 
