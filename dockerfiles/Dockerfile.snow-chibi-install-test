@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y \
     libmbedtls-dev \
     markdown
 COPY --from=build /usr/local-other /usr/local-other
+RUN ln -sf /usr/local/bin/chibi-scheme /usr/local/bin/chibi
 RUN rm -rf /usr/local/bin/snow-chibi
 ENV PATH=${PATH}:/usr/local-other/bin
 RUN git clone https://gitea.scheme.org/Retropikzel/compile-r7rs.git --depth=1
