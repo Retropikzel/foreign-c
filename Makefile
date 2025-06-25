@@ -1,12 +1,11 @@
-.PHONY=libtest.o tests/libtest.so libtest.a documentation
+.PHONY=libtest.o tests/libtest.so libtest.a documentation README.html
 CC=gcc
 DOCKER=docker run -it -v ${PWD}:/workdir
 DOCKER_INIT=cd /workdir && make clean &&
 VERSION=$(shell awk '/version:/{ print $$2 }' README.md )
 TESTNAME=primitives
 
-package:
-	markdown README.md > README.html
+package: README.html
 	snow-chibi package \
 		--version=${VERSION} \
 		--authors="Retropikzel" \
@@ -14,6 +13,9 @@ package:
 		--foreign-depends=ffi \
 		--description="Portable foreign function interface for R7RS Schemes" \
 	foreign/c.sld
+
+README.html:
+	markdown README.md > README.html
 
 clean-package:
 	rm -rf *.tgz
