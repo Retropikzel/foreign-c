@@ -101,14 +101,14 @@ gambit:
 
 gauche:
 	gauche-package compile \
-		--srcdir=primitives/gauche \
+		--srcdir=foreign/c/primitives/gauche \
 		--cc=${CC} \
-		--cflags="-I./primitives/include" \
+		--cflags="-I.foreign/c/primitives/gauche" \
 		--libs=-lffi \
 		foreign-c-primitives-gauche foreign-c-primitives-gauche.c gauchelib.scm
-	mkdir -p lib
-	mv foreign-c-primitives-gauche.so lib/gauche.so
-	mv foreign-c-primitives-gauche.o lib/gauche.o
+	mkdir -p foreign/c/lib
+	mv foreign-c-primitives-gauche.so foreign/c/lib/gauche.so
+	mv foreign-c-primitives-gauche.o foreign/c/lib/gauche.o
 
 gerbil:
 	@echo "Nothing to build for Gerbil"
