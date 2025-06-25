@@ -1,9 +1,3 @@
-ARG COMPILE_R7RS=chibi
-FROM schemers/sagittarius AS build
-RUN apt-get update && apt-get install -y wget build-essential make cmake libgc-dev zlib1g-dev libffi-dev libssl-dev
-RUN wget https://github.com/ktakashi/sagittarius-scheme/releases/download/v0.9.13/sagittarius-0.9.13.tar.gz && tar -xf sagittarius-0.9.13.tar.gz
-RUN cd sagittarius-0.9.13 && ./dist.sh gen && cmake -DCMAKE_INSTALL_PREFIX=/usr/local-other && make && make install
-
 FROM schemers/${COMPILE_R7RS}
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -15,9 +9,8 @@ RUN apt-get update && apt-get install -y \
     libuv1 \
     build-essential \
     libffi-dev \
-    libmbedtls-dev
-COPY --from=build /usr/local-other /usr/local-other
-ENV PATH=${PATH}:/usr/local-other/bin
+    libmbedtls-dev \
+    chicken-bin
 RUN git clone https://gitea.scheme.org/Retropikzel/compile-r7rs.git --depth=1
 RUN cd compile-r7rs && make && make install
 
