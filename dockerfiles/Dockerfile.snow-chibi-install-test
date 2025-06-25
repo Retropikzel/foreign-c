@@ -15,7 +15,8 @@ RUN apt-get update && apt-get install -y \
     libuv1 \
     build-essential \
     libffi-dev \
-    libmbedtls-dev
+    libmbedtls-dev \
+    markdown
 COPY --from=build /usr/local-other /usr/local-other
 RUN rm -rf /usr/local/bin/snow-chibi
 ENV PATH=${PATH}:/usr/local-other/bin

@@ -5,16 +5,6 @@ DOCKER_INIT=cd /workdir && make clean &&
 VERSION=$(shell awk '/version:/{ print $$2 }' README.md )
 TESTNAME=primitives
 
-chibi: foreign/c/primitives/chibi/foreign-c.stub
-	chibi-ffi foreign/c/primitives/chibi/foreign-c.stub
-	${CC} \
-		-g3 \
-		-o foreign/c/primitives/chibi/foreign-c.so \
-		foreign/c/primitives/chibi/foreign-c.c \
-		-fPIC \
-		-lffi \
-		-shared
-
 package:
 	markdown README.md > README.html
 	snow-chibi package \
@@ -109,7 +99,7 @@ cyclone:
 gambit:
 	@echo "Nothing to build for Gambit"
 
-gauche: primitives/gauche/foreign-c-primitives-gauche.c primitives/gauche/gauchelib.scm
+gauche:
 	gauche-package compile \
 		--srcdir=primitives/gauche \
 		--cc=${CC} \
