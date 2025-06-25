@@ -3,5 +3,5 @@
         (foreign c))
 
 (define-c-procedure c-puts libc 'puts 'int '(pointer))
-(c-puts "Hello from C!")
+(c-puts (string->c-utf8 "Hello from C!"))
 
