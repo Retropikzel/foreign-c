@@ -1,6 +1,15 @@
 (define-c-procedure c-calloc libc 'calloc 'pointer '(int int))
-(define-c-procedure c-memset-address->pointer libc 'memset 'pointer '(uint64 uint8 int))
-(define-c-procedure c-memset-pointer->address libc 'memset 'uint64 '(pointer uint8 int))
+(cond-expand
+  (chicken (define c-memset-address->pointer
+             (lambda (address value offset)
+               (address->pointer address))))
+  (else (define-c-procedure c-memset-address->pointer libc 'memset 'pointer '(uint64 uint8 int))))
+
+(cond-expand
+  (chicken (define c-memset-pointer->address
+             (lambda (pointer value offset)
+               (pointer->address pointer))))
+  (else (define-c-procedure c-memset-pointer->address libc 'memset 'uint64 '(pointer uint8 int))))
 ;(define-c-procedure c-memset-address libc 'memset 'pointer '(uint64 uint8 int))
 ;(define-c-procedure c-printf libc 'printf 'int '(pointer pointer))
 (define-c-procedure c-malloc libc 'malloc 'pointer '(int))
