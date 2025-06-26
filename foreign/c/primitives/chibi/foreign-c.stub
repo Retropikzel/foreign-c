@@ -1,5 +1,7 @@
 ; vim: ft=scheme
 
+(c-link "ffi")
+
 (c-system-include "stdint.h")
 (c-system-include "dlfcn.h")
 (c-system-include "stdio.h")

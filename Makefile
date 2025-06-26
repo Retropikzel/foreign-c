@@ -5,17 +5,14 @@ DOCKER_INIT=cd /workdir && make clean &&
 VERSION=$(shell awk '/version:/{ print $$2 }' README.md )
 TESTNAME=primitives
 
-package: README.html
+package: docs
 	snow-chibi package \
 		--version=${VERSION} \
 		--authors="Retropikzel" \
-		--doc=README.html \
+		--doc=documentation/foreign-c.html \
 		--foreign-depends=ffi \
 		--description="Portable foreign function interface for R7RS Schemes" \
 	foreign/c.sld
-
-README.html:
-	markdown README.md > README.html
 
 clean-package:
 	rm -rf *.tgz
