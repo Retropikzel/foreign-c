@@ -47,12 +47,9 @@ test-compile-r7rs-wine:
 		LD_LIBRARY_PATH=. \
 		wine ./${TESTNAME}.bat
 
-test-compile-r7rs-docker-old:
-	docker build --build-arg COMPILE_R7RS=${COMPILE_R7RS} --tag=r7rs-pffi-test-${COMPILE_R7RS} -f Dockerfile.test .
-	docker run -v "${PWD}:/workdir" -w /workdir -t r7rs-pffi-test-${COMPILE_R7RS} sh -c "make COMPILE_R7RS=${COMPILE_R7RS} TESTNAME=${TESTNAME} test-compile-r7rs"
-
 test-compile-r7rs-docker:
-	docker run -v "${PWD}:/workdir" -w /workdir retropikzel1/compile-r7rs:${COMPILE_R7RS} sh -c "make test-compile-r7rs COMPILE_R7RS=${COMPILE_R7RS} TESTNAME=${TESTNAME}"
+	docker build --build-arg COMPILE_R7RS=${COMPILE_R7RS} --tag=r7rs-pffi-test-${COMPILE_R7RS} -f dockerfiles/Dockerfile.test .
+	docker run -it -v "${PWD}:/workdir" -w /workdir -t r7rs-pffi-test-${COMPILE_R7RS} sh -c "make COMPILE_R7RS=${COMPILE_R7RS} TESTNAME=${TESTNAME} test-compile-r7rs"
 
 tmp/test/libtest.o: tests/c-src/libtest.c
 	mkdir -p tmp/test

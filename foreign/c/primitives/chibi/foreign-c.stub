@@ -1,11 +1,10 @@
 ; vim: ft=scheme
 
-(c-link "ffi")
-
 (c-system-include "stdint.h")
 (c-system-include "dlfcn.h")
 (c-system-include "stdio.h")
 (c-system-include "ffi.h")
+(c-link "ffi")
 
 ;; c-type-size
 (c-declare "

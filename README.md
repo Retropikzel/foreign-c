@@ -85,7 +85,15 @@ to being portable by conforming to some specification.
 
 Required versions:
 
+- Gambit >= 4.9.5
 - Guile >= 3
+- Kawa >= 3.11 and Java >= 22
+  - Needs arguments
+    - -J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED
+    - -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED
+    - -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED
+    - -J--enable-native-access=ALL-UNNAMED
+    - -J--enable-preview
 - STklos > 2.10
 
 ### Primitives 1 table
@@ -94,12 +102,13 @@ Required versions:
 |------------------|:------------:|:--------------------:|:------------------:|:-------------------:|:-------------:|:-------------------:|
 | **Chibi**        | X            | X                    |X                   | X                   | X             | X                   |
 | **Chicken**      | X            | X                    |X                   | X                   | X             | X                   |
+| Gambit           | X            | X                    |X                   | X                   | X             | X                   |
 | **Gauche**       | X            | X                    |X                   | X                   | X             | X                   |
 | **Guile**        | X            | X                    |X                   | X                   | X             | X                   |
 | **Kawa**         | X            | X                    |X                   | X                   | X             | X                   |
 | **Mosh**         | X            | X                    |X                   | X                   | X             | X                   |
 | **Racket**       | X            | X                    |X                   | X                   | X             | X                   |
-| **Saggittarius** | X            | X                    |X                   | X                   | X             | X                   |
+| **Sagittarius**  | X            | X                    |X                   | X                   | X             | X                   |
 | **STklos**       | X            | X                    |X                   | X                   | X             | X                   |
 | **Ypsilon**      | X            | X                    |X                   | X                   | X             | X                   |
 
@@ -135,7 +144,7 @@ Required versions:
 
 ## Installation
 
-Eithe download the latest release from
+Either download the latest release from
 [https://git.sr.ht/~retropikzel/foreign-c/refs](https://git.sr.ht/~retropikzel/foreign-c/refs)
 or git clone, preferably with a tag, and copy the _foreign_ directory to your
 library directory.

@@ -47,14 +47,11 @@
           (else (error "Can not get size of unknown type" type)))))
 
 (define-macro
-  (define-c-library name headers object-name . options)
-  (begin
-    (let ((c-code (apply string-append
-                         (map
-                           (lambda (header)
-                             (string-append "#include <" header ">" (string #\newline)))
-                           (car (cdr headers))))))
-      `(begin (define ,name #t) (c-declare ,c-code)))))
+  (define-c-library name headers object-name options)
+  (append (list `(define ,name #t)
+                (map (lambda (header)
+                       `(c-declare ,(string-append "#include <" header ">")))
+                     (car (cdr headers))))))
 
 
 (define pointer? (c-lambda ((pointer void)) bool  "___return(1);"))
@@ -66,7 +63,7 @@
           (lambda (x) #f)
           (lambda () (pointer? object)))))))
 
-#;(define c-bytevector-u8-set! (c-lambda ((pointer void) int unsigned-int8) void "*(uint8_t*)((char*)___arg1 + ___arg2) = ___arg3;"))
+(define c-bytevector-u8-set! (c-lambda ((pointer void) int unsigned-int8) void "*(uint8_t*)((char*)___arg1 + ___arg2) = ___arg3;"))
 (define c-bytevector-u8-ref (c-lambda ((pointer void) int) unsigned-int8 "___return(*(uint8_t*)((char*)___arg1 + ___arg2));"))
 
 (define pointer-set-c-int8_t! (c-lambda ((pointer void) int int8) void "*(int8_t*)((char*)___arg1 + ___arg2) = ___arg3;"))

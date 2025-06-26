@@ -1,8 +1,9 @@
 (cond-expand
-  (windows (define-c-library libc
-                             '("stdlib.h" "stdio.h" "string.h")
-                             "ucrtbase"
-                             '()))
+  (windows
+    (define-c-library libc
+                      '("stdlib.h" "stdio.h" "string.h")
+                      "ucrtbase"
+                      '()))
   (else
     (define c-library "c")
     (when (get-environment-variable "BE_HOST_CPU")
