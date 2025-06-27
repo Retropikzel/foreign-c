@@ -4,8 +4,9 @@ DOCKER=docker run -it -v ${PWD}:/workdir
 DOCKER_INIT=cd /workdir && make clean &&
 VERSION=$(shell awk '/version:/{ print $$2 }' README.md )
 TESTNAME=primitives
+COMPILE_R7RS=chibi
 
-package: documentation
+build: documentation
 	snow-chibi package \
 		--version=${VERSION} \
 		--authors="Retropikzel" \
@@ -14,11 +15,8 @@ package: documentation
 		--description="Portable foreign function interface for R7RS Schemes" \
 	foreign/c.sld
 
-snow-chibi-install: clean-package package
+install:
 	snow-chibi --impls=${COMPILE_R7RS} install foreign-c-${VERSION}.tgz
-
-clean-package:
-	rm -rf *.tgz
 
 test-java: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 	mkdir -p tmp/test
@@ -160,3 +158,4 @@ clean:
 	find . -name "*@gambit*" -delete
 	rm -rf tmp
 	rm foreign/c/primitives/chibi/foreign-c.c
+	rm -rf *.tgz
