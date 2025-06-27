@@ -144,17 +144,31 @@ Required versions:
 
 ## Installation
 
+### Snow-fort
+
+[https://snow-fort.org/](https://snow-fort.org/)
+
+Installable with snow-chibi for following implementations.
+
+- Chibi
+- Kawa
+- STklos
+
+### Manul
+
 Either download the latest release from
 [https://git.sr.ht/~retropikzel/foreign-c/refs](https://git.sr.ht/~retropikzel/foreign-c/refs)
-or git clone, preferably with a tag, and copy the _foreign_ directory to your
+or git clone, tag, and copy the _foreign_ directory to your
 library directory.
 
 Example assuming libraries in directory _snow_:
 
     git clone https://git.sr.ht/~retropikzel/foreign-c --branch LATEST_VERSION
+    cd foreign-c
+    make SCHEME_IMPLEMENTATION_NAME
+    cd ..
     mkdir -p snow
     cp -r foreign-c/foreign snow/
-    make -C snow/foreign/c SCHEME_IMPLEMENTATION_NAME
 
 With most implementations the make command does not compile anything. When that
 is the case it will say "Nothing to build on SCHEME\_IMPLEMENTATION\_NAME."

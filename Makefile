@@ -5,7 +5,7 @@ DOCKER_INIT=cd /workdir && make clean &&
 VERSION=$(shell awk '/version:/{ print $$2 }' README.md )
 TESTNAME=primitives
 
-package: docs
+package: documentation
 	snow-chibi package \
 		--version=${VERSION} \
 		--authors="Retropikzel" \
@@ -13,6 +13,9 @@ package: docs
 		--foreign-depends=ffi \
 		--description="Portable foreign function interface for R7RS Schemes" \
 	foreign/c.sld
+
+snow-chibi-install: clean-package package
+	snow-chibi --impls=${COMPILE_R7RS} install foreign-c-${VERSION}.tgz
 
 clean-package:
 	rm -rf *.tgz
@@ -32,10 +35,16 @@ test-compile-r7rs: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 	cp tests/*.scm tmp/test/
 	cp tests/c-include/libtest.h tmp/test/
 	cd tmp/test && \
-		COMPILE_R7RS_GAMBIT="-cc-options \"-ltest -I. -L\" -ld-options \"-L.\"" \
 		COMPILE_R7RS_CHICKEN="-L -static -L -ltest -I. -L." \
 		compile-r7rs -I . -o ${TESTNAME} ${TESTNAME}.scm
 	cd tmp/test && ./${TESTNAME}
+
+test-compile-r7rs-snow: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
+	cp tests/*.scm tmp/test/
+	cp tests/c-include/libtest.h tmp/test/
+	cd tmp/test && \
+		compile-r7rs -o hello hello.scm
+	cd tmp/test && ./hello
 
 test-compile-r7rs-wine:
 	cp -r foreign tmp/test/
@@ -65,7 +74,7 @@ tmp/test/libtest.a: tmp/test/libtest.o tests/c-src/libtest.c
 documentation/foreign-c.html:
 
 # apt-get install pandoc weasyprint
-docs:
+documentation: README.md
 	mkdir -p documentation
 	pandoc --standalone \
 		--template templates/documentation.html README.md \

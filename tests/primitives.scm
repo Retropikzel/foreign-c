@@ -5,6 +5,16 @@
         (scheme process-context)
         (foreign c))
 
+
+(display "libc-name:" )
+(display libc-name)
+(newline)
+
+(define-c-library libc
+                  '("stdlib.h" "stdio.h" "string.h")
+                  libc-name
+                  '((additional-versions ("0" "6"))))
+
 ;; util
 (define header-count 1)
 

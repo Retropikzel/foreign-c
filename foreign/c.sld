@@ -201,7 +201,7 @@
           c-bytevector->bytevector
 
           ;;;; Utilities
-          libc
+          libc-name
 
           ;; TODO endianness
           native-endianness
@@ -314,7 +314,7 @@
     (gambit (include "c/primitives/gambit.scm"))
     (gauche (include "c/primitives/gauche/define-c-procedure.scm"))
     ;(gerbil (include "c/primitives/gerbil.scm"))
-    (guile (include "c/primitives/guile.scm"))
+    (guile (include "./c/primitives/guile.scm"))
     (kawa (include "c/primitives/kawa.scm"))
     (mit-scheme (include "c/primitives/mit-scheme.scm"))
     ;(larceny (include "c/primitives/larceny.scm"))

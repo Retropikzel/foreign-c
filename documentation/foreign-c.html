@@ -366,15 +366,28 @@ Schemes - 0.10.0</title>
         </tbody>
         </table>
         <h2 id="installation">Installation</h2>
+        <h3 id="snow-fort">Snow-fort</h3>
+        <p><a
+        href="https://snow-fort.org/">https://snow-fort.org/</a></p>
+        <p>Installable with snow-chibi for following
+        implementations.</p>
+        <ul>
+        <li>Chibi</li>
+        <li>Kawa</li>
+        <li>STklos</li>
+        </ul>
+        <h3 id="manul">Manul</h3>
         <p>Either download the latest release from <a
         href="https://git.sr.ht/~retropikzel/foreign-c/refs">https://git.sr.ht/~retropikzel/foreign-c/refs</a>
-        or git clone, preferably with a tag, and copy the
-        <em>foreign</em> directory to your library directory.</p>
+        or git clone, tag, and copy the <em>foreign</em> directory to
+        your library directory.</p>
         <p>Example assuming libraries in directory <em>snow</em>:</p>
         <pre><code>git clone https://git.sr.ht/~retropikzel/foreign-c --branch LATEST_VERSION
+cd foreign-c
+make SCHEME_IMPLEMENTATION_NAME
+cd ..
 mkdir -p snow
-cp -r foreign-c/foreign snow/
-make -C snow/foreign/c SCHEME_IMPLEMENTATION_NAME</code></pre>
+cp -r foreign-c/foreign snow/</code></pre>
         <p>With most implementations the make command does not compile
         anything. When that is the case it will say “Nothing to build on
         SCHEME_IMPLEMENTATION_NAME.”</p>

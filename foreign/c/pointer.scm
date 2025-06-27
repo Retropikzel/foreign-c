@@ -1,3 +1,8 @@
+(define-c-library libc
+                  '("stdlib.h" "stdio.h" "string.h")
+                  libc-name
+                  '((additional-versions ("0" "6"))))
+
 (define-c-procedure c-calloc libc 'calloc 'pointer '(int int))
 (cond-expand
   (gambit
