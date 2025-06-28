@@ -85,7 +85,6 @@ to being portable by conforming to some specification.
 
 Required versions:
 
-- Gambit >= 4.9.5
 - Guile >= 3
 - Kawa >= 3.11 and Java >= 22
   - Needs arguments
