@@ -118,7 +118,7 @@ Schemes - 0.10.0</title>
         </ul></li>
         <li>Kawa &gt;= 3.11 and Java &gt;= 22
         <ul>
-        <li>Needs arguments
+        <li>Needs arguments to enable FFI
         <ul>
         <li>-J–add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED</li>
         <li>-J–add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED</li>
@@ -126,10 +126,15 @@ Schemes - 0.10.0</title>
         <li>-J–enable-native-access=ALL-UNNAMED</li>
         <li>-J–enable-preview</li>
         </ul></li>
+        <li>So that snow-chibi installed library is found
+        <ul>
+        <li>-Dkawa.import.path=/usr/local/share/kawa</li>
+        <li>-Dkawa.import.path=/usr/local/share/kawa/lib</li>
+        </ul></li>
         </ul></li>
         <li>Mosh &gt;= 0.2.9-rc1</li>
-        <li>Racket</li>
-        <li>Sagittarius</li>
+        <li>Racket &gt;= 8.16 [cs]</li>
+        <li>Sagittarius &gt;= 0.9.13</li>
         <li>STklos &gt; 2.10
         <ul>
         <li>At the time only 2.10 is out so build from git</li>
@@ -378,14 +383,13 @@ Schemes - 0.10.0</title>
         <h3 id="snow-fort">Snow-fort</h3>
         <p><a
         href="https://snow-fort.org/">https://snow-fort.org/</a></p>
-        <p>Installable with snow-chibi for following
-        implementations.</p>
-        <ul>
-        <li>Chibi</li>
-        <li>Kawa</li>
-        <li>STklos</li>
-        </ul>
-        <h3 id="manul">Manul</h3>
+        <p>snow-chibi –impls=IMPLEMENTATION install “(foreign c)”</p>
+        <p>You can test that library is found by your implementation
+        like this:</p>
+        <pre><code>cp tests/hello.scm /tmp/hello.scm
+cd /tmp
+IMPLEMENTATION hello.scm</code></pre>
+        <h3 id="manual">Manual</h3>
         <p>Either download the latest release from <a
         href="https://git.sr.ht/~retropikzel/foreign-c/refs">https://git.sr.ht/~retropikzel/foreign-c/refs</a>
         or git clone, tag, and copy the <em>foreign</em> directory to

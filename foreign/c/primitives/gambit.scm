@@ -46,12 +46,28 @@
           ((eq? type 'void) (size-of-void*))
           (else (error "Can not get size of unknown type" type)))))
 
-(define-macro
+#;(define-macro
   (define-c-library name headers object-name options)
-  (append (list `(define ,name #t)
-                (map (lambda (header)
-                       `(c-declare ,(string-append "#include <" header ">")))
-                     (car (cdr headers))))))
+  (display "HERE: ")
+  (write (cons `(define ,name #t)
+          (map (lambda (header)
+                 `(c-declare ,(string-append "#include <" header ">")))
+               (car (cdr headers)))))
+  (newline)
+  (cons `(define ,name #t)
+          (map (lambda (header)
+                 `(c-declare ,(string-append "#include <" header ">")))
+               (car (cdr headers)))))
+
+(define-macro
+  (define-c-library name headers object-name . options)
+  (begin
+    (let ((c-code (apply string-append
+                         (map
+                           (lambda (header)
+                             (string-append "#include <" header ">" (string #\newline)))
+                           (car (cdr headers))))))
+      `(begin (define ,name #t) (c-declare ,c-code)))))
 
 
 (define pointer? (c-lambda ((pointer void)) bool  "___return(1);"))
