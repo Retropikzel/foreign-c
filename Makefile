@@ -18,6 +18,9 @@ build: documentation
 install:
 	snow-chibi --impls=${COMPILE_R7RS} install foreign-c-${VERSION}.tgz
 
+install-jenkins:
+	snow-chibi --impls=${COMPILE_R7RS} --always-yes install foreign-c-${VERSION}.tgz
+
 test-java: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 	mkdir -p tmp/test
 	cp kawa.jar tmp/test/
