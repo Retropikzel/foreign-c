@@ -85,15 +85,21 @@ to being portable by conforming to some specification.
 
 Required versions:
 
+- Chibi > 0.11
+    - At the only 0.11 is out so build from git
+- Chicken >= 5.4.0 < 6
 - Guile >= 3
+    - Has include bug, might not work on all situations
 - Kawa >= 3.11 and Java >= 22
-  - Needs arguments
-    - -J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED
-    - -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED
-    - -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED
-    - -J--enable-native-access=ALL-UNNAMED
-    - -J--enable-preview
+    - Needs arguments
+        - -J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED
+        - -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED
+        - -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED
+        - -J--enable-native-access=ALL-UNNAMED
+        - -J--enable-preview
 - STklos > 2.10
+    - At the time only 2.10 is out so build from git
+
 
 ### Primitives 1 table
 
@@ -233,11 +239,9 @@ Example:
 
     (define-c-library libc
                       (list "stdlib.h")
-                      "c"
+                      libc-name
                       '((additional-versions ("" "0" "6"))
                         (additional-paths ("."))))
-
-Note that libc is exported by this library so you might not need to load it.
 
 #### Notes
 
@@ -261,9 +265,7 @@ Defines a new foreign function to be used from Scheme code.
 
 Example:
 
-    (cond-expand
-        (windows (define-c-library libc '("stdlib.h") "ucrtbase" '()))
-        (else (define-c-library libc '("stdlib.h")  "c" '("6"))))
+    (define-c-library libc '("stdlib.h") libc-name '("6"))
     (define-c-procedure c-puts libc 'puts 'int '(pointer))
     (c-puts "Message brought to you by foreign-c!")
 
@@ -311,9 +313,7 @@ Defines a new Sceme function to be used as callback to C code.
 Example:
 
     ; Load the shared library
-    (cond-expand
-        (windows (define-c-library libc-stdlib '("stdlib.h") "ucrtbase" '()))
-        (else (define-c-library '("stdlib.h") "c" '("" "6"))))
+    (define-c-library libc-stdlib '("stdlib.h") libc-name '("" "6"))
 
     ; Define C function that takes a callback
     (define-c-procedure qsort libc-stdlib 'qsort 'void '(pointer int int callback))
@@ -610,19 +610,20 @@ encoded by the given c-bytevector.
 
 ### Utilities
 
-**libc**
+**libc-name**
 
-Since the library uses C standard internally, and that is most likely library
-to have different name on different operating systems. For example libc.so on
-Linux, ucrtbase.dll on windows and libroot.so on Haiku. It makes sense to
-export it, saving the users the trouble of figuring out which named shared
-library they should load.
+Name of the C standard library on the current operating system. Supported OS:
+
+- Windows
+- Linux
+- Haiku
 
 See foreign/c/libc.scm to see which headers are included and what shared
 libraries are loaded.
 
 Example:
 
+    (define-c-library libc '("stdlib.h") libc-name '("" "6"))
     (define-c-procedure c-puts libc 'puts 'int '(pointer))
     (c-puts "Message brought to you by foreign-c!")
 
