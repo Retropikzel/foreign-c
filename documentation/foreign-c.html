@@ -107,8 +107,13 @@ Schemes - 0.10.0</title>
         <li>At the only 0.11 is out so build from git</li>
         </ul></li>
         <li>Chicken &gt;= 5.4.0 &lt; 6</li>
+        <li>Gauche &gt;= 0.9.15
+        <ul>
+        <li>Does not yet work with snow-chibi install</li>
+        </ul></li>
         <li>Guile &gt;= 3
         <ul>
+        <li>Does not yet work with snow-chibi install</li>
         <li>Has include bug, might not work on all situations</li>
         </ul></li>
         <li>Kawa &gt;= 3.11 and Java &gt;= 22
@@ -122,6 +127,9 @@ Schemes - 0.10.0</title>
         <li>-J–enable-preview</li>
         </ul></li>
         </ul></li>
+        <li>Mosh &gt;= 0.2.9-rc1</li>
+        <li>Racket</li>
+        <li>Sagittarius</li>
         <li>STklos &gt; 2.10
         <ul>
         <li>At the time only 2.10 is out so build from git</li>
@@ -456,11 +464,9 @@ cp -r foreign-c/foreign snow/</code></pre>
         <p>Example:</p>
         <pre><code>(define-c-library libc
                   (list &quot;stdlib.h&quot;)
-                  &quot;c&quot;
+                  libc-name
                   &#39;((additional-versions (&quot;&quot; &quot;0&quot; &quot;6&quot;))
                     (additional-paths (&quot;.&quot;))))</code></pre>
-        <p>Note that libc is exported by this library so you might not
-        need to load it.</p>
         <h4 id="notes">Notes</h4>
         <ul>
         <li>Do not cond-expand inside the arguments, that might lead to
@@ -485,9 +491,7 @@ cp -r foreign-c/foreign snow/</code></pre>
         <p>Defines a new foreign function to be used from Scheme
         code.</p>
         <p>Example:</p>
-        <pre><code>(cond-expand
-    (windows (define-c-library libc &#39;(&quot;stdlib.h&quot;) &quot;ucrtbase&quot; &#39;()))
-    (else (define-c-library libc &#39;(&quot;stdlib.h&quot;)  &quot;c&quot; &#39;(&quot;6&quot;))))
+        <pre><code>(define-c-library libc &#39;(&quot;stdlib.h&quot;) libc-name &#39;(&quot;6&quot;))
 (define-c-procedure c-puts libc &#39;puts &#39;int &#39;(pointer))
 (c-puts &quot;Message brought to you by foreign-c!&quot;)</code></pre>
         <h4 id="notes-1">Notes</h4>
@@ -533,9 +537,7 @@ cp -r foreign-c/foreign snow/</code></pre>
         code.</p>
         <p>Example:</p>
         <pre><code>; Load the shared library
-(cond-expand
-    (windows (define-c-library libc-stdlib &#39;(&quot;stdlib.h&quot;) &quot;ucrtbase&quot; &#39;()))
-    (else (define-c-library &#39;(&quot;stdlib.h&quot;) &quot;c&quot; &#39;(&quot;&quot; &quot;6&quot;))))
+(define-c-library libc-stdlib &#39;(&quot;stdlib.h&quot;) libc-name &#39;(&quot;&quot; &quot;6&quot;))
 
 ; Define C function that takes a callback
 (define-c-procedure qsort libc-stdlib &#39;qsort &#39;void &#39;(pointer int int callback))
@@ -825,17 +827,19 @@ func(&amp;i);</code></pre>
         <p>Returns a newly allocated (unless empty) string whose
         character sequence is encoded by the given c-bytevector.</p>
         <h3 id="utilities">Utilities</h3>
-        <p><strong>libc</strong></p>
-        <p>Since the library uses C standard internally, and that is
-        most likely library to have different name on different
-        operating systems. For example libc.so on Linux, ucrtbase.dll on
-        windows and libroot.so on Haiku. It makes sense to export it,
-        saving the users the trouble of figuring out which named shared
-        library they should load.</p>
+        <p><strong>libc-name</strong></p>
+        <p>Name of the C standard library on the current operating
+        system. Supported OS:</p>
+        <ul>
+        <li>Windows</li>
+        <li>Linux</li>
+        <li>Haiku</li>
+        </ul>
         <p>See foreign/c/libc.scm to see which headers are included and
         what shared libraries are loaded.</p>
         <p>Example:</p>
-        <pre><code>(define-c-procedure c-puts libc &#39;puts &#39;int &#39;(pointer))
+        <pre><code>(define-c-library libc &#39;(&quot;stdlib.h&quot;) libc-name &#39;(&quot;&quot; &quot;6&quot;))
+(define-c-procedure c-puts libc &#39;puts &#39;int &#39;(pointer))
 (c-puts &quot;Message brought to you by foreign-c!&quot;)</code></pre>
         <h3 id="environment-variables">Environment variables</h3>
         <p>Setting environment variables like this on Windows works for

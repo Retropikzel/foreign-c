@@ -88,15 +88,24 @@ Required versions:
 - Chibi > 0.11
     - At the only 0.11 is out so build from git
 - Chicken >= 5.4.0 < 6
+- Gauche >= 0.9.15
+    - Does not yet work with snow-chibi install
 - Guile >= 3
+    - Does not yet work with snow-chibi install
     - Has include bug, might not work on all situations
 - Kawa >= 3.11 and Java >= 22
-    - Needs arguments
+    - Needs arguments to enable FFI
         - -J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED
         - -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED
         - -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED
         - -J--enable-native-access=ALL-UNNAMED
         - -J--enable-preview
+    - So that snow-chibi installed library is found
+        - -Dkawa.import.path=/usr/local/share/kawa
+        - -Dkawa.import.path=/usr/local/share/kawa/lib
+- Mosh >= 0.2.9-rc1
+- Racket >= 8.16 [cs]
+- Sagittarius >= 0.9.13
 - STklos > 2.10
     - At the time only 2.10 is out so build from git
 
@@ -152,13 +161,15 @@ Required versions:
 
 [https://snow-fort.org/](https://snow-fort.org/)
 
-Installable with snow-chibi for following implementations.
+snow-chibi --impls=IMPLEMENTATION install "(foreign c)"
 
-- Chibi
-- Kawa
-- STklos
+You can test that library is found by your implementation like this:
 
-### Manul
+    cp tests/hello.scm /tmp/hello.scm
+    cd /tmp
+    IMPLEMENTATION hello.scm
+
+### Manual
 
 Either download the latest release from
 [https://git.sr.ht/~retropikzel/foreign-c/refs](https://git.sr.ht/~retropikzel/foreign-c/refs)
