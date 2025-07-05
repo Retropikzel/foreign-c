@@ -6,6 +6,10 @@
 (c-system-include "ffi.h")
 (c-link "ffi")
 
+;; make-c-null
+(c-declare "void* make_c_null() { return NULL; }")
+(define-c (maybe-null pointer void*) make-c-null ())
+
 ;; c-type-size
 (c-declare "
     int size_of_int8_t() { return sizeof(int8_t); }
@@ -366,10 +370,12 @@
         case 17:
           c_atypes[i] = &ffi_type_float;
           vals17[i] = (float)sexp_flonum_value(avalues[i]);
+          c_avalues[i] = &vals17[i];
         break;
         case 18:
           c_atypes[i] = &ffi_type_double;
           vals18[i] = (double)sexp_flonum_value(avalues[i]);
+          c_avalues[i] = &vals18[i];
         break;
         case 19:
           c_atypes[i] = &ffi_type_void;

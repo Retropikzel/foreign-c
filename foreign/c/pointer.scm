@@ -84,8 +84,9 @@
     (bytevector->c-bytevector (string->utf8 (string-append string-var (string #\null))))))
 
 (cond-expand
-  (kawa #t) ; FIXME
+  (chibi #t) ; FIXME
   (chicken #t) ; FIXME
+  (kawa #t) ; FIXME
   (else (define make-c-null
           (lambda ()
             (cond-expand (stklos (let ((pointer (make-c-bytevector 1)))
@@ -94,8 +95,8 @@
                          (else (c-memset-address->pointer 0 0 0)))))))
 
 (cond-expand
-  (kawa #t) ; FIXME
   (chicken #t) ; FIXME
+  (kawa #t) ; FIXME
   (else (define c-null?
           (lambda (pointer)
             (if (c-bytevector? pointer)

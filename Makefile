@@ -4,7 +4,7 @@ DOCKER=docker run -it -v ${PWD}:/workdir
 DOCKER_INIT=cd /workdir && make clean &&
 VERSION=$(shell awk '/version:/{ print $$2 }' README.md )
 TESTNAME=primitives
-COMPILE_R7RS=chibi
+SCHEME=chibi
 
 all: package
 
@@ -19,10 +19,10 @@ package:
 	foreign/c.sld
 
 install:
-	snow-chibi --impls=${COMPILE_R7RS} install foreign-c-${VERSION}.tgz
+	snow-chibi --impls=${SCHEME} install foreign-c-${VERSION}.tgz
 
 install-jenkins:
-	snow-chibi --impls=${COMPILE_R7RS} --always-yes install foreign-c-${VERSION}.tgz
+	snow-chibi --impls=${SCHEME} --always-yes install foreign-c-${VERSION}.tgz
 
 test-java: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 	mkdir -p tmp/test
@@ -34,12 +34,13 @@ test-java: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 	&& ${JAVA_HOME}/bin/java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=*.sld:./snow/*.sld:./snow/retropikzel/*.sld ${TESTNAME}.scm
 
 test-compile-r7rs: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
-	make ${COMPILE_R7RS}
+	make ${SCHEME}
 	cp -r foreign tmp/test/
 	cp tests/*.scm tmp/test/
 	cp tests/c-include/libtest.h tmp/test/
 	cd tmp/test && \
 		COMPILE_R7RS_CHICKEN="-L -static -L -ltest -I. -L." \
+		COMPILE_R7RS=${SCHEME} \
 		compile-r7rs -I . -o ${TESTNAME} ${TESTNAME}.scm
 	cd tmp/test && ./${TESTNAME}
 
@@ -61,8 +62,8 @@ test-compile-r7rs-wine:
 		wine ./${TESTNAME}.bat
 
 test-compile-r7rs-docker:
-	docker build --build-arg COMPILE_R7RS=${COMPILE_R7RS} --tag=r7rs-pffi-test-${COMPILE_R7RS} -f dockerfiles/Dockerfile.test .
-	docker run -it -v "${PWD}:/workdir" -w /workdir -t r7rs-pffi-test-${COMPILE_R7RS} sh -c "make COMPILE_R7RS=${COMPILE_R7RS} TESTNAME=${TESTNAME} test-compile-r7rs"
+	docker build --build-arg COMPILE_R7RS=${SCHEME} --tag=r7rs-pffi-test-${SCHEME} -f dockerfiles/Dockerfile.test .
+	docker run -it -v "${PWD}:/workdir" -w /workdir -t r7rs-pffi-test-${SCHEME} sh -c "make COMPILE_R7RS=${SCHEME} TESTNAME=${TESTNAME} test-compile-r7rs"
 
 tmp/test/libtest.o: tests/c-src/libtest.c
 	mkdir -p tmp/test
