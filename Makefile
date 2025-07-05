@@ -6,11 +6,14 @@ VERSION=$(shell awk '/version:/{ print $$2 }' README.md )
 TESTNAME=primitives
 COMPILE_R7RS=chibi
 
-build: documentation
+all: package
+
+package:
+	markdown README.md > README.html
 	snow-chibi package \
 		--version=${VERSION} \
 		--authors="Retropikzel" \
-		--doc=documentation/foreign-c.html \
+		--doc=README.html \
 		--foreign-depends=ffi \
 		--description="Portable foreign function interface for R7RS Schemes" \
 	foreign/c.sld

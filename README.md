@@ -100,6 +100,8 @@ Required versions:
         - -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED
         - -J--enable-native-access=ALL-UNNAMED
         - -J--enable-preview
+    - All needed arguments on one line for copy pasting
+        - -J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED -J--enable-native-access=ALL-UNNAMED -J--enable-preview
     - So that snow-chibi installed library is found
         - -Dkawa.import.path=/usr/local/share/kawa
         - -Dkawa.import.path=/usr/local/share/kawa/lib
