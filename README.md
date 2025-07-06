@@ -161,6 +161,11 @@ Required versions:
 
 ### Snow-fort
 
+Not yet installable with snow-fort:
+
+- Gauche
+- Guile
+
 [https://snow-fort.org/](https://snow-fort.org/)
 
 snow-chibi --impls=IMPLEMENTATION install "(foreign c)"
