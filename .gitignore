@@ -1,11 +1,3 @@
-*.h
-!include/pffi-gauche.h
-!include/libtest.h
-*.c
-!tests/c-src/*.c
-!tests/c-include/*.h
-!src/libtest.c
-!src/gauche/pffi.c
 *.swp
 *.swo
 docuptmp
@@ -32,7 +24,6 @@ size-of
 test/*
 test
 !test/*.scm
-retropikzel/pffi/*/*.c
 retropikzel/pffi/*/*.o*
 retropikzel/pffi/*/*.so
 retropikzel/pffi/*/compiled
@@ -45,8 +36,7 @@ testfile.test
 testfile.test
 snow
 foreign/c/lib
-!foreign/c/primitives/gauche/*.c
-!foreign/c/primitives/include/*.h
 README.html
 *.tgz
 *.tar.gz
+foreign/c/primitives/chibi/foreign-c.c

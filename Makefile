@@ -39,7 +39,8 @@ test-compile-r7rs: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 	cp tests/*.scm tmp/test/
 	cp tests/c-include/libtest.h tmp/test/
 	cd tmp/test && \
-		COMPILE_R7RS_CHICKEN="-L -static -L -ltest -I. -L." \
+		COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." \
+		COMPILE_R7RS_KAWA="-J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED -J--enable-native-access=ALL-UNNAMED -J--enable-preview" \
 		COMPILE_R7RS=${SCHEME} \
 		compile-r7rs -I . -o ${TESTNAME} ${TESTNAME}.scm
 	cd tmp/test && ./${TESTNAME}

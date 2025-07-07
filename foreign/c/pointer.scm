@@ -84,7 +84,6 @@
     (bytevector->c-bytevector (string->utf8 (string-append string-var (string #\null))))))
 
 (cond-expand
-  (chibi #t) ; FIXME
   (chicken #t) ; FIXME
   (kawa #t) ; FIXME
   (else (define make-c-null
