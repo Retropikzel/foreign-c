@@ -69,6 +69,12 @@
     (let ((c-function (dlsym shared-object c-name))
           (maybe-dlerror (dlerror)))
       (lambda arguments
+        (display "NAME: ")
+        (display c-name)
+        (newline)
+        (display "ARGS: ")
+        (write arguments)
+        (newline)
         (let* ((return-pointer
                  (internal-ffi-call (length argument-types)
                                     (type->libffi-type-number return-type)

@@ -109,7 +109,9 @@
     double vals18[nargs];
     void* vals20[nargs];
 
+    printf(\"nargs: %i\\n\", nargs);
     for(int i = 0; i < nargs; i++) {
+      printf(\"i: %i\\n\", i);
       void* arg = NULL;
       switch(atypes[i]) {
         case 1:
@@ -202,10 +204,11 @@
         case 19:
           c_atypes[i] = &ffi_type_void;
           arg = NULL;
+          c_avalues[i] = NULL;
         break;
         case 20:
           c_atypes[i] = &ffi_type_pointer;
-          if(avalues[i] != NULL) {
+          if(sexp_cpointerp(avalues[i])) {
             vals20[i] = sexp_cpointer_value(avalues[i]);
           } else {
             vals20[i] = NULL;

@@ -72,11 +72,6 @@
        (newline)))))
 
 (define-c-library libc '("stdlib.h" "stdio.h" "time.h") libc-name '((additional-versions ("6"))))
-(define-c-procedure c-fopen libc 'fopen 'pointer '(pointer pointer))
-(define-c-procedure c-fclose libc 'fclose 'int '(pointer))
-(define-c-procedure c-time libc 'time 'int '(pointer))
-(define-c-procedure c-srand libc 'srand 'void '(int))
-(define-c-procedure c-rand libc 'rand 'int '())
 
 (print-header "pointers 1")
 
@@ -88,7 +83,10 @@
 (debug n)
 (assert equal? (c-bytevector? n) #t)
 
+(define-c-procedure c-time libc 'time 'int '(pointer))
+(define-c-procedure c-srand libc 'srand 'void '(int))
 (c-srand (c-time (make-c-null)))
 
+(define-c-procedure c-rand libc 'rand 'int '())
 (define random-integer (c-rand))
 (assert equal? (number? random-integer) #t)

@@ -3,7 +3,7 @@ CC=gcc
 DOCKER=docker run -it -v ${PWD}:/workdir
 DOCKER_INIT=cd /workdir && make clean &&
 VERSION=$(shell awk '/version:/{ print $$2 }' README.md )
-TESTNAME=primitives
+TEST=primitives
 SCHEME=chibi
 
 all: package
@@ -31,9 +31,9 @@ test-java: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 	cp tests/*.scm tmp/test/
 	cp tests/c-include/libtest.h tmp/test/
 	cd tmp/test \
-	&& ${JAVA_HOME}/bin/java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=*.sld:./snow/*.sld:./snow/retropikzel/*.sld ${TESTNAME}.scm
+	&& ${JAVA_HOME}/bin/java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=*.sld:./snow/*.sld:./snow/retropikzel/*.sld ${TEST}.scm
 
-test-compile-r7rs: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
+test: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 	make ${SCHEME}
 	cp -r foreign tmp/test/
 	cp tests/*.scm tmp/test/
@@ -42,8 +42,8 @@ test-compile-r7rs: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 		COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." \
 		COMPILE_R7RS_KAWA="-J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED -J--enable-native-access=ALL-UNNAMED -J--enable-preview" \
 		COMPILE_R7RS=${SCHEME} \
-		compile-r7rs -I . -o ${TESTNAME} ${TESTNAME}.scm
-	cd tmp/test && ./${TESTNAME}
+		compile-r7rs -I . -o ${TEST} ${TEST}.scm
+	cd tmp/test && ./${TEST}
 
 test-compile-r7rs-snow: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 	cp tests/*.scm tmp/test/
@@ -57,14 +57,14 @@ test-compile-r7rs-wine:
 	cp tests/*.scm tmp/test/
 	cp tests/c-include/libtest.h tmp/test/
 	cd tmp/test && \
-		wine "${HOME}/.wine/drive_c/Program Files (x86)/compile-r7rs/compile-r7rs.bat" -I . -o ${TESTNAME} ${TESTNAME}.scm
+		wine "${HOME}/.wine/drive_c/Program Files (x86)/compile-r7rs/compile-r7rs.bat" -I . -o ${TEST} ${TEST}.scm
 	cd tmp/test && \
 		LD_LIBRARY_PATH=. \
-		wine ./${TESTNAME}.bat
+		wine ./${TEST}.bat
 
 test-compile-r7rs-docker:
 	docker build --build-arg COMPILE_R7RS=${SCHEME} --tag=r7rs-pffi-test-${SCHEME} -f dockerfiles/Dockerfile.test .
-	docker run -it -v "${PWD}:/workdir" -w /workdir -t r7rs-pffi-test-${SCHEME} sh -c "make COMPILE_R7RS=${SCHEME} TESTNAME=${TESTNAME} test-compile-r7rs"
+	docker run -it -v "${PWD}:/workdir" -w /workdir -t r7rs-pffi-test-${SCHEME} sh -c "make COMPILE_R7RS=${SCHEME} TEST=${TEST} test-compile-r7rs"
 
 tmp/test/libtest.o: tests/c-src/libtest.c
 	mkdir -p tmp/test
