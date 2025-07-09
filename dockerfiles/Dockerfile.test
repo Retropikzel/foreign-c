@@ -1,3 +1,4 @@
+ARG SCHEME=chibi
 FROM debian:bookworm-slim AS build
 RUN apt-get update && apt-get install -y \
     chicken-bin
