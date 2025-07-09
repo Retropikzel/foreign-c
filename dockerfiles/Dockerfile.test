@@ -1,3 +1,10 @@
+FROM debian:bookworm-slim AS build
+RUN apt-get update && apt-get install -y \
+    chicken-bin
+RUN chicken-install r7rs
+RUN git clone https://gitea.scheme.org/Retropikzel/compile-r7rs.git --depth=1
+RUN cd compile-r7rs && make && make install
+
 ARG SCHEME=chibi
 FROM schemers/${SCHEME}
 RUN apt-get update && apt-get install -y \
@@ -10,11 +17,9 @@ RUN apt-get update && apt-get install -y \
     libuv1 \
     build-essential \
     libffi-dev \
-    libmbedtls-dev \
-    chicken-bin
-RUN chicken-install r7rs
-RUN git clone https://gitea.scheme.org/Retropikzel/compile-r7rs.git --depth=1
-RUN cd compile-r7rs && make && make install
+    libmbedtls-dev
+COPY --from=build /usr/local/ /usr/local-other
+ENV PATH=/usr/local-other:${PATH}
 ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
 RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
