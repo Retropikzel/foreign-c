@@ -15,6 +15,6 @@ RUN apt-get update && apt-get install -y \
 RUN chicken-install r7rs
 RUN git clone https://gitea.scheme.org/Retropikzel/compile-r7rs.git --depth=1
 RUN cd compile-r7rs && make && make install
-ARG COMPILE_R7RS=chibi
+ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
 
