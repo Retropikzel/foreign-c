@@ -17,4 +17,5 @@ RUN git clone https://gitea.scheme.org/Retropikzel/compile-r7rs.git --depth=1
 RUN cd compile-r7rs && make && make install
 ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
+RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
 
