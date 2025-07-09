@@ -1,7 +1,6 @@
 ARG SCHEME=chibi
 FROM debian:bookworm-slim AS build
-RUN apt-get update && apt-get install -y \
-    chicken-bin
+RUN apt-get update && apt-get install -y chicken-bin build-install
 RUN chicken-install r7rs
 RUN git clone https://gitea.scheme.org/Retropikzel/compile-r7rs.git --depth=1
 RUN cd compile-r7rs && make && make install
