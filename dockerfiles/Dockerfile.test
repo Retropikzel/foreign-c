@@ -18,8 +18,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     libffi-dev \
     libmbedtls-dev
-COPY --from=build /usr/local/ /usr/local-other
-ENV PATH=/usr/local-other/bin:${PATH}
+COPY --from=build /usr/local /usr/local-other
 ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
 RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
