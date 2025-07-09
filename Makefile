@@ -107,6 +107,9 @@ chicken:
 cyclone:
 	@echo "Nothing to build for Cyclone"
 
+foment:
+	@echo "Nothing to build for Foment"
+
 gambit:
 	@echo "Nothing to build for Gambit"
 
