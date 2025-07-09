@@ -23,7 +23,7 @@ pipeline {
                                 }
                             }
                         }
-                        stage("${implementation} snow-chibi install test") {
+                        stage("${implementation} install") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                 sh "timeout 600 docker build --build-arg SCHEME=${implementation} --tag=r7rs-pffi-test-${implementation} -f dockerfiles/Dockerfile.snow-chibi-install-test ."
                                 sh "timeout 600 docker run -v ${WORKSPACE}:/workdir -w /workdir -t r7rs-pffi-test-${implementation} sh -c \"make clean build install-jenkins SCHEME=${implementation} && cp tests/hello.scm /tmp/ && cd /tmp && SCHEME=${implementation} compile-r7rs -o hello hello.scm && ./hello\""
