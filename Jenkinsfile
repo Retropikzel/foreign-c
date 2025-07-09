@@ -19,7 +19,7 @@ pipeline {
                             stage("${implementation} ${test}") {
                                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                     sh "timeout 600 docker build --build-arg COMPILE_R7RS=${implementation} --tag=r7rs-pffi-test-${implementation} -f dockerfiles/Dockerfile.test ."
-                                    sh "timeout 600 docker run -v ${WORKSPACE}:/workdir -w /workdir -t r7rs-pffi-test-${implementation} sh -c \"make SCHEME=${implementation} TEST=primitives test\""
+                                    sh "timeout 600 docker run -v ${WORKSPACE}:/workdir -w /workdir -t r7rs-pffi-test-${implementation} sh -c \"make SCHEME=${implementation} TEST=primitives clean test\""
                                 }
                             }
                         }
