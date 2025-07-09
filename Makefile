@@ -42,7 +42,7 @@ test: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 		COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." \
 		COMPILE_R7RS_KAWA="-J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED -J--enable-native-access=ALL-UNNAMED -J--enable-preview" \
 		COMPILE_R7RS=${SCHEME} \
-		compile-r7rs -I . -o ${TEST} ${TEST}.scm
+		compile-r7rs -I . -I /usr/local/share/kawa/lib -o ${TEST} ${TEST}.scm
 	cd tmp/test && ./${TEST}
 
 test-compile-r7rs-snow: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
@@ -62,7 +62,7 @@ test-compile-r7rs-wine:
 		LD_LIBRARY_PATH=. \
 		wine ./${TEST}.bat
 
-test-compile-r7rs-docker:
+test-docker:
 	docker build --build-arg COMPILE_R7RS=${SCHEME} --tag=r7rs-pffi-test-${SCHEME} -f dockerfiles/Dockerfile.test .
 	docker run -it -v "${PWD}:/workdir" -w /workdir -t r7rs-pffi-test-${SCHEME} sh -c "make COMPILE_R7RS=${SCHEME} TEST=${TEST} test-compile-r7rs"
 
