@@ -23,16 +23,6 @@ pipeline {
                                 }
                             }
                         }
-                    }
-                }
-            }
-        }
-        stage('snow-chibi install tests') {
-            steps {
-                script {
-                    def implementations = sh(script: 'docker run retropikzel1/compile-r7rs:chibi sh -c "compile-r7rs --list-r7rs-schemes"', returnStdout: true).split()
-
-                    implementations.each { implementation->
                         stage("${implementation} snow-chibi install test") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                 sh "timeout 600 docker build --build-arg SCHEME=${implementation} --tag=r7rs-pffi-test-${implementation} -f dockerfiles/Dockerfile.snow-chibi-install-test ."
