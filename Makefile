@@ -165,5 +165,5 @@ clean:
 	find . -name "core.1" -delete
 	find . -name "*@gambit*" -delete
 	rm -rf tmp
-	rm foreign/c/primitives/chibi/foreign-c.c
+	rm -rf foreign/c/primitives/chibi/foreign-c.c
 	rm -rf *.tgz
