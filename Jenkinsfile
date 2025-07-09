@@ -19,14 +19,14 @@ pipeline {
                             stage("${implementation} ${test}") {
                                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                     sh "timeout 600 docker build --build-arg COMPILE_R7RS=${implementation} --tag=r7rs-pffi-test-${implementation} -f dockerfiles/Dockerfile.test ."
-                                    sh "timeout 600 docker run -v ${WORKSPACE}:/workdir -w /workdir -t r7rs-pffi-test-${implementation} sh -c \"make COMPILE_R7RS=${implementation} TESTNAME=primitives test-compile-r7rs\""
+                                    sh "timeout 600 docker run -v ${WORKSPACE}:/workdir -w /workdir -t r7rs-pffi-test-${implementation} sh -c \"make SCHEME=${implementation} TEST=primitives test\""
                                 }
                             }
                         }
                         stage("${implementation} snow-chibi install test") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "timeout 600 docker build --build-arg COMPILE_R7RS=${implementation} --tag=r7rs-pffi-test-${implementation} -f dockerfiles/Dockerfile.snow-chibi-install-test ."
-                                sh "timeout 600 docker run -v ${WORKSPACE}:/workdir -w /workdir -t r7rs-pffi-test-${implementation} sh -c \"make build install-jenkins COMPILE_R7RS=${implementation} && cp tests/hello.scm /tmp/ && cd /tmp && COMPILE_R7RS=${implementation} compile-r7rs -o hello hello.scm && ./hello\""
+                                sh "timeout 600 docker build --build-arg SCHEME=${implementation} --tag=r7rs-pffi-test-${implementation} -f dockerfiles/Dockerfile.snow-chibi-install-test ."
+                                sh "timeout 600 docker run -v ${WORKSPACE}:/workdir -w /workdir -t r7rs-pffi-test-${implementation} sh -c \"make build install-jenkins SCHEME=${implementation} && cp tests/hello.scm /tmp/ && cd /tmp && SCHEME=${implementation} compile-r7rs -o hello hello.scm && ./hello\""
                             }
                         }
                     }

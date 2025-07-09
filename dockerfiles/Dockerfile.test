@@ -1,5 +1,5 @@
-ARG COMPILE_R7RS=chibi
-FROM schemers/${COMPILE_R7RS}
+ARG SCHEME=chibi
+FROM schemers/${SCHEME}
 RUN apt-get update && apt-get install -y \
     build-essential \
     git \
@@ -16,5 +16,5 @@ RUN chicken-install r7rs
 RUN git clone https://gitea.scheme.org/Retropikzel/compile-r7rs.git --depth=1
 RUN cd compile-r7rs && make && make install
 ARG COMPILE_R7RS=chibi
-ENV COMPILE_R7RS=${COMPILE_R7RS}
+ENV COMPILE_R7RS=${SCHEME}
 
