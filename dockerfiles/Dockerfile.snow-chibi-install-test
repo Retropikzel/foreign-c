@@ -1,5 +1,5 @@
 ARG SCHEME=chibi
-FROM schemers/${COMPILE_R7RS}
+FROM schemers/${SCHEME}:head
 RUN apt-get update && apt-get install -y \
     build-essential \
     git \
