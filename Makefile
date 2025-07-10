@@ -170,3 +170,4 @@ clean:
 	rm -rf tmp
 	rm -rf foreign/c/primitives/chibi/foreign-c.c
 	rm -rf *.tgz
+	rm -rf README.html
