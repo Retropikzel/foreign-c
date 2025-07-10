@@ -63,8 +63,8 @@ test-compile-r7rs-wine:
 		wine ./${TEST}.bat
 
 test-docker:
-	docker build --build-arg COMPILE_R7RS=${SCHEME} --tag=r7rs-pffi-test-${SCHEME} -f dockerfiles/Dockerfile.test .
-	docker run -it -v "${PWD}:/workdir" -w /workdir -t r7rs-pffi-test-${SCHEME} sh -c "make COMPILE_R7RS=${SCHEME} TEST=${TEST} test-compile-r7rs"
+	docker build --build-arg SCHEME=${SCHEME} --tag=r7rs-pffi-test-${SCHEME} -f dockerfiles/Dockerfile.test .
+	docker run -it -v "${PWD}:/workdir" -w /workdir -t r7rs-pffi-test-${SCHEME} sh -c "make SCHEME=${SCHEME} TEST=${TEST} test-compile-r7rs"
 
 tmp/test/libtest.o: tests/c-src/libtest.c
 	mkdir -p tmp/test
