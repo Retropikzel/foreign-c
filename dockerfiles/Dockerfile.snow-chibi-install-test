@@ -1,3 +1,4 @@
+ARG SCHEME=chibi
 FROM debian:bookworm AS build
 RUN apt-get update && apt-get install -y git make chicken-bin build-essential
 RUN chicken-install r7rs
@@ -20,9 +21,9 @@ RUN apt-get update && apt-get install -y \
     markdown \
     pandoc \
     weasyprint
-COPY --from=build /usr/local/bin/compile-r7rs /usr/local-other/bin/compile-r7rs
 RUN git clone https://github.com/ashinn/chibi-scheme.git --depth=1
 RUN cd chibi-scheme && make && make install
+COPY --from=build /usr/local/bin/compile-r7rs /usr/local/bin/compile-r7rs
 ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
 RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
