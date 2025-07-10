@@ -43,7 +43,7 @@ test: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 		COMPILE_R7RS_KAWA="-J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED -J--enable-native-access=ALL-UNNAMED -J--enable-preview" \
 		COMPILE_R7RS=${SCHEME} \
 		compile-r7rs -I . -I /usr/local/share/kawa/lib -o ${TEST} ${TEST}.scm
-	cd tmp/test && ./${TEST}
+	cd tmp/test && LD_LIBRARY_PATH=. ./${TEST}
 
 test-compile-r7rs-snow: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 	cp tests/*.scm tmp/test/

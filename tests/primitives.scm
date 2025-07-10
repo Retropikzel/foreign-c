@@ -328,11 +328,11 @@
 (define output-file (c-fopen (string->c-utf8 "testfile.test")
                               (string->c-utf8 "w")))
 (debug output-file)
-(define-c-procedure c-fprintf libc 'fprintf 'int '(pointer pointer))
+(define-c-procedure c-fprintf libc 'fprintf 'int '(pointer pointer int))
 (define characters-written
-  (c-fprintf output-file (string->c-utf8 "Hello world")))
+  (c-fprintf output-file (string->c-utf8 "Hello world %i") 1))
 (debug characters-written)
-(assert equal? (= characters-written 11) #t)
+(assert equal? (= characters-written 13) #t)
 (define-c-procedure c-fclose libc 'fclose 'int '(pointer))
 (define closed-status (c-fclose output-file))
 (debug closed-status)
@@ -340,6 +340,6 @@
 (assert equal? (file-exists? "testfile.test") #t)
 (assert equal? (string=? (with-input-from-file "testfile.test"
                                                (lambda () (read-line)))
-                         "Hello world") #t)
+                         "Hello world 1") #t)
 
 (exit 0)
