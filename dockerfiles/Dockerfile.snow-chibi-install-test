@@ -27,3 +27,4 @@ COPY --from=build /usr/local/bin/compile-r7rs /usr/local/bin/compile-r7rs
 ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
 RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
+ENV GUILE_AUTO_COMPILE=0
