@@ -6,9 +6,9 @@ VERSION=$(shell awk '/version:/{ print $$2 }' README.md )
 TEST=primitives
 SCHEME=chibi
 
-all: package
+all: build
 
-package:
+build:
 	markdown README.md > README.html
 	snow-chibi package \
 		--version=${VERSION} \
@@ -21,6 +21,9 @@ package:
 install:
 	snow-chibi --impls=${SCHEME} install foreign-c-${VERSION}.tgz
 
+uninstall:
+	snow-chibi --impls=${SCHEME} remove foreign.c
+
 install-jenkins:
 	snow-chibi --impls=${SCHEME} --always-yes install foreign-c-${VERSION}.tgz
 
@@ -32,6 +35,15 @@ test-java: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 	cp tests/c-include/libtest.h tmp/test/
 	cd tmp/test \
 	&& ${JAVA_HOME}/bin/java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=*.sld:./snow/*.sld:./snow/retropikzel/*.sld ${TEST}.scm
+
+test-chibi: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
+	make chibi
+	mkdir -p tmp/test
+	cp kawa.jar tmp/test/
+	cp -r foreign tmp/test/
+	cp tests/*.scm tmp/test/
+	cp tests/c-include/libtest.h tmp/test/
+	cd tmp/test && chibi-scheme -I . ${TEST}.scm
 
 test: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
 	make ${SCHEME}
@@ -67,7 +79,7 @@ test-compile-r7rs-wine:
 
 test-docker:
 	docker build --build-arg SCHEME=${SCHEME} --tag=r7rs-pffi-test-${SCHEME} -f dockerfiles/Dockerfile.test .
-	docker run -it -v "${PWD}:/workdir" -w /workdir -t r7rs-pffi-test-${SCHEME} sh -c "make SCHEME=${SCHEME} TEST=${TEST} test-compile-r7rs"
+	docker run -it -v "${PWD}:/workdir" -w /workdir -t r7rs-pffi-test-${SCHEME} sh -c "make SCHEME=${SCHEME} TEST=${TEST} test"
 
 tmp/test/libtest.o: tests/c-src/libtest.c
 	mkdir -p tmp/test

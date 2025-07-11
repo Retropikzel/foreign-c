@@ -96,10 +96,11 @@
 (cond-expand
   (chicken #t) ; FIXME
   (kawa #t) ; FIXME
+  (chibi (define c-null? pointer?))
   (else (define c-null?
           (lambda (pointer)
             (if (c-bytevector? pointer)
-              (= (c-memset-pointer->address pointer 0 0) 0)
+              (= (c-memset-pointer->address pointer 0 0 0) 0)
               #f)))))
 
 #;(define c-bytevector->address
