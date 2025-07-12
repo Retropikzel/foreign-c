@@ -9,11 +9,10 @@ SCHEME=chibi
 all: build
 
 build:
-	markdown README.md > README.html
 	snow-chibi package \
 		--version=${VERSION} \
 		--authors="Retropikzel" \
-		--doc=README.html \
+		--doc=README.md \
 		--foreign-depends=ffi \
 		--description="Portable foreign function interface for R7RS Schemes" \
 	foreign/c.sld
