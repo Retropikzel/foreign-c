@@ -31,9 +31,6 @@ gauche: primitives/gauche/foreign-c-primitives-gauche.c primitives/gauche/gauche
 	mv foreign-c-primitives-gauche.o lib/gauche.o
 
 
-gerbil:
-	@echo "Nothing to build for Gerbil"
-
 guile:
 	@echo "Nothing to build for Guile"
 

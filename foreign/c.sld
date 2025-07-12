@@ -50,13 +50,6 @@
               (scheme process-context)
               (gauche base)
               (foreign c primitives gauche)))
-    #;(gerbil
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (scheme inexact)
-              (scheme process-context)))
     (guile
       (import (scheme base)
               (scheme write)
@@ -363,7 +356,6 @@
     ;(cyclone (include "c/primitives/cyclone.scm"))
     (gambit (include "c/primitives/gambit.scm"))
     (gauche (include "c/primitives/gauche/define-c-procedure.scm"))
-    ;(gerbil (include "c/primitives/gerbil.scm"))
     (guile (include "./c/primitives/guile.scm"))
     (kawa (include "c/primitives/kawa.scm"))
     (mit-scheme (include "c/primitives/mit-scheme.scm"))

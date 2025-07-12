@@ -138,9 +138,6 @@ gauche:
 	mv foreign-c-primitives-gauche.so foreign/c/lib/gauche.so
 	mv foreign-c-primitives-gauche.o foreign/c/lib/gauche.o
 
-gerbil:
-	@echo "Nothing to build for Gerbil"
-
 guile:
 	@echo "Nothing to build for Guile"
 
