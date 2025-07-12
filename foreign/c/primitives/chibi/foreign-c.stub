@@ -10,6 +10,10 @@
 (c-declare "void* make_c_null() { return NULL; }")
 (define-c (maybe-null pointer void*) make-c-null ())
 
+;; c-null?
+(c-declare "sexp is_null(void* pointer) { if(pointer == NULL) { return SEXP_TRUE; } else { return SEXP_FALSE; } }")
+(define-c sexp (c-null? is_null) ((maybe-null pointer void*)))
+
 ;; c-type-size
 (c-declare "
     int size_of_int8_t() { return sizeof(int8_t); }
@@ -109,9 +113,9 @@
     double vals18[nargs];
     void* vals20[nargs];
 
-    printf(\"nargs: %i\\n\", nargs);
+    //printf(\"nargs: %i\\n\", nargs);
     for(int i = 0; i < nargs; i++) {
-      printf(\"i: %i\\n\", i);
+      //printf(\"i: %i\\n\", i);
       void* arg = NULL;
       switch(atypes[i]) {
         case 1:

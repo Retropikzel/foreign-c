@@ -86,6 +86,7 @@
 (cond-expand
   (chicken #t) ; FIXME
   (kawa #t) ; FIXME
+  ;(chibi #t)
   (else (define make-c-null
           (lambda ()
             (cond-expand (stklos (let ((pointer (make-c-bytevector 1)))
@@ -96,7 +97,7 @@
 (cond-expand
   (chicken #t) ; FIXME
   (kawa #t) ; FIXME
-  (chibi (define c-null? pointer?))
+  (chibi #t)
   (else (define c-null?
           (lambda (pointer)
             (if (c-bytevector? pointer)
