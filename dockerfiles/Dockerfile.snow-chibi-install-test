@@ -22,7 +22,6 @@ COPY --from=build /chibi-scheme /chibi-scheme
 RUN cd /chibi-scheme && make -j 8 install
 COPY --from=build /compile-r7rs /compile-r7rs
 RUN cd /compile-r7rs && make install
-COPY --from=build /usr/local-other /usr/local-other
 ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
 ENV GUILE_AUTO_COMPILE=0
