@@ -58,7 +58,7 @@ test: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.
 	cd ${TMPDIR}/test && \
 		LD_LIBRARY_PATH=. \
 		GUILE_AUTO_COMPILE=0 \
-		timeout 60
+		timeout 60 \
 		./${TEST}
 
 test-compile-r7rs-snow: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
