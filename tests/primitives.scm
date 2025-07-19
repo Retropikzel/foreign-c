@@ -1,5 +1,6 @@
 (import (scheme base)
         (scheme write)
+	(scheme read)
         (scheme char)
         (scheme file)
         (scheme process-context)
@@ -324,6 +325,8 @@
                                                    (string->c-utf8 "cat2")))
                     "con2cat2") #t)
 
+(when (file-exists? "testfile.test")
+  (delete-file "testfile.test"))
 (define-c-procedure c-fopen libc 'fopen 'pointer '(pointer pointer))
 (define output-file (c-fopen (string->c-utf8 "testfile.test")
                               (string->c-utf8 "w")))
@@ -338,8 +341,8 @@
 (debug closed-status)
 (assert equal? (= closed-status 0) #t)
 (assert equal? (file-exists? "testfile.test") #t)
-(assert equal? (string=? (with-input-from-file "testfile.test"
-                                               (lambda () (read-line)))
-                         "Hello world 1") #t)
+(define file-content (with-input-from-file "testfile.test"
+					       (lambda () (read-line))))
+(assert equal? (string=? file-content "Hello world 1") #t)
 
-(exit 0)
+(exit)

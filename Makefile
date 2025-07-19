@@ -6,8 +6,15 @@ VERSION=$(shell awk '/version:/{ print $$2 }' README.md )
 TEST=primitives
 SCHEME=chibi
 TMPDIR=tmp/${SCHEME}
+DOCKERIMG=${SCHEME}:head
+ifeq "${SCHEME}" "chicken"
+DOCKERIMG=${SCHEME}
+endif
 
 all: build ${TMPDIR}
+
+docker-image:
+	echo ${DOCKERIMG}
 
 build:
 	snow-chibi package \
@@ -79,7 +86,7 @@ test-compile-r7rs-wine:
 		wine ./${TEST}.bat
 
 test-docker:
-	docker build --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f dockerfiles/Dockerfile.test .
+	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f dockerfiles/Dockerfile.test .
 	docker run -it -v "${PWD}:/workdir" -w /workdir -t foreign-c-test-${SCHEME} sh -c "make SCHEME=${SCHEME} TEST=${TEST} test"
 
 ${TMPDIR}/test/libtest.o: tests/c-src/libtest.c
