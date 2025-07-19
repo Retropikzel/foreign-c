@@ -5,6 +5,7 @@ DOCKER_INIT=cd /workdir && make clean &&
 VERSION=$(shell awk '/version:/{ print $$2 }' README.md )
 TEST=primitives
 SCHEME=chibi
+TMPDIR=tmp/${SCHEME}
 
 all: build
 
@@ -26,53 +27,53 @@ uninstall:
 install-jenkins:
 	snow-chibi --impls=${SCHEME} --always-yes install foreign-c-${VERSION}.tgz
 
-test-java: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
-	mkdir -p tmp/test
-	cp kawa.jar tmp/test/
-	cp -r foreign tmp/test/
-	cp tests/*.scm tmp/test/
-	cp tests/c-include/libtest.h tmp/test/
-	cd tmp/test \
+test-java: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
+	mkdir -p ${TMPDIR}/test
+	cp kawa.jar ${TMPDIR}/test/
+	cp -r foreign ${TMPDIR}/test/
+	cp tests/*.scm ${TMPDIR}/test/
+	cp tests/c-include/libtest.h ${TMPDIR}/test/
+	cd ${TMPDIR}/test \
 	&& ${JAVA_HOME}/bin/java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=*.sld:./snow/*.sld:./snow/retropikzel/*.sld ${TEST}.scm
 
-test-chibi: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
+test-chibi: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
 	make chibi
-	mkdir -p tmp/test
-	cp kawa.jar tmp/test/
-	cp -r foreign tmp/test/
-	cp tests/*.scm tmp/test/
-	cp tests/c-include/libtest.h tmp/test/
-	cd tmp/test && chibi-scheme -I . ${TEST}.scm
+	mkdir -p ${TMPDIR}/test
+	cp kawa.jar ${TMPDIR}/test/
+	cp -r foreign ${TMPDIR}/test/
+	cp tests/*.scm ${TMPDIR}/test/
+	cp tests/c-include/libtest.h ${TMPDIR}/test/
+	cd ${TMPDIR}/test && chibi-scheme -I . ${TEST}.scm
 
-test: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
+test: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
 	make ${SCHEME}
-	cp -r foreign tmp/test/
-	cp tests/*.scm tmp/test/
-	cp tests/c-include/libtest.h tmp/test/
-	cd tmp/test && \
+	cp -r foreign ${TMPDIR}/test/
+	cp tests/*.scm ${TMPDIR}/test/
+	cp tests/c-include/libtest.h ${TMPDIR}/test/
+	cd ${TMPDIR}/test && \
 		COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." \
 		COMPILE_R7RS_KAWA="-J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED -J--enable-native-access=ALL-UNNAMED -J--enable-preview" \
 		COMPILE_R7RS=${SCHEME} \
 		compile-r7rs -I . -I /usr/local/share/kawa/lib -o ${TEST} ${TEST}.scm
-	cd tmp/test && \
+	cd ${TMPDIR}/test && \
 		LD_LIBRARY_PATH=. \
 		GUILE_AUTO_COMPILE=0 \
 		./${TEST}
 
-test-compile-r7rs-snow: tmp/test/libtest.o tmp/test/libtest.so tmp/test/libtest.a
-	cp tests/*.scm tmp/test/
-	cp tests/c-include/libtest.h tmp/test/
-	cd tmp/test && \
+test-compile-r7rs-snow: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
+	cp tests/*.scm ${TMPDIR}/test/
+	cp tests/c-include/libtest.h ${TMPDIR}/test/
+	cd ${TMPDIR}/test && \
 		compile-r7rs -o hello hello.scm
-	cd tmp/test && ./hello
+	cd ${TMPDIR}/test && ./hello
 
 test-compile-r7rs-wine:
-	cp -r foreign tmp/test/
-	cp tests/*.scm tmp/test/
-	cp tests/c-include/libtest.h tmp/test/
-	cd tmp/test && \
+	cp -r foreign ${TMPDIR}/test/
+	cp tests/*.scm ${TMPDIR}/test/
+	cp tests/c-include/libtest.h ${TMPDIR}/test/
+	cd ${TMPDIR}/test && \
 		wine "${HOME}/.wine/drive_c/Program Files (x86)/compile-r7rs/compile-r7rs.bat" -I . -o ${TEST} ${TEST}.scm
-	cd tmp/test && \
+	cd ${TMPDIR}/test && \
 		LD_LIBRARY_PATH=. \
 		wine ./${TEST}.bat
 
@@ -80,16 +81,16 @@ test-docker:
 	docker build --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f dockerfiles/Dockerfile.test .
 	docker run -it -v "${PWD}:/workdir" -w /workdir -t foreign-c-test-${SCHEME} sh -c "make SCHEME=${SCHEME} TEST=${TEST} test"
 
-tmp/test/libtest.o: tests/c-src/libtest.c
-	mkdir -p tmp/test
-	${CC} -o tmp/test/libtest.o -fPIC -c tests/c-src/libtest.c -I./include
+${TMPDIR}/test/libtest.o: tests/c-src/libtest.c
+	mkdir -p ${TMPDIR}/test
+	${CC} -o ${TMPDIR}/test/libtest.o -fPIC -c tests/c-src/libtest.c -I./include
 
-tmp/test/libtest.so: tests/c-src/libtest.c
-	mkdir -p tmp/test
-	${CC} -o tmp/test/libtest.so -shared -fPIC tests/c-src/libtest.c -I./include
+${TMPDIR}/test/libtest.so: tests/c-src/libtest.c
+	mkdir -p ${TMPDIR}/test
+	${CC} -o ${TMPDIR}/test/libtest.so -shared -fPIC tests/c-src/libtest.c -I./include
 
-tmp/test/libtest.a: tmp/test/libtest.o tests/c-src/libtest.c
-	ar rcs tmp/test/libtest.a tmp/test/libtest.o
+${TMPDIR}/test/libtest.a: ${TMPDIR}/test/libtest.o tests/c-src/libtest.c
+	ar rcs ${TMPDIR}/test/libtest.a ${TMPDIR}/test/libtest.o
 
 documentation/foreign-c.html:
 
