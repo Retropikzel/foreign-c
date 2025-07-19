@@ -1,6 +1,6 @@
 (import (scheme base)
         (scheme write)
-	(scheme read)
+        (scheme read)
         (scheme char)
         (scheme file)
         (scheme process-context)
@@ -342,7 +342,7 @@
 (assert equal? (= closed-status 0) #t)
 (assert equal? (file-exists? "testfile.test") #t)
 (define file-content (with-input-from-file "testfile.test"
-					       (lambda () (read-line))))
+                                           (lambda () (read-line))))
 (assert equal? (string=? file-content "Hello world 1") #t)
 
 (exit)

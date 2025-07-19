@@ -6,9 +6,14 @@ VERSION=$(shell awk '/version:/{ print $$2 }' README.md )
 TEST=primitives
 SCHEME=chibi
 TMPDIR=tmp/${SCHEME}
-DOCKERIMG=${SCHEME}:head
+DOCKERIMG=${SCHEME}
 ifeq "${SCHEME}" "chicken"
 DOCKERIMG="chicken:5"
+endif
+
+INCDIRS=-I . -I /usr/local/share/kawa/lib 
+ifeq "${SCHEME}" "ypsilon"
+INCDIRS=-I .
 endif
 
 all: build ${TMPDIR}
@@ -58,7 +63,7 @@ test: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.
 		COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." \
 		COMPILE_R7RS_KAWA="-J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED -J--enable-native-access=ALL-UNNAMED -J--enable-preview" \
 		COMPILE_R7RS=${SCHEME} \
-		compile-r7rs -I . -I /usr/local/share/kawa/lib -o ${TEST} ${TEST}.scm
+		compile-r7rs ${INCDIRS} -o ${TEST} ${TEST}.scm
 	cd ${TMPDIR}/test && \
 		LD_LIBRARY_PATH=. \
 		GUILE_AUTO_COMPILE=0 \
