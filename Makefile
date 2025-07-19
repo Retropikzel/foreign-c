@@ -60,15 +60,14 @@ test: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.
 	cp tests/*.scm ${TMPDIR}/test/
 	cp tests/c-include/libtest.h ${TMPDIR}/test/
 	cd ${TMPDIR}/test && \
-		COMPILE_R7RS_CHICKEN="-L -ltest -I. -L. -C -static" \
+		COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." \
 		COMPILE_R7RS_KAWA="-J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED -J--enable-native-access=ALL-UNNAMED -J--enable-preview" \
 		COMPILE_R7RS=${SCHEME} \
 		compile-r7rs ${INCDIRS} -o ${TEST} ${TEST}.scm
-	cd ${TMPDIR}/test && \
-		LD_LIBRARY_PATH=. \
-		GUILE_AUTO_COMPILE=0 \
-		timeout 60 \
-		printf "\n" | ./${TEST}
+	cd ${TMPDIR}/test \
+		&& export LD_LIBRARY_PATH=. \
+		&& export GUILE_AUTO_COMPILE=0 \
+		&& timeout 60 printf "\n" | ./${TEST}
 
 test-compile-r7rs-snow: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
 	cp tests/*.scm ${TMPDIR}/test/
