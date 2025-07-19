@@ -182,7 +182,7 @@ clean:
 	find . -name "*.class" -delete
 	find . -name "core.1" -delete
 	find . -name "*@gambit*" -delete
-	rm -rf tmp
+	rm -rf ${TMPDIR}
 	rm -rf foreign/c/primitives/chibi/foreign-c.c
 	rm -rf *.tgz
 	rm -rf README.html
