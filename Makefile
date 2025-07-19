@@ -7,14 +7,11 @@ TEST=primitives
 SCHEME=chibi
 TMPDIR=tmp/${SCHEME}
 DOCKERIMG=${SCHEME}:head
-ifeq "${SCHEME}" "chicken"
+ifeq "${SCHEME}" "chicken:5"
 DOCKERIMG=${SCHEME}
 endif
 
 all: build ${TMPDIR}
-
-docker-image:
-	echo ${DOCKERIMG}
 
 build:
 	snow-chibi package \

@@ -294,17 +294,13 @@
           ;define-c-variable (?)
           )
   (cond-expand
-    (chicken-6 (include-relative "c/internal.scm"))
+    (chicken (include-relative "c/internal.scm"))
     (else (include "c/internal.scm")))
   (cond-expand
     (chibi (include "c/primitives/chibi.scm"))
-    (chicken-5 (export foreign-declare
-                       foreign-safe-lambda
-                       void)
-               (include "c/primitives/chicken.scm"))
-    (chicken-6 (export foreign-declare
-                       foreign-safe-lambda
-                       void)
+    (chicken (export foreign-declare
+                     foreign-safe-lambda
+                     void)
       (include-relative "c/primitives/chicken.scm"))
     ;(cyclone (include "c/primitives/cyclone.scm"))
     (gambit (include "c/primitives/gambit.scm"))
@@ -322,12 +318,12 @@
     (ypsilon (export c-function c-callback)
              (include "c/primitives/ypsilon.scm")))
   (cond-expand
-    (chicken-6 (include-relative "c/main.scm")
-               (include-relative "c/libc.scm")
-               (include-relative "c/c-bytevectors.scm")
-               (include-relative "c/pointer.scm")
-               ;(include-relative "c/array.scm")
-               ;(include-relative "c/struct.scm")
+    (chicken (include-relative "c/main.scm")
+             (include-relative "c/libc.scm")
+             (include-relative "c/c-bytevectors.scm")
+             (include-relative "c/pointer.scm")
+             ;(include-relative "c/array.scm")
+             ;(include-relative "c/struct.scm")
                )
     (else (include "c/main.scm")
           (include "c/libc.scm")

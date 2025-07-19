@@ -20,7 +20,7 @@ pipeline {
                                 stage("${implementation} install") {
                                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
 					if("${implementation}" == "chicken") {
-						DOCKERIMG="${implementation}:5"
+						DOCKERIMG="chicken:5"
 					} else {
 						DOCKERIMG="${implementation}:head"
 					}
