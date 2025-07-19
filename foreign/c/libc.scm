@@ -4,4 +4,4 @@
   (else
     (define libc-name
       (cond ((get-environment-variable "BE_HOST_CPU") "root") ; Haiku
-            (else "c")))))
+	    (else "c")))))

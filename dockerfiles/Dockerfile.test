@@ -25,5 +25,4 @@ COPY --from=build /compile-r7rs /compile-r7rs
 RUN cd /compile-r7rs && make install
 ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
-RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
 ENV GUILE_AUTO_COMPILE=0
