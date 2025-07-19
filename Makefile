@@ -7,8 +7,8 @@ TEST=primitives
 SCHEME=chibi
 TMPDIR=tmp/${SCHEME}
 DOCKERIMG=${SCHEME}:head
-ifeq "${SCHEME}" "chicken:5"
-DOCKERIMG=${SCHEME}
+ifeq "${SCHEME}" "chicken"
+DOCKERIMG="chicken:5"
 endif
 
 all: build ${TMPDIR}

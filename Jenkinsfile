@@ -31,6 +31,11 @@ pipeline {
                                 tests.each { test ->
                                     stage("${implementation} ${test}") {
                                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+					    if("${implementation}" == "chicken") {
+					         DOCKERIMG="chicken:5"
+					    } else {
+						 DOCKERIMG="${implementation}:head"
+					    }
                                             sh "docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${implementation} --tag=foreign-c-test-${implementation} -f dockerfiles/Dockerfile.test ."
                                             sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t foreign-c-test-${implementation} sh -c \"timeout 120 make SCHEME=${implementation} TEST=${test} clean test\""
                                         }
