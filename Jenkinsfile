@@ -21,7 +21,7 @@ pipeline {
                                 stage("${implementation} install") {
                                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                         sh "docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${implementation} --tag=foreign-c-test-${implementation} -f dockerfiles/Dockerfile.snow-chibi-install-test ."
-                                        sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t foreign-c-test-${implementation} sh -c \"timeout 120 make clean all install-jenkins SCHEME=${implementation} && cp tests/hello.scm /tmp/ && cd /tmp && SCHEME=${implementation} compile-r7rs -o hello hello.scm && timeout 120 ./hello\""
+                                        sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t foreign-c-test-${implementation} sh -c \"timeout 120 make clean all install-jenkins SCHEME=${implementation} && cp tests/hello.scm /tmp/ && cd /tmp && SCHEME=${implementation} timeout 120 compile-r7rs -o hello hello.scm && timeout 120 ./hello\""
                                     }
                                 }
                                 tests.each { test ->
