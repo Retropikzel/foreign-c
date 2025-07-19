@@ -173,6 +173,9 @@ ypsilon:
 	@echo "Nothing to build for Ypsilon"
 
 clean:
+	rm -rf ${TMPDIR}
+
+clean-all:
 	find . -name "*.meta" -delete
 	find . -name "*.link" -delete
 	find . -name "*.o" -delete
@@ -182,7 +185,7 @@ clean:
 	find . -name "*.class" -delete
 	find . -name "core.1" -delete
 	find . -name "*@gambit*" -delete
-	rm -rf ${TMPDIR}
+	rm -rf tmp
 	rm -rf foreign/c/primitives/chibi/foreign-c.c
 	rm -rf *.tgz
 	rm -rf README.html
