@@ -34,7 +34,7 @@ uninstall:
 	snow-chibi --impls=${SCHEME} remove foreign.c
 
 install-jenkins:
-	snow-chibi --impls=${SCHEME} --always-yes install foreign-c-${VERSION}.tgz
+	printf "\n" | snow-chibi --impls=${SCHEME} --always-yes install foreign-c-${VERSION}.tgz
 
 test-java: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
 	mkdir -p ${TMPDIR}/test
