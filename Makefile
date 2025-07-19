@@ -77,8 +77,8 @@ test-compile-r7rs-wine:
 		wine ./${TEST}.bat
 
 test-docker:
-	docker build --build-arg SCHEME=${SCHEME} --tag=r7rs-pffi-test-${SCHEME} -f dockerfiles/Dockerfile.test .
-	docker run -it -v "${PWD}:/workdir" -w /workdir -t r7rs-pffi-test-${SCHEME} sh -c "make SCHEME=${SCHEME} TEST=${TEST} test"
+	docker build --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f dockerfiles/Dockerfile.test .
+	docker run -it -v "${PWD}:/workdir" -w /workdir -t foreign-c-test-${SCHEME} sh -c "make SCHEME=${SCHEME} TEST=${TEST} test"
 
 tmp/test/libtest.o: tests/c-src/libtest.c
 	mkdir -p tmp/test
