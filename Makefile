@@ -11,7 +11,7 @@ ifeq "${SCHEME}" "chicken"
 DOCKERIMG="chicken:5"
 endif
 
-INCDIRS=-I . -I /usr/local/share/kawa/lib 
+INCDIRS=-I . -I /usr/local/share/kawa/lib
 ifeq "${SCHEME}" "ypsilon"
 INCDIRS=-I .
 endif
@@ -68,7 +68,7 @@ test: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.
 		LD_LIBRARY_PATH=. \
 		GUILE_AUTO_COMPILE=0 \
 		timeout 60 \
-		./${TEST}
+		printf "\n" | ./${TEST}
 
 test-compile-r7rs-snow: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
 	cp tests/*.scm ${TMPDIR}/test/

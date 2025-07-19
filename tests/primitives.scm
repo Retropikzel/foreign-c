@@ -345,4 +345,4 @@
                                            (lambda () (read-line))))
 (assert equal? (string=? file-content "Hello world 1") #t)
 
-(exit)
+(exit 0)
