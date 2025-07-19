@@ -17,7 +17,7 @@ pipeline {
 
                     parallel implementations.collectEntries { implementation->
                         [(implementation): {
-                                stage("${implementation} install") {
+                                stage("${implementation} snow-chibi install") {
                                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                         if("${implementation}" == "chicken") {
                                             DOCKERIMG="chicken:5"
