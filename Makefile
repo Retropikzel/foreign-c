@@ -7,7 +7,7 @@ TEST=primitives
 SCHEME=chibi
 TMPDIR=tmp/${SCHEME}
 
-all: build
+all: build ${TMPDIR}
 
 build:
 	snow-chibi package \
@@ -58,6 +58,7 @@ test: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.
 	cd ${TMPDIR}/test && \
 		LD_LIBRARY_PATH=. \
 		GUILE_AUTO_COMPILE=0 \
+		timeout 60
 		./${TEST}
 
 test-compile-r7rs-snow: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
@@ -92,7 +93,9 @@ ${TMPDIR}/test/libtest.so: tests/c-src/libtest.c
 ${TMPDIR}/test/libtest.a: ${TMPDIR}/test/libtest.o tests/c-src/libtest.c
 	ar rcs ${TMPDIR}/test/libtest.a ${TMPDIR}/test/libtest.o
 
-documentation/foreign-c.html:
+
+${TMPDIR}:
+	mkdir -p ${TMPDIR}
 
 # apt-get install pandoc weasyprint
 documentation: README.md
