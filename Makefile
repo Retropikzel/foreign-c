@@ -1,4 +1,4 @@
-.PHONY=libtest.o tests/libtest.so libtest.a documentation README.html
+.PHONY: libtest.o tests/libtest.so libtest.a documentation README.html
 CC=gcc
 DOCKER=docker run -it -v ${PWD}:/workdir
 DOCKER_INIT=cd /workdir && make clean &&
@@ -22,7 +22,7 @@ build: README.html
 	snow-chibi package \
 		--version=${VERSION} \
 		--authors="Retropikzel" \
-		--doc=documentation/foreign-c.html \
+		--doc=README.html \
 		--foreign-depends=ffi \
 		--description="Portable foreign function interface for R7RS Schemes" \
 	foreign/c.sld

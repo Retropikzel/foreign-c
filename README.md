@@ -109,6 +109,7 @@ Required versions:
 
 ### Primitives 1 table
 
+
 |                  | c-type-size  | c-bytevector-u8-set! |c-bytevector-u8-ref | define-c-library    | c-bytevector? | define-c-procedure  |
 |------------------|:------------:|:--------------------:|:------------------:|:-------------------:|:-------------:|:-------------------:|
 | **Chibi**        | X            | X                    |X                   | X                   | X             | X                   |
@@ -122,7 +123,9 @@ Required versions:
 | **STklos**       | X            | X                    |X                   | X                   | X             | X                   |
 | **Ypsilon**      | X            | X                    |X                   | X                   | X             | X                   |
 
+
 ### Primitives 2 table
+
 
 |                  | define-c-callback |
 |------------------|:-----------------:|
@@ -137,7 +140,9 @@ Required versions:
 | STklos           |                   |
 | **Ypsilon**      | X                 |
 
+
 ### Test files pass
+
 
 |                  | primitives.scm | addressof.scm | callback.scm |
 |------------------|:--------------:|:-------------:|-------------:|
@@ -151,6 +156,7 @@ Required versions:
 | **Saggittarius** | X              | X             | X            |
 | STklos           | X              | X             |              |
 | Ypsilon          | X              | X             |              |
+
 
 ## Installation
 
@@ -646,9 +652,9 @@ Setting environment variables like this on Windows works for this library:
 
     set "FOREIGN_C_LOAD_PATH=C:\Program Files (x86)/foo/bar"
 
-#### FOREIGN_C_\_LOAD\_PATH
+#### FOREIGN\_C_\_LOAD\_PATH
 
 To add more paths to where foreign c looks for libraries set
-FOREIGN_C\_LOAD\_PATH to paths separated by ; on windows, and : on other
+FOREIGN\_C\_LOAD\_PATH to paths separated by ; on windows, and : on other
 operating systems.
 

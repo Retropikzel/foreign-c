@@ -19,7 +19,8 @@ RUN apt-get update && apt-get install -y \
     git \
     ca-certificates \
     make \
-        libffi-dev
+    libffi-dev \
+    markdown
 RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
 COPY --from=build /chibi-scheme /chibi-scheme
 RUN cd /chibi-scheme && make -j 8 install

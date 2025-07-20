@@ -18,7 +18,8 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     git \
     make \
-    libffi-dev
+    libffi-dev \
+    markdown
 RUN mkdir ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
 COPY --from=build /chibi-scheme /chibi-scheme
 RUN cd /chibi-scheme && make -j 8 install
