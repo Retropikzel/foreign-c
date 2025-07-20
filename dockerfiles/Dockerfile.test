@@ -1,18 +1,5 @@
 ARG SCHEME=chibi
 ARG IMAGE=chibi:head
-FROM schemers/chibi:head AS build
-RUN apt-get update && apt-get install -y \
-    ca-certificates \
-    git \
-    make \
-    build-essential
-RUN git clone https://github.com/ashinn/chibi-scheme.git --depth=1
-RUN cd chibi-scheme && make -j 32
-RUN git clone https://gitea.scheme.org/Retropikzel/compile-r7rs.git --depth=1
-RUN cd compile-r7rs && make
-
-ARG SCHEME=chibi
-ARG IMAGE=chibi:head
 FROM schemers/${IMAGE}
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -22,10 +9,8 @@ RUN apt-get update && apt-get install -y \
     libffi-dev \
     pandoc
 RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
-COPY --from=build /chibi-scheme /chibi-scheme
-RUN cd /chibi-scheme && make -j 8 install
-COPY --from=build /compile-r7rs /compile-r7rs
-RUN cd /compile-r7rs && make install
+COPY --from=retropikzel1/compile-r7rs /opt/compile-r7rs /opt/compile-r7rs
+ENV PATH=/opt/compile-r7rs/bin:${PATH}
 ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
 ENV GUILE_AUTO_COMPILE=0
