@@ -77,6 +77,10 @@ is portable in the sense that it supports multiple implementations.
 
 ## Implementation support tables
 
+*NOTE* Implementation missing from this table does not mean it will not be
+supported. Either the work on it has not started yet or support for missing
+implementations is so unfinished that they are not listed here.
+
 Required versions:
 
 - Chibi > 0.11
