@@ -1,8 +1,3 @@
----
-title: foreign-c a portable foreign function interface for R7RS Schemes
-version: 0.10.0
----
-
 # foreign-c
 
 foreign-c is a C foreign function interface (FFI) library for R7RS Schemes. It
@@ -13,7 +8,7 @@ to being portable by conforming to some specification.
 
 [Maling lists](https://sr.ht/~retropikzel/foreign-c/lists)
 
-[Jenkins](https://jenkins.scheme.org/job/foreign_c/job/foreign-c/)
+[Jenkins](https://jenkins.scheme.org/job/retropikzel/job/foreign-c/)
 
 - [Installation](#installation)
 - [Documentation](#documentation)
@@ -86,7 +81,7 @@ to being portable by conforming to some specification.
 Required versions:
 
 - Chibi > 0.11
-    - At the only 0.11 is out so build from git
+    - At the time only 0.11 is out so build from git
 - Chicken >= 5.4.0 < 6
 - Gauche >= 0.9.15
     - Does not yet work with snow-chibi install

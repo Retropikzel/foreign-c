@@ -2,7 +2,7 @@
 CC=gcc
 DOCKER=docker run -it -v ${PWD}:/workdir
 DOCKER_INIT=cd /workdir && make clean &&
-VERSION=$(shell awk '/version:/{ print $$2 }' README.md )
+VERSION=0.10.0
 TEST=primitives
 SCHEME=chibi
 TMPDIR=tmp/${SCHEME}
@@ -18,11 +18,11 @@ endif
 
 all: build ${TMPDIR}
 
-build:
+build: README.html
 	snow-chibi package \
 		--version=${VERSION} \
 		--authors="Retropikzel" \
-		--doc=README.md \
+		--doc=documentation/foreign-c.html \
 		--foreign-depends=ffi \
 		--description="Portable foreign function interface for R7RS Schemes" \
 	foreign/c.sld
@@ -109,17 +109,8 @@ ${TMPDIR}/test/libtest.a: ${TMPDIR}/test/libtest.o tests/c-src/libtest.c
 ${TMPDIR}:
 	mkdir -p ${TMPDIR}
 
-# apt-get install pandoc weasyprint
-documentation: README.md
-	mkdir -p documentation
-	pandoc --standalone \
-		--template templates/documentation.html README.md \
-		> documentation/foreign-c.html
-	pandoc -t html5 \
-		--pdf-engine=weasyprint \
-		--css templates/css/pdf-documentation.css \
-		-o documentation/foreign-c.pdf \
-		README.md
+README.html: README.md
+	markdown README.md > README.html
 
 chibi: foreign/c/primitives/chibi/foreign-c.stub
 	chibi-ffi foreign/c/primitives/chibi/foreign-c.stub
