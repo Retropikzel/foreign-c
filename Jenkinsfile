@@ -19,8 +19,7 @@ pipeline {
         stage('Tests') {
             steps {
                 script {
-                    //def implementations = sh(script: 'docker run retropikzel1/compile-r7rs:chibi sh -c "compile-r7rs --list-r7rs-schemes"', returnStdout: true).split()
-                    def implementations = "chibi chicken gauche guile kawa mosh racket sagittarius stklos ypsilon".split()
+                    def implementations = sh(script: 'docker run retropikzel1/compile-r7rs sh -c "compile-r7rs --list-r7rs-schemes"', returnStdout: true).split()
 
                     parallel implementations.collectEntries { implementation->
                         [(implementation): {
