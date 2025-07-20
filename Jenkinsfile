@@ -9,6 +9,13 @@ pipeline {
     }
 
     stages {
+        stage('Package') {
+            steps {
+                sh "docker build --build-arg IMAGE=chibi:head --build-arg SCHEME=chibi --tag=foreign-c-test-chibi -f dockerfiles/Dockerfile.snow-chibi-install-test ."
+                sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t foreign-c-test-chibi sh -c \"timeout 120 make clean all"
+            }
+        }
+
         stage('Tests') {
             steps {
                 script {
@@ -25,7 +32,7 @@ pipeline {
                                             DOCKERIMG="${implementation}:head"
                                         }
                                         sh "docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${implementation} --tag=foreign-c-test-${implementation} -f dockerfiles/Dockerfile.snow-chibi-install-test ."
-                                            sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t foreign-c-test-${implementation} sh -c \"timeout 120 make SCHEME=${implementation} clean all install-jenkins && cp tests/hello.scm /tmp/ && cd /tmp && SCHEME=${implementation} timeout 120 printf \"\\n\" | compile-r7rs -o hello hello.scm && timeout 120 printf \"\\n\" | ./hello\""
+                                            sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t foreign-c-test-${implementation} sh -c \"timeout 120 make SCHEME=${implementation} clean install-jenkins && cp tests/hello.scm /tmp/ && cd /tmp && SCHEME=${implementation} timeout 120 printf \"\\n\" | compile-r7rs -o hello hello.scm && timeout 120 printf \"\\n\" | ./hello\""
                                     }
                                 }
                                 tests.each { test ->
