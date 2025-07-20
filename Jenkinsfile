@@ -22,7 +22,7 @@ pipeline {
                     def implementations = sh(script: 'docker run retropikzel1/compile-r7rs:chibi sh -c "compile-r7rs --list-r7rs-schemes"', returnStdout: true).split()
                     //def implementations = "chibi chicken gauche guile kawa mosh racket sagittarius stklos ypsilon".split()
 
-                    parallel implementations.collectEntries { implementation->
+                    parallel implementations.collectEntries { implementation ->
                         [(implementation): {
                                 stage("${implementation} snow-chibi install") {
                                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
