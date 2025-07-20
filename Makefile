@@ -110,7 +110,7 @@ ${TMPDIR}:
 	mkdir -p ${TMPDIR}
 
 README.html: README.md
-	pandoc -f README.md > README.html
+	pandoc --metadata title="Foreign C" --standalone README.md > README.html
 
 chibi: foreign/c/primitives/chibi/foreign-c.stub
 	chibi-ffi foreign/c/primitives/chibi/foreign-c.stub
