@@ -6,7 +6,7 @@ VERSION=0.10.0
 TEST=primitives
 SCHEME=chibi
 TMPDIR=tmp/${SCHEME}
-DOCKERIMG=${SCHEME}
+DOCKERIMG=${SCHEME}:head
 ifeq "${SCHEME}" "chicken"
 DOCKERIMG="chicken:5"
 endif
