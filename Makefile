@@ -28,10 +28,11 @@ build: README.html
 	foreign/c.sld
 
 install:
-	snow-chibi --impls=${SCHEME} install foreign-c-${VERSION}.tgz
 	if [ "${SCHEME}" = "gauche" ]; then \
 		cp -r foreign $(shell gauche-config --sitelibdir)/; \
-		fi
+	else \
+		snow-chibi --impls=${SCHEME} install foreign-c-${VERSION}.tgz
+	fi
 
 uninstall:
 	snow-chibi --impls=${SCHEME} remove foreign.c
