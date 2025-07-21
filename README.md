@@ -85,9 +85,7 @@ Required versions:
     - At the time only 0.11 is out so build from git
 - Chicken >= 5.4.0 < 6
 - Gauche >= 0.9.15
-    - Does not yet work with snow-chibi install
 - Guile >= 3
-    - Does not yet work with snow-chibi install
     - Has include bug, might not work on all situations
 - Kawa >= 3.11 and Java >= 22
     - Needs arguments to enable FFI
@@ -161,12 +159,13 @@ Required versions:
 
 ## Installation
 
-### Snow-fort
-
 Not yet installable with snow-fort:
 
 - Gauche
     - Use manual installation
+
+### Snow-fort
+
 
 [https://snow-fort.org/](https://snow-fort.org/)
 
@@ -179,6 +178,9 @@ You can test that library is found by your implementation like this:
     IMPLEMENTATION hello.scm
 
 ### Manual system wide
+
+Manual system wide installation requires snow-chibi for other implementations
+than Gauche.
 
 Either download the latest release from
 [https://git.sr.ht/~retropikzel/foreign-c/refs](https://git.sr.ht/~retropikzel/foreign-c/refs)
