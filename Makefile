@@ -26,6 +26,7 @@ build: README.html
 		--foreign-depends=ffi \
 		--description="Portable foreign function interface for R7RS Schemes" \
 	foreign/c.sld
+	make ${SCHEME}
 
 install:
 	if [ "${SCHEME}" = "gauche" ]; then \
