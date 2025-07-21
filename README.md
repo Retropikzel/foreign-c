@@ -168,7 +168,8 @@ Required versions:
 Not yet installable with snow-fort:
 
 - Gauche
-- Guile
+    - make SCHEME=gauche
+    - make SCHEME=gauche install
 
 [https://snow-fort.org/](https://snow-fort.org/)
 
