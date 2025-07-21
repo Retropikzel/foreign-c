@@ -10,7 +10,8 @@ RUN apt-get update && apt-get install \
     make \
     libffi-dev \
     pandoc \
-    libmbedtls-dev
+    libmbedtls-dev \
+    tree
 RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
 COPY --from=retropikzel1/compile-r7rs /opt/compile-r7rs /opt/compile-r7rs
 ENV PATH=/opt/compile-r7rs/bin:${PATH}

@@ -19,7 +19,6 @@ endif
 all: build ${TMPDIR}
 
 build: README.html
-	make ${SCHEME}
 	snow-chibi package \
 		--version=${VERSION} \
 		--authors="Retropikzel" \
@@ -30,7 +29,9 @@ build: README.html
 
 install:
 	if [ "${SCHEME}" = "gauche" ]; then \
-		cp -r foreign $(shell gauche-config --sitelibdir)/; \
+		cp -r foreign $(shell gauche-config --syslibdir)/; \
+		mkdir -p $(shell gauche-config --sysarchdir)/foreign/c/lib; \
+		cp -r foreign/c/lib/gauche.so $(shell gauche-config --sysarchdir)/foreign/c/lib/; \
 	else \
 		snow-chibi --impls=${SCHEME} install foreign-c-${VERSION}.tgz; \
 	fi
@@ -39,7 +40,11 @@ uninstall:
 	snow-chibi --impls=${SCHEME} remove foreign.c
 
 force-install:
-	printf "\n" | snow-chibi --impls=${SCHEME} --always-yes install foreign-c-${VERSION}.tgz
+	if [ "${SCHEME}" = "gauche" ]; then \
+		cp -r foreign $(shell gauche-config --sitelibdir)/; \
+	else \
+		printf "\n" | snow-chibi --impls=${SCHEME} --always-yes install foreign-c-${VERSION}.tgz; \
+	fi
 
 test-java: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
 	mkdir -p ${TMPDIR}/test
@@ -93,11 +98,13 @@ test-compile-r7rs-wine:
 
 test-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f dockerfiles/Dockerfile.test .
-	docker run -it -v "${PWD}:/workdir" -w /workdir -t foreign-c-test-${SCHEME} sh -c "make SCHEME=${SCHEME} TEST=${TEST} test"
+	docker run -it -v "${PWD}:/workdir" -w /workdir -t foreign-c-test-${SCHEME} sh \
+		-c "make SCHEME=${SCHEME} TEST=${TEST} test"
 
-test-snow-install-docker:
+test-install-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f dockerfiles/Dockerfile.snow-chibi-install-test .
-	docker run -it -v "${PWD}:/workdir" -w /workdir -t foreign-c-test-${SCHEME} sh -c "make SCHEME=${SCHEME} TEST=${TEST} all install"
+	docker run -it -v "${PWD}:/workdir" -w /workdir -t foreign-c-test-${SCHEME} sh \
+		-c "make SCHEME=${SCHEME} clean ${SCHEME} install && cp tests/hello.scm /tmp/ && cd /tmp && COMPILE_R7RS=${SCHEME} compile-r7rs -o hello hello.scm && ./hello"
 
 ${TMPDIR}/test/libtest.o: tests/c-src/libtest.c
 	mkdir -p ${TMPDIR}/test
