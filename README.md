@@ -404,7 +404,7 @@ Frees _c-bytevector_ from memory.
 Calls _thunk_ with address pointer of _c-bytevector_.
 
 Since the support for calling C functions taking pointer address arguments,
-ones prefixrd with & in C, varies, some additional ceremony is needed on
+ones prefixed with & in C, varies, some additional ceremony is needed on
 the Scheme side.
 
 Example:
