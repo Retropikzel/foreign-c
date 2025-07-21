@@ -42,6 +42,8 @@ uninstall:
 force-install:
 	if [ "${SCHEME}" = "gauche" ]; then \
 		cp -r foreign $(shell gauche-config --sitelibdir)/; \
+		mkdir -p $(shell gauche-config --sysarchdir)/foreign/c/lib; \
+		cp -r foreign/c/lib/gauche.so $(shell gauche-config --sysarchdir)/foreign/c/lib/; \
 	else \
 		printf "\n" | snow-chibi --impls=${SCHEME} --always-yes install foreign-c-${VERSION}.tgz; \
 	fi
