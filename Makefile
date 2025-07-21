@@ -19,6 +19,7 @@ endif
 all: build ${TMPDIR}
 
 build: README.html
+	make ${SCHEME}
 	snow-chibi package \
 		--version=${VERSION} \
 		--authors="Retropikzel" \

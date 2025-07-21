@@ -168,8 +168,7 @@ Required versions:
 Not yet installable with snow-fort:
 
 - Gauche
-    - make SCHEME=gauche
-    - make SCHEME=gauche install
+    - Use manual installation
 
 [https://snow-fort.org/](https://snow-fort.org/)
 
@@ -181,7 +180,21 @@ You can test that library is found by your implementation like this:
     cd /tmp
     IMPLEMENTATION hello.scm
 
-### Manual
+### Manual system wide
+
+Either download the latest release from
+[https://git.sr.ht/~retropikzel/foreign-c/refs](https://git.sr.ht/~retropikzel/foreign-c/refs)
+or git clone, tag, and copy the _foreign_ directory to your
+library directory.
+
+Example installation for Gauche:
+
+    make SCHEME=gauche
+    make SCHEME=gauche install
+
+With most implementations the make command does not compile anything. When that
+is the case it will say "Nothing to build on SCHEME\_IMPLEMENTATION\_NAME."
+### Manual for project
 
 Either download the latest release from
 [https://git.sr.ht/~retropikzel/foreign-c/refs](https://git.sr.ht/~retropikzel/foreign-c/refs)
