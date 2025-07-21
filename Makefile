@@ -1,4 +1,5 @@
-.PHONY: libtest.o tests/libtest.so libtest.a documentation README.html
+.PHONY: libtest.o tests/libtest.so libtest.a documentation README.html foreign-c.pdf
+PDFENGINE=weasyprint
 CC=gcc
 DOCKER=docker run -it -v ${PWD}:/workdir
 DOCKER_INIT=cd /workdir && make clean &&
@@ -126,6 +127,9 @@ ${TMPDIR}:
 
 README.html: README.md
 	pandoc --metadata title="Foreign C" --standalone README.md > README.html
+
+foreign-c.pdf:
+	pandoc -f markdown -t pdf --pdf-engine=${PDFENGINE} README.md -o foreign-c.pdf
 
 chibi: foreign/c/primitives/chibi/foreign-c.stub
 	chibi-ffi foreign/c/primitives/chibi/foreign-c.stub

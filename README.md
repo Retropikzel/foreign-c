@@ -1,5 +1,3 @@
-# foreign-c
-
 foreign-c is a C foreign function interface (FFI) library for R7RS Schemes. It
 is portable in the sense that it supports multiple implementations.
 
@@ -440,7 +438,7 @@ Returns the endianness symbol associated implementation’s preferred endianness
 (usually that of the underlying machine architecture).  This may be any
 \<endianness symbol\>, including a symbol other than big and little.
 
-(**make-c-bytevector** _k_)</br>
+(**make-c-bytevector** _k_)<br></br>
 (**make-c-bytevector** _k_ _fill_)
 
 Returns a newly allocated c-bytevector of _k_ bytes.
@@ -488,9 +486,9 @@ If _k_ is not a valid index of c-bytevector the behaviour is undefined.
 
 Returns the unsigned char at index _k_ of _c-bytevector_.
 
-(**c-bytevector-uint-ref** _c-bytevector_ _k_ _endianness_ _size_)</br>
-(**c-bytevector-sint-ref** _c-bytevector_ _k_ _endianness_ _size_)</br>
-(**c-bytevector-uint-set!** _c-bytevector_ _k_ _n_ _endianness_ _size_)</br>
+(**c-bytevector-uint-ref** _c-bytevector_ _k_ _endianness_ _size_)<br></br>
+(**c-bytevector-sint-ref** _c-bytevector_ _k_ _endianness_ _size_)<br></br>
+(**c-bytevector-uint-set!** _c-bytevector_ _k_ _n_ _endianness_ _size_)<br></br>
 (**c-bytevector-sint-set!** _c-bytevector_ _k_ _n_ _endianness_ _size_)
 
 Size must be a positive exact integer object. If _k_,...,_k_ + _size_ − 1 is
@@ -520,13 +518,13 @@ Examples:
     > 100
 
 
-(**c-bytevector-u16-ref** _c-bytevector_ _k_ _endianness_)</br>
-(**c-bytevector-s16-ref** _c-bytevector_ _k_ _endianness_)</br>
-(**c-bytevector-u16-native-ref** _c-bytevector_ _k_)</br>
-(**c-bytevector-s16-native-ref** _c-bytevector_ _k_)</br>
-(**c-bytevector-u16-set!** _c-bytevector_ _k_ _n_ _endianness_)</br>
-(**c-bytevector-s16-set!** _c-bytevector_ _k_ _n_ _endianness_)</br>
-(**c-bytevector-u16-native-set!** _c-bytevector_ _k_ _n_)</br>
+(**c-bytevector-u16-ref** _c-bytevector_ _k_ _endianness_)<br></br>
+(**c-bytevector-s16-ref** _c-bytevector_ _k_ _endianness_)<br></br>
+(**c-bytevector-u16-native-ref** _c-bytevector_ _k_)<br></br>
+(**c-bytevector-s16-native-ref** _c-bytevector_ _k_)<br></br>
+(**c-bytevector-u16-set!** _c-bytevector_ _k_ _n_ _endianness_)<br></br>
+(**c-bytevector-s16-set!** _c-bytevector_ _k_ _n_ _endianness_)<br></br>
+(**c-bytevector-u16-native-set!** _c-bytevector_ _k_ _n_)<br></br>
 (**c-bytevector-s16-native-set!** _c-bytevector_ _k_ _n_)
 
 _K_ must be a valid index of _c-bytevector_ ; so must _k_ + 1.  For
@@ -545,13 +543,13 @@ work only at aligned indices: _k_ must be a multiple of 2.
 
 The ...-set!  procedures return unspecified values.
 
-(**c-bytevector-u32-ref** _c-bytevector_ _k_ _endianness_)</br>
-(**c-bytevector-s32-ref** _c-bytevector_ _k_ _endianness_)</br>
-(**c-bytevector-u32-native-ref** _c-bytevector_ _k_)</br>
-(**c-bytevector-s32-native-ref** _c-bytevector_ _k_)</br>
-(**c-bytevector-u32-set!** _c-bytevector_ _k_ _n_ _endianness_)</br>
-(**c-bytevector-s32-set!** _c-bytevector_ _k_ _n_ _endianness_)</br>
-(**c-bytevector-u32-native-set!** _c-bytevector_ _k_ _n_)</br>
+(**c-bytevector-u32-ref** _c-bytevector_ _k_ _endianness_)<br></br>
+(**c-bytevector-s32-ref** _c-bytevector_ _k_ _endianness_)<br></br>
+(**c-bytevector-u32-native-ref** _c-bytevector_ _k_)<br></br>
+(**c-bytevector-s32-native-ref** _c-bytevector_ _k_)<br></br>
+(**c-bytevector-u32-set!** _c-bytevector_ _k_ _n_ _endianness_)<br></br>
+(**c-bytevector-s32-set!** _c-bytevector_ _k_ _n_ _endianness_)<br></br>
+(**c-bytevector-u32-native-set!** _c-bytevector_ _k_ _n_)<br></br>
 (**c-bytevector-s32-native-set!** _c-bytevector_ _k_ _n_)
 
 _K_,...,_k_ + 3 must be valid indices of bytevector.  For c-bytevector-u32-set!
@@ -570,13 +568,13 @@ work only at aligned indices: _k_ must be a multiple of 4.
 
 The ...-set!  procedures return unspecified values.
 
-(**c-bytevector-u64-ref** _c-bytevector_ _k_ _endianness_)</br>
-(**c-bytevector-s64-ref** _c-bytevector_ _k_ _endianness_)</br>
-(**c-bytevector-u64-native-ref** _c-bytevector_ _k_)</br>
-(**c-bytevector-s64-native-ref** _c-bytevector_ _k_)</br>
-(**c-bytevector-u64-set!** _c-bytevector_ _k_ _n_ _endianness_)</br>
-(**c-bytevector-s64-set!** _c-bytevector_ _k_ _n_ _endianness_)</br>
-(**c-bytevector-u64-native-set!** _c-bytevector_ _k_ _n_)</br>
+(**c-bytevector-u64-ref** _c-bytevector_ _k_ _endianness_)<br></br>
+(**c-bytevector-s64-ref** _c-bytevector_ _k_ _endianness_)<br></br>
+(**c-bytevector-u64-native-ref** _c-bytevector_ _k_)<br></br>
+(**c-bytevector-s64-native-ref** _c-bytevector_ _k_)<br></br>
+(**c-bytevector-u64-set!** _c-bytevector_ _k_ _n_ _endianness_)<br></br>
+(**c-bytevector-s64-set!** _c-bytevector_ _k_ _n_ _endianness_)<br></br>
+(**c-bytevector-u64-native-set!** _c-bytevector_ _k_ _n_)<br></br>
 (**c-bytevector-s64-native-set!** _c-bytevector_ _k_ _n_)
 
 _K_,...,_k_ + 7 must be valid indices of _c-bytevector_.  For
@@ -595,8 +593,8 @@ work only at aligned indices: _k_ must be a multiple of 8.
 
 The ...-set! procedures return unspecified values.
 
-(**c-bytevector-ieee-single-native-ref**)</br>
-(**c-bytevector-ieee-single-ref**)</br>
+(**c-bytevector-ieee-single-native-ref**)<br></br>
+(**c-bytevector-ieee-single-ref**)<br></br>
 
 _K_,...,_k_ + 3 must be valid indices of _c-bytevector_. For
 c-bytevector-ieee-single-native-ref, _k_ must be a multiple of 4.
@@ -605,7 +603,7 @@ These procedures return the inexact real number object that best represents the
 IEEE-754 single-precision number represented by the four bytes beginning at
 index _k_.
 
-(**c-bytevector-ieee-double-native-ref**)</br>
+(**c-bytevector-ieee-double-native-ref**)<br></br>
 (**c-bytevector-ieee-double-ref**)
 
 _K_,...,_k_ + 7 must be valid indices of _c-bytevector_. For
@@ -615,7 +613,7 @@ These procedures return the inexact real number object that best represents the
 IEEE-754 double-precision number represented by the eight bytes beginning at
 index _k_.
 
-(**c-bytevector-ieee-single-native-set!**)</br>
+(**c-bytevector-ieee-single-native-set!**)<br></br>
 (**c-bytevector-ieee-single-set!**)
 
 _K_,...,_k_ + 3 must be valid indices of _c-bytevector_. For
@@ -624,7 +622,7 @@ c-bytevector-ieee-single-native-set!, _k_ must be a multiple of 4.
 These procedures store an IEEE-754 single-precision representation of x into
 elements _k_ through _k_ + 3 of bytevector, and return unspecified values.
 
-(**c-bytevector-ieee-double-native-set!**)</br>
+(**c-bytevector-ieee-double-native-set!**)<br></br>
 (**c-bytevector-ieee-double-set!**)
 
 _K_,...,_k_ + 7 must be valid indices of bytevector. For
