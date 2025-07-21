@@ -19,6 +19,7 @@ endif
 all: build ${TMPDIR}
 
 build: README.html
+	make ${SCHEME}
 	snow-chibi package \
 		--version=${VERSION} \
 		--authors="Retropikzel" \
@@ -26,7 +27,6 @@ build: README.html
 		--foreign-depends=ffi \
 		--description="Portable foreign function interface for R7RS Schemes" \
 	foreign/c.sld
-	make ${SCHEME}
 
 install:
 	if [ "${SCHEME}" = "gauche" ]; then \
