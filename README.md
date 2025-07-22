@@ -1,6 +1,8 @@
 foreign-c is a C foreign function interface (FFI) library for R7RS Schemes. It
 is portable in the sense that it supports multiple implementations.
 
+[Repository](https://git.sr.ht/~retropikzel/foreign-c)
+
 [Issue tracker](https://sr.ht/~retropikzel/foreign-c/trackers)
 
 [Maling lists](https://sr.ht/~retropikzel/foreign-c/lists)
