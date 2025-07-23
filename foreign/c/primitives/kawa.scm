@@ -1,6 +1,7 @@
 (define arena (invoke-static java.lang.foreign.Arena 'global))
 (define method-handle-lookup (invoke-static java.lang.invoke.MethodHandles 'lookup))
 (define native-linker (invoke-static java.lang.foreign.Linker 'nativeLinker))
+(define INTEGER-MAX-VALUE (static-field java.lang.Integer 'MAX_VALUE))
 
 (define value->object
   (lambda (value type)
@@ -155,25 +156,35 @@
   (lambda (pointer)
     (invoke pointer 'equals null-pointer)))
 
-(define u8-value-layout (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_BYTE) 'withByteAlignment 1))
+(define u8-value-layout
+  (invoke ;(static-field java.lang.foreign.ValueLayout 'JAVA_BYTE)
+          (static-field java.lang.foreign.ValueLayout 'JAVA_INT)
+          'withByteAlignment
+          8))
+
 (define c-bytevector-u8-set!
   (lambda (c-bytevector k byte)
-    (invoke (invoke c-bytevector 'reinterpret (static-field java.lang.Integer 'MAX_VALUE))
+    (invoke (invoke c-bytevector 'reinterpret INTEGER-MAX-VALUE)
             'set
             u8-value-layout
             k
             byte)))
+
 (define c-bytevector-u8-ref
   (lambda (c-bytevector k)
-    (invoke (invoke c-bytevector 'reinterpret (static-field java.lang.Integer 'MAX_VALUE))
+    (invoke (invoke c-bytevector 'reinterpret INTEGER-MAX-VALUE)
             'get
             u8-value-layout
             k)))
 
-(define pointer-value-layout (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
+(define pointer-value-layout
+  (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS)
+          'withByteAlignment
+          8))
+
 (define c-bytevector-pointer-set!
   (lambda (c-bytevector k pointer)
-    (invoke (invoke c-bytevector 'reinterpret (static-field java.lang.Integer 'MAX_VALUE))
+    (invoke (invoke c-bytevector 'reinterpret INTEGER-MAX-VALUE)
             'set
             pointer-value-layout
             k
@@ -181,7 +192,7 @@
 
 (define c-bytevector-pointer-ref
   (lambda (c-bytevector k)
-    (invoke (invoke c-bytevector 'reinterpret (static-field java.lang.Integer 'MAX_VALUE))
+    (invoke (invoke c-bytevector 'reinterpret INTEGER-MAX-VALUE)
             'get
             pointer-value-layout
             k)))
