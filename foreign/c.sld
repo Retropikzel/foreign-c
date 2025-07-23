@@ -59,8 +59,8 @@
               (scheme process-context)
               (system foreign)
               (system foreign-library)
-              (only (guile) include-from-path)
-              (only (rnrs bytevectors)
+              ;(only (guile) include-from-path)
+              #;(only (rnrs bytevectors)
                     bytevector-int8-set!
                     bytevector-uint-ref)))
     (kawa

@@ -455,6 +455,7 @@
 
 (define (native-endianness)
   (cond-expand (little-endian 'little)
+               (racket 'little) ;; FIXME
                (else 'big)))
 
 ;;; Already defined by (scheme base):
