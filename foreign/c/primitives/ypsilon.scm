@@ -40,14 +40,19 @@
       (bytevector-c-uint8_t-ref (make-bytevector-mapping (+ c-bytevector k)
                                                       (c-type-size 'uint8))
                              0)))
+
 (define c-bytevector-pointer-set!
   (lambda (c-bytevector k pointer)
-    (let ((bv (make-bytevector-mapping (+ c-bytevector k) (c-type-size 'pointer))))
-      (bytevector-c-void*-set! bv 0 pointer))))
+    (bytevector-c-void*-set! (make-bytevector-mapping (+ c-bytevector k)
+                                                      (c-type-size 'pointer))
+                             0
+                             pointer)))
+
 (define c-bytevector-pointer-ref
   (lambda (c-bytevector k)
-    (let ((bv (make-bytevector-mapping (+ c-bytevector k) (c-type-size 'pointer))))
-      (bytevector-c-void*-ref bv 0))))
+    (bytevector-c-void*-ref (make-bytevector-mapping (+ c-bytevector k)
+                                                     (c-type-size 'pointer))
+                            0)))
 
 #;(define pointer-set!
   (lambda (pointer type offset value)
