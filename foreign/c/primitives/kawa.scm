@@ -160,7 +160,7 @@
   (invoke ;(static-field java.lang.foreign.ValueLayout 'JAVA_BYTE)
           (static-field java.lang.foreign.ValueLayout 'JAVA_INT)
           'withByteAlignment
-          8))
+          1))
 
 (define c-bytevector-u8-set!
   (lambda (c-bytevector k byte)
