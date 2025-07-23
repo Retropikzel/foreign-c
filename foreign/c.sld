@@ -61,7 +61,7 @@
               (system foreign-library)
               (only (guile) include-from-path)
               (only (rnrs bytevectors)
-                    bytevector-uint-set!
+                    bytevector-int8-set!
                     bytevector-uint-ref)))
     (kawa
       (import (scheme base)
@@ -170,7 +170,11 @@
               (scheme process-context)
               (ypsilon c-ffi)
               (ypsilon c-types)
-              (only (core) define-macro syntax-case))))
+              (only (core)
+                    define-macro
+                    syntax-case
+                    bytevector-c-int8-set!
+                    bytevector-c-uint8-ref))))
   (export ;;;; Primitives 1
           c-type-size
           define-c-library
@@ -296,9 +300,7 @@
   (include "c/internal.scm")
   (cond-expand
     (chibi (include "c/primitives/chibi.scm"))
-    (chicken (export foreign-declare
-                     foreign-safe-lambda
-                     void)
+    (chicken (export foreign-declare foreign-safe-lambda void)
       (include "c/primitives/chicken.scm"))
     ;(cyclone (include "c/primitives/cyclone.scm"))
     (gambit (include "c/primitives/gambit.scm"))
@@ -313,7 +315,10 @@
     ;(skint (include "c/primitives/skint.scm"))
     (stklos (include "c/primitives/stklos.scm"))
     ;(tr7 (include "c/primitives/tr7.scm"))
-    (ypsilon (export c-function c-callback)
+    (ypsilon (export c-function
+                     c-callback
+                     bytevector-c-int8-set!
+                     bytevector-c-uint8-ref)
              (include "c/primitives/ypsilon.scm")))
     (include "c/main.scm")
     (include "c/libc.scm")
