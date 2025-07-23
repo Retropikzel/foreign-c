@@ -1,8 +1,6 @@
 .PHONY: libtest.o tests/libtest.so libtest.a documentation README.html foreign-c.pdf
 PDFENGINE=weasyprint
 CC=gcc
-DOCKER=docker run -it -v ${PWD}:/workdir
-DOCKER_INIT=cd /workdir && make clean &&
 VERSION=0.10.1
 TEST=primitives
 SCHEME=chibi
