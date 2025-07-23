@@ -59,11 +59,11 @@
 
 (define c-bytevector-u8-set!
   (lambda (c-bytevector k byte)
-    (ptr-set! c-bytevector _int8 'abs k byte)))
+    (ptr-set! c-bytevector _byte 'abs k byte)))
 
 (define c-bytevector-u8-ref
   (lambda (c-bytevector k)
-    (ptr-ref c-bytevector _uint8 'abs k)))
+    (ptr-ref c-bytevector _byte 'abs k)))
 
 (define c-bytevector-pointer-set!
   (lambda (c-bytevector k pointer)
