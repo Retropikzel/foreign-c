@@ -30,14 +30,14 @@
 
 (define c-bytevector-u8-set!
   (lambda (c-bytevector k byte)
-    (bytevector-c-uint8-set! (make-bytevector-mapping (+ c-bytevector k)
+    (bytevector-c-uint8_t-set! (make-bytevector-mapping (+ c-bytevector k)
                                                      (c-type-size 'uint8))
                             0
                             byte)))
 
 (define c-bytevector-u8-ref
   (lambda (c-bytevector k)
-      (bytevector-c-uint8-ref (make-bytevector-mapping (+ c-bytevector k)
+      (bytevector-c-uint8_t-ref (make-bytevector-mapping (+ c-bytevector k)
                                                       (c-type-size 'uint8))
                              0)))
 (define c-bytevector-pointer-set!
