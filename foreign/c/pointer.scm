@@ -29,9 +29,7 @@
   (else (define-c-procedure c-memset-pointer->address libc 'memset 'uint64 '(pointer uint8 int))))
 ;(define-c-procedure c-memset-address libc 'memset 'pointer '(uint64 uint8 int))
 ;(define-c-procedure c-printf libc 'printf 'int '(pointer pointer))
-(cond-expand
-  (racket (define-c-procedure c-malloc libc 'malloc 'pointer '(int)))
-  (else (define (c-malloc size) (malloc size 'raw))))
+(define-c-procedure c-malloc libc 'malloc 'pointer '(int))
 (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
 
 (define make-c-bytevector
