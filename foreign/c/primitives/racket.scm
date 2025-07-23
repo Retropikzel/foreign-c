@@ -63,17 +63,7 @@
 
 (define c-bytevector-u8-ref
   (lambda (c-bytevector k)
-    (let ((result (ptr-ref c-bytevector _uint8 'abs k)))
-      (display "c-bytevector: ")
-      (display c-bytevector)
-      (newline)
-      (display "k: ")
-      (display k)
-      (newline)
-      (display "Result: ")
-      (display result)
-      (newline)
-      result)))
+    (ptr-ref c-bytevector _uint8 'abs k)))
 
 (define c-bytevector-pointer-set!
   (lambda (c-bytevector k pointer)
