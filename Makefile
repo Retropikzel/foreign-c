@@ -1,7 +1,7 @@
 .PHONY: libtest.o tests/libtest.so libtest.a documentation README.html foreign-c.pdf
 PDFENGINE=weasyprint
 CC=gcc
-VERSION=0.10.1
+VERSION=0.10.2
 TEST=primitives
 SCHEME=chibi
 TMPDIR=tmp/${SCHEME}
