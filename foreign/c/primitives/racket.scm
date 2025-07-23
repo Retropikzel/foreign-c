@@ -1,7 +1,7 @@
 (define type->native-type
   (lambda (type)
-    (cond ((equal? type 'int8) _int8)
-          ((equal? type 'uint8) _uint8)
+    (cond ((equal? type 'int8) _byte)
+          ((equal? type 'uint8) _ubyte)
           ((equal? type 'int16) _int16)
           ((equal? type 'uint16) _uint16)
           ((equal? type 'int32) _int32)
@@ -59,11 +59,21 @@
 
 (define c-bytevector-u8-set!
   (lambda (c-bytevector k byte)
-    (ptr-set! c-bytevector _byte 'abs k byte)))
+    (ptr-set! c-bytevector _ubyte 'abs k byte)))
 
 (define c-bytevector-u8-ref
   (lambda (c-bytevector k)
-    (ptr-ref c-bytevector _ubyte 'abs k)))
+    (let ((result (ptr-ref c-bytevector _ubyte 'abs k)))
+      (display "c-bytevector: ")
+      (display c-bytevector)
+      (newline)
+      (display "k: ")
+      (display k)
+      (newline)
+      (display "Result: ")
+      (display result)
+      (newline)
+      result)))
 
 (define c-bytevector-pointer-set!
   (lambda (c-bytevector k pointer)
