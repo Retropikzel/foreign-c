@@ -551,13 +551,19 @@
 
 (define (c-bytevector-sint-ref c-bytevector index endness size)
   (let* ((high-byte (c-bytevector-u8-ref c-bytevector
-                               (if (eq? endness 'big)
-                                   index
-                                   (+ index size -1))))
+                                         (if (eq? endness 'big)
+                                           index
+                                           (+ index size -1))))
          (uresult (c-bytevector-uint-ref c-bytevector index endness size)))
+    (display "High byte: ")
+    (display high-byte)
+    (newline)
+    (display "Uresult: ")
+    (display uresult)
+    (newline)
     (if (> high-byte 127)
-        (- uresult (expt 256 size))
-  uresult)))
+      (- uresult (expt 256 size))
+      uresult)))
 
 ; FIXME: Some of these procedures may not do enough range checking.
 
