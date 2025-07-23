@@ -106,7 +106,9 @@
               (scheme file)
               (scheme inexact)
               (scheme process-context)
-              (only (racket base) system-type)
+              (only (racket base)
+                    system-type
+                    system-big-endian?)
               (ffi winapi)
               (compatibility mlist)
               (ffi unsafe)
