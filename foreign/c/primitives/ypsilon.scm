@@ -30,6 +30,9 @@
 
 (define c-bytevector-u8-set!
   (lambda (c-bytevector k byte)
+    ;; Ypsilon for some reason does not have bytevector-c-uint8-set!
+    ;; or other bytevector-c-u*-set! procedures so we use
+    ;; bytevector-c-int8-set!
     (bytevector-c-int8-set! (make-bytevector-mapping (+ c-bytevector k)
                                                      (c-type-size 'uint8))
                             0
