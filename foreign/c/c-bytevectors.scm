@@ -453,13 +453,9 @@
    ((_ little)
     (quote little))))
 
-(cond-expand
- (little-endian
-  (define (native-endianness)
-    'little))
- (else
-  (define (native-endianness)
-    'big)))
+(define (native-endianness)
+  (cond-expand (little-endian 'little)
+               (else 'big)))
 
 ;;; Already defined by (scheme base):
 ;;;
