@@ -533,7 +533,27 @@
   (c-bytevector-s8-set! c-bytevector index (char->integer char)))
 
 (define (c-bytevector-uint-ref c-bytevector index endness size)
-  (case endness
+  (cond ((equal? endness 'big)
+    (display "BIG")
+    (newline)
+    (do ((i 0 (+ i 1))
+         (result 0 (+ (* 256 result)
+                      (c-bytevector-u8-ref c-bytevector (+ index i)))))
+        ((>= i size)
+         result)))
+   ((equal? endness 'little)
+    (display "LITTLE")
+    (newline)
+    (do ((i (- size 1) (- i 1))
+         (result 0 (+ (* 256 result)
+                      (c-bytevector-u8-ref c-bytevector (+ index i)))))
+        ((< i 0)
+         result)))
+   (else
+    (display "ELSE")
+    (newline)
+    (c-bytevector-uint-ref c-bytevector index (native-endianness) size)))
+  #;(case endness
    ((big)
     (display "BIG")
     (newline)
