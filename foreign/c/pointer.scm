@@ -97,7 +97,7 @@
 (cond-expand
   (chicken #t) ; FIXME
   (kawa #t) ; FIXME
-  ;(chibi #t)
+  (chibi #t)
   (else (define c-null?
           (lambda (pointer)
             (if (c-bytevector? pointer)
