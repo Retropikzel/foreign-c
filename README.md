@@ -643,8 +643,8 @@ UTF-8 encoding of the given string.
 
 (**c-utf8->string** _c-bytevector_)
 
-Returns a newly allocated (unless empty) string whose character sequence is
-encoded by the given c-bytevector.
+Returns a newly allocated string whose character sequence is
+encoded by the given c-bytevector. It is an error if _c-bytevector_ is null.
 
 ### Utilities
 
