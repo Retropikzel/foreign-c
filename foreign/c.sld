@@ -147,8 +147,7 @@
                     cpointer-data-set!
                     cpointer-set!
                     cpointer-ref
-                    void?
-                    c-strlen))
+                    void?))
       (export ; calculate-struct-size-and-offsets
               ;struct-make
               get-environment-variable

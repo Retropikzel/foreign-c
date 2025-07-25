@@ -74,14 +74,12 @@
   (lambda (bytevector-var)
     (c-strlen bytevector-var)))
 
-(define-syntax c-utf8->string
-  (syntax-rules ()
-    ((_ c-bytevector)
-     (begin
-       (when (c-null? c-bytevector)
-         (error "Can not turn null pointer into string" 'c-bytevector))
-       (let ((size (c-strlen c-bytevector)))
-         (utf8->string (c-bytevector->bytevector c-bytevector size)))))))
+(define c-utf8->string
+  (lambda (c-bytevector)
+    (when (c-null? c-bytevector)
+      (error "Can not turn null pointer into string" c-bytevector))
+    (let ((size (c-strlen c-bytevector)))
+      (utf8->string (c-bytevector->bytevector c-bytevector size)))))
 
 (define string->c-utf8
   (lambda (string-var)
