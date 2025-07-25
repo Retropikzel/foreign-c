@@ -138,39 +138,6 @@
           ((equal? type 'pointer) (get-ffi-type-pointer))
           ((equal? type 'callback) (get-ffi-type-pointer)))))
 
-#;(define type->libffi-type
-  (lambda (type)
-    (cond ((equal? type 'int8) 1)
-          ((equal? type 'uint8) 2)
-          ((equal? type 'int16) 3)
-          ((equal? type 'uint16) 4)
-          ((equal? type 'int32) 5)
-          ((equal? type 'uint32) 6)
-          ((equal? type 'int64) 7)
-          ((equal? type 'uint64) 8)
-          ((equal? type 'char) 9)
-          ((equal? type 'unsigned-char) 10)
-          ((equal? type 'bool) 11)
-          ((equal? type 'short) 12)
-          ((equal? type 'unsigned-short) 13)
-          ((equal? type 'int) 14)
-          ((equal? type 'unsigned-int) 15)
-          ((equal? type 'long) 16)
-          ((equal? type 'unsigned-long) 17)
-          ((equal? type 'float) 18)
-          ((equal? type 'double) 19)
-          ((equal? type 'void) 20)
-          ((equal? type 'pointer) 21)
-          ((equal? type 'callback) 21))))
-
-#;(define argument->pointer
-  (lambda (value type)
-    (cond ((procedure? value) (scheme-procedure-to-pointer value))
-          (else (let ((pointer (make-c-bytevector (size-of-type type))))
-                  (pointer-set! pointer type 0 value)
-                  pointer)))))
-
-
 (define make-c-callback
   (lambda (return-type argument-types procedure)
     (scheme-procedure-to-pointer procedure)))
