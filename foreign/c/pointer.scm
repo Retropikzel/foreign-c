@@ -102,6 +102,9 @@
   (chibi #t)
   (else (define c-null?
           (lambda (pointer)
+            (display "HERE: ")
+            (write pointer)
+            (newline)
             (if (c-bytevector? pointer)
               (= (c-memset-pointer->address pointer 0 0) 0)
               #f)))))
