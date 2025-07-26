@@ -100,7 +100,7 @@
   (chicken #t) ; FIXME
   (kawa #t) ; FIXME
   (chibi #t)
-  ;(gauche (define c-null? pointer-null?))
+  (gauche (define c-null? pointer-null?))
   (else (define c-null?
           (lambda (pointer)
             (display "HERE123: ")
