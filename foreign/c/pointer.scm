@@ -101,6 +101,9 @@
   (kawa #t) ; FIXME
   (chibi #t)
   (gauche (define c-null? pointer-null?))
+  (mosh (define c-null?
+          (lambda (pointer) (and (c-bytevector? pointer)
+                                 (= (pointer->integer pointer) 0)))))
   (else (define c-null?
           (lambda (pointer)
             (display "HERE123: ")
