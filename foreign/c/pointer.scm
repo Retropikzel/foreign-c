@@ -106,7 +106,7 @@
             (write pointer)
             (newline)
             (if (c-bytevector? pointer)
-              (= (c-memset-pointer->address pointer 0 0) 0)
+              #t ;(= (c-memset-pointer->address pointer 0 0) 0)
               #f)))))
 
 #;(define c-bytevector->address
