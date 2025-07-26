@@ -103,6 +103,9 @@
   (gauche (define c-null? pointer-null?))
   (mosh (define c-null?
           (lambda (pointer)
+            (display "HERE5: ")
+            (display pointer)
+            (newline)
             (if (c-bytevector? pointer)
               (pointer-null? pointer)
               #f))))
