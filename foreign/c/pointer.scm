@@ -101,7 +101,7 @@
   (kawa #t) ; FIXME
   (chibi #t)
   (gauche (define c-null? pointer-null?))
-  (mosh (define c-null?
+  #;(mosh (define c-null?
           (lambda (pointer) (and (c-bytevector? pointer)
                                  (= (pointer->integer pointer) 0)))))
   (else (define c-null?
@@ -110,7 +110,7 @@
             (write pointer)
             (newline)
             (if (c-bytevector? pointer)
-              (= (c-memset-pointer->address pointer 0 0) 0)
+              #t ;(= (c-memset-pointer->address pointer 0 0) 0)
               #f)))))
 
 #;(define c-bytevector->address
