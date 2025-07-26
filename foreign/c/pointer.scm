@@ -102,7 +102,7 @@
   (chibi #t)
   (else (define c-null?
           (lambda (pointer)
-            (display "HERE: ")
+            (display "HERE123: ")
             (write pointer)
             (newline)
             (if (c-bytevector? pointer)
