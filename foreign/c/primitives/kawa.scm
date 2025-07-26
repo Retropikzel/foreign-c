@@ -97,11 +97,8 @@
      (define scheme-name
        (let* ((callback-procedure
                 (lambda (arg1 . args)
-                  (try-catch
-                    (begin
-                      (apply procedure (append (list arg1) args)))
-                    (ex <java.lang.Throwable>
-                        #f))))
+                  (try-catch (begin (apply procedure (append (list arg1) args)))
+                             (ex <java.lang.Throwable> #f))))
               (function-descriptor
                 (let ((function-descriptor
                         (if (equal? return-type 'void)
@@ -159,7 +156,7 @@
     (invoke pointer 'equals null-pointer)))
 
 (define u8-value-layout
-  (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT)
+  (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_BYTE)
           'withByteAlignment
           1))
 
