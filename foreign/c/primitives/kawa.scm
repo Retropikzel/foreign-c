@@ -172,14 +172,6 @@
 
 (define c-bytevector-u8-ref
   (lambda (c-bytevector k)
-    (display "HERE:")
-    (display (invoke (invoke (invoke (invoke c-bytevector 'reinterpret INTEGER-MAX-VALUE)
-                                     'get
-                                     u8-value-layout
-                                     k)
-                             'getClass)
-                     'getName))
-    (newline)
     (invoke (java.lang.Byte 1)
             'toUnsignedInt
             (invoke
