@@ -14,6 +14,8 @@
     (newline)
     (cond ((equal? type 'byte)
            (java.lang.Byte value))
+          ((equal? type 'int8)
+           (java.lang.Integer value))
           ((equal? type 'uint8)
            (java.lang.Integer (invoke (gnu.math.UInt value) 'toIntNum)))
           ((equal? type 'short)
