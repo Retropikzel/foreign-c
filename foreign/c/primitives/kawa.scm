@@ -5,6 +5,11 @@
 
 (define value->object
   (lambda (value type)
+    (cond ((equal? type 'byte)
+           (java.lang.Byte value))
+          ((equal? type 'int8)
+           (java.lang.Integer value))
+          ((equal? type 'uint8)
     (display "VALUE HERE: ")
     (write value)
     (newline)
@@ -12,11 +17,6 @@
     (newline)
     (write (invoke (invoke value 'getClass) 'getName))
     (newline)
-    (cond ((equal? type 'byte)
-           (java.lang.Byte value))
-          ((equal? type 'int8)
-           (java.lang.Integer value))
-          ((equal? type 'uint8)
            (java.lang.Integer (invoke (gnu.math.UInt value) 'toIntNum)))
           ((equal? type 'short)
            (java.lang.Short value))
