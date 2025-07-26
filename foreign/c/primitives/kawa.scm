@@ -156,7 +156,7 @@
     (invoke pointer 'equals null-pointer)))
 
 (define u8-value-layout
-  (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_BYTE)
+  (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT)
           'withByteAlignment
           1))
 
