@@ -7,6 +7,8 @@
   (lambda (value type)
     (cond ((equal? type 'byte)
            (java.lang.Byte value))
+          ((equal? type 'uint8)
+           (java.lang.Integer value))
           ((equal? type 'short)
            (java.lang.Short value))
           ((equal? type 'unsigned-short)
