@@ -76,6 +76,9 @@
 
 (define c-utf8->string
   (lambda (c-bytevector)
+    (display "HERE 10: ")
+    (display c-bytevector)
+    (newline)
     (when (c-null? c-bytevector)
       (error "Can not turn null pointer into string" c-bytevector))
     (let ((size (c-strlen c-bytevector)))
@@ -103,6 +106,13 @@
   (gauche (define c-null? pointer-null?))
   (else (define c-null?
           (lambda (pointer)
+            (display "HERE123: ")
+            (write pointer)
+            (newline)
+            (display (if (c-bytevector? pointer)
+              (= (c-memset-pointer->address pointer 0 0) 0)
+              #f))
+            (newline)
             (if (c-bytevector? pointer)
               (= (c-memset-pointer->address pointer 0 0) 0)
               #f)))))
