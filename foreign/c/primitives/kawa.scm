@@ -10,19 +10,12 @@
           ((equal? type 'int8)
            (java.lang.Integer value))
           ((equal? type 'uint8)
-           (java.lang.Integer (invoke (gnu.math.UInt value) 'toIntNum)))
+           (java.lang.Integer value))
           ((equal? type 'short)
            (java.lang.Short value))
           ((equal? type 'unsigned-short)
            (java.lang.Short value))
           ((equal? type 'int)
-    (display "VALUE HERE: ")
-    (write value)
-    (newline)
-    (write type)
-    (newline)
-    (write (invoke (invoke value 'getClass) 'getName))
-    (newline)
            (java.lang.Integer value))
           ((equal? type 'unsigned-int)
            (java.lang.Integer value))
@@ -41,7 +34,7 @@
 (define type->native-type
   (lambda (type)
     (cond
-      ((equal? type 'int8) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_BYTE) 'withByteAlignment 1))
+      ((equal? type 'int8) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 1))
       ((equal? type 'uint8) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_BYTE) 'withByteAlignment 1))
       ((equal? type 'int16) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 2))
       ((equal? type 'uint16) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 2))
@@ -179,10 +172,21 @@
 
 (define c-bytevector-u8-ref
   (lambda (c-bytevector k)
-    (invoke (invoke c-bytevector 'reinterpret INTEGER-MAX-VALUE)
-            'get
-            u8-value-layout
-            k)))
+    (display "HERE:")
+    (display (invoke (invoke (invoke (invoke c-bytevector 'reinterpret INTEGER-MAX-VALUE)
+                                     'get
+                                     u8-value-layout
+                                     k)
+                             'getClass)
+                     'getName))
+    (newline)
+    (invoke
+      (invoke
+        (invoke c-bytevector 'reinterpret INTEGER-MAX-VALUE)
+        'get
+        u8-value-layout
+        k)
+      'intValue)))
 
 (define pointer-value-layout
   (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS)
