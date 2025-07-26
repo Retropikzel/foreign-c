@@ -103,13 +103,6 @@
   (gauche (define c-null? pointer-null?))
   (else (define c-null?
           (lambda (pointer)
-            (display "HERE123: ")
-            (write pointer)
-            (newline)
-            (display (if (c-bytevector? pointer)
-              (= (c-memset-pointer->address pointer 0 0) 0)
-              #f))
-            (newline)
             (if (c-bytevector? pointer)
               (= (c-memset-pointer->address pointer 0 0) 0)
               #f)))))
