@@ -83,7 +83,8 @@
 
 (define string->c-utf8
   (lambda (string-var)
-    (bytevector->c-bytevector (string->utf8 (string-append string-var (string #\null))))))
+    (bytevector->c-bytevector
+      (string->utf8 (string-append string-var (string #\null))))))
 
 (cond-expand
   (chicken #t) ; FIXME
@@ -103,13 +104,6 @@
   (gauche (define c-null? pointer-null?))
   (else (define c-null?
           (lambda (pointer)
-            (display "HERE123: ")
-            (write pointer)
-            (newline)
-            (display (if (c-bytevector? pointer)
-              (= (c-memset-pointer->address pointer 0 0) 0)
-              #f))
-            (newline)
             (if (c-bytevector? pointer)
               (= (c-memset-pointer->address pointer 0 0) 0)
               #f)))))
