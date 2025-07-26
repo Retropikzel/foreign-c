@@ -100,19 +100,7 @@
   (chicken #t) ; FIXME
   (kawa #t) ; FIXME
   (chibi #t)
-  (gauche (define c-null? pointer-null?))
-  #;(mosh (define c-null?
-          (lambda (pointer)
-            (display "HERE5: ")
-            (display pointer)
-            (newline)
-            (display (if (c-bytevector? pointer)
-              (pointer-null? pointer)
-              #f))
-            (newline)
-            (if (c-bytevector? pointer)
-              (pointer-null? pointer)
-              #f))))
+  ;(gauche (define c-null? pointer-null?))
   (else (define c-null?
           (lambda (pointer)
             (display "HERE123: ")
