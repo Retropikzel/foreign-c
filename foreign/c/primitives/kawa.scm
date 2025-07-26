@@ -180,13 +180,13 @@
                              'getClass)
                      'getName))
     (newline)
-    (invoke
-      (invoke
-        (invoke c-bytevector 'reinterpret INTEGER-MAX-VALUE)
-        'get
-        u8-value-layout
-        k)
-      'intValue)))
+    (invoke (java.lang.Byte 1)
+            'toUnsignedInt
+            (invoke
+              (invoke c-bytevector 'reinterpret INTEGER-MAX-VALUE)
+              'get
+              u8-value-layout
+              k))))
 
 (define pointer-value-layout
   (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS)
