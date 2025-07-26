@@ -6,7 +6,7 @@
                        c-bytevector-pointer-set!
                        c-bytevector-pointer-ref
                        ;pointer-null
-                       ;pointer-null?
+                       pointer-null?
                        ;make-c-bytevector
                        ;pointer-address
                        c-bytevector?
@@ -17,8 +17,7 @@
                        define-c-callback
                        dlerror
                        dlsym
-                       internal-ffi-call
-                       ))
+                       internal-ffi-call))
 
 (select-module foreign.c.primitives.gauche)
 (dynamic-load "foreign/c/lib/gauche")

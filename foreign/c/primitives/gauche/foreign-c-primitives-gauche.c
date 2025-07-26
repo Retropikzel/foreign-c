@@ -60,7 +60,6 @@ ScmObj pointer_null() {
 }
 */
 
-/*
 ScmObj is_pointer_null(ScmObj pointer) {
     if(!Scm_TypeP(pointer, SCM_CLASS_FOREIGN_POINTER)) {
         return SCM_FALSE;
@@ -71,7 +70,6 @@ ScmObj is_pointer_null(ScmObj pointer) {
         return SCM_FALSE;
     }
 }
-*/
 
 /*
 ScmObj pointer_allocate(int size) {

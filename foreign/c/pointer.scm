@@ -100,13 +100,14 @@
   (chicken #t) ; FIXME
   (kawa #t) ; FIXME
   (chibi #t)
+  (gauche (define c-null? pointer-null?))
   (else (define c-null?
           (lambda (pointer)
             (display "HERE123: ")
             (write pointer)
             (newline)
             (if (c-bytevector? pointer)
-              #t ;(= (c-memset-pointer->address pointer 0 0) 0)
+              #t (= (c-memset-pointer->address pointer 0 0) 0)
               #f)))))
 
 #;(define c-bytevector->address

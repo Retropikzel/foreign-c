@@ -21,7 +21,7 @@ extern ScmObj size_of_pointer();
 extern ScmObj size_of_void();
 extern ScmObj shared_object_load(ScmString* path, ScmObj options);
 //extern ScmObj pointer_null();
-//extern ScmObj is_pointer_null();
+extern ScmObj is_pointer_null();
 //extern ScmObj pointer_allocate(int size);
 //extern ScmObj pointer_address(ScmObj pointer);
 extern ScmObj is_pointer(ScmObj pointer);
