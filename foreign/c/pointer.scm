@@ -101,7 +101,7 @@
   (kawa #t) ; FIXME
   (chibi #t)
   (gauche (define c-null? pointer-null?))
-  (mosh (define c-null?
+  #;(mosh (define c-null?
           (lambda (pointer)
             (display "HERE5: ")
             (display pointer)
@@ -117,6 +117,10 @@
           (lambda (pointer)
             (display "HERE123: ")
             (write pointer)
+            (newline)
+            (display (if (c-bytevector? pointer)
+              (= (c-memset-pointer->address pointer 0 0) 0)
+              #f))
             (newline)
             (if (c-bytevector? pointer)
               (= (c-memset-pointer->address pointer 0 0) 0)
