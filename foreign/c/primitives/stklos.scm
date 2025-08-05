@@ -72,7 +72,7 @@
                        (type->native-type return-type))))))
 
 ; FIXME
-(define size-of-type
+#;(define size-of-type
   (lambda (type)
     (cond ((equal? type 'int8) 1)
           ((equal? type 'uint8) 1)
@@ -93,6 +93,28 @@
           ((equal? type 'float) 4)
           ((equal? type 'double) 8)
           ((equal? type 'pointer) 8))))
+
+(define size-of-type
+  (lambda (type)
+    (cond ((equal? type 'int8) (c-size-of :int8))
+          ((equal? type 'uint8) (c-size-of :uint8))
+          ((equal? type 'int16) (c-size-of :int16))
+          ((equal? type 'uint16) (c-size-of :uint16))
+          ((equal? type 'int32) (c-size-of :int32))
+          ((equal? type 'uint32) (c-size-of :uint32))
+          ((equal? type 'int64) (c-size-of :int64))
+          ((equal? type 'uint64) (c-size-of :uint64))
+          ((equal? type 'char) (c-size-of :char))
+          ((equal? type 'unsigned-char) (c-size-of :uchar))
+          ((equal? type 'short) (c-size-of :short))
+          ((equal? type 'unsigned-short) (c-size-of :ushort))
+          ((equal? type 'int) (c-size-of :int))
+          ((equal? type 'unsigned-int) (c-size-of :uint))
+          ((equal? type 'long) (c-size-of :long))
+          ((equal? type 'unsigned-long) (c-size-of :ulong))
+          ((equal? type 'float) (c-size-of :float))
+          ((equal? type 'double) (c-size-of :double))
+          ((equal? type 'pointer) (c-size-of :pointer)))))
 
 (define c-bytevector-u8-set!
   (lambda (pointer offset value)

@@ -147,6 +147,7 @@
                     cpointer-data-set!
                     cpointer-set!
                     cpointer-ref
+                    c-size-of
                     void?))
       (export ; calculate-struct-size-and-offsets
               ;struct-make
