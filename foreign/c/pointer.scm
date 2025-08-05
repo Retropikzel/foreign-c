@@ -102,14 +102,6 @@
   (kawa #t) ; FIXME
   (chibi #t)
   (gauche (define c-null? pointer-null?))
-  (stklos (define c-null?
-            (lambda (pointer)
-              (display "HERE c-null?: ")
-              (write pointer)
-              (newline)
-              (and (not (void? pointer))
-                   (c-bytevector? c-bytevector?)
-                   (cpointer-null? pointer)))))
   (else (define c-null?
           (lambda (pointer)
             (if (c-bytevector? pointer)
