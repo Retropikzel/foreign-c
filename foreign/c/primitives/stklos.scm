@@ -71,29 +71,6 @@
                        (map type->native-type argument-types)
                        (type->native-type return-type))))))
 
-; FIXME
-#;(define size-of-type
-  (lambda (type)
-    (cond ((equal? type 'int8) 1)
-          ((equal? type 'uint8) 1)
-          ((equal? type 'int16) 2)
-          ((equal? type 'uint16) 2)
-          ((equal? type 'int32) 4)
-          ((equal? type 'uint32) 4)
-          ((equal? type 'int64) 8)
-          ((equal? type 'uint64) 8)
-          ((equal? type 'char) 1)
-          ((equal? type 'unsigned-char) 1)
-          ((equal? type 'short) 2)
-          ((equal? type 'unsigned-short) 2)
-          ((equal? type 'int) 4)
-          ((equal? type 'unsigned-int) 4)
-          ((equal? type 'long) 8)
-          ((equal? type 'unsigned-long) 8)
-          ((equal? type 'float) 4)
-          ((equal? type 'double) 8)
-          ((equal? type 'pointer) 8))))
-
 (define size-of-type
   (lambda (type)
     (cond ((equal? type 'int8) (c-size-of :int8))
