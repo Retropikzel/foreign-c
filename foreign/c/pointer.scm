@@ -104,7 +104,8 @@
   (gauche (define c-null? pointer-null?))
   (stklos (define c-null?
             (lambda (pointer)
-              (and pointer
+              (and (not (void? pointer))
+                   pointer
                    (cpointer-null? pointer)))))
   (else (define c-null?
           (lambda (pointer)
