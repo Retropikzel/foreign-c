@@ -458,10 +458,6 @@
                (racket (if (system-big-endian?) 'big 'little))
                (else 'big)))
 
-;;; Already defined by (scheme base):
-;;;
-;;;     c-bytevector? make-c-bytevector c-bytevector-length
-
 (define (c-bytevector=? bv1 bv2)
   (if (and (c-bytevector? bv1)
            (c-bytevector? bv2))

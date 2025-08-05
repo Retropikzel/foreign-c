@@ -25,7 +25,8 @@
 
 (define c-bytevector?
   (lambda (object)
-    (cpointer? object)))
+    (and (not (void? object))
+         (cpointer? object))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()
