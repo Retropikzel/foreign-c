@@ -102,6 +102,7 @@
   (kawa #t) ; FIXME
   (chibi #t)
   (gauche (define c-null? pointer-null?))
+  (stklos (define c-null? cpointer-null?))
   (else (define c-null?
           (lambda (pointer)
             (if (c-bytevector? pointer)
