@@ -105,7 +105,7 @@
   (stklos (define c-null?
             (lambda (pointer)
               (and pointer
-                   cpointer-null?))))
+                   (cpointer-null? pointer)))))
   (else (define c-null?
           (lambda (pointer)
             (if (c-bytevector? pointer)
