@@ -107,9 +107,8 @@
               (display "HERE c-null?: ")
               (write pointer)
               (newline)
-              (and (not (void? pointer))
-                   pointer
-                   (cpointer-null? pointer)))))
+              (and (pointer? pointer)
+                       (cpointer-null? pointer)))))
   (else (define c-null?
           (lambda (pointer)
             (if (c-bytevector? pointer)
