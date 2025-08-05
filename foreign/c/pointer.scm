@@ -116,7 +116,7 @@
               (= (c-memset-pointer->address pointer 0 0) 0)
               #f)))))
 
-#;(define c-bytevector->address
+(define c-bytevector->address
   (lambda (c-bytevector)
     (c-memset-pointer->address c-bytevector 0 0)))
 

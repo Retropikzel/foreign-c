@@ -205,6 +205,7 @@
           ;; TODO endianness
           native-endianness
           make-c-bytevector
+          c-bytevector->address
           ;; TODO c-bytevector=?
           ;; TODO c-bytevector-fill!
           ;; TODO c-bytevector-copy!
