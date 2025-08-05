@@ -107,8 +107,7 @@
   (stklos (define c-null?
             (lambda (pointer)
               (cond ((void? pointer) #t)
-                    ((and ;(c-bytevector? pointer)
-                          (= (c-memset-pointer->address pointer 0 0) 0)) #t)
+                    ((= (c-memset-pointer->address pointer 0 0) 0) #t)
                     (else #f)))))
   (else (define c-null?
           (lambda (pointer)
