@@ -78,7 +78,7 @@
   (lambda (c-bytevector)
     (display c-bytevector)
     (newline)
-    #;(when (c-null? c-bytevector)
+    (when (c-null? c-bytevector)
       (error "Can not turn null pointer into string" c-bytevector))
     (let ((size (c-strlen c-bytevector)))
       (utf8->string (c-bytevector->bytevector c-bytevector size)))))
@@ -106,7 +106,7 @@
   (gauche (define c-null? pointer-null?))
   (stklos (define c-null?
             (lambda (pointer)
-              (cond ((void? pointer) #t)
+              (cond ;((void? pointer) #t)
                     ((and (c-bytevector? pointer)
                           (= (c-memset-pointer->address pointer 0 0) 0)) #t
                      (else #f))))))
