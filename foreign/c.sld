@@ -203,6 +203,8 @@
 
           ;;;; Utilities
           libc-name
+          c-type-signed?
+          c-type-unsigned?
 
           ;; TODO endianness
           native-endianness
@@ -281,14 +283,12 @@
 
           ;c-string-length ;; TODO Documentation, Testing
 
-          ;; c-struct
-          ;pffi-define-struct;define-c-struct
-          ;pffi-struct-pointer;c-struct-bytevector
-          ;pffi-struct-offset-get;c-struct-offset
-          ;pffi-struct-set!;c-struct-set!
-          ;pffi-struct-get;c-struct-get
-
           ;; c-array
+          make-c-array
+          c-array-ref
+          c-array-set!
+          list->c-array
+          c-array->list
           ;define-c-array (?)
           ;pffi-array-allocate;make-c-array
           ;pffi-array-pointer;c-array-pointer
@@ -298,6 +298,14 @@
           ;pffi-array-set!;c-array-set!
           ;pffi-list->array;list->c-array
           ;pffi-array->list;c-array->list
+
+          ;; c-struct
+          ;pffi-define-struct;define-c-struct
+          ;pffi-struct-pointer;c-struct-bytevector
+          ;pffi-struct-offset-get;c-struct-offset
+          ;pffi-struct-set!;c-struct-set!
+          ;pffi-struct-get;c-struct-get
+
 
           ;; c-variable
           ;define-c-variable (?)
@@ -325,10 +333,11 @@
                      bytevector-c-int8-set!
                      bytevector-c-uint8-ref)
              (include "c/primitives/ypsilon.scm")))
+    (include "c/c-types.scm")
     (include "c/main.scm")
     (include "c/libc.scm")
     (include "c/c-bytevectors.scm")
     (include "c/pointer.scm")
-    ;(include "c/array.scm")
+    (include "c/array.scm")
     ;(include "c/struct.scm")
           )

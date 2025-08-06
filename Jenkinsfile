@@ -1,4 +1,4 @@
-def tests = ['primitives', 'addressof', 'callback']
+def tests = ['primitives', 'array', 'addressof', 'callback']
 
 pipeline {
     agent any

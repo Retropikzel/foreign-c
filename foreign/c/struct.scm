@@ -1,12 +1,12 @@
-(define-record-type <pffi-struct>
-  (struct-make c-type size pointer members)
-  pffi-struct?
-  (c-type pffi-struct-c-type)
-  (size pffi-struct-size)
-  (pointer pffi-struct-pointer)
-  (members pffi-struct-members))
+(define-record-type <c-struct>
+  (c-struct-make c-type size pointer members)
+  c-struct?
+  (c-type c-struct:type)
+  (size c-struct:size)
+  (pointer c-struct:pointer)
+  (members c-struct:members))
 
-(define-syntax pffi-define-struct
+(define-syntax define-c-struct
   (syntax-rules ()
     ((_ name c-type members)
      (define name
@@ -19,13 +19,7 @@
                            (car arguments)
                            (make-c-bytevector size)))
                 (c-type-string (if (string? c-type) c-type (symbol->string c-type))))
-           (struct-make c-type-string size pointer offsets)))))))
-
-(define c-align-of
-  (lambda (type)
-    (cond-expand
-      ;(guile (alignof (pffi-type->native-type type)))
-      (else (size-of-type type)))))
+           (c-struct-make c-type-string size pointer offsets)))))))
 
 (define round-to-next-modulo-of
   (lambda (to-round roundee)
@@ -81,19 +75,19 @@
          (c-type (if (string? c-type) c-type (symbol->string c-type))))
     (struct-make c-type size pointer offsets))))
 
-(define (pffi-struct-offset-get struct member-name)
+#;(define (pffi-struct-offset-get struct member-name)
   (when (not (assoc member-name (pffi-struct-members struct)))
     (error "Struct has no such member" (list struct member-name)))
   (car (cdr (cdr (assoc member-name (pffi-struct-members struct))))))
 
-(define (pffi-struct-get struct member-name)
+#;(define (pffi-struct-get struct member-name)
   (when (not (assoc member-name (pffi-struct-members struct)))
     (error "Struct has no such member" (list struct member-name)))
   (let ((type (car (cdr (assoc member-name (pffi-struct-members struct)))))
         (offset (car (cdr (cdr (assoc member-name (pffi-struct-members struct)))))))
     (pffi-pointer-get (pffi-struct-pointer struct) type offset)))
 
-(define (pffi-struct-set! struct member-name value)
+#;(define (pffi-struct-set! struct member-name value)
   (when (not (assoc member-name (pffi-struct-members struct)))
     (error "Struct has no such member" (list struct member-name)))
   (let ((type (car (cdr (assoc member-name (pffi-struct-members struct)))))

@@ -1,58 +1,59 @@
-(define-record-type <pffi-array>
-  (array-make type size pointer)
-  pffi-array?
-  (type pffi-array-type)
-  (size pffi-array-size)
-  (pointer pffi-array-pointer))
+(define make-c-array
+  (lambda (type size . fill)
+    (let ((array (make-c-bytevector (* (c-type-size type) size))))
+      (when (not (null? fill))
+        (letrec* ((filler (car fill))
+                  (looper (lambda (count)
+                          (when (> size count)
+                            (c-array-set! array type count filler)
+                            (looper (+ count 1))))))
+          (looper 0)))
+      array)))
 
-(define pffi-list->array
-  (lambda (type list-arg)
-    (let* ((array-size (length list-arg))
-           (type-size (c-size-of type))
+(define c-array-ref
+  (lambda (array type index)
+    (let* ((size (c-type-size type))
+           (offset (* index size)))
+      (cond
+        ((equal? 'pointer type)
+         (c-bytevector-pointer-ref array offset))
+        ((c-type-signed? type)
+         (c-bytevector-sint-ref array offset (native-endianness) size))
+        (else
+          (c-bytevector-uint-ref array offset (native-endianness) size))))))
+
+(define c-array-set!
+  (lambda (array type index value)
+    (let* ((size (c-type-size type))
+           (offset (* index size)))
+      (cond
+        ((equal? 'pointer type)
+         (c-bytevector-pointer-set! array offset value))
+        ((c-type-signed? type)
+         (c-bytevector-sint-set! array offset value (native-endianness) size))
+        (else
+          (c-bytevector-uint-set! array offset value (native-endianness) size))))))
+
+(define list->c-array
+  (lambda (list type)
+    (let* ((array-size (length list))
+           (type-size (c-type-size type))
            (array (make-c-bytevector (* type-size array-size)))
-           (offset 0))
+           (index 0))
       (for-each
         (lambda (item)
-          (pffi-pointer-set! array type offset item)
-          (set! offset (+ offset type-size)))
-        list-arg)
-      (array-make type array-size array))))
+          (c-array-set! array type index item)
+          (set! index (+ index 1)))
+        list)
+      array)))
 
-(define pffi-pointer->array
-  (lambda (pointer type size)
-    (array-make type size pointer)))
-
-(define pffi-array->list
-  (lambda (array)
-    (letrec* ((type (pffi-array-type array))
-              (type-size (c-size-of type))
-              (max-offset (* type-size (pffi-array-size array)))
-              (array-pointer (pffi-array-pointer array))
-              (looper (lambda (offset result)
-                        (if (= offset max-offset)
-                          result
-                          (looper (+ offset type-size)
-                                  (append result
-                                          (list (pffi-pointer-get array-pointer
-                                                                  type
-                                                                  offset))))))))
+(define c-array->list
+  (lambda (array type size)
+    (letrec*
+      ((looper (lambda (index result)
+                 (if (>= index size)
+                   result
+                   (looper (+ index 1)
+                           (append result
+                                   (list (c-array-ref array type index))))))))
       (looper 0 (list)))))
-
-(define pffi-array-allocate
-  (lambda (type size)
-    (array-make type size (pffi-pointer-allocate-calloc size (c-size-of type)))))
-
-(define pffi-array-get
-  (lambda (array index)
-    (let ((type (pffi-array-type array)))
-      (pffi-pointer-get (pffi-array-pointer array)
-                        type
-                        (* (c-size-of type) index)))))
-
-(define pffi-array-set!
-  (lambda (array index value)
-    (let ((type (pffi-array-type array)))
-      (pffi-pointer-set! (pffi-array-pointer array)
-                        type
-                        (* (c-size-of type) index)
-                        value))))

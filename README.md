@@ -72,6 +72,10 @@ is portable in the sense that it supports multiple implementations.
         - c-bytevector-\>bytevector
         - string-\>c-utf8
         - c-utf8-\>string
+    - [c-array](#c-array)
+        - make-c-array
+        - c-array-ref
+        - c-array-set!
     - [Environment variables](#environment-variables)
 
 
@@ -645,6 +649,46 @@ UTF-8 encoding of the given string.
 
 Returns a newly allocated string whose character sequence is
 encoded by the given c-bytevector. It is an error if _c-bytevector_ is null.
+
+### c-array
+
+(**make-c-array** _type_ _size_)<br></br>
+(**make-c-array** _type_ _size_ _fill_)
+
+If the _fill_ argument is missing, the initial contents of the
+returned c-bytevector are unspecified.
+
+If the _fill_ argument is present, it specifies the initial value for the items
+of the array.  If it's value does not match _type_ behaviour is unspecified.
+
+Returns a newly allocated c-bytevector with size of _type_ times _size_.
+
+(**c-array-ref** _array_ _type_ _index_)
+
+_array_ is a c-bytevector.
+
+Returns the given value of _type_ from _index_ of _array_. If the value is not
+of _type_ or _index_ is out of bounds the behaviour is unspecified.
+
+(**c-array-set!** _array_ _type_ _index_ _value_)
+
+_array_ is a c-bytevector.
+
+Sets the given _value_ of _type_ at _index_ of _array_. If _value_ is not of
+_type_ or _index_ is out of bounds behaviour is unspecified.
+
+(**list->c-array** list _type_)
+
+Returns newly allocated c-bytevector with values of the _list_ in it. List
+values must be of _type_. If the values are not of type behaviour is
+unspecified.
+
+(**c-array->list** _array_ _type_ _size_)
+
+_array_ is a c-bytevector.
+
+Returns a list with values of _array_ in it. If _type_ and _size_ do not match
+what is in the _c-bytevector_ the behaviour is unspecified.
 
 ### Utilities
 

@@ -168,6 +168,9 @@ guile:
 kawa:
 	@echo "Nothing to build for Kawa"
 
+mit-scheme:
+	@echo "Nothing to build for Kawa"
+
 larceny:
 	@echo "Nothing to build for Larceny"
 
