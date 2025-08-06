@@ -2,6 +2,10 @@
   (lambda (type)
     (size-of-type type)))
 
+(define c-type-align
+  (lambda (type)
+    (align-of-type type)))
+
 (define foreign-c:string-split
   (lambda (str mark)
     (let* ((str-l (string->list str))

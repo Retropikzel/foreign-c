@@ -24,8 +24,7 @@
 
 (define size-of-type
   (lambda (type)
-    (cond
-      ((equal? type 'int8) (size-of-int8))
+    (cond ((equal? type 'int8) (size-of-int8))
       ((equal? type 'uint8) (size-of-uint8))
       ((equal? type 'int16) (size-of-int16))
       ((equal? type 'uint16) (size-of-uint16))
@@ -46,6 +45,30 @@
       ((equal? type 'string) (size-of-string))
       ((equal? type 'pointer) (size-of-pointer))
       ((equal? type 'void) (size-of-void)))))
+
+(define align-of-type
+  (lambda (type)
+    (cond ((equal? type 'int8) (align-of-int8))
+      ((equal? type 'uint8) (align-of-uint8))
+      ((equal? type 'int16) (align-of-int16))
+      ((equal? type 'uint16) (align-of-uint16))
+      ((equal? type 'int32) (align-of-int32))
+      ((equal? type 'uint32) (align-of-uint32))
+      ((equal? type 'int64) (align-of-int64))
+      ((equal? type 'uint64) (align-of-uint64))
+      ((equal? type 'char) (align-of-char))
+      ((equal? type 'unsigned-char) (align-of-unsigned-char))
+      ((equal? type 'short) (align-of-short))
+      ((equal? type 'unsigned-short) (align-of-unsigned-short))
+      ((equal? type 'int) (align-of-int))
+      ((equal? type 'unsigned-int) (align-of-unsigned-int))
+      ((equal? type 'long) (align-of-long))
+      ((equal? type 'unsigned-long) (align-of-unsigned-long))
+      ((equal? type 'float) (align-of-float))
+      ((equal? type 'double) (align-of-double))
+      ((equal? type 'string) (align-of-string))
+      ((equal? type 'pointer) (align-of-pointer))
+      ((equal? type 'void) (align-of-void)))))
 
 #;(define shared-object-load
   (lambda (path options)

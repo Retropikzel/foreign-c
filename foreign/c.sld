@@ -180,6 +180,7 @@
                     bytevector-c-uint8-ref))))
   (export ;;;; Primitives 1
           c-type-size
+          c-type-align
           define-c-library
           define-c-procedure
           c-bytevector?

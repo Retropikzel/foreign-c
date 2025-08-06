@@ -48,6 +48,11 @@
   (lambda (type)
     (ctype-sizeof (type->native-type type))))
 
+;; FIXME
+(define align-of-type
+  (lambda (type)
+    (ctype-sizeof (type->native-type type))))
+
 (define shared-object-load
   (lambda (path options)
     (if (and (not (null? options))

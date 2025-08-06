@@ -2,6 +2,7 @@
 
 (inline-stub
  (.include "foreign-c-primitives-gauche.h")
+
  (define-cproc size-of-int8 () size_of_int8)
  (define-cproc size-of-uint8 () size_of_uint8)
  (define-cproc size-of-int16 () size_of_int16)
@@ -23,6 +24,29 @@
  (define-cproc size-of-string () size_of_string)
  (define-cproc size-of-pointer () size_of_pointer)
  (define-cproc size-of-void () size_of_void)
+
+ (define-cproc align-of-int8 () align_of_int8)
+ (define-cproc align-of-uint8 () align_of_uint8)
+ (define-cproc align-of-int16 () align_of_int16)
+ (define-cproc align-of-uint16 () align_of_int16)
+ (define-cproc align-of-int32 () align_of_int32)
+ (define-cproc align-of-uint32 () align_of_int32)
+ (define-cproc align-of-int64 () align_of_int64)
+ (define-cproc align-of-uint64 () align_of_int64)
+ (define-cproc align-of-char () align_of_char)
+ (define-cproc align-of-unsigned-char () align_of_unsigned_char)
+ (define-cproc align-of-short () align_of_short)
+ (define-cproc align-of-unsigned-short () align_of_unsigned_short)
+ (define-cproc align-of-int () align_of_int)
+ (define-cproc align-of-unsigned-int () align_of_unsigned_int)
+ (define-cproc align-of-long () align_of_long)
+ (define-cproc align-of-unsigned-long () align_of_unsigned_long)
+ (define-cproc align-of-float () align_of_float)
+ (define-cproc align-of-double () align_of_double)
+ (define-cproc align-of-string () align_of_string)
+ (define-cproc align-of-pointer () align_of_pointer)
+ (define-cproc align-of-void () align_of_void)
+
  (define-cproc shared-object-load (path::<string> options) shared_object_load)
  ;(define-cproc pointer-null () pointer_null)
  (define-cproc pointer-null? (pointer) is_pointer_null)

@@ -132,6 +132,13 @@
         (invoke native-type 'byteAlignment)
         #f))))
 
+(define align-of-type
+  (lambda (type)
+    (let ((native-type (type->native-type type)))
+      (if native-type
+        (invoke native-type 'byteAlignment)
+        #f))))
+
 (define make-c-null
   (lambda ()
     (static-field java.lang.foreign.MemorySegment 'NULL)))

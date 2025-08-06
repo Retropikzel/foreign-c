@@ -57,6 +57,49 @@
 (define-c int (size-of-double size_of_double) ())
 (define-c int (size-of-pointer size_of_pointer) ())
 
+;; c-type-align
+(c-declare "
+    int align_of_int8_t() { return _Alignof(int8_t); }
+    int align_of_uint8_t() { return _Alignof(uint8_t); }
+    int align_of_int16_t() { return _Alignof(int16_t); }
+    int align_of_uint16_t() { return _Alignof(uint16_t); }
+    int align_of_int32_t() { return _Alignof(int32_t); }
+    int align_of_uint32_t() { return _Alignof(uint32_t); }
+    int align_of_int64_t() { return _Alignof(int64_t); }
+    int align_of_uint64_t() { return _Alignof(uint64_t); }
+    int align_of_char() { return _Alignof(char); }
+    int align_of_unsigned_char() { return _Alignof(unsigned char); }
+    int align_of_short() { return _Alignof(short); }
+    int align_of_unsigned_short() { return _Alignof(unsigned short); }
+    int align_of_int() { return _Alignof(int); }
+    int align_of_unsigned_int() { return _Alignof(unsigned int); }
+    int align_of_long() { return _Alignof(long); }
+    int align_of_unsigned_long() { return _Alignof(unsigned long); }
+    int align_of_float() { return _Alignof(float); }
+    int align_of_double() { return _Alignof(double); }
+    int align_of_pointer() { return _Alignof(void*); }
+")
+
+(define-c int (align-of-int8_t align_of_int8_t) ())
+(define-c int (align-of-uint8_t align_of_uint8_t) ())
+(define-c int (align-of-int16_t align_of_int16_t) ())
+(define-c int (align-of-uint16_t align_of_uint16_t) ())
+(define-c int (align-of-int32_t align_of_int32_t) ())
+(define-c int (align-of-uint32_t align_of_uint32_t) ())
+(define-c int (align-of-int64_t align_of_int64_t) ())
+(define-c int (align-of-uint64_t align_of_uint64_t) ())
+(define-c int (align-of-char align_of_char) ())
+(define-c int (align-of-unsigned-char align_of_unsigned_char) ())
+(define-c int (align-of-short align_of_short) ())
+(define-c int (align-of-unsigned-short align_of_unsigned_short) ())
+(define-c int (align-of-int align_of_int) ())
+(define-c int (align-of-unsigned-int align_of_unsigned_int) ())
+(define-c int (align-of-long align_of_long) ())
+(define-c int (align-of-unsigned-long align_of_unsigned_long) ())
+(define-c int (align-of-float align_of_float) ())
+(define-c int (align-of-double align_of_double) ())
+(define-c int (align-of-pointer align_of_pointer) ())
+
 ;; shared-object-load
 (define-c-const int (RTLD-NOW "RTLD_NOW"))
 (define-c (maybe-null pointer void*) dlopen (string int))

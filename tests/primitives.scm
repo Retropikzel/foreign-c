@@ -6,6 +6,28 @@
         (scheme process-context)
         (foreign c))
 
+(define foreign-types '(int8
+                         uint8
+                         int16
+                         uint16
+                         int32
+                         uint32
+                         int64
+                         uint64
+                         char
+                         unsigned-char
+                         short
+                         unsigned-short
+                         int
+                         unsigned-int
+                         long
+                         unsigned-long
+                         float
+                         double
+                         pointer
+                         pointer-address
+                         callback
+                         void))
 (display "libc-name: ")
 (display libc-name)
 

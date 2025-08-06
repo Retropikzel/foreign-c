@@ -41,6 +41,28 @@ ScmObj size_of_string() { return Scm_MakeInteger(sizeof(char*)); }
 ScmObj size_of_pointer() { return Scm_MakeInteger(sizeof(void*)); }
 ScmObj size_of_void() { return Scm_MakeInteger(sizeof(void)); }
 
+ScmObj align_of_int8() { return Scm_MakeInteger(_Alignof(int8_t)); }
+ScmObj align_of_uint8() { return Scm_MakeInteger(_Alignof(uint8_t)); }
+ScmObj align_of_int16() { return Scm_MakeInteger(_Alignof(int16_t)); }
+ScmObj align_of_uint16() { return Scm_MakeInteger(_Alignof(uint16_t)); }
+ScmObj align_of_int32() { return Scm_MakeInteger(_Alignof(int32_t)); }
+ScmObj align_of_uint32() { return Scm_MakeInteger(_Alignof(uint32_t)); }
+ScmObj align_of_int64() { return Scm_MakeInteger(_Alignof(int64_t)); }
+ScmObj align_of_uint64() { return Scm_MakeInteger(_Alignof(uint64_t)); }
+ScmObj align_of_char() { return Scm_MakeInteger(_Alignof(char)); }
+ScmObj align_of_unsigned_char() { return Scm_MakeInteger(_Alignof(unsigned char)); }
+ScmObj align_of_short() { return Scm_MakeInteger(_Alignof(short)); }
+ScmObj align_of_unsigned_short() { return Scm_MakeInteger(_Alignof(unsigned short)); }
+ScmObj align_of_int() { return Scm_MakeInteger(_Alignof(int)); }
+ScmObj align_of_unsigned_int() { return Scm_MakeInteger(_Alignof(unsigned int)); }
+ScmObj align_of_long() { return Scm_MakeInteger(_Alignof(long)); }
+ScmObj align_of_unsigned_long() { return Scm_MakeInteger(_Alignof(unsigned long)); }
+ScmObj align_of_float() { return Scm_MakeInteger(_Alignof(float)); }
+ScmObj align_of_double() { return Scm_MakeInteger(_Alignof(double)); }
+ScmObj align_of_string() { return Scm_MakeInteger(_Alignof(char*)); }
+ScmObj align_of_pointer() { return Scm_MakeInteger(_Alignof(void*)); }
+ScmObj align_of_void() { return Scm_MakeInteger(_Alignof(void)); }
+
 ScmModule* module = NULL;
 
 ScmObj shared_object_load(ScmString* path, ScmObj options) {

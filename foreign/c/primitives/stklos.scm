@@ -93,6 +93,11 @@
           ((equal? type 'double) (c-size-of :double))
           ((equal? type 'pointer) (c-size-of :pointer)))))
 
+;; FIXME
+(define align-of-type
+  (lambda (type)
+    (size-of-type type)))
+
 (define c-bytevector-u8-set!
   (lambda (pointer offset value)
   (cpointer-set! pointer :uint8 value offset)))

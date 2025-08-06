@@ -21,7 +21,6 @@
           ((equal? type 'pointer) '*)
           ((equal? type 'void) void)
           ((equal? type 'callback) '*)
-          ((equal? type 'struct) '*)
           (else #f))))
 
 (define c-bytevector?
@@ -50,6 +49,13 @@
     (let ((native-type (type->native-type type)))
       (cond ((equal? native-type void) 0)
             (native-type (sizeof native-type))
+            (else #f)))))
+
+(define align-of-type
+  (lambda (type)
+    (let ((native-type (type->native-type type)))
+      (cond ((equal? native-type void) 0)
+            (native-type (alignof native-type))
             (else #f)))))
 
 (define shared-object-load
