@@ -74,5 +74,31 @@
 
 ;; define-c-struct
 
+(define-c-struct s
+                 s-members
+                 (make-c-null)
+                 (field1 'int t-struct:field1 t-struct:field1!)
+                 (field2 'int t-struct:field2 t-struct:field2!)
+                 (field3 'pointer t-struct:field3 t-struct:field3!)
+                 (field4 'int t-struct:field4 t-struct:field4!))
 
-(define-c-struct test '() '())
+(t-struct:field1! s 1)
+(t-struct:field2! s 2)
+(t-struct:field3! s (make-c-bytevector 32))
+(t-struct:field4! s 4)
+
+(write s)
+(newline)
+(write s-members)
+(newline)
+(write (t-struct:field1 s))
+(newline)
+(write (t-struct:field2 s))
+(newline)
+(write (t-struct:field3 s))
+(newline)
+(write (t-struct:field4 s))
+(newline)
+
+(write (c-struct->alist s s-members))
+(newline)

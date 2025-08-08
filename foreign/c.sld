@@ -281,7 +281,7 @@
           ;; TODO c-utf32->string
 
 
-          ;c-string-length ;; TODO Documentation, Testing
+          ;c-utf8-length ;; TODO ??
 
           ;; c-array
           make-c-array
@@ -289,17 +289,10 @@
           c-array-set!
           list->c-array
           c-array->list
-          ;define-c-array (?)
-          ;pffi-array-allocate;make-c-array
-          ;pffi-array-pointer;c-array-pointer
-          ;pffi-array?;c-array?
-          ;pffi-pointer->array;c-bytevector->array
-          ;pffi-array-get;c-array-get
-          ;pffi-array-set!;c-array-set!
-          ;pffi-list->array;list->c-array
-          ;pffi-array->list;c-array->list
 
           ;; c-struct
+          define-c-struct
+          c-struct->alist
           ;pffi-define-struct;define-c-struct
           ;pffi-struct-pointer;c-struct-bytevector
           ;pffi-struct-offset-get;c-struct-offset
@@ -339,5 +332,4 @@
     (include "c/c-bytevectors.scm")
     (include "c/pointer.scm")
     (include "c/array.scm")
-    ;(include "c/struct.scm")
-          )
+    (include "c/struct.scm"))
