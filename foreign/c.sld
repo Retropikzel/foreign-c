@@ -145,8 +145,8 @@
                     cpointer-null?
                     cpointer-data
                     cpointer-data-set!
-                    cpointer-set!
-                    cpointer-ref
+                    cpointer-set-abs!
+                    cpointer-ref-abs
                     c-size-of
                     void?))
       (export ; calculate-struct-size-and-offsets

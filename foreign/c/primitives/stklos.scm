@@ -100,16 +100,16 @@
 
 (define c-bytevector-u8-set!
   (lambda (pointer offset value)
-  (cpointer-set! pointer :uint8 value offset)))
+  (cpointer-set-abs! pointer :uint8 value offset)))
 
 (define c-bytevector-u8-ref
   (lambda (pointer offset)
-    (cpointer-ref pointer :uint8 offset)))
+    (cpointer-ref-abs pointer :uint8 offset)))
 
 (define c-bytevector-pointer-set!
   (lambda (pointer offset value)
-    (cpointer-set! pointer :pointer value offset)))
+    (cpointer-set-abs! pointer :pointer value offset)))
 
 (define c-bytevector-pointer-ref
   (lambda (pointer offset)
-    (cpointer-ref pointer :pointer offset)))
+    (cpointer-ref-abs pointer :pointer offset)))
