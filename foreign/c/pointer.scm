@@ -76,8 +76,6 @@
 
 (define c-utf8->string
   (lambda (c-bytevector)
-    (display c-bytevector)
-    (newline)
     (when (c-null? c-bytevector)
       (error "Can not turn null pointer into string" c-bytevector))
     (let ((size (c-strlen c-bytevector)))

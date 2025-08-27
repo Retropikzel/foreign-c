@@ -120,7 +120,7 @@
               (scheme file)
               (scheme inexact)
               (scheme process-context)
-              (except (sagittarius ffi) c-free c-malloc)
+              (except (sagittarius ffi) c-free c-malloc define-c-struct)
               (sagittarius)))
     #;(skint
       (import (scheme base)

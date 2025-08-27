@@ -58,8 +58,12 @@
 
 (define c-bytevector-u8-set! pointer-set-c-uint8!)
 (define c-bytevector-u8-ref pointer-ref-c-uint8)
-(define c-bytevector-pointer-set! pointer-set-c-pointer!)
-(define c-bytevector-pointer-ref pointer-ref-c-pointer)
+(define c-bytevector-pointer-set!
+  (lambda (pointer offset value)
+  (pointer-set-c-pointer! pointer offset value)))
+(define c-bytevector-pointer-ref
+  (lambda (pointer offset)
+  (pointer-ref-c-pointer pointer offset)))
 
 (define type->native-type
   (lambda (type)

@@ -110,6 +110,13 @@
   (lambda (pointer offset value)
     (cpointer-set-abs! pointer :pointer value offset)))
 
-(define c-bytevector-pointer-ref
+#;(define c-bytevector-pointer-ref
   (lambda (pointer offset)
     (cpointer-ref-abs pointer :pointer offset)))
+
+(define c-bytevector-pointer-ref
+  (lambda (c-bytevector k)
+    (address->c-bytevector (c-bytevector-uint-ref c-bytevector
+                                                  0
+                                                  (native-endianness)
+                                                  (c-type-size 'pointer)))))
