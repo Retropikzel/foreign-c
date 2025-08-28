@@ -1,7 +1,7 @@
 .PHONY: libtest.o tests/libtest.so libtest.a documentation README.html foreign-c.pdf
 PDFENGINE=weasyprint
 CC=gcc
-VERSION=0.10.4
+VERSION=0.10.5
 TEST=primitives
 SCHEME=chibi
 TMPDIR=tmp/${SCHEME}
@@ -15,9 +15,7 @@ ifeq "${SCHEME}" "ypsilon"
 INCDIRS=-I .
 endif
 
-all: build ${TMPDIR}
-
-build: README.html
+package: README.html
 	make ${SCHEME}
 	snow-chibi package \
 		--version=${VERSION} \
