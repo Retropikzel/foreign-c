@@ -44,7 +44,7 @@ extern ScmObj align_of_void();
 
 extern ScmObj shared_object_load(ScmString* path, ScmObj options);
 //extern ScmObj pointer_null();
-extern ScmObj is_pointer_null();
+extern ScmObj is_pointer_null(ScmObj pointer);
 //extern ScmObj pointer_allocate(int size);
 //extern ScmObj pointer_address(ScmObj pointer);
 extern ScmObj is_pointer(ScmObj pointer);
@@ -53,6 +53,7 @@ extern ScmObj is_pointer(ScmObj pointer);
 
 //extern ScmObj pointer_set_int8(ScmObj pointer, int offset, int8_t value);
 extern ScmObj pointer_set_uint8(ScmObj pointer, int offset, uint8_t value);
+extern ScmObj pointer_get_uint8(ScmObj pointer, int offset);
 /*
  * extern ScmObj pointer_set_int16(ScmObj pointer, int offset, int16_t value);
  * extern ScmObj pointer_set_uint16(ScmObj pointer, int offset, uint16_t value);
@@ -72,6 +73,7 @@ extern ScmObj pointer_set_uint8(ScmObj pointer, int offset, uint8_t value);
  * extern ScmObj pointer_set_double(ScmObj pointer, int offset, double value);
  * */
 
+extern ScmObj pointer_set_pointer(ScmObj pointer, int offset, ScmObj value);
 extern ScmObj pointer_get_pointer(ScmObj pointer, int offset);
 //extern ScmObj string_to_pointer(ScmObj string);
 //extern ScmObj pointer_to_string(ScmObj pointer);

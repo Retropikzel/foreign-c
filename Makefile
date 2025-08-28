@@ -210,5 +210,6 @@ clean-all:
 	find . -name "*@gambit*" -delete
 	rm -rf tmp
 	rm -rf foreign/c/primitives/chibi/foreign-c.c
+	rm -rf foreign/c/lib
 	rm -rf *.tgz
 	rm -rf README.html
