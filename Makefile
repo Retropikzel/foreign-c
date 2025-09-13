@@ -1,7 +1,7 @@
 .PHONY: libtest.o tests/libtest.so libtest.a documentation README.html foreign-c.pdf
 PDFENGINE=weasyprint
 CC=gcc
-VERSION=0.10.5
+VERSION=0.10.6
 TEST=primitives
 SCHEME=chibi
 TMPDIR=tmp/${SCHEME}
@@ -28,7 +28,7 @@ package: README.html
 	foreign/c.sld
 
 install: package
-	snow-chibi --impls=${SCHEME} install foreign-c-${VERSION}.tgz; \
+	snow-chibi --impls=${SCHEME} ${SNOW_CHIBI_ARGS} install foreign-c-${VERSION}.tgz; \
 	if [ "${SCHEME}" = "gauche" ]; then \
 		make gauche; \
 		cp foreign/c/primitives/gauche.scm ${GAUCHE_LIB_DIR}/foreign/c/primitives/;\
@@ -52,7 +52,7 @@ test: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.
 
 test-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f dockerfiles/Dockerfile.test .
-	docker run -it -v "${PWD}:/workdir" -w /workdir -t foreign-c-test-${SCHEME} sh -c "make SCHEME=${SCHEME} TEST=${TEST} install test"
+	docker run -it -v "${PWD}:/workdir" -w /workdir -t foreign-c-test-${SCHEME} sh -c "make SCHEME=${SCHEME} TEST=${TEST} SNOW_CHIBI_ARGS=--always-yes install test"
 
 ${TMPDIR}/test/libtest.o: tests/c-src/libtest.c
 	mkdir -p ${TMPDIR}/test
