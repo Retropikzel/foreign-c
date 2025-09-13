@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Package') {
             steps {
-                sh "docker build --build-arg IMAGE=chibi:head --build-arg SCHEME=chibi --tag=foreign-c-test-chibi -f dockerfiles/Dockerfile.snow-chibi-install-test ."
+                sh "docker build --build-arg IMAGE=chibi:head --build-arg SCHEME=chibi --tag=foreign-c-test-chibi -f dockerfiles/Dockerfile.test ."
                 sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t foreign-c-test-chibi sh -c \"timeout 120 make clean all\""
             }
         }
