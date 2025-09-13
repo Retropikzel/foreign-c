@@ -26,7 +26,7 @@ pipeline {
                                                 DOCKERIMG="chicken:5"
                                             }
                                             sh "docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${implementation} --tag=foreign-c-test-${implementation} -f Dockerfile.test ."
-                                            sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t foreign-c-test-${implementation} sh -c \"timeout 120 make SCHEME=${implementation} TEST=${test} clean test\""
+                                            sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t foreign-c-test-${implementation} sh -c \"timeout 120 make SCHEME=${implementation} TEST=${test} clean install test\""
                                         }
                                     }
                                 }
