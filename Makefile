@@ -11,11 +11,6 @@ ifeq "${SCHEME}" "chicken"
 DOCKERIMG="chicken:5"
 endif
 
-GAUCHE_LIB_DIR=""
-ifeq "${SCHEME}" "gauche"
-GAUCHE_LIB_DIR=$(shell gauche-config --sitelibdir)
-endif
-
 all: package
 
 package: README.html
@@ -31,10 +26,9 @@ install: package
 	snow-chibi --impls=${SCHEME} ${SNOW_CHIBI_ARGS} install foreign-c-${VERSION}.tgz; \
 	if [ "${SCHEME}" = "gauche" ]; then \
 		make gauche; \
-		cp foreign/c/primitives/gauche.scm ${GAUCHE_LIB_DIR}/foreign/c/primitives/;\
+		cp foreign/c/primitives/gauche.scm $(shell gauche-config --sitelibdir)/foreign/c/primitives/;\
 		mkdir -p $(shell gauche-config --sitearchdir)/foreign/c/lib/; \
 		cp -r foreign/c/lib/gauche.so $(shell gauche-config --sitearchdir)/foreign/c/lib/; \
-		tree ${GAUCHE_LIB_DIR}/; \
 	fi
 
 uninstall:
