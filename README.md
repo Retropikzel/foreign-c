@@ -185,21 +185,20 @@ You can test that library is found by your implementation like this:
 
 ### Manual system wide
 
-Manual system wide installation requires snow-chibi for other implementations
-than Gauche.
+Manual system wide installation requires snow-chibi.
 
 Either download the latest release from
 [https://git.sr.ht/~retropikzel/foreign-c/refs](https://git.sr.ht/~retropikzel/foreign-c/refs)
 or git clone, tag, and copy the _foreign_ directory to your
 library directory.
 
-Example installation for Gauche:
+Example for how to install for Gauche:
 
+    git clone https://git.sr.ht/~retropikzel/foreign-c
+    cd foreign-c
     make SCHEME=gauche
     make SCHEME=gauche install
 
-With most implementations the make command does not compile anything. When that
-is the case it will say "Nothing to build on SCHEME\_IMPLEMENTATION\_NAME."
 ### Manual for project
 
 Either download the latest release from

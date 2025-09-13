@@ -5,18 +5,20 @@ VERSION=0.10.5
 TEST=primitives
 SCHEME=chibi
 TMPDIR=tmp/${SCHEME}
+SNOW_CHIBI_ARGS=""
 DOCKERIMG=${SCHEME}:head
 ifeq "${SCHEME}" "chicken"
 DOCKERIMG="chicken:5"
 endif
 
-INCDIRS=-I . -I /usr/local/share/kawa/lib
-ifeq "${SCHEME}" "ypsilon"
-INCDIRS=-I .
+GAUCHE_LIB_DIR=""
+ifeq "${SCHEME}" "gauche"
+GAUCHE_LIB_DIR=$(shell gauche-config --sitelibdir)
 endif
 
+all: package
+
 package: README.html
-	make ${SCHEME}
 	snow-chibi package \
 		--version=${VERSION} \
 		--authors="Retropikzel" \
@@ -25,86 +27,32 @@ package: README.html
 		--description="Portable foreign function interface for R7RS Schemes" \
 	foreign/c.sld
 
-install:
+install: package
+	snow-chibi --impls=${SCHEME} install foreign-c-${VERSION}.tgz; \
 	if [ "${SCHEME}" = "gauche" ]; then \
-		cp -r foreign $(shell gauche-config --syslibdir)/; \
-		mkdir -p $(shell gauche-config --sysarchdir)/foreign/c/lib; \
-		cp -r foreign/c/lib/gauche.so $(shell gauche-config --sysarchdir)/foreign/c/lib/; \
-	else \
-		snow-chibi --impls=${SCHEME} install foreign-c-${VERSION}.tgz; \
+		make gauche; \
+		cp foreign/c/primitives/gauche.scm ${GAUCHE_LIB_DIR}/foreign/c/primitives/;\
+		mkdir -p $(shell gauche-config --sitearchdir)/foreign/c/lib/; \
+		cp -r foreign/c/lib/gauche.so $(shell gauche-config --sitearchdir)/foreign/c/lib/; \
+		tree ${GAUCHE_LIB_DIR}/; \
 	fi
 
 uninstall:
-	snow-chibi --impls=${SCHEME} remove foreign.c
-
-force-install:
-	if [ "${SCHEME}" = "gauche" ]; then \
-		cp -r foreign $(shell gauche-config --sitelibdir)/; \
-		mkdir -p $(shell gauche-config --sysarchdir)/foreign/c/lib; \
-		cp -r foreign/c/lib/gauche.so $(shell gauche-config --sysarchdir)/foreign/c/lib/; \
-	else \
-		printf "\n" | snow-chibi --impls=${SCHEME} --always-yes install foreign-c-${VERSION}.tgz; \
-	fi
-
-test-java: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
-	mkdir -p ${TMPDIR}/test
-	cp kawa.jar ${TMPDIR}/test/
-	cp -r foreign ${TMPDIR}/test/
-	cp tests/*.scm ${TMPDIR}/test/
-	cp tests/c-include/libtest.h ${TMPDIR}/test/
-	cd ${TMPDIR}/test \
-	&& ${JAVA_HOME}/bin/java --add-exports java.base/jdk.internal.foreign.abi=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign.layout=ALL-UNNAMED --add-exports java.base/jdk.internal.foreign=ALL-UNNAMED --enable-native-access=ALL-UNNAMED --enable-preview -jar kawa.jar --r7rs --full-tailcalls -Dkawa.import.path=*.sld:./snow/*.sld:./snow/retropikzel/*.sld ${TEST}.scm
-
-test-chibi: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
-	make chibi
-	mkdir -p ${TMPDIR}/test
-	cp kawa.jar ${TMPDIR}/test/
-	cp -r foreign ${TMPDIR}/test/
-	cp tests/*.scm ${TMPDIR}/test/
-	cp tests/c-include/libtest.h ${TMPDIR}/test/
-	cd ${TMPDIR}/test && chibi-scheme -I . ${TEST}.scm
+	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
 test: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
-	make ${SCHEME}
 	cp -r foreign ${TMPDIR}/test/
 	cp tests/*.scm ${TMPDIR}/test/
 	cp tests/c-include/libtest.h ${TMPDIR}/test/
 	cd ${TMPDIR}/test && \
 		COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." \
-		COMPILE_R7RS_KAWA="-J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED -J--enable-native-access=ALL-UNNAMED -J--enable-preview" \
 		COMPILE_R7RS=${SCHEME} \
-		compile-r7rs ${INCDIRS} -o ${TEST} ${TEST}.scm
-	cd ${TMPDIR}/test \
-		&& export LD_LIBRARY_PATH=. \
-		&& export GUILE_AUTO_COMPILE=0 \
-		&& timeout 60 printf "\n" | ./${TEST}
-
-test-compile-r7rs-snow: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
-	cp tests/*.scm ${TMPDIR}/test/
-	cp tests/c-include/libtest.h ${TMPDIR}/test/
-	cd ${TMPDIR}/test && \
-		compile-r7rs -o hello hello.scm
-	cd ${TMPDIR}/test && ./hello
-
-test-compile-r7rs-wine:
-	cp -r foreign ${TMPDIR}/test/
-	cp tests/*.scm ${TMPDIR}/test/
-	cp tests/c-include/libtest.h ${TMPDIR}/test/
-	cd ${TMPDIR}/test && \
-		wine "${HOME}/.wine/drive_c/Program Files (x86)/compile-r7rs/compile-r7rs.bat" -I . -o ${TEST} ${TEST}.scm
-	cd ${TMPDIR}/test && \
-		LD_LIBRARY_PATH=. \
-		wine ./${TEST}.bat
+		compile-r7rs -o ${TEST} ${TEST}.scm
+	cd ${TMPDIR}/test \ && timeout 60 printf "\n" | LD_LIBRARY_PATH=. ./${TEST}
 
 test-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f dockerfiles/Dockerfile.test .
-	docker run -it -v "${PWD}:/workdir" -w /workdir -t foreign-c-test-${SCHEME} sh \
-		-c "make SCHEME=${SCHEME} TEST=${TEST} test"
-
-test-install-docker:
-	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f dockerfiles/Dockerfile.snow-chibi-install-test .
-	docker run -it -v "${PWD}:/workdir" -w /workdir -t foreign-c-test-${SCHEME} sh \
-		-c "make SCHEME=${SCHEME} clean ${SCHEME} install && cp tests/hello.scm /tmp/ && cd /tmp && COMPILE_R7RS=${SCHEME} compile-r7rs -o hello hello.scm && ./hello"
+	docker run -it -v "${PWD}:/workdir" -w /workdir -t foreign-c-test-${SCHEME} sh -c "make SCHEME=${SCHEME} TEST=${TEST} install test"
 
 ${TMPDIR}/test/libtest.o: tests/c-src/libtest.c
 	mkdir -p ${TMPDIR}/test
@@ -116,7 +64,6 @@ ${TMPDIR}/test/libtest.so: tests/c-src/libtest.c
 
 ${TMPDIR}/test/libtest.a: ${TMPDIR}/test/libtest.o tests/c-src/libtest.c
 	ar rcs ${TMPDIR}/test/libtest.a ${TMPDIR}/test/libtest.o
-
 
 ${TMPDIR}:
 	mkdir -p ${TMPDIR}
@@ -137,18 +84,6 @@ chibi: foreign/c/primitives/chibi/foreign-c.stub
 		-lffi \
 		-shared
 
-chicken:
-	@echo "Nothing to build for Chicken"
-
-cyclone:
-	@echo "Nothing to build for Cyclone"
-
-foment:
-	@echo "Nothing to build for Foment"
-
-gambit:
-	@echo "Nothing to build for Gambit"
-
 gauche:
 	gauche-package compile \
 		--srcdir=foreign/c/primitives/gauche \
@@ -159,39 +94,6 @@ gauche:
 	mkdir -p foreign/c/lib
 	mv foreign-c-primitives-gauche.so foreign/c/lib/gauche.so
 	mv foreign-c-primitives-gauche.o foreign/c/lib/gauche.o
-
-guile:
-	@echo "Nothing to build for Guile"
-
-kawa:
-	@echo "Nothing to build for Kawa"
-
-mit-scheme:
-	@echo "Nothing to build for Kawa"
-
-larceny:
-	@echo "Nothing to build for Larceny"
-
-mosh:
-	@echo "Nothing to build for Mosh"
-
-racket:
-	@echo "Nothing to build for Racket"
-
-sagittarius:
-	@echo "Nothing to build for Sagittarius"
-
-skint:
-	@echo "Nothing to build for Skint"
-
-stklos:
-	@echo "Nothing to build for Stklos"
-
-tr7:
-	@echo "Nothing to build for tr7"
-
-ypsilon:
-	@echo "Nothing to build for Ypsilon"
 
 clean:
 	rm -rf ${TMPDIR}
