@@ -45,7 +45,7 @@ test: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.
 	cd ${TMPDIR}/test \ && timeout 60 printf "\n" | LD_LIBRARY_PATH=. ./${TEST}
 
 test-docker:
-	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f dockerfiles/Dockerfile.test .
+	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f Dockerfile.test .
 	docker run -it -v "${PWD}:/workdir" -w /workdir -t foreign-c-test-${SCHEME} sh -c "make SCHEME=${SCHEME} TEST=${TEST} SNOW_CHIBI_ARGS=--always-yes install test"
 
 ${TMPDIR}/test/libtest.o: tests/c-src/libtest.c
