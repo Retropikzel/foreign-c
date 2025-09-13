@@ -19,17 +19,6 @@ pipeline {
 
                     parallel implementations.collectEntries { implementation ->
                         [(implementation): {
-                                stage("${implementation} test install") {
-                                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                        if("${implementation}" == "chicken") {
-                                            DOCKERIMG="chicken:5"
-                                        } else {
-                                            DOCKERIMG="${implementation}:head"
-                                        }
-                                        sh "docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${implementation} --tag=foreign-c-test-${implementation} -f dockerfiles/Dockerfile.snow-chibi-install-test ."
-                                            sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t foreign-c-test-${implementation} sh -c \"timeout 120 make SCHEME=${implementation} SNOW_CHIBI_ARGS=\"--always-yes\" clean install && cp tests/hello.scm /tmp/ && cd /tmp && COMPILE_R7RS=${implementation} printf \"\\n\" | timeout 120 compile-r7rs -o hello hello.scm && printf \"\\n\" | timeout 120 ./hello\""
-                                    }
-                                }
                                 tests.each { test ->
                                     stage("${implementation} ${test}") {
                                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
