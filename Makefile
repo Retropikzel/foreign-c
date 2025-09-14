@@ -63,10 +63,7 @@ ${TMPDIR}:
 	mkdir -p ${TMPDIR}
 
 README.html: README.md
-	pandoc --metadata title="Foreign C" --standalone README.md > README.html
-
-foreign-c.pdf:
-	pandoc -f markdown -t pdf --pdf-engine=${PDFENGINE} README.md -o foreign-c.pdf
+	markdown README.md > README.html
 
 chibi: foreign/c/primitives/chibi/foreign-c.stub
 	chibi-ffi foreign/c/primitives/chibi/foreign-c.stub

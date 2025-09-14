@@ -9,7 +9,7 @@ RUN cd chibi-scheme && make DESTDIR=/opt/chibi -j16 && make DESTDIR=/opt/chibi -
 ARG SCHEME=chibi
 ARG IMAGE=chibi:head
 FROM docker.io/schemers/${IMAGE}
-RUN apt-get update && apt-get install -y make pandoc libffi-dev
+RUN apt-get update && apt-get install -y make gcc markdown libffi-dev
 COPY --from=local-chibi /opt/chibi /opt/chibi
 COPY --from=docker.io/retropikzel1/compile-r7rs /opt/compile-r7rs /opt/compile-r7rs
 ARG SCHEME=chibi
