@@ -13,7 +13,9 @@ pipeline {
     stages {
 
         stage('Cache warmup') {
-            sh "docker build --build-arg IMAGE=chibi:head --build-arg SCHEME=chibi --tag=foreign-c-test-chibi -f Dockerfile.test ."
+            steps {
+                sh "docker build --build-arg IMAGE=chibi:head --build-arg SCHEME=chibi --tag=foreign-c-test-chibi -f Dockerfile.test ."
+            }
         }
 
         stage('Tests') {
