@@ -2,7 +2,7 @@ def tests = ['primitives', 'array', 'struct', 'addressof', 'callback']
 
 pipeline {
     agent {
-        label 'linux'
+        label 'docker-x86_64'
     }
 
     options {
@@ -11,6 +11,11 @@ pipeline {
     }
 
     stages {
+
+        stage('Cache warmup') {
+            sh "docker build --build-arg IMAGE=chibi:head --build-arg SCHEME=chibi --tag=foreign-c-test-chibi -f Dockerfile.test ."
+        }
+
         stage('Tests') {
             steps {
                 script {

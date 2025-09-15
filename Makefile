@@ -1,12 +1,13 @@
 .PHONY: libtest.o tests/libtest.so libtest.a documentation README.html foreign-c.pdf
 PDFENGINE=weasyprint
-CC=gcc
 VERSION=0.10.6
 TEST=primitives
 SCHEME=chibi
 TMPDIR=tmp/${SCHEME}
 SNOW_CHIBI_ARGS=""
 DOCKERIMG=${SCHEME}:head
+CC=gcc
+
 ifeq "${SCHEME}" "chicken"
 DOCKERIMG="chicken:5"
 endif
@@ -42,32 +43,34 @@ test: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.
 		COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." \
 		COMPILE_R7RS=${SCHEME} \
 		compile-r7rs -o ${TEST} ${TEST}.scm
-	cd ${TMPDIR}/test \ && timeout 60 printf "\n" | LD_LIBRARY_PATH=. ./${TEST}
+	cd ${TMPDIR}/test \ && printf "\n" | LD_LIBRARY_PATH=. ./${TEST}
 
 test-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f Dockerfile.test .
-	docker run -it -v "${PWD}:/workdir" -w /workdir -t foreign-c-test-${SCHEME} sh -c "make SCHEME=${SCHEME} TEST=${TEST} SNOW_CHIBI_ARGS=--always-yes install test"
+	docker run -it -v "${PWD}:/workdir" -w /workdir -t foreign-c-test-${SCHEME} sh -c \
+		"timeout 120 make SCHEME=${SCHEME} TEST=${TEST} SNOW_CHIBI_ARGS=--always-yes install test"
 
 ${TMPDIR}/test/libtest.o: tests/c-src/libtest.c
 	mkdir -p ${TMPDIR}/test
-	${CC} -o ${TMPDIR}/test/libtest.o -fPIC -c tests/c-src/libtest.c -I./include
+	${CC} ${CFLAGS} -o ${TMPDIR}/test/libtest.o -fPIC -c tests/c-src/libtest.c -I./include ${LDFLAGS}
 
 ${TMPDIR}/test/libtest.so: tests/c-src/libtest.c
 	mkdir -p ${TMPDIR}/test
-	${CC} -o ${TMPDIR}/test/libtest.so -shared -fPIC tests/c-src/libtest.c -I./include
+	${CC} ${CFLAGS} -o ${TMPDIR}/test/libtest.so -shared -fPIC tests/c-src/libtest.c -I./include ${LDFLAGS}
 
 ${TMPDIR}/test/libtest.a: ${TMPDIR}/test/libtest.o tests/c-src/libtest.c
-	ar rcs ${TMPDIR}/test/libtest.a ${TMPDIR}/test/libtest.o
+	ar rcs ${TMPDIR}/test/libtest.a ${TMPDIR}/test/libtest.o ${LDFLAGS}
 
 ${TMPDIR}:
 	mkdir -p ${TMPDIR}
 
 README.html: README.md
-	markdown README.md > README.html
+	cmark README.md > README.html
 
 chibi: foreign/c/primitives/chibi/foreign-c.stub
 	chibi-ffi foreign/c/primitives/chibi/foreign-c.stub
 	${CC} \
+		${CFLAGS} \
 		-g3 \
 		-o foreign/c/primitives/chibi/foreign-c.so \
 		foreign/c/primitives/chibi/foreign-c.c \
@@ -79,7 +82,7 @@ gauche:
 	gauche-package compile \
 		--srcdir=foreign/c/primitives/gauche \
 		--cc=${CC} \
-		--cflags="-I.foreign/c/primitives/gauche" \
+		--cflags="${CFLAGS} -I.foreign/c/primitives/gauche" \
 		--libs=-lffi \
 		foreign-c-primitives-gauche foreign-c-primitives-gauche.c gauchelib.scm
 	mkdir -p foreign/c/lib

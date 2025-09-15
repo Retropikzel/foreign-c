@@ -1,22 +1,24 @@
 ARG SCHEME=chibi
 ARG IMAGE=chibi:head
-FROM docker.io/debian:trixie-slim AS local-chibi
-RUN apt-get update && apt-get install -y git ca-certificates make gcc libc-dev
-#RUN git clone https://github.com/ashinn/chibi-scheme.git --depth=1
-RUN git clone https://github.com/Retropikzel/chibi-scheme.git --branch gauche-fixes --depth=1
-RUN cd chibi-scheme && make DESTDIR=/opt/chibi -j16 && make DESTDIR=/opt/chibi -j16 install
+FROM schemers/${IMAGE}
+FROM debian:trixie AS build
+WORKDIR /debs
+RUN apt-get update && apt-get install \
+    -y \
+    --no-install-recommends \
+    --no-install-suggests \
+    --download-only \
+    gcc libffi-dev libc-dev cmark make linux-libc-dev
 
 ARG SCHEME=chibi
 ARG IMAGE=chibi:head
-FROM docker.io/schemers/${IMAGE}
-RUN apt-get update && apt-get install -y make gcc markdown libffi-dev
-COPY --from=local-chibi /opt/chibi /opt/chibi
-COPY --from=docker.io/retropikzel1/compile-r7rs /opt/compile-r7rs /opt/compile-r7rs
+FROM schemers/${IMAGE}
+COPY --from=build /var/cache/apt/archives/*.deb /debs/
+RUN dpkg -i /debs/*.deb
+COPY --from=retropikzel1/compile-r7rs /opt/compile-r7rs /opt/compile-r7rs
+ENV PATH=${PATH}:/opt/compile-r7rs/bin:/build/usr/bin
 ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
 ENV GUILE_AUTO_COMPILE=0
 RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
-ENV CHIBI_MODULE_PATH=/opt/chibi/usr/local/share/chibi:/opt/chibi/usr/local/lib/chibi
-ENV LD_LIBRARY_PATH=/opt/chibi/usr/local/lib:/opt/chibi/usr/local/lib/chibi
-ENV PATH=/opt/compile-r7rs/bin:/opt/chibi/usr/local/bin:${PATH}
 

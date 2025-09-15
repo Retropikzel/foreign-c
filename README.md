@@ -194,6 +194,7 @@ library directory.
 
 Example for how to install for Gauche:
 
+    apt-get install libffi-dev
     git clone https://git.sr.ht/~retropikzel/foreign-c
     cd foreign-c
     make SCHEME=gauche
