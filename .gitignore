@@ -41,3 +41,4 @@ README.html
 *.tar.gz
 foreign/c/primitives/chibi/foreign-c.c
 *.pdf
+.*

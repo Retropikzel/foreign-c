@@ -1,16 +1,8 @@
-.PHONY: libtest.o tests/libtest.so libtest.a documentation README.html foreign-c.pdf
-PDFENGINE=weasyprint
-VERSION=0.10.6
-TEST=primitives
+.PHONY: libtest.o tests/libtest.so libtest.a documentation README.html
 SCHEME=chibi
-TMPDIR=tmp/${SCHEME}
-SNOW_CHIBI_ARGS=""
-DOCKERIMG=${SCHEME}:head
+VERSION=0.10.6
 CC=gcc
-
-ifeq "${SCHEME}" "chicken"
-DOCKERIMG="chicken:5"
-endif
+TMPDIR=.tmp/
 
 all: package
 
@@ -22,6 +14,11 @@ package: README.html
 		--foreign-depends=ffi \
 		--description="Portable foreign function interface for R7RS Schemes" \
 	foreign/c.sld
+
+README.html: README.md
+	echo "<pre>" > README.html
+	cat README.md >> README.html
+	echo "</pre>" >> README.html
 
 install: package
 	snow-chibi --impls=${SCHEME} ${SNOW_CHIBI_ARGS} install foreign-c-${VERSION}.tgz; \
@@ -35,15 +32,21 @@ install: package
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
-test: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
+test-old: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
 	cp -r foreign ${TMPDIR}/test/
 	cp tests/*.scm ${TMPDIR}/test/
 	cp tests/c-include/libtest.h ${TMPDIR}/test/
 	cd ${TMPDIR}/test && \
 		COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." \
-		COMPILE_R7RS=${SCHEME} \
-		compile-r7rs -o ${TEST} ${TEST}.scm
-	cd ${TMPDIR}/test \ && printf "\n" | LD_LIBRARY_PATH=. ./${TEST}
+		COMPILE_R7RS=${SCHEME} timeout 600 compile-r7rs -o ${TEST} ${TEST}.scm
+	cd ${TMPDIR}/test && printf "\n" | LD_LIBRARY_PATH=. timeout 600 ./${TEST}
+
+test:
+	rm -rf ${TMPDIR}
+	mkdir -p ${TMPDIR}
+	cp test.scm ${TMPDIR}/
+	cp -r foreign ${TMPDIR}/
+	cd ${TMPDIR} && COMPILE_R7RS="${SCHEME}" test-r7rs -I . -o test test.scm
 
 test-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f Dockerfile.test .
@@ -63,9 +66,6 @@ ${TMPDIR}/test/libtest.a: ${TMPDIR}/test/libtest.o tests/c-src/libtest.c
 
 ${TMPDIR}:
 	mkdir -p ${TMPDIR}
-
-README.html: README.md
-	cmark README.md > README.html
 
 chibi: foreign/c/primitives/chibi/foreign-c.stub
 	chibi-ffi foreign/c/primitives/chibi/foreign-c.stub
