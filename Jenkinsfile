@@ -30,6 +30,11 @@ pipeline {
                                 sh "COMPILE_R7RS=${SCHEME} test-r7rs test.scm"
                             }
                         }
+                        stage("${SCHEME} logs") {
+                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                sh "cat .test-r7rs/${SCHEME}/logs/*.log"
+                            }
+                        }
                     }
                 }
             }
