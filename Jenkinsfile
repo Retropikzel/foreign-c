@@ -23,7 +23,7 @@ pipeline {
             steps {
                 script {
                     //def implementations = sh(script: 'docker run retropikzel1/compile-r7rs sh -c "compile-r7rs --list-r7rs-schemes"', returnStdout: true).split()
-                    def schemes = "chibi chicken gauche guile kawa mosh racket sagittarius stklos ypsilon".split()
+                    def schemes = "chibi chicken gauche guile kawa mosh racket sagittarius stklos ypsilon"
 
                     schemes.split().each { SCHEME ->
                         stage("${SCHEME}") {
