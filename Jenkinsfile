@@ -28,7 +28,7 @@ pipeline {
                     schemes.split().each { SCHEME ->
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "test-r7s test.scm"
+                                sh "test-r7rs test.scm"
                             }
                         }
                     }
