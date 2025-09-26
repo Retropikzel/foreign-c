@@ -27,7 +27,7 @@ pipeline {
                     schemes.split().each { SCHEME ->
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "COMPILE_R7RS=${SCHEME} test-r7rs test.scm ; cat .test-r7rs/${SCHEME}/logs/*.log"
+                                sh "COMPILE_R7RS=${SCHEME} test-r7rs test.scm"
                             }
                         }
                     }
