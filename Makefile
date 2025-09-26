@@ -46,7 +46,7 @@ test:
 	mkdir -p ${TMPDIR}
 	cp test.scm ${TMPDIR}/
 	cp -r foreign ${TMPDIR}/
-	cd ${TMPDIR} && COMPILE_R7RS="${SCHEME}" test-r7rs ${TEST_R7RS_ARGS} -I . -o test test.scm
+	cd ${TMPDIR} && COMPILE_R7RS="${SCHEME}" test-r7rs ${TEST_R7RS_ARGS} --use-docker-head -I . -o test test.scm
 
 test-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f Dockerfile.test .
