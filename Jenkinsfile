@@ -7,7 +7,7 @@ pipeline {
 
     options {
         disableConcurrentBuilds()
-            buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
+        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
     }
 
     stages {
@@ -16,16 +16,24 @@ pipeline {
             agent {
                 docker {
                     label 'docker-x86_64'
-                        image 'retropikzel1/compile-r7rs'
-                        args '--user=root --privileged -v /var/run/docker.sock:/var/run/docker.sock'
+                    image 'retropikzel1/compile-r7rs'
+                    args '--user=root --privileged -v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
-            environment {
-                COMPILE_R7RS='chibi chicken gauche guile kawa mosh racket sagittarius stklos ypsilon'
-            }
             steps {
-                sh "test-r7rs test.scm"
+                script {
+                    def schemes = "chibi chicken gauche guile kawa mosh racket sagittarius stklos ypsilon"
+
+                    schemes.split().each { SCHEME ->
+                        stage("${SCHEME}") {
+                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                sh "COMPILE_R7RS=${SCHEME} test-r7rs test.scm"
+                            }
+                        }
+                    }
+                }
             }
         }
+
     }
 }
