@@ -1,6 +1,6 @@
 .PHONY: libtest.o tests/libtest.so libtest.a documentation README.html
 SCHEME=chibi
-VERSION=0.10.6
+VERSION=0.10.7
 CC=gcc
 TMPDIR=.tmp/
 
