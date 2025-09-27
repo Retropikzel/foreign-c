@@ -22,7 +22,7 @@ pipeline {
             }
             steps {
                 script {
-                    def schemes = "chicken gauche guile kawa racket sagittarius stklos ypsilon"
+                    def schemes = "chibi chicken gauche guile kawa mosh racket sagittarius stklos ypsilon"
 
                     schemes.split().each { SCHEME ->
                         stage("${SCHEME}") {
