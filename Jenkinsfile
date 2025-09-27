@@ -32,9 +32,9 @@ pipeline {
                         }
                         stage("${SCHEME} logs") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "cat .test-r7rs/tmp/*"
-                                sh "cat .test-r7rs/Dockerfile"
-                                sh "cat .test-r7rs/${SCHEME}/logs/*.log"
+                                sh "cat .tmp/test/test-r7rs/tmp/*"
+                                sh "cat .tmp/test/test-r7rs/Dockerfile"
+                                sh "cat .tmp/test-r7rs/${SCHEME}/logs/*.log"
                             }
                         }
                     }
