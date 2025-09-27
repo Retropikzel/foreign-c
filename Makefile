@@ -2,7 +2,7 @@
 SCHEME=chibi
 VERSION=0.10.7
 CC=gcc
-TMPDIR=.tmp/
+TMPDIR=.tmp
 
 all: package
 
@@ -41,31 +41,30 @@ test-old: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libt
 		COMPILE_R7RS=${SCHEME} timeout 600 compile-r7rs -o ${TEST} ${TEST}.scm
 	cd ${TMPDIR}/test && printf "\n" | LD_LIBRARY_PATH=. timeout 600 ./${TEST}
 
-test:
-	rm -rf ${TMPDIR}
-	mkdir -p ${TMPDIR}
-	cp test.scm ${TMPDIR}/
-	cp -r foreign ${TMPDIR}/
-	cd ${TMPDIR} && COMPILE_R7RS="${SCHEME}" test-r7rs ${TEST_R7RS_ARGS} --use-docker-head -I . -o test test.scm
+test: ${TMPDIR}/test ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
+	cp -r foreign ${TMPDIR}/test/
+	cp test.scm ${TMPDIR}/test/
+	cd ${TMPDIR}/test && COMPILE_R7RS="${SCHEME}" test-r7rs ${TEST_R7RS_ARGS} --use-docker-head -I . -o test test.scm
 
 test-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f Dockerfile.test .
 	docker run -it -v "${PWD}:/workdir" -w /workdir -t foreign-c-test-${SCHEME} sh -c \
 		"timeout 120 make SCHEME=${SCHEME} TEST=${TEST} SNOW_CHIBI_ARGS=--always-yes install test"
 
-${TMPDIR}/test/libtest.o: tests/c-src/libtest.c
-	mkdir -p ${TMPDIR}/test
+${TMPDIR}/test/libtest.o: tests/c-src/libtest.c ${TMPDIR}/test
 	${CC} ${CFLAGS} -o ${TMPDIR}/test/libtest.o -fPIC -c tests/c-src/libtest.c -I./include ${LDFLAGS}
 
-${TMPDIR}/test/libtest.so: tests/c-src/libtest.c
-	mkdir -p ${TMPDIR}/test
+${TMPDIR}/test/libtest.so: tests/c-src/libtest.c ${TMPDIR}/test
 	${CC} ${CFLAGS} -o ${TMPDIR}/test/libtest.so -shared -fPIC tests/c-src/libtest.c -I./include ${LDFLAGS}
 
-${TMPDIR}/test/libtest.a: ${TMPDIR}/test/libtest.o tests/c-src/libtest.c
+${TMPDIR}/test/libtest.a: ${TMPDIR}/test/libtest.o tests/c-src/libtest.c ${TMPDIR}/test
 	ar rcs ${TMPDIR}/test/libtest.a ${TMPDIR}/test/libtest.o ${LDFLAGS}
 
 ${TMPDIR}:
 	mkdir -p ${TMPDIR}
+
+${TMPDIR}/test: ${TMPDIR}
+	mkdir -p ${TMPDIR}/test
 
 chibi: foreign/c/primitives/chibi/foreign-c.stub
 	chibi-ffi foreign/c/primitives/chibi/foreign-c.stub
