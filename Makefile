@@ -44,7 +44,7 @@ test-old: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libt
 test: ${TMPDIR}/test ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
 	cp -r foreign ${TMPDIR}/test/
 	cp test.scm ${TMPDIR}/test/
-	cd ${TMPDIR}/test && COMPILE_R7RS="${SCHEME}" test-r7rs ${TEST_R7RS_ARGS} --use-docker-head -I . -o test test.scm
+	cd ${TMPDIR}/test && COMPILE_R7RS="${SCHEME}" APT_PKGS=libffi-dev test-r7rs ${TEST_R7RS_ARGS} --use-docker-head -I . -o test test.scm
 
 test-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f Dockerfile.test .
