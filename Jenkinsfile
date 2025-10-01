@@ -19,7 +19,7 @@ pipeline {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                 def DOCKERIMG="${SCHEME}:head"
                                 sh "docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f Dockerfile.test ."
-                                sh "docker run -it -v ${WORKSPACE}:/workdir -w /workdir -t foreign-c-test-${SCHEME} sh -c \"make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes install test\""
+                                sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t foreign-c-test-${SCHEME} sh -c \"make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes install test\""
                                 archiveArtifacts artifacts: '.tmp/test/*.log', allowEmptyArchive: true, fingerprint: true, onlyIfSuccessful: true
                             }
                         }
