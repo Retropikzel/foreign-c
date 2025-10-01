@@ -5,6 +5,10 @@ VERSION=0.10.7
 CC=gcc
 TMPDIR=.tmp
 
+ifeq "${SCHEME}" "chicken"
+DOCKERIMG=${SCHEME}:5
+endif
+
 all: package
 
 package: README.html

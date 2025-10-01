@@ -1,26 +1,22 @@
 ARG SCHEME=chibi
-ARG IMAGE=chibi:head
-FROM schemers/${IMAGE}
-FROM debian:trixie AS build
-WORKDIR /cache/debs
-RUN apt-get update && apt-get install \
-    -y \
-    --no-install-recommends \
-    --no-install-suggests \
-    --download-only \
-    gcc libffi-dev libc-dev make linux-libc-dev
-RUN cp -r /var/cache/apt/archives/*.deb .
+ARG IMAGE=${SCHEME}:head
+FROM debian:trixie-slim AS cache
+RUN apt-get update && apt-get install -y make gcc git
+WORKDIR /cache
+RUN git clone https://github.com/ashinn/chibi-scheme.git --depth=1
+RUN cd chibi-scheme && make
 
 ARG SCHEME=chibi
-ARG IMAGE=chibi:head
+ARG IMAGE=${SCHEME}:head
 FROM schemers/${IMAGE}
-RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
-COPY --from=build /cache /cache
-WORKDIR /cache/debs
-RUN dpkg -i *.deb
+RUN apt-get update && apt-get install -y make gcc libffi-dev
 COPY --from=retropikzel1/compile-r7rs /opt/compile-r7rs /opt/compile-r7rs
-ENV PATH=/opt/compile-r7rs/bin:${PATH}
-WORKDIR /
-ARG SCHEME=chibi
+COPY --from=cache /cache /cache
+WORKDIR /cache/chibi-scheme
+RUN make -j8 install
+WORKDIR /workdir
 ENV COMPILE_R7RS=${SCHEME}
+ENV PATH=/opt/compile-r7rs/bin:${PATH}
+ARG SCHEME=chibi
+RUN snow-chibi install --always-yes --impls=${SCHEME} "(srfi 64)"
 
