@@ -1,5 +1,3 @@
-def tests = ['primitives', 'array', 'struct', 'addressof', 'callback']
-
 pipeline {
     agent {
         label 'linux'
@@ -11,15 +9,7 @@ pipeline {
     }
 
     stages {
-
         stage('Tests x86_64 Debian') {
-            agent {
-                docker {
-                    label 'docker-x86_64'
-                    image 'retropikzel1/compile-r7rs'
-                    args '--user=root --privileged -v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
             steps {
                 script {
                     def schemes = "chibi chicken gauche guile kawa mosh racket sagittarius stklos ypsilon"
@@ -27,14 +17,10 @@ pipeline {
                     schemes.split().each { SCHEME ->
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "COMPILE_R7RS=${SCHEME} test-r7rs test.scm"
-                            }
-                        }
-                        stage("${SCHEME} logs") {
-                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "cat .tmp/test/test-r7rs/tmp/*"
-                                sh "cat .tmp/test/test-r7rs/Dockerfile"
-                                sh "cat .tmp/test-r7rs/${SCHEME}/logs/*.log"
+                                def DOCKERIMG="${SCHEME}:head"
+                                sh "docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f Dockerfile.test ."
+                                sh "docker run -it -v ${WORKSPACE}:/workdir -w /workdir -t foreign-c-test-${SCHEME} sh -c \"make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes install test\""
+                                archiveArtifacts artifacts: '.tmp/test/*.log', allowEmptyArchive: true, fingerprint: true, onlyIfSuccessful: true
                             }
                         }
                     }

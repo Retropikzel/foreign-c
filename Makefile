@@ -1,5 +1,6 @@
 .PHONY: libtest.o tests/libtest.so libtest.a documentation README.html
 SCHEME=chibi
+DOCKERIMG=${SCHEME}:head
 VERSION=0.10.7
 CC=gcc
 TMPDIR=.tmp
@@ -32,24 +33,19 @@ install: package
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
-test-old: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
+test: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
 	cp -r foreign ${TMPDIR}/test/
 	cp tests/*.scm ${TMPDIR}/test/
 	cp tests/c-include/libtest.h ${TMPDIR}/test/
 	cd ${TMPDIR}/test && \
 		COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." \
-		COMPILE_R7RS=${SCHEME} timeout 600 compile-r7rs -o ${TEST} ${TEST}.scm
-	cd ${TMPDIR}/test && printf "\n" | LD_LIBRARY_PATH=. timeout 600 ./${TEST}
-
-test: ${TMPDIR}/test ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
-	cp -r foreign ${TMPDIR}/test/
-	cp test.scm ${TMPDIR}/test/
-	cd ${TMPDIR}/test && COMPILE_R7RS="${SCHEME}" APT_PKGS=libffi-dev test-r7rs ${TEST_R7RS_ARGS} --use-docker-head -I . -o test test.scm
+		COMPILE_R7RS=${SCHEME} timeout 600 compile-r7rs -o test test.scm
+	cd ${TMPDIR}/test && printf "\n" | LD_LIBRARY_PATH=. timeout 600 ./test
 
 test-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f Dockerfile.test .
 	docker run -it -v "${PWD}:/workdir" -w /workdir -t foreign-c-test-${SCHEME} sh -c \
-		"timeout 120 make SCHEME=${SCHEME} TEST=${TEST} SNOW_CHIBI_ARGS=--always-yes install test"
+		"make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes install test"
 
 ${TMPDIR}/test/libtest.o: tests/c-src/libtest.c ${TMPDIR}/test
 	${CC} ${CFLAGS} -o ${TMPDIR}/test/libtest.o -fPIC -c tests/c-src/libtest.c -I./include ${LDFLAGS}
