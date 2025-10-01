@@ -15,9 +15,9 @@ COPY --from=cache /cache /cache
 WORKDIR /cache/chibi-scheme
 RUN make -j8 install
 WORKDIR /workdir
+ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
 ENV PATH=/opt/compile-r7rs/bin:${PATH}
-ARG SCHEME=chibi
 RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
 RUN snow-chibi install --always-yes --impls=${SCHEME} "(srfi 64)"
 
