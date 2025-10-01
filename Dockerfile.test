@@ -18,5 +18,6 @@ WORKDIR /workdir
 ENV COMPILE_R7RS=${SCHEME}
 ENV PATH=/opt/compile-r7rs/bin:${PATH}
 ARG SCHEME=chibi
+RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
 RUN snow-chibi install --always-yes --impls=${SCHEME} "(srfi 64)"
 
