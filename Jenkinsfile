@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'retropikzel1/compile-r7rs'
+            image 'retropikzel1/snow-test'
             label 'docker-x86_64'
             args '--user=root --privileged -v /var/run/docker.sock:/var/run/docker.sock'
         }
@@ -24,8 +24,7 @@ pipeline {
                                 if("${SCHEME}" == "chicken") {
                                     DOCKERIMG="chicken:5"
                                 }
-                                sh "docker run -v ${WORKSPACE}:/workdir -w /workdir schemers/${DOCKERIMG} sh -c \"make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes all install test\""
-                                archiveArtifacts artifacts: 'logs/*.log', allowEmptyArchive: true, fingerprint: true, onlyIfSuccessful: true
+                                sh "snow-test ${SCHEME} test.scm"
                             }
                         }
                     }

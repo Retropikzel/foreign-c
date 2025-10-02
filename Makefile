@@ -4,6 +4,7 @@ DOCKERIMG=${SCHEME}:head
 VERSION=0.10.7
 CC=gcc
 TMPDIR=.tmp
+PKGNAME=foreign-c-${VERSION}.tgz
 
 ifeq "${SCHEME}" "chicken"
 DOCKERIMG=${SCHEME}:5
@@ -38,7 +39,7 @@ install: package
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
-test: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
+test-old: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
 	cp -r foreign ${TMPDIR}/test/
 	cp tests/*.scm ${TMPDIR}/test/
 	cp tests/c-include/libtest.h ${TMPDIR}/test/
@@ -46,6 +47,9 @@ test: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.
 		COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." \
 		COMPILE_R7RS=${SCHEME} timeout 600 compile-r7rs -o test test.scm
 	cd ${TMPDIR}/test && printf "\n" | LD_LIBRARY_PATH=. timeout 600 ./test
+
+test: package
+	snow-test ${SCHEME} ${PKGNAME}
 
 test-docker:
 	docker run -it -v "${PWD}:/workdir" -w /workdir retropikzel1/compile-r7rs sh -c \
