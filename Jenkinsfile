@@ -16,7 +16,7 @@ pipeline {
         stage('Tests x86_64 Debian') {
             steps {
                 script {
-                    def schemes = sh(script: 'docker run -it retropikzel1/compile-r7rs sh -c "compile-r7rs --list-r7rs-schemes"', returnStdout: true)
+                    def schemes = sh(script: 'docker run -t retropikzel1/compile-r7rs sh -c "compile-r7rs --list-r7rs-schemes"', returnStdout: true)
                     schemes.split().each { SCHEME ->
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
