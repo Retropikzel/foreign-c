@@ -1,19 +1,7 @@
 ARG SCHEME=chibi
 ARG IMAGE=${SCHEME}:head
-FROM debian:trixie-slim AS cache
-RUN apt-get update && apt-get install -y make gcc git
-WORKDIR /cache
-RUN git clone https://github.com/ashinn/chibi-scheme.git --depth=1
-RUN cd chibi-scheme && make
-
-ARG SCHEME=chibi
-ARG IMAGE=${SCHEME}:head
 FROM schemers/${IMAGE}
-RUN apt-get update && apt-get install -y make gcc libffi-dev
 COPY --from=retropikzel1/compile-r7rs /opt/compile-r7rs /opt/compile-r7rs
-COPY --from=cache /cache /cache
-WORKDIR /cache/chibi-scheme
-RUN make -j8 install
 WORKDIR /workdir
 ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}

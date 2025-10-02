@@ -1,6 +1,10 @@
 pipeline {
     agent {
-        label 'linux'
+        docker {
+            image 'retropikzel1/compile-r7rs'
+            label 'docker-x86_64'
+            args '--user=root --privileged -v /var/run/docker.sock:/var/run/docker.sock'
+        }
     }
 
     options {
@@ -12,8 +16,7 @@ pipeline {
         stage('Tests x86_64 Debian') {
             steps {
                 script {
-                    def schemes = "chibi chicken gauche guile kawa mosh racket sagittarius stklos ypsilon"
-
+                    def schemes = sh(script: 'compile-r7rs --list-r7rs-schemes', returnStdout: true)
                     schemes.split().each { SCHEME ->
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -21,9 +24,8 @@ pipeline {
                                 if("${SCHEME}" == "chicken") {
                                     DOCKERIMG="chicken:5"
                                 }
-                                sh "docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=foreign-c-test-${SCHEME} -f Dockerfile.test ."
-                                sh "docker run -v ${WORKSPACE}:/workdir -w /workdir -t foreign-c-test-${SCHEME} sh -c \"make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes install test\""
-                                archiveArtifacts artifacts: '.tmp/test/*.log', allowEmptyArchive: true, fingerprint: true, onlyIfSuccessful: true
+                                sh "docker run -v ${WORKSPACE}:/workdir -w /workdir schemers/${DOCKERIMG} sh -c \"make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes all install test\""
+                                archiveArtifacts artifacts: 'logs/*.log', allowEmptyArchive: true, fingerprint: true, onlyIfSuccessful: true
                             }
                         }
                     }
