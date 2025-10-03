@@ -24,7 +24,8 @@ pipeline {
                                 if("${SCHEME}" == "chicken") {
                                     DOCKERIMG="chicken:5"
                                 }
-                                sh "snow-test ${SCHEME} test.scm"
+                                sh "make package"
+                                sh "snow-test ${SCHEME} *.tgz"
                             }
                         }
                     }
