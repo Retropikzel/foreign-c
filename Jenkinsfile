@@ -25,6 +25,7 @@ pipeline {
                                     DOCKERIMG="chicken:5"
                                 }
                                 sh "make package"
+                                sh "ls"
                                 sh "snow-test ${SCHEME} *.tgz"
                             }
                         }
