@@ -20,10 +20,6 @@ pipeline {
                     schemes.split().each { SCHEME ->
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                def DOCKERIMG="${SCHEME}:head"
-                                if("${SCHEME}" == "chicken") {
-                                    DOCKERIMG="chicken:5"
-                                }
                                 sh "make SCHEME=${SCHEME} test"
                             }
                         }
