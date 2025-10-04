@@ -1,4 +1,4 @@
-.PHONY: libtest.o tests/libtest.so libtest.a documentation README.html
+.PHONY: package libtest.o tests/libtest.so libtest.a documentation README.html
 SCHEME=chibi
 DOCKERIMG=${SCHEME}:head
 VERSION=0.10.7
