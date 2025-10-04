@@ -24,7 +24,7 @@ pipeline {
                     params.SCHEMES.split().each { SCHEME ->
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "package"
+                                sh "make package"
                                 sh "make SCHEME=${SCHEME} test"
                             }
                         }
