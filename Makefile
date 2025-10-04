@@ -49,7 +49,6 @@ test-old: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libt
 	cd ${TMPDIR}/test && printf "\n" | LD_LIBRARY_PATH=. timeout 600 ./test
 
 test: package ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
-	ls
 	snow-test ${SCHEME} ${PKGNAME}
 
 test-docker:
