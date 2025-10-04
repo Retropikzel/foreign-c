@@ -20,7 +20,7 @@ pipeline {
         stage('Tests x86_64 Debian') {
             steps {
                 script {
-                    schemes.split().each { SCHEME ->
+                    params.SCHEMES.split().each { SCHEME ->
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                 sh "make SCHEME=${SCHEME} test"
