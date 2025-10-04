@@ -48,8 +48,8 @@ test-old: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libt
 		COMPILE_R7RS=${SCHEME} timeout 600 compile-r7rs -o test test.scm
 	cd ${TMPDIR}/test && printf "\n" | LD_LIBRARY_PATH=. timeout 600 ./test
 
-test: package
-	snow-test ${SCHEME} ${PKGNAME}
+test: package ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
+	snow-test ${SCHEME} ./${PKGNAME}
 
 test-docker:
 	docker run -it -v "${PWD}:/workdir" -w /workdir retropikzel1/compile-r7rs sh -c \
