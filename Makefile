@@ -1,10 +1,9 @@
-.PHONY: package libtest.o tests/libtest.so libtest.a documentation README.html
+.PHONY: package test libtest.o tests/libtest.so libtest.a documentation README.html
 SCHEME=chibi
 DOCKERIMG=${SCHEME}:head
 VERSION=0.10.7
 CC=gcc
-TMPDIR=.tmp
-PKGNAME=foreign-c-${VERSION}.tgz
+PKG=foreign-c-${VERSION}.tgz
 
 ifeq "${SCHEME}" "chicken"
 DOCKERIMG=${SCHEME}:5
@@ -23,11 +22,9 @@ package: README.html
 	foreign/c.sld
 
 README.html: README.md
-	echo "<pre>" > README.html
-	cat README.md >> README.html
-	echo "</pre>" >> README.html
+	echo "<pre>$$(cat README.md)</pre>" > README.html
 
-install: package
+install:
 	snow-chibi --impls=${SCHEME} ${SNOW_CHIBI_ARGS} install foreign-c-${VERSION}.tgz; \
 	if [ "${SCHEME}" = "gauche" ]; then \
 		make gauche; \
@@ -39,36 +36,26 @@ install: package
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
-test-old: ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
-	cp -r foreign ${TMPDIR}/test/
-	cp tests/*.scm ${TMPDIR}/test/
-	cp tests/c-include/libtest.h ${TMPDIR}/test/
-	cd ${TMPDIR}/test && \
-		COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." \
-		COMPILE_R7RS=${SCHEME} timeout 600 compile-r7rs -o test test.scm
-	cd ${TMPDIR}/test && printf "\n" | LD_LIBRARY_PATH=. timeout 600 ./test
+test-old: libtest.o libtest.so libtest.a
+	COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." \
+	COMPILE_R7RS=${SCHEME} timeout 600 compile-r7rs -o test test.scm
+	./test
 
-test: package ${TMPDIR}/test/libtest.o ${TMPDIR}/test/libtest.so ${TMPDIR}/test/libtest.a
-	snow-test ${SCHEME} ${PKGNAME}
+test: package libtest.o libtest.so libtest.a
+	COMPILE_R7RS=${SCHEME} test-snowball --apt-pkgs "libffi-dev" ${PKG}
 
 test-docker:
 	docker run -it -v "${PWD}:/workdir" -w /workdir retropikzel1/compile-r7rs sh -c \
 		"make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes install test"
 
-${TMPDIR}/test/libtest.o: tests/c-src/libtest.c ${TMPDIR}/test
-	${CC} ${CFLAGS} -o ${TMPDIR}/test/libtest.o -fPIC -c tests/c-src/libtest.c -I./include ${LDFLAGS}
+libtest.o: tests/c-src/libtest.c
+	${CC} ${CFLAGS} -o libtest.o -fPIC -c tests/c-src/libtest.c -I./include ${LDFLAGS}
 
-${TMPDIR}/test/libtest.so: tests/c-src/libtest.c ${TMPDIR}/test
-	${CC} ${CFLAGS} -o ${TMPDIR}/test/libtest.so -shared -fPIC tests/c-src/libtest.c -I./include ${LDFLAGS}
+libtest.so: tests/c-src/libtest.c
+	${CC} ${CFLAGS} -o libtest.so -shared -fPIC tests/c-src/libtest.c -I./include ${LDFLAGS}
 
-${TMPDIR}/test/libtest.a: ${TMPDIR}/test/libtest.o tests/c-src/libtest.c ${TMPDIR}/test
-	ar rcs ${TMPDIR}/test/libtest.a ${TMPDIR}/test/libtest.o ${LDFLAGS}
-
-${TMPDIR}:
-	mkdir -p ${TMPDIR}
-
-${TMPDIR}/test: ${TMPDIR}
-	mkdir -p ${TMPDIR}/test
+libtest.a: libtest.o tests/c-src/libtest.c
+	ar rcs libtest.a libtest.o ${LDFLAGS}
 
 chibi: foreign/c/primitives/chibi/foreign-c.stub
 	chibi-ffi foreign/c/primitives/chibi/foreign-c.stub
@@ -93,9 +80,6 @@ gauche:
 	mv foreign-c-primitives-gauche.o foreign/c/lib/gauche.o
 
 clean:
-	rm -rf ${TMPDIR}
-
-clean-all:
 	find . -name "*.meta" -delete
 	find . -name "*.link" -delete
 	find . -name "*.o" -delete
