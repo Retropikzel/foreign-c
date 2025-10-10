@@ -9,74 +9,6 @@ is portable in the sense that it supports multiple implementations.
 
 [Jenkins](https://jenkins.scheme.org/job/retropikzel/job/foreign-c/)
 
-- [Installation](#installation)
-- [Documentation](#documentation)
-    - [Types](#types)
-    - [Primitives 1](#primitives-1)
-        - c-type-size
-        - define-c-library
-        - define-c-procedure
-        - c-bytevector?
-        - c-bytevector-u8-set!
-        - c-bytevector-u8-ref
-        - c-bytevector-pointer-set!
-        - c-bytevector-pointer-ref
-    - [Primitives 2](#primitives-2)
-        - define-c-callback
-    - [c-bytevector](#c-bytevector)
-        - make-c-null
-        - c-null?
-        - c-free
-        - make-c-bytevector
-        - call-with-address-of
-        - native-endianness
-        - c-bytevector-s8-set!
-        - c-bytevector-s8-ref
-        - c-bytevector-s16-set!
-        - c-bytevector-s16-ref
-        - c-bytevector-s16-native-set!
-        - c-bytevector-s16-native-ref
-        - c-bytevector-u16-set!
-        - c-bytevector-u16-ref
-        - c-bytevector-u16-native-set!
-        - c-bytevector-u16-native-ref
-        - c-bytevector-s32-set!
-        - c-bytevector-s32-ref
-        - c-bytevector-s32-native-set!
-        - c-bytevector-s32-native-ref
-        - c-bytevector-u32-set!
-        - c-bytevector-u32-ref
-        - c-bytevector-u32-native-set!
-        - c-bytevector-u32-native-ref
-        - c-bytevector-s64-set!
-        - c-bytevector-s64-ref
-        - c-bytevector-s64-native-set!
-        - c-bytevector-s64-native-ref
-        - c-bytevector-u64-set!
-        - c-bytevector-u64-ref
-        - c-bytevector-u64-native-set!
-        - c-bytevector-u64-native-ref
-        - c-bytevector-sint-set!
-        - c-bytevector-sint-ref
-        - c-bytevector-uint-set!
-        - c-bytevector-uint-ref
-        - c-bytevector-ieee-single-set!
-        - c-bytevector-ieee-single-native-set!
-        - c-bytevector-ieee-single-ref
-        - c-bytevector-ieee-single-native-ref
-        - c-bytevector-ieee-double-set!
-        - c-bytevector-ieee-double-native-set!
-        - c-bytevector-ieee-double-ref
-        - c-bytevector-ieee-double-native-ref
-        - bytevector-\>c-bytevector
-        - c-bytevector-\>bytevector
-        - string-\>c-utf8
-        - c-utf8-\>string
-    - [c-array](#c-array)
-        - make-c-array
-        - c-array-ref
-        - c-array-set!
-    - [Environment variables](#environment-variables)
 
 
 ## Implementation support tables
@@ -112,6 +44,7 @@ Required versions:
     - At the time only 2.10 is out so build from git
 
 
+
 ### Primitives 1 table
 
 
@@ -127,6 +60,7 @@ Required versions:
 | **Sagittarius**  | X            | X                    |X                   | X                   | X             | X                   |
 | **STklos**       | X            | X                    |X                   | X                   | X             | X                   |
 | **Ypsilon**      | X            | X                    |X                   | X                   | X             | X                   |
+
 
 
 ### Primitives 2 table
@@ -146,6 +80,7 @@ Required versions:
 | **Ypsilon**      | X                 |
 
 
+
 ### Test files pass
 
 
@@ -163,12 +98,15 @@ Required versions:
 | Ypsilon          | X              | X             |              |
 
 
+
 ## Installation
 
 Not yet installable with snow-fort:
 
 - Gauche
     - Use manual installation
+
+
 
 ### Snow-fort
 
@@ -183,13 +121,15 @@ You can test that library is found by your implementation like this:
     cd /tmp
     IMPLEMENTATION hello.scm
 
+
+
 ### Manual system wide
 
 Manual system wide installation requires snow-chibi.
 
 Either download the latest release from
 [https://git.sr.ht/~retropikzel/foreign-c/refs](https://git.sr.ht/~retropikzel/foreign-c/refs)
-or git clone, tag, and copy the _foreign_ directory to your
+or git clone, tag, and copy the foreign directory to your
 library directory.
 
 Example for how to install for Gauche:
@@ -200,14 +140,16 @@ Example for how to install for Gauche:
     make SCHEME=gauche
     make SCHEME=gauche install
 
+
+
 ### Manual for project
 
 Either download the latest release from
 [https://git.sr.ht/~retropikzel/foreign-c/refs](https://git.sr.ht/~retropikzel/foreign-c/refs)
-or git clone, tag, and copy the _foreign_ directory to your
+or git clone, tag, and copy the foreign directory to your
 library directory.
 
-Example assuming libraries in directory _snow_:
+Example assuming libraries in directory snow:
 
     git clone https://git.sr.ht/~retropikzel/foreign-c --branch LATEST_VERSION
     cd foreign-c
@@ -219,7 +161,11 @@ Example assuming libraries in directory _snow_:
 With most implementations the make command does not compile anything. When that
 is the case it will say "Nothing to build on SCHEME\_IMPLEMENTATION\_NAME."
 
+
+
 ## Documentation
+
+
 
 ### Types
 
@@ -250,13 +196,19 @@ Types are given as symbols, for example 'int8 or 'pointer.
 - void
     - Can not be argument type, only return type
 
+
+
 ### Primitives 1
 
-(**c-type-size** _type_)
+
+
+(**c-type-size** type)
 
 Returns the size of given C type.
 
-(**define-c-library** _scheme-name_ _headers_ _object-name_ _options_)
+
+
+(**define-c-library** scheme-name headers object-name options)
 
 Takes a scheme-name to bind the library to, list of C headers as
 strings, shared-object name and options.
@@ -285,6 +237,8 @@ Example:
                       '((additional-versions ("" "0" "6"))
                         (additional-paths ("."))))
 
+
+
 #### Notes
 
 - Do not cond-expand inside the arguments, that might lead to problems on some
@@ -296,8 +250,10 @@ implementations.
 - Pass the options using quote
     - As '(...) and not (list...)
 
-(**define-c-procedure** _scheme-name_ _shared-object_ _c-name_ _return-type_
-_argument-type_)
+
+
+(**define-c-procedure** scheme-name shared-object c-name return-type
+argument-type)
 
 Takes a scheme-name to bind the C procedure to, shared-object where the function
 is looked from, c-name of the function as symbol, return-type and argument-types.
@@ -311,41 +267,60 @@ Example:
     (define-c-procedure c-puts libc 'puts 'int '(pointer))
     (c-puts "Message brought to you by foreign-c!")
 
+
+
 #### Notes
 
 - Pass the return-types using quote
     - As '(...) and not (list...)
 
-(**c-bytevector?** _obj_)
 
-Returns **#t** if _obj_ is c-bytevector, otherwise returns **#f**.
 
-(**c-bytevector-u8-set!** _c-bytevector_ _k_ _byte_)
+(**c-bytevector?** obj)
+
+
+
+Returns #t if obj is c-bytevector, otherwise returns #f.
+
+
+
+(**c-bytevector-u8-set!** c-bytevector k byte)
 
 If K is not a valid index of c-bytevector the behaviour is undefined.
 
 Stores the byte in element k of c-bytevector.
 
-(**c-bytevector-u8-ref** _c-bytevector_ _k_)
+
+
+(**c-bytevector-u8-ref** c-bytevector k)
 
 If K is not a valid index of c-bytevector the behaviour is undefined.
 
 Returns the byte at index k of c-bytevector.
 
-(**c-bytevector-pointer-set!** _c-bytevector_ _k_ _pointer_)
+
+
+(**c-bytevector-pointer-set!** c-bytevector k pointer)
 
 If K is not a valid index of c-bytevector the behaviour is undefined.
 
 Stores the pointer(which is also c-bytevector) in element k of c-bytevector.
 
-(**c-bytevector-pointer-ref**  _c-bytevector_ _k_ _pointer_)
+
+
+(**c-bytevector-pointer-ref**  c-bytevector k pointer)
 
 If K is not a valid index of c-bytevector the behaviour is undefined.
 
 Returns the pointer(which is also c-bytevector) at index k of c-bytevector.
 
+
+
+
 ### Primitives 2
-(**define-c-callback** _scheme-name_ _return-type_ _argument-types_ _procedure_)
+
+
+(**define-c-callback** scheme-name return-type argument-types procedure)
 
 Takes scheme-name to bind the Scheme procedure to, return-type, argument-types
 and procedure as in place lambda.
@@ -388,26 +363,38 @@ Example:
     (newline)
     ;> (1 2 3)
 
+
+
 ### c-bytevector
 
 Foreign-c c-bytevector interface is copied from R6RS bytevectors, with some
 added functionality for C null pointers and manual memory management.
 
+
+
 (**make-c-null**)
 
 Returns a null C pointer.
 
-(**c-null?** _obj_)
 
-Returns **#t** if _obj_ is a null C pointer, otherwise returns **#f**.
 
-(**c-free** _c-bytevector_)
+(**c-null?** obj)
 
-Frees _c-bytevector_ from memory.
 
-(**call-with-address-of** _c-bytevector_ _thunk_)
 
-Calls _thunk_ with address pointer of _c-bytevector_.
+Returns **#t** if obj is a null C pointer, otherwise returns **#f**.
+
+
+
+(**c-free** c-bytevector)
+
+Frees c-bytevector from memory.
+
+
+
+(**call-with-address-of** c-bytevector thunk)
+
+Calls thunk with address pointer of c-bytevector.
 
 Since the support for calling C functions taking pointer address arguments,
 ones prefixed with & in C, varies, some additional ceremony is needed on
@@ -432,13 +419,19 @@ Calling from Scheme:
 The passed c-bytevector, in example named cbv, should only be used **after**
 call to call-with-addres-of ends.
 
-(**bytevector->c-bytevector** _bytevector_)
 
-Returns a newly allocated c-bytevector of the bytes of _bytevector_.
+
+(**bytevector->c-bytevector** bytevector)
+
+Returns a newly allocated c-bytevector of the bytes of bytevector.
+
+
 
 (**c-bytevector->bytevector**)
 
-Returns a newly allocated bytevector of the bytes of _c-bytevector_.
+Returns a newly allocated bytevector of the bytes of c-bytevector.
+
+
 
 (**native-endianness**)
 
@@ -446,75 +439,91 @@ Returns the endianness symbol associated implementation’s preferred endianness
 (usually that of the underlying machine architecture).  This may be any
 \<endianness symbol\>, including a symbol other than big and little.
 
-(**make-c-bytevector** _k_)<br></br>
-(**make-c-bytevector** _k_ _fill_)
 
-Returns a newly allocated c-bytevector of _k_ bytes.
 
-If the _fill_ argument is missing, the initial contents of the
+(**make-c-bytevector** k)<br></br>
+(**make-c-bytevector** k fill)
+
+Returns a newly allocated c-bytevector of k bytes.
+
+If the fill argument is missing, the initial contents of the
 returned c-bytevector are unspecified.
 
-If the _fill_ argument is present, it's value must confine to C uint8_t values
+If the fill argument is present, it's value must confine to C uint8t values
 , it specifies the initial value for the bytes of the c-bytevector
 
 
-(**c-bytevector-s8-set!** _c-bytevector_ _k_ _byte_)
 
-If _k_ is not a valid index of c-bytevector the behaviour is undefined.
 
-Stores the _byte_ in element _k_ of _c-bytevector_.
+(**c-bytevector-s8-set!** c-bytevector k byte)
 
-(**c-bytevector-s8-ref** _c-bytevector_ _k_)
+If k is not a valid index of c-bytevector the behaviour is undefined.
 
-If _k_ is not a valid index of c-bytevector the behaviour is undefined.
+Stores the byte in element k of c-bytevector.
 
-Returns the byte at index _k_ of _c-bytevector_.
 
-(**c-bytevector-char-set!** _c-bytevector_ _k_ _char_)
 
-If _k_ is not a valid index of c-bytevector the behaviour is undefined.
+(**c-bytevector-s8-ref** c-bytevector k)
 
-Stores the _char_ in element _k_ of _c-bytevector_.
+If k is not a valid index of c-bytevector the behaviour is undefined.
 
-(**c-bytevector-char-ref** _c-bytevector_ _k_)
+Returns the byte at index k of c-bytevector.
 
-If _k_ is not a valid index of c-bytevector the behaviour is undefined.
 
-Returns the char at index _k_ of _c-bytevector_.
 
-(**c-bytevector-uchar-set!** _c-bytevector_ _k_ _char_)
+(**c-bytevector-char-set!** c-bytevector k char)
 
-If _k_ is not a valid index of c-bytevector the behaviour is undefined.
+If k is not a valid index of c-bytevector the behaviour is undefined.
 
-Stores the unsigned _char_ in element _k_ of _c-bytevector_.
+Stores the char in element k of c-bytevector.
 
-(**c-bytevector-uchar-ref** _c-bytevector_ _k_)
 
-If _k_ is not a valid index of c-bytevector the behaviour is undefined.
 
-Returns the unsigned char at index _k_ of _c-bytevector_.
+(**c-bytevector-char-ref** c-bytevector k)
 
-(**c-bytevector-uint-ref** _c-bytevector_ _k_ _endianness_ _size_)<br></br>
-(**c-bytevector-sint-ref** _c-bytevector_ _k_ _endianness_ _size_)<br></br>
-(**c-bytevector-uint-set!** _c-bytevector_ _k_ _n_ _endianness_ _size_)<br></br>
-(**c-bytevector-sint-set!** _c-bytevector_ _k_ _n_ _endianness_ _size_)
+If k is not a valid index of c-bytevector the behaviour is undefined.
 
-Size must be a positive exact integer object. If _k_,...,_k_ + _size_ − 1 is
+Returns the char at index k of c-bytevector.
+
+
+
+(**c-bytevector-uchar-set!** c-bytevector k char)
+
+If k is not a valid index of c-bytevector the behaviour is undefined.
+
+Stores the unsigned char in element k of c-bytevector.
+
+
+
+(**c-bytevector-uchar-ref** c-bytevector k)
+
+If k is not a valid index of c-bytevector the behaviour is undefined.
+
+Returns the unsigned char at index k of c-bytevector.
+
+
+
+(**c-bytevector-uint-ref** c-bytevector k endianness size)<br></br>
+(**c-bytevector-sint-ref** c-bytevector k endianness size)<br></br>
+(**c-bytevector-uint-set!** c-bytevector k n endianness size)<br></br>
+(**c-bytevector-sint-set!** c-bytevector k n endianness size)
+
+Size must be a positive exact integer object. If k,...,k + size − 1 is
 not valid indices of c-bytevector the behavior is unspecified.
 
 The c-bytevector-uint-ref procedure retrieves the exact integer object
-corresponding to the unsigned representation of size _size_ and specified by
-_endianness_ at indices _k_,...,_k_ + _size_ − 1.
+corresponding to the unsigned representation of size size and specified by
+endianness at indices k,...,k + size − 1.
 
 The c-bytevector-sint-ref procedure retrieves the exact integer object
-corresponding to the two’s-complement representation of size _size_ and
-specified by _endianness_ at indices _k_,...,_k_ + _size_ − 1.  For
-c-bytevector-uint-set!, _n_ must be an exact integer object in the interval
-{0,...,256^_size_ − 1}.
+corresponding to the two’s-complement representation of size size and
+specified by endianness at indices k,...,k + size − 1.  For
+c-bytevector-uint-set!, n must be an exact integer object in the interval
+{0,...,256^size − 1}.
 
 The c-bytevector-uint-set! procedure stores the unsigned representation of
-size _size_ and specified by _endianness_ into c-bytevector at indices
-_k_,...,_k_ + size − 1.
+size size and specified by endianness into c-bytevector at indices
+k,...,k + size − 1.
 
 The . . . -set! procedures return unspecified values.
 
@@ -526,171 +535,205 @@ Examples:
     > 100
 
 
-(**c-bytevector-u16-ref** _c-bytevector_ _k_ _endianness_)<br></br>
-(**c-bytevector-s16-ref** _c-bytevector_ _k_ _endianness_)<br></br>
-(**c-bytevector-u16-native-ref** _c-bytevector_ _k_)<br></br>
-(**c-bytevector-s16-native-ref** _c-bytevector_ _k_)<br></br>
-(**c-bytevector-u16-set!** _c-bytevector_ _k_ _n_ _endianness_)<br></br>
-(**c-bytevector-s16-set!** _c-bytevector_ _k_ _n_ _endianness_)<br></br>
-(**c-bytevector-u16-native-set!** _c-bytevector_ _k_ _n_)<br></br>
-(**c-bytevector-s16-native-set!** _c-bytevector_ _k_ _n_)
 
-_K_ must be a valid index of _c-bytevector_ ; so must _k_ + 1.  For
-c-bytevector-u16-set! and c-bytevector-u16-native-set!, _n_ must be an exact
+
+(**c-bytevector-u16-ref** c-bytevector k endianness)<br></br>
+(**c-bytevector-s16-ref** c-bytevector k endianness)<br></br>
+(**c-bytevector-u16-native-ref** c-bytevector k)<br></br>
+(**c-bytevector-s16-native-ref** c-bytevector k)<br></br>
+(**c-bytevector-u16-set!** c-bytevector k n endianness)<br></br>
+(**c-bytevector-s16-set!** c-bytevector k n endianness)<br></br>
+(**c-bytevector-u16-native-set!** c-bytevector k n)<br></br>
+(**c-bytevector-s16-native-set!** c-bytevector k n)
+
+K must be a valid index of c-bytevector ; so must k + 1.  For
+c-bytevector-u16-set! and c-bytevector-u16-native-set!, n must be an exact
 integer object in the interval {0,...,216 − 1}. For c-bytevector-s16-set! and
-c-bytevector-s16-native-set!, _n_ must be an exact integer object in the
+c-bytevector-s16-native-set!, n must be an exact integer object in the
 interval {−215,...,215 − 1}.
 
-These retrieve and set two-byte representations of numbers at indices _k_ and
-_k_ + 1, according to the endianness specified by _endianness_. The procedures
+These retrieve and set two-byte representations of numbers at indices k and
+k + 1, according to the endianness specified by endianness. The procedures
 with u16 in their names deal with the unsigned representation; those with s16
 in their names deal with the two’s-complement representation.
 
 The procedures with native in their names employ the native endianness, and
-work only at aligned indices: _k_ must be a multiple of 2.
+work only at aligned indices: k must be a multiple of 2.
 
 The ...-set!  procedures return unspecified values.
 
-(**c-bytevector-u32-ref** _c-bytevector_ _k_ _endianness_)<br></br>
-(**c-bytevector-s32-ref** _c-bytevector_ _k_ _endianness_)<br></br>
-(**c-bytevector-u32-native-ref** _c-bytevector_ _k_)<br></br>
-(**c-bytevector-s32-native-ref** _c-bytevector_ _k_)<br></br>
-(**c-bytevector-u32-set!** _c-bytevector_ _k_ _n_ _endianness_)<br></br>
-(**c-bytevector-s32-set!** _c-bytevector_ _k_ _n_ _endianness_)<br></br>
-(**c-bytevector-u32-native-set!** _c-bytevector_ _k_ _n_)<br></br>
-(**c-bytevector-s32-native-set!** _c-bytevector_ _k_ _n_)
 
-_K_,...,_k_ + 3 must be valid indices of bytevector.  For c-bytevector-u32-set!
-and bytevector-u32-native-set!, _n_ must be an exact integer object in the
+
+(**c-bytevector-u32-ref** c-bytevector k endianness)<br></br>
+(**c-bytevector-s32-ref** c-bytevector k endianness)<br></br>
+(**c-bytevector-u32-native-ref** c-bytevector k)<br></br>
+(**c-bytevector-s32-native-ref** c-bytevector k)<br></br>
+(**c-bytevector-u32-set!** c-bytevector k n endianness)<br></br>
+(**c-bytevector-s32-set!** c-bytevector k n endianness)<br></br>
+(**c-bytevector-u32-native-set!** c-bytevector k n)<br></br>
+(**c-bytevector-s32-native-set!** c-bytevector k n)
+
+K,...,k + 3 must be valid indices of bytevector.  For c-bytevector-u32-set!
+and bytevector-u32-native-set!, n must be an exact integer object in the
 interval {0,...,232 − 1}. For bytevector-s32-set! and
-bytevector-s32-native-set!, _n_ must be an exact integer object in the
+bytevector-s32-native-set!, n must be an exact integer object in the
 interval {−231,...,232 − 1}.
 
 These retrieve and set four-byte representations of numbers at indices
-_k_,...,_k_ + 3, according to the endianness specified by _endianness_.
+k,...,k + 3, according to the endianness specified by endianness.
 The procedures with u32 in their names deal with the unsigned representation;
 those with s32 with the two’s-complement representation.
 
 The procedures with native in their names employ the native endianness, and
-work only at aligned indices: _k_ must be a multiple of 4.
+work only at aligned indices: k must be a multiple of 4.
 
 The ...-set!  procedures return unspecified values.
 
-(**c-bytevector-u64-ref** _c-bytevector_ _k_ _endianness_)<br></br>
-(**c-bytevector-s64-ref** _c-bytevector_ _k_ _endianness_)<br></br>
-(**c-bytevector-u64-native-ref** _c-bytevector_ _k_)<br></br>
-(**c-bytevector-s64-native-ref** _c-bytevector_ _k_)<br></br>
-(**c-bytevector-u64-set!** _c-bytevector_ _k_ _n_ _endianness_)<br></br>
-(**c-bytevector-s64-set!** _c-bytevector_ _k_ _n_ _endianness_)<br></br>
-(**c-bytevector-u64-native-set!** _c-bytevector_ _k_ _n_)<br></br>
-(**c-bytevector-s64-native-set!** _c-bytevector_ _k_ _n_)
 
-_K_,...,_k_ + 7 must be valid indices of _c-bytevector_.  For
-c-bytevector-u64-set! and c-bytevector-u64-native-set!, _n_ must be an exact
+
+(**c-bytevector-u64-ref** c-bytevector k endianness)<br></br>
+(**c-bytevector-s64-ref** c-bytevector k endianness)<br></br>
+(**c-bytevector-u64-native-ref** c-bytevector k)<br></br>
+(**c-bytevector-s64-native-ref** c-bytevector k)<br></br>
+(**c-bytevector-u64-set!** c-bytevector k n endianness)<br></br>
+(**c-bytevector-s64-set!** c-bytevector k n endianness)<br></br>
+(**c-bytevector-u64-native-set!** c-bytevector k n)<br></br>
+(**c-bytevector-s64-native-set!** c-bytevector k n)
+
+K,...,k + 7 must be valid indices of c-bytevector.  For
+c-bytevector-u64-set! and c-bytevector-u64-native-set!, n must be an exact
 integer object in the interval {0,...,264 − 1}. For c-bytevector-s64-set! and
-c-bytevector-s64-native-set!, _n_ must be an exact integer object in the
+c-bytevector-s64-native-set!, n must be an exact integer object in the
 interval {−263,...,264 − 1}.
 
 These retrieve and set eight-byte representations of numbers at indices
-_k_,...,_k_ + 7, according to the endianness specified by _endianness_. The
+k,...,k + 7, according to the endianness specified by endianness. The
 procedures with u64 in their names deal with the unsigned representation; those
 with s64 with the two’s-complement representation.
 
 The procedures with native in their names employ the native endianness, and
-work only at aligned indices: _k_ must be a multiple of 8.
+work only at aligned indices: k must be a multiple of 8.
 
 The ...-set! procedures return unspecified values.
+
+
 
 (**c-bytevector-ieee-single-native-ref**)<br></br>
 (**c-bytevector-ieee-single-ref**)<br></br>
 
-_K_,...,_k_ + 3 must be valid indices of _c-bytevector_. For
-c-bytevector-ieee-single-native-ref, _k_ must be a multiple of 4.
+K,...,k + 3 must be valid indices of c-bytevector. For
+c-bytevector-ieee-single-native-ref, k must be a multiple of 4.
 
 These procedures return the inexact real number object that best represents the
 IEEE-754 single-precision number represented by the four bytes beginning at
-index _k_.
+index k.
+
+
 
 (**c-bytevector-ieee-double-native-ref**)<br></br>
 (**c-bytevector-ieee-double-ref**)
 
-_K_,...,_k_ + 7 must be valid indices of _c-bytevector_. For
-c-bytevector-ieee-double-native-ref, _k_ must be a multiple of 8.
+K,...,k + 7 must be valid indices of c-bytevector. For
+c-bytevector-ieee-double-native-ref, k must be a multiple of 8.
 
 These procedures return the inexact real number object that best represents the
 IEEE-754 double-precision number represented by the eight bytes beginning at
-index _k_.
+index k.
+
+
 
 (**c-bytevector-ieee-single-native-set!**)<br></br>
 (**c-bytevector-ieee-single-set!**)
 
-_K_,...,_k_ + 3 must be valid indices of _c-bytevector_. For
-c-bytevector-ieee-single-native-set!, _k_ must be a multiple of 4.
+K,...,k + 3 must be valid indices of c-bytevector. For
+c-bytevector-ieee-single-native-set!, k must be a multiple of 4.
 
 These procedures store an IEEE-754 single-precision representation of x into
-elements _k_ through _k_ + 3 of bytevector, and return unspecified values.
+elements k through k + 3 of bytevector, and return unspecified values.
+
+
 
 (**c-bytevector-ieee-double-native-set!**)<br></br>
 (**c-bytevector-ieee-double-set!**)
 
-_K_,...,_k_ + 7 must be valid indices of bytevector. For
-c-bytevector-ieee-double-native-set!, _k_ must be a multiple of 8.
+K,...,k + 7 must be valid indices of bytevector. For
+c-bytevector-ieee-double-native-set!, k must be a multiple of 8.
 
 These procedures store an IEEE-754 double-precision representation of x into
-elements _k_ through _k_ + 7 of bytevector, andreturn unspecified values.
+elements k through k + 7 of bytevector, andreturn unspecified values.
 
 
-(**string->c-utf8** _string_)
+
+
+(**string->c-utf8** string)
 
 Returns a newly allocated (unless empty) c-bytevector that contains the
 UTF-8 encoding of the given string.
 
-(**c-utf8->string** _c-bytevector_)
+
+
+(**c-utf8->string** c-bytevector)
 
 Returns a newly allocated string whose character sequence is
-encoded by the given c-bytevector. It is an error if _c-bytevector_ is null.
+encoded by the given c-bytevector. It is an error if c-bytevector is null.
+
+
 
 ### c-array
 
-(**make-c-array** _type_ _size_)<br></br>
-(**make-c-array** _type_ _size_ _fill_)
 
-If the _fill_ argument is missing, the initial contents of the
+
+(**make-c-array** type size)<br></br>
+(**make-c-array** type size fill)
+
+If the fill argument is missing, the initial contents of the
 returned c-bytevector are unspecified.
 
-If the _fill_ argument is present, it specifies the initial value for the items
-of the array.  If it's value does not match _type_ behaviour is unspecified.
+If the fill argument is present, it specifies the initial value for the items
+of the array.  If it's value does not match type behaviour is unspecified.
 
-Returns a newly allocated c-bytevector with size of _type_ times _size_.
+Returns a newly allocated c-bytevector with size of type times size.
 
-(**c-array-ref** _array_ _type_ _index_)
 
-_array_ is a c-bytevector.
 
-Returns the given value of _type_ from _index_ of _array_. If the value is not
-of _type_ or _index_ is out of bounds the behaviour is unspecified.
+(**c-array-ref** array type index)
 
-(**c-array-set!** _array_ _type_ _index_ _value_)
+array is a c-bytevector.
 
-_array_ is a c-bytevector.
+Returns the given value of type from index of array. If the value is not
+of type or index is out of bounds the behaviour is unspecified.
 
-Sets the given _value_ of _type_ at _index_ of _array_. If _value_ is not of
-_type_ or _index_ is out of bounds behaviour is unspecified.
 
-(**list->c-array** list _type_)
 
-Returns newly allocated c-bytevector with values of the _list_ in it. List
-values must be of _type_. If the values are not of type behaviour is
+(**c-array-set!** array type index value)
+
+array is a c-bytevector.
+
+Sets the given value of type at index of array. If value is not of
+type or index is out of bounds behaviour is unspecified.
+
+
+
+(**list->c-array** list type)
+
+Returns newly allocated c-bytevector with values of the list in it. List
+values must be of type. If the values are not of type behaviour is
 unspecified.
 
-(**c-array->list** _array_ _type_ _size_)
 
-_array_ is a c-bytevector.
 
-Returns a list with values of _array_ in it. If _type_ and _size_ do not match
-what is in the _c-bytevector_ the behaviour is unspecified.
+(**c-array->list** array type size)
+
+array is a c-bytevector.
+
+Returns a list with values of array in it. If type and size_ do not match
+what is in the c-bytevector the behaviour is unspecified.
+
+
 
 ### Utilities
+
+
 
 **libc-name**
 
@@ -709,11 +752,15 @@ Example:
     (define-c-procedure c-puts libc 'puts 'int '(pointer))
     (c-puts "Message brought to you by foreign-c!")
 
+
+
 ### Environment variables
 
 Setting environment variables like this on Windows works for this library:
 
     set "FOREIGN_C_LOAD_PATH=C:\Program Files (x86)/foo/bar"
+
+
 
 #### FOREIGN\_C_\_LOAD\_PATH
 
