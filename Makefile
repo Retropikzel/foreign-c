@@ -1,7 +1,7 @@
 .PHONY: package test libtest.o tests/libtest.so libtest.a documentation README.html
 SCHEME=chibi
 DOCKERIMG=${SCHEME}:head
-VERSION=0.10.8
+VERSION=0.10.9
 CC=gcc
 PKG=foreign-c-${VERSION}.tgz
 
@@ -36,12 +36,13 @@ install:
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
-test-old: libtest.o libtest.so libtest.a
+test: libtest.o libtest.so libtest.a
+	rm -rf test
 	COMPILE_R7RS_CHICKEN="-L -ltest -I. -L." \
-	COMPILE_R7RS=${SCHEME} timeout 600 compile-r7rs -o test test.scm
+		COMPILE_R7RS=${SCHEME} compile-r7rs -o test test.scm
 	./test
 
-test: package libtest.o libtest.so libtest.a
+test-no: package libtest.o libtest.so libtest.a
 	COMPILE_R7RS=${SCHEME} test-snowball --apt-pkgs "libffi-dev" ${PKG}
 
 test-docker:
