@@ -1,7 +1,7 @@
 .PHONY: package test libtest.o tests/libtest.so libtest.a documentation README.html
 SCHEME=chibi
 DOCKERIMG=${SCHEME}:head
-VERSION=0.10.7
+VERSION=0.10.8
 CC=gcc
 PKG=foreign-c-${VERSION}.tgz
 
@@ -28,9 +28,9 @@ install:
 	snow-chibi --impls=${SCHEME} ${SNOW_CHIBI_ARGS} install foreign-c-${VERSION}.tgz; \
 	if [ "${SCHEME}" = "gauche" ]; then \
 		make gauche; \
-		cp foreign/c/primitives/gauche.scm $(shell gauche-config --sitelibdir)/foreign/c/primitives/;\
-		mkdir -p $(shell gauche-config --sitearchdir)/foreign/c/lib/; \
-		cp -r foreign/c/lib/gauche.so $(shell gauche-config --sitearchdir)/foreign/c/lib/; \
+		sudo cp foreign/c/primitives/gauche.scm $(shell gauche-config --sitelibdir)/foreign/c/primitives/;\
+		sudo mkdir -p $(shell gauche-config --sitearchdir)/foreign/c/lib/; \
+		sudo cp -r foreign/c/lib/gauche.so $(shell gauche-config --sitearchdir)/foreign/c/lib/; \
 	fi
 
 uninstall:

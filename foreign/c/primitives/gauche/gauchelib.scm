@@ -56,7 +56,7 @@
  ;(define-cproc pointer-free (pointer) pointer_free)
 
  ;(define-cproc pointer-set-int8! (pointer offset::<int> value::<int8>) pointer_set_int8)
- (define-cproc pointer-set-uint8! (pointer offset::<int> value::<int8>) pointer_set_uint8)
+ (define-cproc pointer-set-uint8! (pointer offset::<int> value::<uint8>) pointer_set_uint8)
  ;(define-cproc pointer-set-int16! (pointer offset::<int> value::<int16>) pointer_set_int16)
  ;(define-cproc pointer-set-uint16! (pointer offset::<int> value::<int16>) pointer_set_uint16)
  ;(define-cproc pointer-set-int32! (pointer offset::<int> value::<int32>) pointer_set_int32)
