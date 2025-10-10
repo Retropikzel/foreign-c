@@ -117,7 +117,7 @@
 (c-declare "void c_bytevector_pointer_set (void* pointer, int offset, void* value) { char* p = (char*)pointer + offset; *(char**)p = value; }")
 (define-c void (c-bytevector-pointer-set! c_bytevector_pointer_set) ((pointer void*) int (maybe-null pointer void*)))
 
-(c-declare "void* c_bytevector_pointer_ref (void* pointer, int offset) { char** p = (char**)pointer + offset; return (void*)*p; }")
+(c-declare "void* c_bytevector_pointer_ref (void* pointer, int offset) { char* p = (char*)pointer + offset; return (void*)*(char**)p;}")
 (define-c (maybe-null pointer void*) (c-bytevector-pointer-ref c_bytevector_pointer_ref) ((maybe-null pointer void*) int))
 
 (c-declare "ffi_cif cif;")
