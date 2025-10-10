@@ -154,6 +154,7 @@
               get-environment-variable
               file-exists?
               make-external-function
+              address->c-bytevector
               foreign-c:string-split
               c-bytevector-pointer-set!
               c-bytevector-pointer-ref))
