@@ -1,2 +1,0 @@
-#!/bin/sh
-ypsilon  --r7rs --mute --quiet --sitelib=.  --top-level-program primitives.scm "$@"

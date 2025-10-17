@@ -1,10 +1,6 @@
 pipeline {
     agent {
-        dockerfile {
-            label 'docker-x86_64'
-            filename 'Dockerfile.jenkins'
-            args '--user=root --privileged -v /var/run/docker.sock:/var/run/docker.sock'
-        }
+        label 'docker-x86_64'
     }
 
     options {
@@ -14,17 +10,39 @@ pipeline {
 
     parameters {
         //string(name: 'SCHEMES', defaultValue: 'chibi chicken gauche kawa racket sagittarius stklos', description: '')
-        string(name: 'SCHEMES', defaultValue: 'chibi', description: '')
+        string(name: 'SCHEMES', defaultValue: 'sagittarius', description: '')
     }
 
     stages {
+        stage('Build compile-r7rs') {
+            docker {
+                image "schemers/chicken:5"
+                label "docker-x86_64"
+            }
+            steps {
+                sh "git clone https://gitea.scheme.org/Retropikzel/compile-r7rs.git"
+                dir("compile-r7rs") {
+                    sh "make build-chicken"
+                }
+            }
+        }
+
         stage('Tests x86_64 Debian') {
             steps {
                 script {
                     params.SCHEMES.split().each { SCHEME ->
+                        def IMG="${SCHEME}:head"
+                        if("${SCHEME}" == "chicken") {
+                            IMG="${SCHEME}:5"
+                        }
                         stage("${SCHEME}") {
+                            docker {
+                                image "schemers/${IMG}"
+                                label "docker-x86_64"
+                                args "--user=root"
+                            }
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "make package"
+                                sh "COMPILE_R7RS=${SCHEME} compile-r7rs/compile-r7rs -I . test.scm"
                                 sh "make SCHEME=${SCHEME} test"
                             }
                         }

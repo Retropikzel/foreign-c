@@ -1,184 +1,30 @@
 (define-library
   (foreign c)
+  (import (scheme base)
+          (scheme write)
+          (scheme char)
+          (scheme file)
+          (scheme process-context)
+          (scheme inexact))
   (cond-expand
-    (chibi
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (scheme process-context)
-              (chibi ast)
-              (scheme inexact)
-              (chibi))
-      (include-shared "c/primitives/chibi/foreign-c"))
-    (chicken
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (scheme inexact)
-              (scheme process-context)
-              (chicken base)
-              (chicken foreign)
-              (chicken locative)
-              (chicken syntax)
-              (chicken memory)
-              (chicken random)))
-    #;(cyclone
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (scheme inexact)
-              (scheme process-context)
-              (cyclone foreign)
-              (scheme cyclone primitives)))
-    (gambit
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (scheme inexact)
-              (scheme process-context)
-              (only (gambit) c-declare c-lambda c-define define-macro)))
-    (gauche
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (scheme inexact)
-              (scheme process-context)
-              (gauche base)
-              (foreign c primitives gauche)))
-    (guile
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (scheme inexact)
-              (scheme process-context)
-              (system foreign)
-              (system foreign-library)
-              ;(only (guile) include-from-path)
-              #;(only (rnrs bytevectors)
-                    bytevector-int8-set!
-                    bytevector-uint-ref)))
-    (kawa
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (scheme inexact)
-              (scheme process-context)))
-    (mit-scheme
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (scheme inexact)
-              (scheme process-context)))
-    #;(larceny
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (scheme inexact)
-              (scheme process-context)
-              (rename (primitives r5rs:require) (r5rs:require require))
-              (primitives std-ffi)
-              (primitives foreign-procedure)
-              (primitives foreign-file)
-              (primitives foreign-stdlib)
-              (primitives system-interface)))
-    (mosh
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (scheme inexact)
-              (scheme inexact)
-              (scheme process-context)
-              (mosh ffi)))
-    (racket
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (scheme inexact)
-              (scheme process-context)
-              (only (racket base)
-                    system-type
-                    system-big-endian?)
-              (ffi winapi)
-              (compatibility mlist)
-              (ffi unsafe)
-              (ffi vector)))
-    (sagittarius
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (scheme inexact)
-              (scheme process-context)
-              (except (sagittarius ffi) c-free c-malloc define-c-struct)
-              (sagittarius)))
-    #;(skint
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (scheme inexact)
-              (scheme process-context)))
-    (stklos
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (scheme inexact)
-              (scheme process-context)
-              (only (stklos)
-                    %make-callback
-                    make-external-function
-                    allocate-bytes
-                    free-bytes
-                    cpointer?
-                    cpointer-null?
-                    cpointer-data
-                    cpointer-data-set!
-                    cpointer-set-abs!
-                    cpointer-ref-abs
-                    c-size-of
-                    void?))
-      (export ; calculate-struct-size-and-offsets
-              ;struct-make
-              get-environment-variable
-              file-exists?
-              make-external-function
-              address->c-bytevector
-              foreign-c:string-split
-              c-bytevector-pointer-set!
-              c-bytevector-pointer-ref))
-    #;(tr7
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              ;(scheme inexact)
-              (scheme process-context)))
-    (ypsilon
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (scheme inexact)
-              (scheme process-context)
-              (ypsilon c-ffi)
-              (ypsilon c-types)
-              (only (core)
-                    define-macro
-                    syntax-case
-                    bytevector-c-int8-set!
-                    bytevector-c-uint8-ref))))
+    (chibi (import (foreign c chibi-primitives)))
+    (chicken (import ;(chicken memory) ;; FIXME
+                     (foreign c chicken-primitives)))
+    ;(cyclone (import (foreign c cyclone-primitives)))
+    ;(gambit (import (foreign c gambit-primitives)))
+    (gauche (import (foreign c gauche-primitives)))
+    (guile (import (foreign c guile-primitives)))
+    ;(kawa (import (foreign c kawa-primitives)))
+    ;(mit-scheme (import (foreign c mit-scheme-primitives)))
+    ;(larceny (import (foreign c larceny-primitives)))
+    (mosh (import (foreign c mosh-primitives)))
+    (racket (import (foreign c racket-primitives)))
+    (sagittarius (import (foreign c sagittarius-primitives)))
+    (stklos (import (foreign c stklos-primitives))
+            ;; FIXME
+            (export foreign-c:string-split))
+    ;(ypsilon (import (foreign c ypsilon-primitives)) (export int))
+    )
   (export ;;;; Primitives 1
           c-type-size
           c-type-align
@@ -284,53 +130,8 @@
 
           ;c-utf8-length ;; TODO ??
 
-          ;; c-array
-          make-c-array
-          c-array-ref
-          c-array-set!
-          list->c-array
-          c-array->list
-
-          ;; c-struct
-          define-c-struct
-          c-struct->alist
-          ;pffi-define-struct;define-c-struct
-          ;pffi-struct-pointer;c-struct-bytevector
-          ;pffi-struct-offset-get;c-struct-offset
-          ;pffi-struct-set!;c-struct-set!
-          ;pffi-struct-get;c-struct-get
-
-
           ;; c-variable
           ;define-c-variable (?)
           )
-  (include "c/internal.scm")
-  (cond-expand
-    (chibi (include "c/primitives/chibi.scm"))
-    (chicken (export foreign-declare foreign-safe-lambda void)
-      (include "c/primitives/chicken.scm"))
-    ;(cyclone (include "c/primitives/cyclone.scm"))
-    (gambit (include "c/primitives/gambit.scm"))
-    (gauche (include "c/primitives/gauche/define-c-procedure.scm"))
-    (guile (include "./c/primitives/guile.scm"))
-    (kawa (include "c/primitives/kawa.scm"))
-    (mit-scheme (include "c/primitives/mit-scheme.scm"))
-    ;(larceny (include "c/primitives/larceny.scm"))
-    (mosh (include "c/primitives/mosh.scm"))
-    (racket (include "c/primitives/racket.scm"))
-    (sagittarius (include "c/primitives/sagittarius.scm"))
-    ;(skint (include "c/primitives/skint.scm"))
-    (stklos (include "c/primitives/stklos.scm"))
-    ;(tr7 (include "c/primitives/tr7.scm"))
-    (ypsilon (export c-function
-                     c-callback
-                     bytevector-c-int8-set!
-                     bytevector-c-uint8-ref)
-             (include "c/primitives/ypsilon.scm")))
-    (include "c/c-types.scm")
-    (include "c/main.scm")
-    (include "c/libc.scm")
-    (include "c/c-bytevectors.scm")
-    (include "c/pointer.scm")
-    (include "c/array.scm")
-    (include "c/struct.scm"))
+  (include "c/c-bytevectors.scm")
+  (include "c.scm"))

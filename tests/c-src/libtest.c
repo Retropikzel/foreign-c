@@ -41,6 +41,11 @@ struct test {
     float n;
 };
 
+
+void Scm_hello() {
+    printf("Hello from Scm_hello");
+}
+
 void print_string_pointer(char* p) {
     printf("C print_string_pointer: %s\n", p);
 }

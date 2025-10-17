@@ -1,0 +1,8 @@
+(declcode "#include <stdio.h>")
+(declcode "#include <ffi.h>")
+
+(declcode "void Scm_Init_gauche_primitives_gauche(void) { puts(\"Hello from init\"); }")
+
+(declcode "extern ScmObj hello() { return Scm_MakeInteger(1); }")
+
+(define-cproc hello () hello)

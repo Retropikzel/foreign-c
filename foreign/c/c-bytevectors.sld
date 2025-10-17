@@ -1,0 +1,10 @@
+(define-library
+  (foreign c c-bytevectors)
+  (import (scheme base)
+          (scheme write)
+          (scheme char)
+          (scheme file)
+          (scheme process-context)
+          (scheme inexact))
+  (export c-bytevectors-init)
+  (include "c-bytevectors.scm"))
