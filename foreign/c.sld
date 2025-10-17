@@ -12,7 +12,7 @@
                      (foreign c chicken-primitives)))
     ;(cyclone (import (foreign c cyclone-primitives)))
     ;(gambit (import (foreign c gambit-primitives)))
-    (gauche (import (foreign c gauche-primitives)))
+    ;(gauche (import (foreign c gauche-primitives)))
     (guile (import (foreign c guile-primitives)))
     ;(kawa (import (foreign c kawa-primitives)))
     ;(mit-scheme (import (foreign c mit-scheme-primitives)))
