@@ -13,8 +13,7 @@ pipeline {
     }
 
     parameters {
-        //string(name: 'SCHEMES', defaultValue: 'chibi chicken gauche kawa racket sagittarius stklos', description: '')
-        string(name: 'SCHEMES', defaultValue: 'sagittarius', description: '')
+        string(name: 'SCHEMES', defaultValue: 'chibi chicken kawa racket sagittarius stklos', description: '')
     }
 
     stages {
