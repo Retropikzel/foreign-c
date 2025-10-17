@@ -3,7 +3,7 @@ pipeline {
         docker {
             label 'docker-x86_64'
             image 'debian'
-            args '--user=root --privileged -v /var/run/docker.socket:/var/run/docker.socket'
+            args '--user=root --privileged -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
 
