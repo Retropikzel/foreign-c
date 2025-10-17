@@ -1,6 +1,10 @@
 pipeline {
     agent {
-        label 'docker-x86_64'
+        docker {
+            label 'docker-x86_64'
+            image 'retropikzel1/compile-r7rs'
+            args '--user=root --privileged -v /var/run/docker.socket:/var/run/docker.socket'
+        }
     }
 
     options {
@@ -36,14 +40,8 @@ pipeline {
                             IMG="${SCHEME}:5"
                         }
                         stage("${SCHEME}") {
-                            docker {
-                                image "schemers/${IMG}"
-                                label "docker-x86_64"
-                                args "--user=root"
-                            }
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "COMPILE_R7RS=${SCHEME} compile-r7rs/compile-r7rs -I . test.scm"
-                                sh "make SCHEME=${SCHEME} test"
+                                sh "make SCHEME=${SCHEME} test-in-docker"
                             }
                         }
                     }
