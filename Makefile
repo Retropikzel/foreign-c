@@ -73,9 +73,13 @@ test: libtest.o libtest.so libtest.a
 test-no: package libtest.o libtest.so libtest.a
 	COMPILE_R7RS=${SCHEME} test-snowball --apt-pkgs "libffi-dev" ${PKG}
 
-test-docker:
+test-docker-old:
 	docker run -it -v "${PWD}:/workdir" -w /workdir retropikzel1/compile-r7rs sh -c \
-		"make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes install test"
+		"make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes build install test"
+
+test-docker:
+	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-test-${SCHEME} -f Dockerfile.test .
+	docker run -it -v "${PWD}:/workdir" -w /workdir -t retropikzel-foreign-c-test-${SCHEME} sh -c "make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes build install test"
 
 libtest.o: tests/c-src/libtest.c
 	${CC} ${CFLAGS} -o libtest.o -fPIC -c tests/c-src/libtest.c -I./include ${LDFLAGS}

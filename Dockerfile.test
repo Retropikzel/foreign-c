@@ -1,11 +1,18 @@
 ARG SCHEME=chibi
 ARG IMAGE=${SCHEME}:head
 FROM schemers/${IMAGE}
-COPY --from=retropikzel1/compile-r7rs /opt/compile-r7rs /opt/compile-r7rs
+WORKDIR /build
+RUN apt-get update && apt-get install -y gcc make git ca-certificates libffi-dev
+RUN git clone https://github.com/ashinn/chibi-scheme.git --depth=1
+RUN git clone https://gitea.scheme.org/Retropikzel/compile-r7rs.git --depth=1
+WORKDIR /build/chibi-scheme
+RUN make && make install
+RUN snow-chibi install --always-yes "(foreign c)"
+RUN snow-chibi install --always-yes "(srfi 170)"
+WORKDIR /build/compile-r7rs
+RUN make build-chibi && make install
 WORKDIR /workdir
 ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
-ENV PATH=/opt/compile-r7rs/bin:${PATH}
 RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
 RUN snow-chibi install --always-yes --impls=${SCHEME} "(srfi 64)"
-
