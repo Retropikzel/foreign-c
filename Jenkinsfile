@@ -19,9 +19,11 @@ pipeline {
 
     stages {
         stage('Build compile-r7rs') {
-            docker {
-                image "schemers/chicken:5"
-                label "docker-x86_64"
+            agent {
+                docker {
+                    image "schemers/chicken:5"
+                    label "docker-x86_64"
+                }
             }
             steps {
                 sh "git clone https://gitea.scheme.org/Retropikzel/compile-r7rs.git"
