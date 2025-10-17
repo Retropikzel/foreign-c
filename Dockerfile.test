@@ -16,6 +16,7 @@ WORKDIR /build
 RUN apt-get update && apt-get install -y gcc make libffi-dev
 WORKDIR /build/chibi-scheme
 RUN make install
+RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
 RUN snow-chibi install --always-yes "(foreign c)"
 RUN snow-chibi install --always-yes "(srfi 170)"
 WORKDIR /build/compile-r7rs
@@ -23,5 +24,4 @@ RUN make build-chibi && make install
 WORKDIR /workdir
 ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
-RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
 RUN snow-chibi install --always-yes --impls=${SCHEME} "(srfi 64)"
