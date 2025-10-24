@@ -25,8 +25,7 @@
              (export c-function
                      c-callback
                      bytevector-c-int8-set!
-                     bytevector-c-uint8-ref))
-    )
+                     bytevector-c-uint8-ref)))
   (export ;;;; Primitives 1
           c-type-size
           c-type-align

@@ -6,8 +6,7 @@
           (scheme file)
           (scheme inexact)
           (scheme process-context)
-          (gauche base)
-          (foreign c primitives gauche))
+          (gauche ffi))
   (export size-of-type
           align-of-type
           shared-object-load

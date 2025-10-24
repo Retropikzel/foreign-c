@@ -27,7 +27,16 @@ build:
 		--doc=README.html \
 		--foreign-depends=ffi \
 		--description="Portable foreign function interface for R7RS Schemes" \
-	foreign/c.sld
+		--test=test.scm \
+	foreign/c.sld \
+	foreign/c/chibi-primitives.sld \
+	foreign/c/chicken-primitives.sld \
+	foreign/c/guile-primitives.sld \
+	foreign/c/kawa-primitives.sld \
+	foreign/c/mosh-primitives.sld \
+	foreign/c/racket-primitives.sld \
+	foreign/c/stklos-primitives.sld \
+	foreign/c/ypsilon-primitives.sld
 
 build-gauche:
 	snow-chibi package \
