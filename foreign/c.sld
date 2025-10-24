@@ -8,22 +8,24 @@
           (scheme inexact))
   (cond-expand
     (chibi (import (foreign c chibi-primitives)))
-    (chicken (import ;(chicken memory) ;; FIXME
-                     (foreign c chicken-primitives)))
+    (chicken (import (foreign c chicken-primitives)))
     ;(cyclone (import (foreign c cyclone-primitives)))
     ;(gambit (import (foreign c gambit-primitives)))
     ;(gauche (import (foreign c gauche-primitives)))
     (guile (import (foreign c guile-primitives)))
-    ;(kawa (import (foreign c kawa-primitives)))
+    (kawa (import (foreign c kawa-primitives)))
     ;(mit-scheme (import (foreign c mit-scheme-primitives)))
     ;(larceny (import (foreign c larceny-primitives)))
     (mosh (import (foreign c mosh-primitives)))
     (racket (import (foreign c racket-primitives)))
     (sagittarius (import (foreign c sagittarius-primitives)))
     (stklos (import (foreign c stklos-primitives))
-            ;; FIXME
             (export foreign-c:string-split))
-    ;(ypsilon (import (foreign c ypsilon-primitives)) (export int))
+    (ypsilon (import (foreign c ypsilon-primitives))
+             (export c-function
+                     c-callback
+                     bytevector-c-int8-set!
+                     bytevector-c-uint8-ref))
     )
   (export ;;;; Primitives 1
           c-type-size

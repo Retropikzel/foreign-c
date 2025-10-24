@@ -190,7 +190,7 @@
     (define libc-name "ucrtbase"))
   (else
     (define libc-name
-      (cond ((get-environment-variable "BE_HOST_CPU") "root") ; Haiku
+      (cond ;((get-environment-variable "BE_HOST_CPU") "root") ; Haiku
             (else "c")))))
 
 
@@ -315,7 +315,7 @@
   (kawa
     (define c-null?
       (lambda (pointer)
-        (invoke pointer 'equals null-pointer))))
+        (invoke pointer 'equals (make-c-null)))))
   ;; FIXME
   (chibi #t) ;; In chibi-primitives.stub
   (gauche (define c-null? pointer-null?))

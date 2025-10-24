@@ -7,7 +7,7 @@
           (scheme inexact)
           (scheme process-context)
           (cyclone foreign)
-          (scheme cyclone primitives)))
+          (scheme cyclone primitives))
   (export size-of-type
           align-of-type
           shared-object-load
@@ -18,4 +18,4 @@
           c-bytevector-u8-set!
           c-bytevector-pointer-ref
           c-bytevector-pointer-set!)
-  (include "primitives-cyclone.scm"))
+  (include "cyclone-primitives.scm"))

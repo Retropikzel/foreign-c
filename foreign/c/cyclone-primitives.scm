@@ -93,6 +93,9 @@
           ((equal? type 'double) (c-value "sizeof(double)" int))
           ((equal? type 'pointer) (c-value "sizeof(void*)" int)))))
 
+;; FIXME
+(define align-of-type size-of-type)
+
 (define-c pointer-address
           "(void *data, int argc, closure _, object k, object pointer)"
           "make_c_opaque(opq, &(void*)opaque_ptr(pointer));
@@ -226,13 +229,13 @@
           *p = double_value(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define-c pointer-pointer-set!
+(define-c c-bytevector-pointer-set!
           "(void *data, int argc, closure _, object k, object pointer, object offset, object value)"
           "uintptr_t* p = opaque_ptr(pointer) + obj_obj2int(offset);
           *p = (uintptr_t)&opaque_ptr(value);
           return_closcall1(data, k, make_boolean(boolean_t));")
 
-(define pointer-set!
+#;(define pointer-set!
   (lambda (pointer type offset value)
     (cond
       ((equal? type 'int8) (pointer-int8-set! pointer offset value))
@@ -341,15 +344,15 @@
           alloca_double(d, *p);
           return_closcall1(data, k, d);")
 
-(define-c pointer-pointer-get
+(define-c c-bytevector-pointer-ref
           "(void *data, int argc, closure _, object k, object pointer, object offset)"
           "make_c_opaque(opq, (void*)opaque_ptr(pointer) + obj_obj2int(offset));
           return_closcall1(data, k, &opq);")
 
-#;(define c-bytevector-u8-set! pointer-uint8-set!)
+(define c-bytevector-u8-set! pointer-uint8-set!)
 (define c-bytevector-u8-ref pointer-uint8-get)
 
-(define pointer-get
+#;(define pointer-get
   (lambda (pointer type offset)
     (cond
       ((equal? type 'int8) (pointer-int8-get pointer offset))

@@ -14,7 +14,7 @@
           ((equal? type 'unsigned-short) (c-bytevector-sint-ref pointer offset (native-endianness) (size-of-type 'unsigned-short)))
           ((equal? type 'int) (c-bytevector-sint-ref pointer offset (native-endianness) (size-of-type 'int)))
           ((equal? type 'unsigned-int) (c-bytevector-sint-ref pointer offset (native-endianness) (size-of-type 'unsigned-int)))
-          ((equal? type 'long) (c-bytevector-sint-ref pointer offset (native-endianness) (sife-of-type 'long)))
+          ((equal? type 'long) (c-bytevector-sint-ref pointer offset (native-endianness) (size-of-type 'long)))
           ((equal? type 'unsigned-long) (c-bytevector-sint-ref pointer offset (native-endianness) (size-of-type 'unsigned-long)))
           ((equal? type 'float) (c-bytevector-ieee-single-native-ref pointer offset))
           ((equal? type 'double) (c-bytevector-ieee-double-native-ref pointer offset))
@@ -104,7 +104,8 @@
 (define shared-object-load
   (lambda (path options)
     (let ((shared-object (dlopen path RTLD-NOW))
-          (maybe-error (dlerror)))
+          ;(maybe-error (dlerror))
+          )
       shared-object)))
 
 (define c-bytevector?
@@ -142,9 +143,10 @@
 
 (define make-c-function
   (lambda (shared-object c-name return-type argument-types)
-    (dlerror) ;; Clean all previous errors
+    ;(dlerror) ;; Clean all previous errors
     (let ((c-function (dlsym shared-object c-name))
-          (maybe-dlerror (dlerror)))
+          ;(maybe-dlerror (dlerror))
+          )
       (lambda arguments
         (let* ((return-pointer
                  (internal-ffi-call (length argument-types)

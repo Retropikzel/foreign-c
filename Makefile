@@ -19,6 +19,7 @@ MITLIBDIR=$(shell echo "(display (->namestring (system-library-directory-pathnam
 
 
 build:
+	rm -rf *.tgz
 	echo "<pre>$$(cat README.md)</pre>" > README.html
 	snow-chibi package \
 		--version=${VERSION} \
@@ -26,17 +27,7 @@ build:
 		--doc=README.html \
 		--foreign-depends=ffi \
 		--description="Portable foreign function interface for R7RS Schemes" \
-		--test=test.scm \
-	foreign/c.sld \
-	foreign/c/array.sld \
-	foreign/c/struct.sld \
-	foreign/c/chibi-primitives.sld \
-	foreign/c/chicken-primitives.sld \
-	foreign/c/guile-primitives.sld \
-	foreign/c/mosh-primitives.sld \
-	foreign/c/racket-primitives.sld \
-	foreign/c/sagittarius-primitives.sld \
-	foreign/c/ypsilon-primitives.sld
+	foreign/c.sld
 
 build-gauche:
 	snow-chibi package \
@@ -48,7 +39,7 @@ build-gauche:
 	foreign/c/gauche-primitives.stub
 
 install:
-	snow-chibi --impls=${SCHEME} ${SNOW_CHIBI_ARGS} install ${PKG}
+	snow-chibi --impls=${SCHEME} --always-yes install ${PKG}
 
 install-gauche:
 	if [ "${SCHEME}" = "gauche" ]; then \
@@ -69,9 +60,6 @@ test: libtest.o libtest.so libtest.a
 	COMPILE_R7RS_CHICKEN="-L -ltest -I./tests/c-include -L." \
 		COMPILE_R7RS=${SCHEME} compile-r7rs -I . -o test test.scm
 	LD_LIBRARY_PATH=. ./test
-
-test-no: package libtest.o libtest.so libtest.a
-	COMPILE_R7RS=${SCHEME} test-snowball --apt-pkgs "libffi-dev" ${PKG}
 
 test-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-test-${SCHEME} -f Dockerfile.test .

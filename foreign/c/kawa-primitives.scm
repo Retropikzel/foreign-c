@@ -155,7 +155,6 @@
       (list (cons 'linker linker)
             (cons 'lookup lookup)))))
 
-(define null-pointer (make-c-null))
 (define u8-value-layout
   (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_BYTE)
           'withByteAlignment
