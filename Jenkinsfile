@@ -23,7 +23,7 @@ pipeline {
             }
         }
 
-        stage('Tests x86_64 Debian') {
+        stage('Tests R7RS x86_64 Debian') {
             steps {
                 script {
                     params.SCHEMES.split().each { SCHEME ->
@@ -34,6 +34,24 @@ pipeline {
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                 sh "make SCHEME=${SCHEME} test-docker"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Tests R6RS x86_64 Debian') {
+            steps {
+                script {
+                    params.SCHEMES.split().each { SCHEME ->
+                        def IMG="${SCHEME}:head"
+                        if("${SCHEME}" == "chicken") {
+                            IMG="${SCHEME}:5"
+                        }
+                        stage("${SCHEME}") {
+                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                sh "make SCHEME=${SCHEME} test-r6rs-docker"
                             }
                         }
                     }
