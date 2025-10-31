@@ -164,7 +164,8 @@
                        (when (and (not shared-object)
                                   (file-exists? library-path))
                          (set! shared-object
-                           (cond-expand (racket library-path-without-suffixes)
+                           (cond-expand (gauche library-path-without-suffixes)
+                                        (racket library-path-without-suffixes)
                                         (else library-path))))))
                    versions))
                paths)

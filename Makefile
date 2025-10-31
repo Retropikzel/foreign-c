@@ -72,7 +72,20 @@ test: libtest.o libtest.so libtest.a
 
 test-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-test-${SCHEME} -f Dockerfile.test .
-	docker run -v "${PWD}:/workdir" -w /workdir -t retropikzel-foreign-c-test-${SCHEME} sh -c "make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes build install test"
+	docker run -t retropikzel-foreign-c-test-${SCHEME} \
+		sh -c "make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes build install test && cat foreign-c.log"
+
+test-r6rs: libtest.o libtest.so libtest.a
+	rm -rf test-r6rs
+	printf "#!r6rs\n(import (rnrs base) (srfi :64))\n" > test-r6rs.scm
+	tail -n+9 test.scm >> test-r6rs.scm
+	COMPILE_R7RS=${SCHEME} compile-r7rs -I .akku/lib -o test-r6rs test-r6rs.scm
+	./test-r6rs
+
+test-r6rs-docker:
+	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-r6rs-test-${SCHEME} -f Dockerfile-r6rs.test .
+	docker run -t retropikzel-foreign-c-r6rs-test-${SCHEME} \
+		sh -c "make SCHEME=${SCHEME} test-r6rs && cat foreign-c.log"
 
 libtest.o: tests/c-src/libtest.c
 	${CC} ${CFLAGS} -o libtest.o -fPIC -c tests/c-src/libtest.c -I./include ${LDFLAGS}

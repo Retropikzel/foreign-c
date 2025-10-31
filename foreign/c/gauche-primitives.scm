@@ -50,7 +50,10 @@
 
 (define shared-object-load
   (lambda (path options)
-    (open-shared-library path)))
+    (display "HERE PATH: ")
+    (write path)
+    (newline)
+    (open-shared-library path "6")))
 
 (define type->native-type
   (lambda (type)
@@ -86,7 +89,7 @@
                         c-name
                         (map type->native-type argument-types))))))
 
-(define-syntax define-c-callback
+#;(define-syntax define-c-callback
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
      (define scheme-name

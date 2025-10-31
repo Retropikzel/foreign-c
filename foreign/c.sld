@@ -11,7 +11,7 @@
     (chicken (import (foreign c chicken-primitives)))
     ;(cyclone (import (foreign c cyclone-primitives)))
     ;(gambit (import (foreign c gambit-primitives)))
-    ;(gauche (import (foreign c gauche-primitives)))
+    (gauche (import (foreign c gauche-primitives)))
     (guile (import (foreign c guile-primitives)))
     (kawa (import (foreign c kawa-primitives)))
     ;(mit-scheme (import (foreign c mit-scheme-primitives)))
@@ -25,7 +25,8 @@
              (export c-function
                      c-callback
                      bytevector-c-int8-set!
-                     bytevector-c-uint8-ref)))
+                     bytevector-c-uint8-ref))
+    (else (begin (error "Unsupported implementation"))))
   (export ;;;; Primitives 1
           c-type-size
           c-type-align

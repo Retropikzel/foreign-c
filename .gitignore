@@ -44,3 +44,4 @@ foreign/c/primitives/chibi/foreign-c.c
 .*
 foreign/c.c
 *.tmp
+test-r6rs.scm
