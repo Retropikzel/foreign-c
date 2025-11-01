@@ -319,7 +319,6 @@
         (invoke pointer 'equals (make-c-null)))))
   ;; FIXME
   (chibi #t) ;; In chibi-primitives.stub
-  (gauche (define c-null? pointer-null?))
   (stklos (define c-null?
             (lambda (pointer)
               (cond ((void? pointer) #t)
