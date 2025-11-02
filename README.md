@@ -1,5 +1,4 @@
-foreign-c is a C foreign function interface (FFI) library for R6RS and R7RS
-Schemes. It is portable in the sense that it supports multiple implementations.
+(foreign c) is a C foreign function interface (FFI) library for R6RS and R7RS Schemes
 
 [Repository](https://git.sr.ht/~retropikzel/foreign-c)
 
@@ -27,7 +26,6 @@ implementations is so unfinished that they are not listed here.
     - At the time support is work in progress in fork or pull request https://github.com/Retropikzel/Gauche
 - Guile >= 3
     - R6RS
-        - Not working yet!
     - R7RS
     - Has include bug, might not work on all situations
 - Kawa >= 3.11 and Java >= 22
@@ -62,7 +60,10 @@ implementations is so unfinished that they are not listed here.
         - Not working yet!
     - R7RS
 
+
+
 ### Primitives 1 table
+
 
 |                  | c-type-size  | c-bytevector-u8-set! |c-bytevector-u8-ref | define-c-library    | c-bytevector? | define-c-procedure  |
 |------------------|:------------:|:--------------------:|:------------------:|:-------------------:|:-------------:|:-------------------:|
@@ -117,14 +118,8 @@ implementations is so unfinished that they are not listed here.
 
 ## Installation
 
-Not yet installable with snow-fort:
 
-- Gauche
-    - Use manual installation
-
-
-
-### Snow-fort
+### Snow-fort (R7RS)
 
 
 [https://snow-fort.org/](https://snow-fort.org/)
@@ -139,7 +134,15 @@ You can test that library is found by your implementation like this:
 
 
 
-### Manual system wide
+### Akku (R6RS)
+
+In your project directory run:
+
+    akku install "(foreign c)"
+
+
+
+### Manual system wide (R7RS)
 
 Manual system wide installation requires snow-chibi.
 
@@ -158,7 +161,7 @@ Example for how to install for Gauche:
 
 
 
-### Manual for project
+### Manual for project (R6RS/R7RS)
 
 Either download the latest release from
 [https://git.sr.ht/~retropikzel/foreign-c/refs](https://git.sr.ht/~retropikzel/foreign-c/refs)
