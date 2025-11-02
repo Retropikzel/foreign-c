@@ -13,8 +13,8 @@ pipeline {
     }
 
     parameters {
-        string(name: 'SCHEMES', defaultValue: 'chibi chicken kawa racket sagittarius stklos', description: '')
-        string(name: 'R6RS_SCHEMES', defaultValue: 'guile sagittarius mosh ypsilon', description: '')
+        string(name: 'SCHEMES', defaultValue: 'chibi chicken gauche guile kawa mosh racket sagittarius stklos ypsilon', description: '')
+        string(name: 'R6RS_SCHEMES', defaultValue: 'guile mosh racket sagittarius ypsilon', description: '')
     }
 
     stages {
@@ -34,7 +34,7 @@ pipeline {
                         }
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "make SCHEME=${SCHEME} test-docker"
+                                sh "make SCHEME=${SCHEME} test-r7rs-docker"
                             }
                         }
                     }
