@@ -2,7 +2,7 @@
 .SILENT: build install test test-docker clean
 SCHEME=chibi
 DOCKERIMG=${SCHEME}:head
-VERSION=0.10.9
+VERSION=0.11.0
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
 PKG=foreign-c-${VERSION}.tgz
