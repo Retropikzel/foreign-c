@@ -46,7 +46,7 @@ test-r6rs: libtest.o libtest.so libtest.a
 test-r6rs-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-r6rs-test-${SCHEME} -f Dockerfile-r6rs.test .
 	docker run -t retropikzel-foreign-c-r6rs-test-${SCHEME} \
-		sh -c "make SCHEME=${SCHEME} test-r6rs && cat foreign-c.log"
+		sh -c "make SCHEME=${SCHEME} test-r6rs"
 
 test-r7rs: libtest.o libtest.so libtest.a
 	rm -rf test-r7rs
