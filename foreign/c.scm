@@ -281,7 +281,8 @@
 (define string->c-utf8
   (lambda (string-var)
     (bytevector->c-bytevector
-      (string->utf8 (string-append string-var (string #\null))))))
+      (string->utf8
+        (string-append string-var (string (integer->char 0)))))))
 
 (cond-expand
   ;; FIXME

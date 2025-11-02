@@ -32,12 +32,7 @@ WORKDIR /workdir
 ARG SCHEME=guile
 ENV COMPILE_R7RS=${SCHEME}
 RUN akku update
-RUN akku init test-project
-WORKDIR /workdir/test-project
-RUN akku install "(srfi 64)"
-RUN akku install "(foreign c)"
-RUN apt-get install -y tree
-RUN tree .akku
+RUN akku install chez-srfi
 COPY Makefile .
 COPY test.scm .
 COPY tests ./tests
