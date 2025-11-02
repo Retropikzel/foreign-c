@@ -1,5 +1,5 @@
-foreign-c is a C foreign function interface (FFI) library for R7RS Schemes. It
-is portable in the sense that it supports multiple implementations.
+foreign-c is a C foreign function interface (FFI) library for R6RS and R7RS
+Schemes. It is portable in the sense that it supports multiple implementations.
 
 [Repository](https://git.sr.ht/~retropikzel/foreign-c)
 
@@ -17,15 +17,21 @@ is portable in the sense that it supports multiple implementations.
 supported. Either the work on it has not started yet or support for missing
 implementations is so unfinished that they are not listed here.
 
-Required versions:
-
 - Chibi > 0.11
+    - R7RS
     - At the time only 0.11 is out so build from git
 - Chicken >= 5.4.0 < 6
-- Gauche >= 0.9.15
+    - R7RS
+- Gauche > 0.9.15
+    - R7RS
+    - At the time support is work in progress in fork or pull request https://github.com/Retropikzel/Gauche
 - Guile >= 3
+    - R6RS
+        - Not working yet!
+    - R7RS
     - Has include bug, might not work on all situations
 - Kawa >= 3.11 and Java >= 22
+    - R7RS
     - Needs arguments to enable FFI
         - -J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED
         - -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED
@@ -38,15 +44,25 @@ Required versions:
         - -Dkawa.import.path=/usr/local/share/kawa
         - -Dkawa.import.path=/usr/local/share/kawa/lib
 - Mosh >= 0.2.9-rc1
+    - R6RS
+        - Not working yet!
+    - R7RS
 - Racket >= 8.16 [cs]
+    - R6RS
+        - Not working yet!
+    - R7RS
 - Sagittarius >= 0.9.13
+    - R6RS
+    - R7RS
 - STklos > 2.10
+    - R7RS
     - At the time only 2.10 is out so build from git
-
-
+- Ypsilon >= 2.08
+    - R6RS
+        - Not working yet!
+    - R7RS
 
 ### Primitives 1 table
-
 
 |                  | c-type-size  | c-bytevector-u8-set! |c-bytevector-u8-ref | define-c-library    | c-bytevector? | define-c-procedure  |
 |------------------|:------------:|:--------------------:|:------------------:|:-------------------:|:-------------:|:-------------------:|

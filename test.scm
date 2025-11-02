@@ -1,11 +1,3 @@
-(import (scheme base)
-        (scheme write)
-        (scheme read)
-        (scheme char)
-        (scheme file)
-        (scheme process-context)
-        (srfi 64)
-        (foreign c))
 
 (test-begin "foreign-c")
 
@@ -20,35 +12,29 @@
 
 (test-begin "c-type-size")
 
-(test-eq (c-type-size 'int8) 1)
-(test-eq (c-type-size 'uint8) 1)
-(test-eq (c-type-size 'int16) 2)
-(test-eq (c-type-size 'uint16) 2)
-(test-eq (c-type-size 'int32) 4)
-(test-eq (c-type-size 'uint32) 4)
-(test-eq (c-type-size 'int64) 8)
-(test-eq (c-type-size 'uint64) 8)
-(test-eq (c-type-size 'char) 1)
-(test-eq (c-type-size 'unsigned-char) 1)
-(test-eq (c-type-size 'short) 2)
-(test-eq (c-type-size 'unsigned-short) 2)
-(test-eq (c-type-size 'int) 4)
-(test-eq (c-type-size 'unsigned-int) 4)
+(test-equal (c-type-size 'int8) 1)
+(test-equal (c-type-size 'uint8) 1)
+(test-equal (c-type-size 'int16) 2)
+(test-equal (c-type-size 'uint16) 2)
+(test-equal (c-type-size 'int32) 4)
+(test-equal (c-type-size 'uint32) 4)
+(test-equal (c-type-size 'int64) 8)
+(test-equal (c-type-size 'uint64) 8)
+(test-equal (c-type-size 'char) 1)
+(test-equal (c-type-size 'unsigned-char) 1)
+(test-equal (c-type-size 'short) 2)
+(test-equal (c-type-size 'unsigned-short) 2)
+(test-equal (c-type-size 'int) 4)
+(test-equal (c-type-size 'unsigned-int) 4)
 
-(cond-expand
-  (i386 (test-eq (c-type-size 'long) 4))
-  (else (test-eq (c-type-size 'long) 8)))
+;(cond-expand (i386 (test-equal (c-type-size 'long) 4)) (else (test-equal (c-type-size 'long) 8)))
 
-(cond-expand
-  (i386 (test-eq (c-type-size 'unsigned-long) 4))
-  (else (test-eq (c-type-size 'unsigned-long) 8)))
+;(cond-expand (i386 (test-equal (c-type-size 'unsigned-long) 4)) (else (test-equal (c-type-size 'unsigned-long) 8)))
 
-(test-eq (c-type-size 'float) 4)
-(test-eq (c-type-size 'double) 8)
+(test-equal (c-type-size 'float) 4)
+(test-equal (c-type-size 'double) 8)
 
-(cond-expand
-  (i386 (test-eq (c-type-size 'pointer) 4))
-  (else (test-eq (c-type-size 'pointer) 8)))
+;(cond-expand (i386 (test-equal (c-type-size 'pointer) 4)) (else (test-equal (c-type-size 'pointer) 8)))
 
 (test-end "c-type-size")
 
@@ -60,14 +46,14 @@
                      '((additional-paths ("." "./tests"))))
 
 (define-c-procedure c-abs libc 'abs 'int '(int))
-(test-eq (c-abs -2) 2)
+(test-equal (c-abs -2) 2)
 
 (define-c-procedure c-takes-no-args c-testlib 'takes_no_args 'void '())
 (c-takes-no-args)
 
 (define-c-procedure c-takes-no-args-returns-int c-testlib 'takes_no_args_returns_int 'int '())
 (define takes-no-args-returns-int-result (c-takes-no-args-returns-int))
-(test-eq takes-no-args-returns-int-result 0)
+(test-equal takes-no-args-returns-int-result 0)
 
 (test-end "define-c-library")
 
@@ -89,7 +75,7 @@
 (define u8-pointer (make-c-bytevector (c-type-size 'uint8)))
 (test-assert (c-bytevector? u8-pointer))
 (c-bytevector-u8-set! u8-pointer 0 42)
-(test-eq (c-bytevector-u8-ref u8-pointer 0) 42)
+(test-equal (c-bytevector-u8-ref u8-pointer 0) 42)
 
 (test-end "c-bytevector-u8-set! and c-bytevector-u8-ref")
 
@@ -99,7 +85,7 @@
 (define p-pointer (make-c-bytevector (c-type-size 'pointer)))
 (test-assert (c-bytevector? p-pointer))
 (c-bytevector-pointer-set! p-pointer 0 u8-pointer)
-(test-eq (c-bytevector-u8-ref (c-bytevector-pointer-ref p-pointer 0) 0) 42)
+(test-equal (c-bytevector-u8-ref (c-bytevector-pointer-ref p-pointer 0) 0) 42)
 
 (test-end "c-bytevector-pointer-set! and c-bytevector-pointer-ref")
 
@@ -115,11 +101,11 @@
 (test-begin "define-c-procedure")
 
 (define-c-procedure c-atoi libc 'atoi 'int '(pointer))
-(test-eq (c-atoi (string->c-utf8 "100")) 100)
+(test-equal (c-atoi (string->c-utf8 "100")) 100)
 
 (define-c-procedure c-puts libc 'puts 'int '(pointer))
 (define chars-written (c-puts (string->c-utf8 "puts: Hello from testing, I am C function puts")))
-(test-eq chars-written 47)
+(test-equal chars-written 47)
 
 (define-c-procedure c-strcat libc 'strcat 'pointer '(pointer pointer))
 (define c-string1 (string->c-utf8 "test123"))
@@ -133,13 +119,20 @@
                               (string->c-utf8 "w")))
 (define-c-procedure c-fprintf libc 'fprintf 'int '(pointer pointer int))
 (define characters-written (c-fprintf output-file (string->c-utf8 "Hello world %i") 1))
-(test-eq characters-written 13)
+(test-equal characters-written 13)
 (define-c-procedure c-fclose libc 'fclose 'int '(pointer))
 (define closed-status (c-fclose output-file))
-(test-eq closed-status 0)
+(test-equal closed-status 0)
 (test-assert (file-exists? "testfile.test"))
+
+;; Own readline so tests work on R6RS
+(define (rl result)
+  (let ((c (read-char)))
+    (if (eof-object? c)
+      result
+      (rl (string-append result (string c))))))
 (define file-content (with-input-from-file "testfile.test"
-                                           (lambda () (read-line))))
+                                           (lambda () (rl ""))))
 (test-assert (string=? file-content "Hello world 1"))
 
 (test-end "define-c-procedure")

@@ -26,6 +26,7 @@ ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
 RUN snow-chibi install --always-yes --impls=${SCHEME} "(srfi 64)"
 COPY Makefile .
+COPY README.md .
 COPY test.scm .
 COPY tests ./tests
 COPY foreign ./foreign
