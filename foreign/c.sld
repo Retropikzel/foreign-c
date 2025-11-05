@@ -33,7 +33,9 @@
     (racket (import (foreign c racket-primitives)))
     (sagittarius (import (foreign c sagittarius-primitives)))
     (stklos (import (foreign c stklos-primitives))
-            (export foreign-c:string-split))
+            (export foreign-c:string-split
+                    make-external-function
+                    free-bytes))
     (ypsilon (import (foreign c ypsilon-primitives))
              (export c-function
                      c-callback

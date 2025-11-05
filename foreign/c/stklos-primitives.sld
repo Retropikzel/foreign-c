@@ -40,6 +40,7 @@
           ;c-bytevector-pointer-set!
           ;c-bytevector-pointer-ref
           void?
+          free-bytes
           )
   (include "c-bytevectors.scm")
   (include "stklos-primitives.scm"))
