@@ -35,10 +35,13 @@ install:
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
-test-r6rs: libtest.o libtest.so libtest.a
+Akku.manifest:
+	akku install chez-srfi
+
+test-r6rs: libtest.o libtest.so libtest.a Akku.manifest
 	akku install
 	rm -rf test-r6rs
-	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (foreign c) (srfi :64))\n" > test-r6rs.sps
+	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c) (srfi :64))\n" > test-r6rs.sps
 	cat test.scm >> test-r6rs.sps
 	COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib -o test-r6rs test-r6rs.sps
 	./test-r6rs

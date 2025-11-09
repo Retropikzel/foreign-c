@@ -10,7 +10,7 @@
 
 
 
-## Implementation support tables
+## Implementation support table
 
 *NOTE* Implementation missing from this table does not mean it will not be
 supported. Either the work on it has not started yet or support for missing

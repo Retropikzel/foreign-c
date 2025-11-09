@@ -27,10 +27,10 @@
            (splitter (lambda (c)
                        (cond ((char=? c mark)
                               (begin
-                                (set! res (append res (list (string-copy str last-index index))))
+                                (set! res (append res (list (substring str last-index index))))
                                 (set! last-index (+ index 1))))
                              ((equal? (length str-l) (+ index 1))
-                              (set! res (append res (list (string-copy str last-index (+ index 1)))))))
+                              (set! res (append res (list (substring str last-index (+ index 1)))))))
                        (set! index (+ index 1)))))
       (for-each splitter str-l)
       res)))
@@ -237,7 +237,8 @@
 
 (define c-bytevector
   (lambda bytes
-    (bytevector->c-bytevector (apply bytevector bytes))))
+    (bytevector->c-bytevector
+      (apply (lambda (b) (make-bytevector 1 b)) bytes))))
 
 (cond-expand
   (else (define-c-procedure c-free libc 'free 'void '(pointer))))

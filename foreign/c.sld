@@ -7,8 +7,18 @@
                         (rnrs files)
                         (rnrs io simple)
                         (rnrs programs)
+                        (only (rnrs bytevectors)
+                              make-bytevector
+                              bytevector-length
+                              utf8->string
+                              string->utf8
+                              bytevector-u8-ref
+                              bytevector-u8-set!)
+                        (only (rnrs r5rs)
+                              remainder
+                              quotient)
                         (only (chezscheme) include)
-                        (srfi :0)
+                        (srfi 0)
                         (srfi :98)))
     (else (import (scheme base)
                   (scheme write)
@@ -17,7 +27,8 @@
                   (scheme process-context)
                   (scheme inexact))))
   (cond-expand
-    (chezscheme (import (foreign c chez-primitives)))
+    (chezscheme (import (foreign c chez-primitives))
+                (export foreign-procedure))
     (chibi (import (foreign c chibi-primitives)))
     (chicken (import (foreign c chicken-primitives)))
     ;(cyclone (import (foreign c cyclone-primitives)))
