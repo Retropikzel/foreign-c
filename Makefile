@@ -19,7 +19,6 @@ build:
 		--doc=README.html \
 		--foreign-depends=ffi \
 		--description="Portable foreign function interface for R7RS Schemes" \
-		--test=test.scm \
 	foreign/c.sld \
 	foreign/c/chibi-primitives.sld \
 	foreign/c/chicken-primitives.sld \

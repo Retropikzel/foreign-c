@@ -173,7 +173,7 @@
                (begin
                  (display "Could not load shared object: ")
                  (write (list (cons 'object object-name)
-                              (cons 'paths paths)
+                              (cons 'searched-paths searched-paths)
                               (cons 'platform-file-extension platform-file-extension)
                               (cons 'versions versions)))
                  (newline)
