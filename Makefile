@@ -72,37 +72,4 @@ libtest.a: libtest.o tests/c-src/libtest.c
 	ar rcs libtest.a libtest.o ${LDFLAGS}
 
 clean:
-	find . -name "*.meta" -delete
-	find . -name "*.link" -delete
-	find . -name "*.o" -delete
-	find . -name "*.bci" -delete
-	find . -name "*.com" -delete
-	find . -name "*.comld" -delete
-	find . -name "*.bin" -delete
-	find . -name "*.binld" -delete
-	find . -name "*.bcild" -delete
-	find . -name "*.o[1-9]" -delete
-	find . -name "*.so" -delete
-	find . -name "*.a" -delete
-	find . -name "*.class" -delete
-	find . -name "*.jar" -delete
-	find . -name "core.1" -delete
-	find . -name "*@gambit*" -delete
-	find . -name "*.import.scm" -delete
-	find . -name "*.cdecl" -delete
-	find . -name "*.log" -delete
-	find . -name "*.tgz" -delete
-	find . -name "*.rkt" -delete
-	find . -name "*.tar.gz" -delete
-	rm -rf MANIFEST.mf
-	rm -rf tmp
-	rm -rf foreign/c/primitives/chibi/foreign-c.c
-	rm -rf foreign/c/lib
-	rm -rf foreign/c/primitives/mit-scheme/mit-scheme-foreign-c-shim.c
-	rm -rf foreign/c/primitives/mit-scheme/mit-scheme-foreign-c-const.c
-	rm -rf foreign/c/primitives/mit-scheme/mit-scheme-foreign-c-const
-	rm -rf foreign/c/primitives/mit-scheme/mit-scheme-foreign-c-const.scm
-	rm -rf *.tgz
-	rm -rf README.html
-	rm -rf test
-	rm -rf testfile.test
+	git clean -X -f
