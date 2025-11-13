@@ -1,7 +1,7 @@
 (define-library
   (foreign c)
   (cond-expand
-    (chezscheme (import (rnrs base)
+    (r6rs (import (rnrs base)
                         (rnrs lists)
                         (rnrs control)
                         (rnrs files)
@@ -17,7 +17,6 @@
                         (only (rnrs r5rs)
                               remainder
                               quotient)
-                        (only (chezscheme) include)
                         (srfi 0)
                         (srfi :98)))
     (else (import (scheme base)
@@ -27,7 +26,8 @@
                   (scheme process-context)
                   (scheme inexact))))
   (cond-expand
-    (chezscheme (import (foreign c chez-primitives))
+    (chezscheme (import (only (chezscheme) include)
+                        (foreign c chez-primitives))
                 (export foreign-procedure))
     (chibi (import (foreign c chibi-primitives)))
     (chicken (import (foreign c chicken-primitives)))
@@ -40,14 +40,16 @@
     (kawa (import (foreign c kawa-primitives)))
     ;(mit-scheme (import (foreign c mit-scheme-primitives)))
     ;(larceny (import (foreign c larceny-primitives)))
-    (mosh (import (foreign c mosh-primitives)))
+    (mosh (import (only (mosh) include)
+                  (foreign c mosh-primitives)))
     (racket (import (foreign c racket-primitives)))
     (sagittarius (import (foreign c sagittarius-primitives)))
     (stklos (import (foreign c stklos-primitives))
             (export foreign-c:string-split
                     make-external-function
                     free-bytes))
-    (ypsilon (import (foreign c ypsilon-primitives))
+    (ypsilon (import (only (core) include)
+                     (foreign c ypsilon-primitives))
              (export c-function
                      c-callback
                      bytevector-c-int8-set!
