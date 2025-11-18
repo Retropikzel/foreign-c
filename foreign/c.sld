@@ -42,7 +42,7 @@
                     (foreign c ikarus-primitives)))
     (kawa (import (foreign c kawa-primitives)))
     ;(mit-scheme (import (foreign c mit-scheme-primitives)))
-    ;(larceny (import (foreign c larceny-primitives)))
+    (larceny (import (foreign c larceny-primitives)))
     (mosh (import (only (mosh) include)
                   (foreign c mosh-primitives)))
     (racket (import (foreign c racket-primitives)))

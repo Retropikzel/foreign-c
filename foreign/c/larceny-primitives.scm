@@ -4,9 +4,31 @@
 (require 'foreign-cenums)
 (require 'foreign-stdlib)
 (require 'foreign-sugar)
-(require 'system-interface)
+;(require 'system-interface)
 
-;; FIXME
+(define (type->native-type type)
+      (cond ((equal? type 'int8) 'char)
+            ((equal? type 'uint8) 'uchar)
+            ((equal? type 'int16) 'short)
+            ((equal? type 'uint16) 'ushort)
+            ((equal? type 'int32) 'int)
+            ((equal? type 'uint32) 'uint)
+            ((equal? type 'int64) 'long)
+            ((equal? type 'uint64) 'ulong)
+            ((equal? type 'char) 'char)
+            ((equal? type 'unsigned-char) 'uchar)
+            ((equal? type 'short) 'short)
+            ((equal? type 'unsigned-short) 'ushort)
+            ((equal? type 'int) 'int)
+            ((equal? type 'unsigned-int) 'uint)
+            ((equal? type 'long) 'long)
+            ((equal? type 'unsigned-long) 'ulong)
+            ((equal? type 'float) 'float)
+            ((equal? type 'double) 'double)
+            ((equal? type 'pointer) 'void*)
+            ((equal? type 'void) 'void)
+            (error "Unsupported type: " type)))
+
 (define size-of-type
   (lambda (type)
     (cond ((eq? type 'int8) 1)
@@ -27,10 +49,12 @@
           ((eq? type 'unsigned-long) 4)
           ((eq? type 'float) 4)
           ((eq? type 'double) 8)
-          ((eq? type 'pointer) sizeof:pointer)
+          ((eq? type 'pointer) 8)
           ((eq? type 'void) 0)
-          ((eq? type 'callback) sizeof:pointer)
+          ((eq? type 'callback) 8)
           (else (error "Can not get size of unknown type" type)))))
+
+(define align-of-type size-of-type)
 
 (define c-bytevector?
   (lambda (object)
@@ -38,39 +62,41 @@
     (number? object)))
 
 (define shared-object-load
-  (lambda (headers path . options)
+  (lambda (path . options)
     (foreign-file path)))
 
 (define c-bytevector-u8-set!
   (lambda (c-bytevector k byte)
-    (syscall syscall:poke-bytes c-bytevector k (c-type-size 'uint8) byte)))
+    ;; FIXME
+    #;(syscall syscall:poke-bytes c-bytevector k (c-type-size 'uint8) byte)
+    #t
+    ))
 
 (define c-bytevector-u8-ref
   (lambda (c-bytevector k)
-    (syscall syscall:peek-bytes c-bytevector k (c-type-size 'uint8))))
+    ;; FIXME
+    #;(syscall syscall:peek-bytes c-bytevector k (c-type-size 'uint8))
+    #t
+    ))
 
 (define c-bytevector-pointer-set!
   (lambda (c-bytevector k pointer)
-    (syscall syscall:poke-bytes c-bytevector k (c-type-size 'pointer) pointer)))
+    ;; FIXME
+    #;(syscall syscall:poke-bytes c-bytevector k (c-type-size 'pointer) pointer)
+    #t
+    ))
 
 (define c-bytevector-pointer-ref
   (lambda (c-bytevector k)
-    (syscall syscall:peek-bytes c-bytevector k (c-type-size 'pointer))))
+    ;; FIXME
+    #;(syscall syscall:peek-bytes c-bytevector k (c-type-size 'pointer))
+    #t
+    ))
 
 (define-syntax define-c-procedure
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
-       0
-
-       #;(make-c-function shared-object
-                        (symbol->string c-name)
-                        return-type
-                        argument-types)))))
-
-(define-syntax define-c-callback
-  (syntax-rules ()
-    ((_ scheme-name return-type argument-types procedure)
-     (define scheme-name
-       0
-       #;(make-c-callback return-type argument-types procedure)))))
+       (foreign-procedure (symbol->string c-name)
+                          (map type->native-type argument-types)
+                          (type->native-type return-type))))))

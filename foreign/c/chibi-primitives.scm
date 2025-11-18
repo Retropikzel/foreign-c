@@ -113,7 +113,7 @@
     (or (equal? object #f) ; False can be null pointer
         (pointer? object))))
 
-(define pffi-type->native-type
+(define type->native-type
   (lambda (type)
     (cond ((equal? type 'int8) 'int8_t)
           ((equal? type 'uint8) 'uint8_t)
@@ -137,7 +137,7 @@
           ((equal? type 'pointer-address) '(maybe-null pointer void*))
           ((equal? type 'void) 'void)
           ((equal? type 'callback) '(maybe-null pointer void*))
-          (else (error "pffi-type->native-type -- No such pffi type" type)))))
+          (else (error "type->native-type -- No such pffi type" type)))))
 
 ;; define-c-procedure
 
