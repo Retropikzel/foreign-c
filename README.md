@@ -20,6 +20,8 @@ implementations is so unfinished that they are not listed here.
     - R6RS
     - R7RS
     - Has include bug, might not work on all situations
+- Ikarus >= 0.0.4-rc1+
+    - R6RS
 - Kawa >= 3.11 and Java >= 22
     - R7RS
     - Needs arguments to enable FFI
@@ -35,11 +37,11 @@ implementations is so unfinished that they are not listed here.
         - -Dkawa.import.path=/usr/local/share/kawa/lib
 - Mosh >= 0.2.9-rc1
     - R6RS
-        - Not working yet!
+        - Not working yet
     - R7RS
 - Racket >= 8.16 [cs]
     - R6RS
-        - Not working yet!
+        - Not working yet
     - R7RS
 - Sagittarius >= 0.9.13
     - R6RS
@@ -49,7 +51,7 @@ implementations is so unfinished that they are not listed here.
     - At the time only 2.10 is out so build from git
 - Ypsilon >= 2.08
     - R6RS
-        - Not working yet!
+        - Not working yet
     - R7RS
 
 ## Installation

@@ -24,7 +24,6 @@
           c-bytevector-pointer-set!
           ;; Ypsilon specific
           c-function
-          c-callback
           bytevector-c-int8-set!
           bytevector-c-uint8-ref)
   (include "ypsilon-primitives.scm"))

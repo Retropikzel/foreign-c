@@ -54,7 +54,6 @@
       ((equal? type 'double) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_DOUBLE) 'withByteAlignment 8))
       ((equal? type 'pointer) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
       ((equal? type 'void) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 1))
-      ((equal? type 'callback) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
       ((equal? type 'struct) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
       (else #f))))
 
@@ -93,7 +92,7 @@
              (looper (+ count 1) (append result (list count)))))))
       (looper from (list)))))
 
-(define-syntax define-c-callback
+#;(define-syntax define-c-callback
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
      (define scheme-name
@@ -197,12 +196,3 @@
             'get
             pointer-value-layout
             k)))
-
-#;(define-syntax call-with-address-of-c-bytevector
-          (syntax-rules ()
-            ((_ input-pointer thunk)
-             (let ((address-pointer (make-c-bytevector (c-type-size 'pointer))))
-               (pointer-set! address-pointer 'pointer 0 input-pointer)
-               (apply thunk (list address-pointer))
-               (set! input-pointer (pointer-get address-pointer 'pointer 0))
-               (c-free address-pointer)))))

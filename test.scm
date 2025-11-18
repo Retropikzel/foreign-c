@@ -30,6 +30,7 @@
 
 (test-end "c-type-size")
 
+;#|
 (test-begin "define-c-library")
 
 (define-c-library libc
@@ -90,7 +91,6 @@
 (test-equal (c-bytevector-u8-ref u8-pointer 0) 42)
 
 (test-end "c-bytevector-u8-set! and c-bytevector-u8-ref")
-#|
 
 (test-begin "c-bytevector-pointer-set! and c-bytevector-pointer-ref")
 

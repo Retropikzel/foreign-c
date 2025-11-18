@@ -17,7 +17,7 @@
                   (only (rnrs r5rs)
                         remainder
                         quotient)
-                  (srfi 0)
+                  (srfi :0)
                   (srfi :98)))
     (else (import (scheme base)
                   (scheme write)

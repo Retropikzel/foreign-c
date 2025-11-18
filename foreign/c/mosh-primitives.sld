@@ -7,7 +7,8 @@
           (scheme inexact)
           (scheme inexact)
           (scheme process-context)
-          (mosh ffi))
+          (mosh ffi)
+          (srfi :0))
   (export size-of-type
           align-of-type
           shared-object-load

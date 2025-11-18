@@ -51,7 +51,6 @@
           ((eq? type 'double) 8)
           ((eq? type 'pointer) 8)
           ((eq? type 'void) 0)
-          ((eq? type 'callback) 8)
           (else (error "Can not get size of unknown type" type)))))
 
 (define align-of-type size-of-type)
@@ -68,28 +67,28 @@
 (define c-bytevector-u8-set!
   (lambda (c-bytevector k byte)
     ;; FIXME
-    #;(syscall syscall:poke-bytes c-bytevector k (c-type-size 'uint8) byte)
+    #;(syscall syscall:poke-bytes c-bytevector k (size-of-type 'uint8) byte)
     #t
     ))
 
 (define c-bytevector-u8-ref
   (lambda (c-bytevector k)
     ;; FIXME
-    #;(syscall syscall:peek-bytes c-bytevector k (c-type-size 'uint8))
+    #;(syscall syscall:peek-bytes c-bytevector k (size-of-type 'uint8))
     #t
     ))
 
 (define c-bytevector-pointer-set!
   (lambda (c-bytevector k pointer)
     ;; FIXME
-    #;(syscall syscall:poke-bytes c-bytevector k (c-type-size 'pointer) pointer)
+    #;(syscall syscall:poke-bytes c-bytevector k (size-of-type 'pointer) pointer)
     #t
     ))
 
 (define c-bytevector-pointer-ref
   (lambda (c-bytevector k)
     ;; FIXME
-    #;(syscall syscall:peek-bytes c-bytevector k (c-type-size 'pointer))
+    #;(syscall syscall:peek-bytes c-bytevector k (size-of-type 'pointer))
     #t
     ))
 

@@ -20,7 +20,7 @@
           ((equal? type 'double) _double)
           ((equal? type 'pointer) _pointer)
           ((equal? type 'void) _void)
-          ((equal? type 'callback) _pointer)
+          ;((equal? type 'callback) _pointer)
           (else #f))))
 
 (define c-bytevector?
@@ -36,7 +36,7 @@
                     (_cprocedure (mlist->list (map type->native-type argument-types))
                                  (type->native-type return-type)))))))
 
-(define-syntax define-c-callback
+#;(define-syntax define-c-callback
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
      (define scheme-name (function-ptr procedure
@@ -77,12 +77,3 @@
 (define c-bytevector-pointer-ref
   (lambda (c-bytevector k)
     (ptr-ref c-bytevector _pointer 'abs k)))
-
-#;(define-syntax call-with-address-of-c-bytevector
-  (syntax-rules ()
-    ((_ input-pointer thunk)
-     (let ((address-pointer (make-c-bytevector (c-type-size 'pointer))))
-       (c-bytevector-pointer-set! address-pointer 0 input-pointer)
-       (apply thunk (list address-pointer))
-       (set! input-pointer (c-bytevector-pointer-ref address-pointer 0))
-       (c-free address-pointer)))))
