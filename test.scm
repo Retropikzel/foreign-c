@@ -1,12 +1,4 @@
-
 (test-begin "foreign-c")
-
-(define-c-library libc
-                  '("stdlib.h" "stdio.h" "string.h")
-                  libc-name
-                  '((additional-versions ("0" "6"))))
-
-(test-assert libc)
 
 ;; c-type-size
 
@@ -39,6 +31,13 @@
 (test-end "c-type-size")
 
 (test-begin "define-c-library")
+
+(define-c-library libc
+                  '("stdlib.h" "stdio.h" "string.h")
+                  libc-name
+                  '((additional-versions ("0" "6"))))
+
+(test-assert libc)
 
 (define-c-library c-testlib
                      '("libtest.h")
@@ -137,4 +136,5 @@
 
 (test-end "define-c-procedure")
 
+;|#
 (test-end "foreign-c")

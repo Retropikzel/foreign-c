@@ -340,23 +340,7 @@
   (lambda (address)
     (c-memset-address->pointer address 0 0)))
 
-#;(define c-bytevector-pointer-set!
-  (lambda (c-bytevector k pointer)
-    (c-bytevector-uint-set! c-bytevector
-                            0
-                            (c-bytevector->address pointer)
-                            (native-endianness)
-                            (c-type-size 'pointer))))
-
-#;(define c-bytevector-pointer-ref
-  (lambda (c-bytevector k)
-    (address->c-bytevector (c-bytevector-uint-ref c-bytevector
-                                                  0
-                                                  (native-endianness)
-                                                  (c-type-size 'pointer)))))
-
 (cond-expand
-  ;(kawa #t) ; Defined in kawa.scm
   (else (define-syntax call-with-address-of
           (syntax-rules ()
             ((_ input-pointer thunk)

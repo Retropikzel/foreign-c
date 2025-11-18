@@ -1,21 +1,13 @@
 (foreign c) is a C foreign function interface (FFI) library for R6RS and R7RS Schemes
 
-[Repository](https://git.sr.ht/~retropikzel/foreign-c)
-
-[Issue tracker](https://sr.ht/~retropikzel/foreign-c/trackers)
-
-[Maling lists](https://sr.ht/~retropikzel/foreign-c/lists)
-
-[Jenkins](https://jenkins.scheme.org/job/retropikzel/job/foreign-c/)
-
-
-
-## Implementation support table
+## Supported implementations
 
 *NOTE* Implementation missing from this table does not mean it will not be
 supported. Either the work on it has not started yet or support for missing
 implementations is so unfinished that they are not listed here.
 
+- Chez => 10.0.0
+    - R6RS
 - Chibi > 0.11
     - R7RS
     - At the time only 0.11 is out so build from git
@@ -59,62 +51,6 @@ implementations is so unfinished that they are not listed here.
     - R6RS
         - Not working yet!
     - R7RS
-
-
-
-### Primitives 1 table
-
-
-|                  | c-type-size  | c-bytevector-u8-set! |c-bytevector-u8-ref | define-c-library    | c-bytevector? | define-c-procedure  |
-|------------------|:------------:|:--------------------:|:------------------:|:-------------------:|:-------------:|:-------------------:|
-| **Chibi**        | X            | X                    |X                   | X                   | X             | X                   |
-| **Chicken**      | X            | X                    |X                   | X                   | X             | X                   |
-| **Gauche**       | X            | X                    |X                   | X                   | X             | X                   |
-| **Guile**        | X            | X                    |X                   | X                   | X             | X                   |
-| **Kawa**         | X            | X                    |X                   | X                   | X             | X                   |
-| **Mosh**         | X            | X                    |X                   | X                   | X             | X                   |
-| **Racket**       | X            | X                    |X                   | X                   | X             | X                   |
-| **Sagittarius**  | X            | X                    |X                   | X                   | X             | X                   |
-| **STklos**       | X            | X                    |X                   | X                   | X             | X                   |
-| **Ypsilon**      | X            | X                    |X                   | X                   | X             | X                   |
-
-
-
-### Primitives 2 table
-
-
-|                  | define-c-callback |
-|------------------|:-----------------:|
-| Chibi            |                   |
-| **Chicken**      | X                 |
-| Gauche           |                   |
-| **Guile**        | X                 |
-| Kawa             |                   |
-| **Mosh**         | X                 |
-| **Racket**       | X                 |
-| **Saggittarius** | X                 |
-| STklos           |                   |
-| **Ypsilon**      | X                 |
-
-
-
-### Test files pass
-
-
-|                  | primitives.scm | addressof.scm | callback.scm |
-|------------------|:--------------:|:-------------:|-------------:|
-| Chibi            | X              | X             |              |
-| **Chicken**      | X              | X             | X            |
-| Gauche           | X              | X             |              |
-| **Guile**        | X              | X             | X            |
-| Kawa             | X              | X             |              |
-| Mosh             | X              | X             |              |
-| Racket           | X              |               |              |
-| **Saggittarius** | X              | X             | X            |
-| STklos           | X              | X             |              |
-| Ypsilon          | X              | X             |              |
-
-
 
 ## Installation
 
@@ -210,8 +146,6 @@ Types are given as symbols, for example 'int8 or 'pointer.
 - double
 - pointer
     - c-bytevector on Scheme side
-- callback
-    - Callback function
 - void
     - Can not be argument type, only return type
 
@@ -332,57 +266,6 @@ Stores the pointer(which is also c-bytevector) in element k of c-bytevector.
 If K is not a valid index of c-bytevector the behaviour is undefined.
 
 Returns the pointer(which is also c-bytevector) at index k of c-bytevector.
-
-
-
-
-### Primitives 2
-
-
-(**define-c-callback** scheme-name return-type argument-types procedure)
-
-Takes scheme-name to bind the Scheme procedure to, return-type, argument-types
-and procedure as in place lambda.
-
-Defines a new Sceme function to be used as callback to C code.
-
-Example:
-
-    ; Load the shared library
-    (define-c-library libc-stdlib '("stdlib.h") libc-name '("" "6"))
-
-    ; Define C function that takes a callback
-    (define-c-procedure qsort libc-stdlib 'qsort 'void '(pointer int int callback))
-
-    ; Define our callback
-    (define-c-callback compare
-                          'int
-                          '(pointer pointer)
-                          (lambda (pointer-a pointer-b)
-                            (let ((a (c-bytevector-sint-get pointer-a (native-endianness) 0))
-                                  (b (c-bytevector-sint-get pointer-b (native-endianness) 0)))
-                              (cond ((> a b) 1)
-                                    ((= a b) 0)
-                                    ((< a b) -1)))))
-
-    ; Create new array of ints to be sorted
-    (define array (make-c-bytevector (* (c-type-size 'int) 3)))
-    (c-bytevector-s32-native-set! array (* (c-type-size 'int) 0) 3)
-    (c-bytevector-s32-native-set! array (* (c-type-size 'int) 1) 2)
-    (c-bytevector-s32-native-set! array (* (c-type-size 'int) 2) 1)
-
-    (display array)
-    (newline)
-    ;> (3 2 1)
-
-    ; Sort the array
-    (qsort array 3 (c-type-size 'int) compare)
-
-    (display array)
-    (newline)
-    ;> (1 2 3)
-
-
 
 ### c-bytevector
 
