@@ -40,6 +40,8 @@
                    (srfi 98)))
     (ikarus (import (ikarus include)
                     (foreign c ikarus-primitives)))
+    (ironscheme (import (only (ironscheme) include)
+                        (foreign c ironscheme-primitives)))
     (kawa (import (foreign c kawa-primitives)))
     ;(mit-scheme (import (foreign c mit-scheme-primitives)))
     (larceny (import (foreign c larceny-primitives)))
@@ -165,6 +167,9 @@
     )
   (cond-expand
     (ikarus
+      (include "foreign/c.scm")
+      (include "foreign/c/c-bytevectors.scm"))
+    (ironscheme
       (include "foreign/c.scm")
       (include "foreign/c/c-bytevectors.scm"))
     (else

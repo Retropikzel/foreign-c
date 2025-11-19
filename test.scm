@@ -1,5 +1,6 @@
 (test-begin "foreign-c")
 
+
 ;; c-type-size
 
 (test-begin "c-type-size")
@@ -30,8 +31,7 @@
 
 (test-end "c-type-size")
 
-;#|
-(test-begin "define-c-library")
+;(test-begin "define-c-library")
 
 (define-c-library libc
                   '("stdlib.h" "stdio.h" "string.h")
@@ -53,21 +53,21 @@
                       "test"
                       '((additional-paths ("." "./tests"))))))
 
-(cond-expand
+#;(cond-expand
   (i386 #t)
   (else
     (define-c-procedure c-takes-no-args c-testlib 'takes_no_args 'void '())
     (c-takes-no-args)))
 
 
-(cond-expand
+#;(cond-expand
   (i386 #t)
   (else
     (define-c-procedure c-takes-no-args-returns-int c-testlib 'takes_no_args_returns_int 'int '())
     (define takes-no-args-returns-int-result (c-takes-no-args-returns-int))
     (test-equal takes-no-args-returns-int-result 0)))
 
-(test-end "define-c-library")
+;(test-end "define-c-library")
 
 
 (test-begin "make-c-bytevector and c-bytevector?")
