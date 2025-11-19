@@ -2,10 +2,6 @@
 
 ## Supported implementations
 
-*NOTE* Implementation missing from this table does not mean it will not be
-supported. Either the work on it has not started yet or support for missing
-implementations is so unfinished that they are not listed here.
-
 - Chez => 10.0.0
     - R6RS
 - Chibi > 0.11
@@ -53,6 +49,13 @@ implementations is so unfinished that they are not listed here.
     - R6RS
         - Not working yet
     - R7RS
+
+## Work in progress implementations
+
+- Cyclone
+- Gambit
+- Ikarus
+- Mit-Scheme
 
 ## Installation
 
