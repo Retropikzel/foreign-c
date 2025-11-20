@@ -2,6 +2,7 @@
 
 ;; c-type-size
 
+;#|
 (test-begin "c-type-size")
 
 (test-equal (c-type-size 'int8) 1)

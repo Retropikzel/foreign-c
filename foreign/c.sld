@@ -1,6 +1,23 @@
 (define-library
   (foreign c)
   (cond-expand
+    (larceny (import (rnrs base)
+                     (rnrs lists)
+                     (rnrs control)
+                     (rnrs files)
+                     (rnrs io simple)
+                     (rnrs programs)
+                     (only (rnrs bytevectors)
+                           make-bytevector
+                           bytevector-length
+                           utf8->string
+                           string->utf8
+                           bytevector-u8-ref
+                           bytevector-u8-set!)
+                     (only (rnrs r5rs)
+                           remainder
+                           quotient)
+                     (srfi :98)))
     (r6rs (import (rnrs base)
                   (rnrs lists)
                   (rnrs control)

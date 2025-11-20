@@ -31,6 +31,11 @@
     - So that snow-chibi installed library is found
         - -Dkawa.import.path=/usr/local/share/kawa
         - -Dkawa.import.path=/usr/local/share/kawa/lib
+- Larceny
+    - R6RS
+        - Not working yet
+    - R7RS
+        - Not working yet
 - Mosh >= 0.2.9-rc1
     - R6RS
         - Not working yet
