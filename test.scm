@@ -1,6 +1,5 @@
 (test-begin "foreign-c")
 
-
 ;; c-type-size
 
 (test-begin "c-type-size")
@@ -31,7 +30,7 @@
 
 (test-end "c-type-size")
 
-;(test-begin "define-c-library")
+(test-begin "define-c-library")
 
 (define-c-library libc
                   '("stdlib.h" "stdio.h" "string.h")
@@ -44,8 +43,8 @@
 (test-equal (c-abs -2) 2)
 
 ;; Skip these tests on 32 bit implementations
-(test-skip (cond-expand (i386 1) (else 0)))
-(cond-expand
+;(test-skip (cond-expand (i386 1) (else 0)))
+#;(cond-expand
   (i386 #t)
   (else
     (define-c-library c-testlib
@@ -67,7 +66,7 @@
     (define takes-no-args-returns-int-result (c-takes-no-args-returns-int))
     (test-equal takes-no-args-returns-int-result 0)))
 
-;(test-end "define-c-library")
+(test-end "define-c-library")
 
 
 (test-begin "make-c-bytevector and c-bytevector?")

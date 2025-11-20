@@ -47,7 +47,8 @@
     (larceny (import (foreign c larceny-primitives)))
     (mosh (import (only (mosh) include)
                   (foreign c mosh-primitives)))
-    (racket (import (foreign c racket-primitives)))
+    (racket (import (only (scheme base) include cond-expand)
+                    (foreign c racket-primitives)))
     (sagittarius (import (foreign c sagittarius-primitives)))
     (stklos (import (foreign c stklos-primitives))
             (export foreign-c:string-split

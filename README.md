@@ -15,7 +15,7 @@
 - Guile >= 3
     - R6RS
     - R7RS
-    - Has include bug, might not work on all situations
+        - Has include bug, might not work on all situations
 - Ikarus >= 0.0.4-rc1+
     - R6RS
 - Kawa >= 3.11 and Java >= 22
@@ -38,6 +38,7 @@
 - Racket >= 8.16 [cs]
     - R6RS
         - Not working yet
+        - Unable to run tests as Rackets SRFI-64 implementation does not work
     - R7RS
 - Sagittarius >= 0.9.13
     - R6RS
