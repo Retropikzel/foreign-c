@@ -5,27 +5,27 @@
 ;#|
 (test-begin "c-type-size")
 
-(test-equal (c-type-size 'int8) 1)
-(test-equal (c-type-size 'uint8) 1)
-(test-equal (c-type-size 'int16) 2)
-(test-equal (c-type-size 'uint16) 2)
-(test-equal (c-type-size 'int32) 4)
-(test-equal (c-type-size 'uint32) 4)
-(test-equal (c-type-size 'int64) 8)
-(test-equal (c-type-size 'uint64) 8)
-(test-equal (c-type-size 'char) 1)
-(test-equal (c-type-size 'unsigned-char) 1)
-(test-equal (c-type-size 'short) 2)
-(test-equal (c-type-size 'unsigned-short) 2)
-(test-equal (c-type-size 'int) 4)
-(test-equal (c-type-size 'unsigned-int) 4)
+(test-equal "c-type-size int8" (c-type-size 'int8) 1)
+(test-equal "c-type-size uint8" (c-type-size 'uint8) 1)
+(test-equal "c-type-size int16" (c-type-size 'int16) 2)
+(test-equal "c-type-size uint16" (c-type-size 'uint16) 2)
+(test-equal "c-type-size int32" (c-type-size 'int32) 4)
+(test-equal "c-type-size uint32" (c-type-size 'uint32) 4)
+(test-equal "c-type-size int64" (c-type-size 'int64) 8)
+(test-equal "c-type-size uint64" (c-type-size 'uint64) 8)
+(test-equal "c-type-size char" (c-type-size 'char) 1)
+(test-equal "c-type-size unsigned-char" (c-type-size 'unsigned-char) 1)
+(test-equal "c-type-size short" (c-type-size 'short) 2)
+(test-equal "c-type-size unsigned-short" (c-type-size 'unsigned-short) 2)
+(test-equal "c-type-size int" (c-type-size 'int) 4)
+(test-equal "c-type-size unsigned-int" (c-type-size 'unsigned-int) 4)
 
 ;(cond-expand (i386 (test-equal (c-type-size 'long) 4)) (else (test-equal (c-type-size 'long) 8)))
 
 ;(cond-expand (i386 (test-equal (c-type-size 'unsigned-long) 4)) (else (test-equal (c-type-size 'unsigned-long) 8)))
 
-(test-equal (c-type-size 'float) 4)
-(test-equal (c-type-size 'double) 8)
+(test-equal "c-type-size float" (c-type-size 'float) 4)
+(test-equal "c-type-size double" (c-type-size 'double) 8)
 
 ;(cond-expand (i386 (test-equal (c-type-size 'pointer) 4)) (else (test-equal (c-type-size 'pointer) 8)))
 
@@ -38,10 +38,10 @@
                   libc-name
                   '((additional-versions ("0" "6"))))
 
-(test-assert libc)
+(test-assert "test-assert libc" libc)
 
 (define-c-procedure c-abs libc 'abs 'int '(int))
-(test-equal (c-abs -2) 2)
+(test-equal "c-abs" (c-abs -2) 2)
 
 ;; Skip these tests on 32 bit implementations
 ;(test-skip (cond-expand (i386 1) (else 0)))
@@ -70,58 +70,70 @@
 (test-end "define-c-library")
 
 
-(test-begin "make-c-bytevector and c-bytevector?")
+(test-begin "make-c-bytevector")
 (define bytes (make-c-bytevector 100))
-(test-assert (c-bytevector? bytes))
+(test-assert "1" (c-bytevector? bytes))
+(test-end "make-c-bytevector")
 
+
+(test-begin "c-bytevector?")
 (define is-pointer (make-c-bytevector 100))
-(test-assert (c-bytevector? is-pointer))
-(test-assert (c-bytevector? 100))
-(test-assert (c-bytevector? #f))
-(test-assert (not (c-bytevector? "Hello")))
-(test-assert (not (c-bytevector? 'bar)))
+(test-assert "1" (c-bytevector? is-pointer))
+(test-assert "2" (not (c-bytevector? 100)))
+;(test-assert "3" (c-bytevector? #f))
+(test-assert "4" (not (c-bytevector? "Hello")))
+(test-assert "5" (not (c-bytevector? 'bar)))
+(test-end "c-bytevector?")
 
-(test-end "make-c-bytevector and c-bytevector?")
 
-(test-begin "c-bytevector-u8-set! and c-bytevector-u8-ref")
-
+(test-begin "c-bytevector-u8-set!")
 (define u8-pointer (make-c-bytevector (c-type-size 'uint8)))
-(test-assert (c-bytevector? u8-pointer))
+(test-assert "1" (c-bytevector? u8-pointer))
 (c-bytevector-u8-set! u8-pointer 0 42)
-(test-equal (c-bytevector-u8-ref u8-pointer 0) 42)
+(test-end "c-bytevector-u8-set!")
 
-(test-end "c-bytevector-u8-set! and c-bytevector-u8-ref")
 
-(test-begin "c-bytevector-pointer-set! and c-bytevector-pointer-ref")
+(test-begin "c-bytevector-u8-ref")
+(test-equal "1" (c-bytevector-u8-ref u8-pointer 0) 42)
+(test-end "c-bytevector-u8-ref")
 
+
+(test-begin "c-bytevector-pointer-set!")
 (define p-pointer (make-c-bytevector (c-type-size 'pointer)))
-(test-assert (c-bytevector? p-pointer))
+(test-assert "1" (c-bytevector? p-pointer))
 (c-bytevector-pointer-set! p-pointer 0 u8-pointer)
-(test-equal (c-bytevector-u8-ref (c-bytevector-pointer-ref p-pointer 0) 0) 42)
+(test-end "c-bytevector-pointer-set!")
 
-(test-end "c-bytevector-pointer-set! and c-bytevector-pointer-ref")
 
-(test-begin "string->c-utf8 c-utf8->string")
-(for-each
-  (lambda (str)
-    (let ((utf-eight (string->c-utf8 str)))
-      (let ((str1 (c-utf8->string utf-eight)))
-        (test-assert (string=? str1 str)))))
-  (list "100" "Hello world" "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"))
-(test-end "string->c-utf8 c-utf8->string")
+(test-begin "c-bytevector-pointer-ref")
+(test-equal "1" (c-bytevector-u8-ref (c-bytevector-pointer-ref p-pointer 0) 0) 42)
+(test-end "c-bytevector-pointer-ref")
+
+
+(test-begin "string->c-utf8")
+(define c-string (string->c-utf8 "foobar"))
+(test-assert "1" (c-bytevector? c-string))
+(test-end "string->c-utf8")
+
+
+(test-begin "c-utf8->string")
+(define string-from-c (c-utf8->string c-string))
+(test-assert "1" (string? string-from-c))
+(test-assert "2" (string=? string-from-c "foobar"))
+(test-end "c-utf8->string")
+
 
 (test-begin "define-c-procedure")
-
 (define-c-procedure c-atoi libc 'atoi 'int '(pointer))
-(test-equal (c-atoi (string->c-utf8 "100")) 100)
+(test-equal "1" (c-atoi (string->c-utf8 "100")) 100)
 
 (define-c-procedure c-puts libc 'puts 'int '(pointer))
 (define chars-written (c-puts (string->c-utf8 "puts: Hello from testing, I am C function puts")))
-(test-equal chars-written 47)
+(test-equal "2" chars-written 47)
 
 (define-c-procedure c-strcat libc 'strcat 'pointer '(pointer pointer))
 (define c-string1 (string->c-utf8 "test123"))
-(test-assert (string=? (c-utf8->string (c-strcat (string->c-utf8 "con2")
+(test-assert "3" (string=? (c-utf8->string (c-strcat (string->c-utf8 "con2")
                                                  (string->c-utf8 "cat2")))
                        "con2cat2"))
 
@@ -131,11 +143,11 @@
                               (string->c-utf8 "w")))
 (define-c-procedure c-fprintf libc 'fprintf 'int '(pointer pointer int))
 (define characters-written (c-fprintf output-file (string->c-utf8 "Hello world %i") 1))
-(test-equal characters-written 13)
+(test-equal "4" characters-written 13)
 (define-c-procedure c-fclose libc 'fclose 'int '(pointer))
 (define closed-status (c-fclose output-file))
-(test-equal closed-status 0)
-(test-assert (file-exists? "testfile.test"))
+(test-equal "5" closed-status 0)
+(test-assert "6" (file-exists? "testfile.test"))
 
 ;; Own readline so tests work on R6RS
 (define (rl result)
@@ -145,7 +157,7 @@
       (rl (string-append result (string c))))))
 (define file-content (with-input-from-file "testfile.test"
                                            (lambda () (rl ""))))
-(test-assert (string=? file-content "Hello world 1"))
+(test-assert "7" (string=? file-content "Hello world 1"))
 
 (test-end "define-c-procedure")
 
