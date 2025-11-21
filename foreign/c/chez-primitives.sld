@@ -1,6 +1,6 @@
-(define-library
+;; This is actually R6RS library, because chez only supports R6RS
+(library
   (foreign c chez-primitives)
-  (import (chezscheme))
   (export size-of-type
           align-of-type
           shared-object-load
@@ -13,6 +13,7 @@
           ;; Chez specific
           foreign-procedure
           type->native-type)
+  (import (chezscheme))
   (begin
     (define-syntax type->native-type
       (syntax-rules ()
