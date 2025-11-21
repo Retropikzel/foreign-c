@@ -1,10 +1,10 @@
 (test-begin "foreign-c")
 
-(display "Hello")
-(newline)
+;(display "Hello")
+;(newline)
 ;; c-type-size
 
-#|
+;#|
 (test-begin "c-type-size")
 
 (test-equal (c-type-size 'int8) 1)

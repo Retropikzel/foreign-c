@@ -4,7 +4,6 @@
 
 - Chez => 10.0.0
     - R6RS
-        - Not working yet
 - Chibi > 0.11
     - R7RS
     - At the time only 0.11 is out so build from git
@@ -34,14 +33,7 @@
     - So that snow-chibi installed library is found
         - -Dkawa.import.path=/usr/local/share/kawa
         - -Dkawa.import.path=/usr/local/share/kawa/lib
-- Larceny
-    - R6RS
-        - Not working yet
-    - R7RS
-        - Not working yet
 - Mosh >= 0.2.9-rc1
-    - R6RS
-        - Not working yet
     - R7RS
 - Racket >= 8.16 [cs]
     - R6RS
@@ -57,12 +49,19 @@
     - R6RS
     - R7RS
 
-## Work in progress implementations
+## Work in progress
 
 - Cyclone
+    - R7RS
 - Gambit
-- Ikarus
+    - R7RS
 - Mit-Scheme
+    - R7RS
+- Mosh
+    - R6RS
+- Larceny
+    - R6RS
+    - R7RS
 
 ## Installation
 
