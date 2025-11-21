@@ -1,6 +1,13 @@
 (define-library
   (foreign c)
   (cond-expand
+    (guile
+     (import (scheme base)
+             (scheme write)
+             (scheme char)
+             (scheme file)
+             (scheme process-context)
+             (scheme inexact)))
     ((and r6rs larceny)
      (import (rnrs base)
              (rnrs lists)
@@ -239,13 +246,13 @@
                                                       version))
                                                   (cadr (assoc 'additional-versions internal-options)))
                                              (list)))
-                      (slash (cond-expand (windows (string #\\)) (else "/")))
+                      (slash (cond-expand (windows (string (string-ref "\\" 0))) (else "/")))
                       (auto-load-paths
                         (cond-expand
                           (windows
                             (append
                               (if (get-environment-variable "FOREIGN_C_LOAD_PATH")
-                                (foreign-c:string-split (get-environment-variable "FOREIGN_C_LOAD_PATH") #\;)
+                                (foreign-c:string-split (get-environment-variable "FOREIGN_C_LOAD_PATH") (string-ref ";" 0))
                                 (list))
                               (if (get-environment-variable "SYSTEM")
                                 (list (get-environment-variable "SYSTEM"))
@@ -264,7 +271,7 @@
                                 (list))
                               (list ".")
                               (if (get-environment-variable "PATH")
-                                (foreign-c:string-split (get-environment-variable "PATH") #\;)
+                                (foreign-c:string-split (get-environment-variable "PATH") (string-ref ";" 0))
                                 (list))
                               (if (get-environment-variable "PWD")
                                 (list (get-environment-variable "PWD"))
@@ -272,7 +279,7 @@
                           (else
                             (append
                               (if (get-environment-variable "FOREIGN_C_LOAD_PATH")
-                                (foreign-c:string-split (get-environment-variable "FOREIGN_C_LOAD_PATH") #\:)
+                                (foreign-c:string-split (get-environment-variable "FOREIGN_C_LOAD_PATH") (string-ref ":" 0))
                                 (list))
                               ; Guix
                               (list (if (get-environment-variable "GUIX_ENVIRONMENT")
@@ -281,7 +288,7 @@
                                     "/run/current-system/profile/lib")
                               ; Debian
                               (if (get-environment-variable "LD_LIBRARY_PATH")
-                                (foreign-c:string-split (get-environment-variable "LD_LIBRARY_PATH") #\:)
+                                (foreign-c:string-split (get-environment-variable "LD_LIBRARY_PATH") (string-ref ":" 0))
                                 (list))
                               (cond-expand
                                 (i386

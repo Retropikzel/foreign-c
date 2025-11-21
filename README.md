@@ -4,6 +4,7 @@
 
 - Chez => 10.0.0
     - R6RS
+        - Not working yet
 - Chibi > 0.11
     - R7RS
     - At the time only 0.11 is out so build from git
@@ -44,7 +45,6 @@
     - R7RS
 - Racket >= 8.16 [cs]
     - R6RS
-        - Not working yet
         - Unable to run tests as Rackets SRFI-64 implementation does not work
     - R7RS
 - Sagittarius >= 0.9.13
@@ -55,7 +55,6 @@
     - At the time only 2.10 is out so build from git
 - Ypsilon >= 2.08
     - R6RS
-        - Not working yet
     - R7RS
 
 ## Work in progress implementations
