@@ -1,5 +1,14 @@
 (define-library
   (foreign c ikarus-primitives)
+  (export size-of-type
+          align-of-type
+          shared-object-load
+          define-c-procedure
+          c-bytevector?
+          c-bytevector-u8-ref
+          c-bytevector-u8-set!
+          c-bytevector-pointer-ref
+          c-bytevector-pointer-set!)
   (import (rnrs base)
           (rnrs lists)
           (rnrs control)
@@ -16,19 +25,8 @@
           (only (rnrs r5rs)
                 remainder
                 quotient)
-          (srfi 0)
-          (srfi :98)
           (ikarus include)
           (ikarus foreign))
-  (export size-of-type
-          align-of-type
-          shared-object-load
-          define-c-procedure
-          c-bytevector?
-          c-bytevector-u8-ref
-          c-bytevector-u8-set!
-          c-bytevector-pointer-ref
-          c-bytevector-pointer-set!)
   (begin
     (define size-of-type
       (lambda (type)

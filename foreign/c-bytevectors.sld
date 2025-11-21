@@ -50,34 +50,32 @@
 (define-library
   (foreign c-bytevectors)
   (cond-expand
-    ((and r6rs guile)
-     (import (rnrs base)
-             (rnrs control)
-             (only (rnrs r5rs)
-                   remainder
-                   quotient)
-             (only (scheme base) cond-expand)))
-    ((and r6rs larceny)
-     (import (rnrs base)
-             (rnrs control)
-             (only (rnrs r5rs)
-                   remainder
-                   quotient)
-             (only (scheme base) cond-expand)))
+    (chezscheme
+      (import (rnrs base)
+              (rnrs control)
+              (only (rnrs r5rs)
+                    remainder
+                    quotient)
+              (only (rnrs bytevectors) native-endianness)))
     (r6rs
       (import (rnrs base)
               (rnrs control)
               (only (rnrs r5rs)
                     remainder
                     quotient)
-              (srfi :0)))
+              (only (rnrs bytevectors) native-endianness)))
     (else
       (import (scheme base)
               (scheme write)
               (scheme char)
               (scheme file)
               (scheme process-context)
-              (scheme inexact))))
+              (scheme inexact))
+      (begin
+        (define (native-endianness)
+          (cond-expand (little-endian 'little)
+                       (racket (if (system-big-endian?) 'big 'little))
+                       (else 'big))))))
   (export c-bytevectors-init
     ;; TODO endianness
     native-endianness
@@ -569,11 +567,6 @@
       ((_ little)
        (quote little))))
 
-  (define (native-endianness)
-    (cond-expand (little-endian 'little)
-                 (racket (if (system-big-endian?) 'big 'little))
-                 (else 'big)))
-
   #;(define (c-bytevector=? bv1 bv2)
     (if (and (c-bytevector? bv1)
              (c-bytevector? bv2))
@@ -725,25 +718,50 @@
 (define c-bytevector-u64-native-set! (make-set!/native 8 c-bytevector-u64-set!))
 (define c-bytevector-s64-native-set! (make-set!/native 8 c-bytevector-s64-set!))
 
-(cond-expand
-  (little-endian
+;(cond-expand
+  ;(little-endian
     (define (c-bytevector-ieee-single-native-ref c-bytevector k)
-      (if (not (= 0 (remainder k 4)))
-        (complain 'c-bytevector-ieee-single-native-ref c-bytevector k))
-      (c-bytevector-ieee-single-little-endian-ref c-bytevector k))
+      (cond
+        ((equal? (native-endianness) 'little)
+         (if (not (= 0 (remainder k 4)))
+           (complain 'c-bytevector-ieee-single-native-ref c-bytevector k))
+         (c-bytevector-ieee-single-little-endian-ref c-bytevector k))
+        (else
+          (if (not (= 0 (remainder k 4)))
+            (complain 'c-bytevector-ieee-single-native-ref c-bytevector k))
+          (c-bytevector-ieee-single-big-endian-ref c-bytevector k))))
     (define (c-bytevector-ieee-double-native-ref c-bytevector k)
-      (if (not (= 0 (remainder k 8)))
-        (complain 'c-bytevector-ieee-double-native-ref c-bytevector k))
-      (c-bytevector-ieee-double-little-endian-ref c-bytevector k))
+      (cond
+        ((equal? (native-endianness) 'little)
+         (if (not (= 0 (remainder k 8)))
+           (complain 'c-bytevector-ieee-double-native-ref c-bytevector k))
+         (c-bytevector-ieee-double-little-endian-ref c-bytevector k))
+        (else
+          (if (not (= 0 (remainder k 8)))
+            (complain 'c-bytevector-ieee-double-native-ref c-bytevector k))
+          (c-bytevector-ieee-double-big-endian-ref c-bytevector k))))
     (define (c-bytevector-ieee-single-native-set! c-bytevector k x)
-      (if (not (= 0 (remainder k 4)))
-        (complain 'c-bytevector-ieee-single-native-set! c-bytevector k x))
-      (c-bytevector-ieee-single-set! c-bytevector k x 'little))
+      (cond
+        ((equal? (native-endianness) 'little)
+         (if (not (= 0 (remainder k 4)))
+           (complain 'c-bytevector-ieee-single-native-set! c-bytevector k x))
+         (c-bytevector-ieee-single-set! c-bytevector k x 'little))
+        (else
+          (if (not (= 0 (remainder k 4)))
+            (complain 'c-bytevector-ieee-single-native-set! c-bytevector k x))
+          (c-bytevector-ieee-single-set! c-bytevector k x 'big))))
     (define (c-bytevector-ieee-double-native-set! c-bytevector k x)
-      (if (not (= 0 (remainder k 8)))
-        (complain 'c-bytevector-ieee-double-native-set! c-bytevector k x))
-      (c-bytevector-ieee-double-set! c-bytevector k x 'little)))
-  (else
+      (cond
+        ((equal? (native-endianness) 'little)
+         (if (not (= 0 (remainder k 4)))
+           (if (not (= 0 (remainder k 8)))
+             (complain 'c-bytevector-ieee-double-native-set! c-bytevector k x))
+           (c-bytevector-ieee-double-set! c-bytevector k x 'little)))
+        (else
+          (if (not (= 0 (remainder k 8)))
+            (complain 'c-bytevector-ieee-double-native-set! c-bytevector k x))
+          (c-bytevector-ieee-double-set! c-bytevector k x 'big))))
+  #;(else
     (define (c-bytevector-ieee-single-native-ref c-bytevector k)
       (if (not (= 0 (remainder k 4)))
         (complain 'c-bytevector-ieee-single-native-ref c-bytevector k))
@@ -759,7 +777,8 @@
     (define (c-bytevector-ieee-double-native-set! c-bytevector k x)
       (if (not (= 0 (remainder k 8)))
         (complain 'c-bytevector-ieee-double-native-set! c-bytevector k x))
-      (c-bytevector-ieee-double-set! c-bytevector k x 'big))))
+      (c-bytevector-ieee-double-set! c-bytevector k x 'big)))
+;)
 
 (define (c-bytevector-ieee-single-ref c-bytevector k endianness)
   (case endianness

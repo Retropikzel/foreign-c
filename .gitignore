@@ -54,3 +54,4 @@ test-r7rs.c
 test-r7rs.scm
 Akku.lock
 Akku.manifest
+srfi

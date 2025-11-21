@@ -2,27 +2,12 @@
   (foreign c)
   (cond-expand
     (guile
-     (import (scheme base)
-             (scheme write)
-             (scheme char)
-             (scheme file)
-             (scheme process-context)
-             (scheme inexact)))
-    ((and r6rs larceny)
-     (import (rnrs base)
-             (rnrs lists)
-             (rnrs control)
-             (rnrs files)
-             (rnrs io simple)
-             (rnrs programs)
-             (only (rnrs bytevectors)
-                   make-bytevector
-                   bytevector-length
-                   utf8->string
-                   string->utf8
-                   bytevector-u8-ref
-                   bytevector-u8-set!)
-             (srfi :98)))
+      (import (scheme base)
+              (scheme write)
+              (scheme char)
+              (scheme file)
+              (scheme process-context)
+              (scheme inexact)))
     (r6rs
       (import (rnrs base)
               (rnrs lists)
@@ -36,9 +21,7 @@
                     utf8->string
                     string->utf8
                     bytevector-u8-ref
-                    bytevector-u8-set!)
-              (srfi :0)
-              (srfi :98)))
+                    bytevector-u8-set!)))
     (else
       (import (scheme base)
               (scheme write)
@@ -181,54 +164,66 @@
     ;; c-variable
     ;define-c-variable (?)
     )
-  (begin
-    ;; Foreign C
-    (define c-type-signed?
-      (lambda (type)
-        (if (member type '(int8 int16 int32 int64 char short int long float double))
-          #t
-          #f)))
-
-    (define c-type-unsigned?
-      (lambda (type)
-        (if (member type '(uint8 uint16 uint32 uint64 unsigned-char unsigned-short unsigned-int unsigned-long))
-          #t
-          #f)))
-
-    (define c-type-size
-      (lambda (type)
-        (size-of-type type)))
-
-    (define c-type-align
-      (lambda (type)
-        (align-of-type type)))
-
-    (define foreign-c:string-split
-      (lambda (str mark)
-        (let* ((str-l (string->list str))
-               (res (list))
-               (last-index 0)
-               (index 0)
-               (splitter (lambda (c)
-                           (cond ((char=? c mark)
-                                  (begin
-                                    (set! res (append res (list (substring str last-index index))))
-                                    (set! last-index (+ index 1))))
-                                 ((equal? (length str-l) (+ index 1))
-                                  (set! res (append res (list (substring str last-index (+ index 1)))))))
-                           (set! index (+ index 1)))))
-          (for-each splitter str-l)
-          res)))
-
-    (cond-expand
-      (chicken
+  (cond-expand
+    (gauche (begin (define implementation 'gauche)))
+    (racket (begin (define implementation 'racket)))
+    (stklos (begin (define implementation 'stklos)))
+    (else (begin (define implementation 'other))))
+  (cond-expand
+    (r6rs
+      ;; FIXME
+      (begin
+        (define operation-system 'linux)))
+    (else
+      (begin
+        (define operation-system
+          (cond-expand
+            (windows 'windows)
+            (haiku 'haiku)
+            (else (cond ;((getenv "BE_HOST_CPU") "root") ; Haiku
+                    (else 'unix))))))))
+  (cond-expand
+    (chezscheme (begin (define arch 'x86_64)))
+    (r6rs
+      ;; FIXME
+      (begin
+        (define arch
+          (if #t ;(> (fixnum-width) 32)
+            'x86_64
+            'i386))))
+    (else
+      (begin
+        (define arch
+          (cond-expand (i386 'i386)
+                       (else 'x86_64))))))
+  (cond-expand
+    (chicken
+      (begin
         (define-syntax define-c-library
           (syntax-rules ()
             ((_ scheme-name headers object-name options)
              (begin
                (define scheme-name #t)
-               (shared-object-load headers))))))
-      (else
+               (shared-object-load headers)))))))
+    (else
+      (begin
+        (define foreign-c:string-split
+          (lambda (str mark)
+            (let* ((str-l (string->list str))
+                   (res (list))
+                   (last-index 0)
+                   (index 0)
+                   (splitter (lambda (c)
+                               (cond ((char=? c mark)
+                                      (begin
+                                        (set! res (append res (list (substring str last-index index))))
+                                        (set! last-index (+ index 1))))
+                                     ((equal? (length str-l) (+ index 1))
+                                      (set! res (append res (list (substring str last-index (+ index 1)))))))
+                               (set! index (+ index 1)))))
+              (for-each splitter str-l)
+              res)))
+
         (define-syntax define-c-library
           (syntax-rules ()
             ((_ scheme-name headers object-name options)
@@ -246,57 +241,57 @@
                                                       version))
                                                   (cadr (assoc 'additional-versions internal-options)))
                                              (list)))
-                      (slash (cond-expand (windows (string (string-ref "\\" 0))) (else "/")))
+                      (slash (if (equal? operation-system 'windows) (string (string-ref "\\" 0)) "/"))
                       (auto-load-paths
-                        (cond-expand
-                          (windows
-                            (append
-                              (if (get-environment-variable "FOREIGN_C_LOAD_PATH")
-                                (foreign-c:string-split (get-environment-variable "FOREIGN_C_LOAD_PATH") (string-ref ";" 0))
-                                (list))
-                              (if (get-environment-variable "SYSTEM")
-                                (list (get-environment-variable "SYSTEM"))
-                                (list))
-                              (if (get-environment-variable "WINDIR")
-                                (list (get-environment-variable "WINDIR"))
-                                (list))
-                              (if (get-environment-variable "WINEDLLDIR0")
-                                (list (get-environment-variable "WINEDLLDIR0"))
-                                (list))
-                              (if (get-environment-variable "SystemRoot")
-                                (list (string-append
-                                        (get-environment-variable "SystemRoot")
-                                        slash
-                                        "system32"))
-                                (list))
-                              (list ".")
-                              (if (get-environment-variable "PATH")
-                                (foreign-c:string-split (get-environment-variable "PATH") (string-ref ";" 0))
-                                (list))
-                              (if (get-environment-variable "PWD")
-                                (list (get-environment-variable "PWD"))
-                                (list))))
+                        (cond
+                          ((equal? operation-system 'windows)
+                           (append
+                             #;(if (getenv "FOREIGN_C_LOAD_PATH")
+                               (foreign-c:string-split (getenv "FOREIGN_C_LOAD_PATH") (string-ref ";" 0))
+                               (list))
+                             #;(if (getenv "SYSTEM")
+                               (list (getenv "SYSTEM"))
+                               (list))
+                             #;(if (getenv "WINDIR")
+                               (list (getenv "WINDIR"))
+                               (list))
+                             #;(if (getenv "WINEDLLDIR0")
+                               (list (getenv "WINEDLLDIR0"))
+                               (list))
+                             #;(if (getenv "SystemRoot")
+                               (list (string-append
+                                       (getenv "SystemRoot")
+                                       slash
+                                       "system32"))
+                               (list))
+                             (list ".")
+                             #;(if (getenv "PATH")
+                               (foreign-c:string-split (getenv "PATH") (string-ref ";" 0))
+                               (list))
+                             #;(if (getenv "PWD")
+                               (list (getenv "PWD"))
+                               (list))))
                           (else
                             (append
-                              (if (get-environment-variable "FOREIGN_C_LOAD_PATH")
-                                (foreign-c:string-split (get-environment-variable "FOREIGN_C_LOAD_PATH") (string-ref ":" 0))
+                              #;(if (getenv "FOREIGN_C_LOAD_PATH")
+                                (foreign-c:string-split (getenv "FOREIGN_C_LOAD_PATH") (string-ref ":" 0))
                                 (list))
                               ; Guix
-                              (list (if (get-environment-variable "GUIX_ENVIRONMENT")
-                                      (string-append (get-environment-variable "GUIX_ENVIRONMENT") slash "lib")
+                              #;(list (if (getenv "GUIX_ENVIRONMENT")
+                                      (string-append (getenv "GUIX_ENVIRONMENT") slash "lib")
                                       "")
                                     "/run/current-system/profile/lib")
                               ; Debian
-                              (if (get-environment-variable "LD_LIBRARY_PATH")
-                                (foreign-c:string-split (get-environment-variable "LD_LIBRARY_PATH") (string-ref ":" 0))
+                              #;(if (getenv "LD_LIBRARY_PATH")
+                                (foreign-c:string-split (getenv "LD_LIBRARY_PATH") (string-ref ":" 0))
                                 (list))
-                              (cond-expand
-                                (i386
-                                  (list
-                                    "/lib/i386-linux-gnu"
-                                    "/usr/lib/i386-linux-gnu"
-                                    "/lib32"
-                                    "/usr/lib32"))
+                              (cond
+                                ((equal? arch 'i386)
+                                 (list
+                                   "/lib/i386-linux-gnu"
+                                   "/usr/lib/i386-linux-gnu"
+                                   "/lib32"
+                                   "/usr/lib32"))
                                 (else
                                   (list
                                     ;;; x86-64
@@ -322,8 +317,8 @@
                       (auto-load-versions (list ""))
                       (paths (append auto-load-paths additional-paths))
                       (versions (append additional-versions auto-load-versions))
-                      (platform-lib-prefix (cond-expand (windows "") (else "lib")))
-                      (platform-file-extension (cond-expand (windows ".dll") (else ".so")))
+                      (platform-lib-prefix (if (equal? operation-system 'windows) "" "lib"))
+                      (platform-file-extension (if (equal? operation-system 'windows) ".dll" ".so"))
                       (shared-object #f)
                       (searched-paths (list)))
                  (for-each
@@ -335,18 +330,19 @@
                                                 slash
                                                 platform-lib-prefix
                                                 object-name
-                                                (cond-expand
-                                                  (windows "")
-                                                  (else platform-file-extension))
+                                                (if (equal? operation-system 'windows)
+                                                  ""
+                                                  platform-file-extension)
                                                 (if (string=? version "")
                                                   ""
                                                   (string-append
-                                                    (cond-expand (windows "-")
-                                                                 (else "."))
+                                                    (if (equal? operation-system 'windows)
+                                                      "-"
+                                                      ".")
                                                     version))
-                                                (cond-expand
-                                                  (windows platform-file-extension)
-                                                  (else ""))))
+                                                (if (equal? operation-system 'windows)
+                                                  platform-file-extension
+                                                  "")))
                                (library-path-without-suffixes (string-append path
                                                                              slash
                                                                              platform-lib-prefix
@@ -355,9 +351,10 @@
                            (when (and (not shared-object)
                                       (file-exists? library-path))
                              (set! shared-object
-                               (cond-expand (gauche library-path-without-suffixes)
-                                            (racket library-path-without-suffixes)
-                                            (else library-path))))))
+                               (cond
+                                 ((equal? implementation 'gauche) library-path-without-suffixes)
+                                 ((equal? implementation 'racket) library-path-without-suffixes)
+                                 (else library-path))))))
                        versions))
                    paths)
                  (if (not shared-object)
@@ -372,48 +369,128 @@
                      (write searched-paths)
                      (newline)
                      (exit 1))
-                   (cond-expand
-                     (stklos shared-object)
+                   (cond
+                     ((equal? implementation 'stklos) shared-object)
                      (else (shared-object-load shared-object
-                                               `((additional-versions ,additional-versions)))))))))))))
-
-    (cond-expand
-      (windows
-        (define libc-name "ucrtbase"))
-      (else
-        (define libc-name
-          (cond ;((get-environment-variable "BE_HOST_CPU") "root") ; Haiku
-            (else "c")))))
-
-
+                                               `((additional-versions ,additional-versions))))))))))))))
+  (begin
+    (define libc-name
+      (cond
+        ((equal? operation-system 'windows) "ucrtbase")
+        ((equal? operation-system 'haiku) "root")
+        (else "c")))
     (define-c-library libc
                       '("stdlib.h" "stdio.h" "string.h")
                       libc-name
-                      '((additional-versions ("0" "6"))))
-
-    (cond-expand
-      (gambit
+                      '((additional-versions ("0" "6")))))
+  (cond-expand
+    (gambit
+      (begin
         (define c-memset-address->pointer
           (c-lambda (unsigned-int64 unsigned-int8 int)
                     (pointer void)
-                    "___return(memset((void*)___arg1, ___arg2, ___arg3));")))
-      (chicken
+                    "___return(memset((void*)___arg1, ___arg2, ___arg3));"))))
+    (chicken
+      (begin
         (define c-memset-address->pointer
           (lambda (address value offset)
-            (address->pointer address))))
-      (else
-        (define-c-procedure c-memset-address->pointer libc 'memset 'pointer '(uint64 uint8 int))))
-
-    (cond-expand
-      (gambit
+            (address->pointer address)))))
+    (else
+      (begin
+        (define-c-procedure c-memset-address->pointer libc 'memset 'pointer '(uint64 uint8 int)))))
+  (cond-expand
+    (gambit
+      (begin
         (define c-memset-pointer->address
           (c-lambda ((pointer void) unsigned-int8 int)
                     unsigned-int64
-                    "___return((uint64_t)memset(___arg1, ___arg2, ___arg3));")))
-      (chicken (define c-memset-pointer->address
-                 (lambda (pointer value offset)
-                   (pointer->address pointer))))
-      (else (define-c-procedure c-memset-pointer->address libc 'memset 'uint64 '(pointer uint8 int))))
+                    "___return((uint64_t)memset(___arg1, ___arg2, ___arg3));"))))
+    (chicken
+      (begin
+        (define c-memset-pointer->address
+          (lambda (pointer value offset)
+            (pointer->address pointer)))))
+    (else
+      (begin
+        (define-c-procedure c-memset-pointer->address libc 'memset 'uint64 '(pointer uint8 int)))))
+  (cond-expand
+    ;; FIXME
+    (chicken
+      (begin
+        (define make-c-null
+          (lambda ()
+            (address->pointer 0)))))
+    ;; FIXME
+    (kawa
+      (begin
+        (define make-c-null
+          (lambda ()
+            (static-field java.lang.foreign.MemorySegment 'NULL)))))
+    ;; FIXME
+    (stklos
+      (begin
+        (define (make-c-null)
+          (let ((pointer (make-c-bytevector 1)))
+            (free-bytes pointer)
+            pointer))))
+    (else
+      (begin
+        (define (make-c-null) (c-memset-address->pointer 0 0 0)))))
+    (cond-expand
+      ;; FIXME
+      (chicken
+        (begin
+          (define c-null?
+            (lambda (pointer)
+              (if (and (not (pointer? pointer))
+                       pointer)
+                #f
+                (or (not pointer) ; #f counts as null pointer on Chicken
+                    (= (pointer->address pointer) 0)))))))
+      ;; FIXME
+      (kawa
+        (begin
+          (define c-null?
+            (lambda (pointer)
+              (invoke pointer 'equals (make-c-null))))))
+      ;; FIXME
+      (chibi (begin #t)) ;; In chibi-primitives.stub
+      (stklos
+        (begin
+          (define c-null?
+            (lambda (pointer)
+              (cond ((void? pointer) #t)
+                    ((= (c-memset-pointer->address pointer 0 0) 0) #t)
+                    (else #f))))))
+      (else
+        (begin
+          (define c-null?
+            (lambda (pointer)
+              (if (c-bytevector? pointer)
+                (= (c-memset-pointer->address pointer 0 0) 0)
+                #f))))))
+  (begin
+    ;; Foreign C
+    (define c-type-signed?
+      (lambda (type)
+        (if (member type '(int8 int16 int32 int64 char short int long float double))
+          #t
+          #f)))
+
+    (define c-type-unsigned?
+      (lambda (type)
+        (if (member type '(uint8 uint16 uint32 uint64 unsigned-char unsigned-short unsigned-int unsigned-long))
+          #t
+          #f)))
+
+    (define c-type-size
+      (lambda (type)
+        (size-of-type type)))
+
+    (define c-type-align
+      (lambda (type)
+        (align-of-type type)))
+
     (define-c-procedure c-malloc libc 'malloc 'pointer '(int))
     (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
 
@@ -428,8 +505,7 @@
         (bytevector->c-bytevector
           (apply (lambda (b) (make-bytevector 1 b)) bytes))))
 
-    (cond-expand
-      (else (define-c-procedure c-free libc 'free 'void '(pointer))))
+    (define-c-procedure c-free libc 'free 'void '(pointer))
 
     (define bytevector->c-bytevector
       (lambda (bytes)
@@ -473,52 +549,6 @@
           (string->utf8
             (string-append string-var (string (integer->char 0)))))))
 
-    (cond-expand
-      ;; FIXME
-      (chicken
-        (define make-c-null
-          (lambda ()
-            (address->pointer 0))))
-      ;; FIXME
-      (kawa
-        (define make-c-null
-          (lambda ()
-            (static-field java.lang.foreign.MemorySegment 'NULL))))
-      (else (define make-c-null
-              (lambda ()
-                (cond-expand (stklos (let ((pointer (make-c-bytevector 1)))
-                                       (free-bytes pointer)
-                                       pointer))
-                             (else (c-memset-address->pointer 0 0 0)))))))
-
-    (cond-expand
-      ;; FIXME
-      (chicken
-        (define c-null?
-          (lambda (pointer)
-            (if (and (not (pointer? pointer))
-                     pointer)
-              #f
-              (or (not pointer) ; #f counts as null pointer on Chicken
-                  (= (pointer->address pointer) 0))))))
-      ;; FIXME
-      (kawa
-        (define c-null?
-          (lambda (pointer)
-            (invoke pointer 'equals (make-c-null)))))
-      ;; FIXME
-      (chibi #t) ;; In chibi-primitives.stub
-      (stklos (define c-null?
-                (lambda (pointer)
-                  (cond ((void? pointer) #t)
-                        ((= (c-memset-pointer->address pointer 0 0) 0) #t)
-                        (else #f)))))
-      (else (define c-null?
-              (lambda (pointer)
-                (if (c-bytevector? pointer)
-                  (= (c-memset-pointer->address pointer 0 0) 0)
-                  #f)))))
-
     (define c-bytevector->address
       (lambda (c-bytevector)
         (c-memset-pointer->address c-bytevector 0 0)))
@@ -527,16 +557,15 @@
       (lambda (address)
         (c-memset-address->pointer address 0 0)))
 
-    (cond-expand
-      (else (define-syntax call-with-address-of
-              (syntax-rules ()
-                ((_ input-pointer thunk)
-                 (let ((address-pointer (make-c-bytevector (c-type-size 'pointer))))
-                   (c-bytevector-pointer-set! address-pointer 0 input-pointer)
-                   (let ((result (apply thunk (list address-pointer))))
-                     (set! input-pointer (c-bytevector-pointer-ref address-pointer 0))
-                     (c-free address-pointer)
-                     result)))))))
+    (define-syntax call-with-address-of
+      (syntax-rules ()
+        ((_ input-pointer thunk)
+         (let ((address-pointer (make-c-bytevector (c-type-size 'pointer))))
+           (c-bytevector-pointer-set! address-pointer 0 input-pointer)
+           (let ((result (apply thunk (list address-pointer))))
+             (set! input-pointer (c-bytevector-pointer-ref address-pointer 0))
+             (c-free address-pointer)
+             result)))))
 
     (c-bytevectors-init make-c-bytevector c-bytevector-u8-set! c-bytevector-u8-ref)))
 
