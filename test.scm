@@ -1,5 +1,7 @@
 (test-begin "foreign-c")
 
+;(display "Hello")
+;(newline)
 ;; c-type-size
 
 ;#|

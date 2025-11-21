@@ -16,4 +16,19 @@
           c-bytevector-u8-set!
           c-bytevector-pointer-ref
           c-bytevector-pointer-set!)
-  (include "mit-scheme-primitives.scm"))
+  (begin
+
+(declare (usual-integrations))
+(load-option 'ffi)
+
+;(define lib (dld-load-file "mit-scheme-foreign-c-shim.so"))
+(C-include "mit-scheme-foreign-c")
+
+(define (hello)
+  (puts "Hello from puts")
+  ;(display "Not from puts")
+  (newline)
+  )
+;(C-call "puts" "Hello world")
+    )
+  )

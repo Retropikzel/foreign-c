@@ -36,7 +36,6 @@
       res)))
 
 (cond-expand
-  (gambit #t) ; Defined in gambit.scm
   (chicken
     (define-syntax define-c-library
       (syntax-rules ()
@@ -44,7 +43,6 @@
          (begin
            (define scheme-name #t)
            (shared-object-load headers))))))
-  (cyclone #t) ; Defined in cyclone.scm
   (else
     (define-syntax define-c-library
       (syntax-rules ()
@@ -135,9 +133,7 @@
                                 ; NetBSD
                                 "/usr/pkg/lib"
                                 ; Haiku
-                                "/boot/system/lib"
-                                ; 32-bit
-                                )))))))
+                                "/boot/system/lib")))))))
                   (auto-load-versions (list ""))
                   (paths (append auto-load-paths additional-paths))
                   (versions (append additional-versions auto-load-versions))
@@ -210,7 +206,6 @@
                   libc-name
                   '((additional-versions ("0" "6"))))
 
-;(define-c-procedure c-calloc libc 'calloc 'pointer '(int int))
 (cond-expand
   (gambit
     (define c-memset-address->pointer
@@ -234,8 +229,6 @@
              (lambda (pointer value offset)
                (pointer->address pointer))))
   (else (define-c-procedure c-memset-pointer->address libc 'memset 'uint64 '(pointer uint8 int))))
-;(define-c-procedure c-memset-address libc 'memset 'pointer '(uint64 uint8 int))
-;(define-c-procedure c-printf libc 'printf 'int '(pointer pointer))
 (define-c-procedure c-malloc libc 'malloc 'pointer '(int))
 (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
 
@@ -306,7 +299,6 @@
     (define make-c-null
       (lambda ()
         (static-field java.lang.foreign.MemorySegment 'NULL))))
-  ;(chibi #t)
   (else (define make-c-null
           (lambda ()
             (cond-expand (stklos (let ((pointer (make-c-bytevector 1)))
