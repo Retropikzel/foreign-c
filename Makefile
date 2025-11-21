@@ -36,10 +36,10 @@ uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
 Akku.manifest:
-	if [ "${SCHEME}" != "mosh" ]; then akku install chez-srfi; fi
-	if [ "${SCHEME}" = "mosh" ]; then rm -rf .akku ; akku install; fi
+	akku install chez-srfi
 
 test-r6rs: libtest.o libtest.so libtest.a Akku.manifest
+	#if [ "${SCHEME}" = "mosh" ]; then rm -rf Akku.manifest ; rm -rf Akku.lock ; rm -rf .akku ; fi
 	akku install
 	rm -rf test-r6rs
 	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c) (srfi :64))\n" > test-r6rs.sps

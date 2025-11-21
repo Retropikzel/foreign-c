@@ -18,6 +18,8 @@
         - Has include bug, might not work on all situations
 - Ikarus >= 0.0.4-rc1+
     - R6RS
+- Ironscheme
+    - R6RS
 - Kawa >= 3.11 and Java >= 22
     - R7RS
     - Needs arguments to enable FFI
