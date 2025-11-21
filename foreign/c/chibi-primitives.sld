@@ -8,7 +8,7 @@
           (chibi ast)
           (scheme inexact)
           (chibi)
-          (foreign c c-bytevectors))
+          (foreign c-bytevectors))
   (export size-of-type
           align-of-type
           shared-object-load

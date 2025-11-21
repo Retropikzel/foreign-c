@@ -19,7 +19,7 @@
                 cpointer-ref-abs
                 c-size-of
                 void?)
-          (foreign c c-bytevectors))
+          (foreign c-bytevectors))
   (export size-of-type
           align-of-type
           ;shared-object-load

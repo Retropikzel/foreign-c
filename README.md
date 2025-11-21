@@ -33,8 +33,6 @@
     - So that snow-chibi installed library is found
         - -Dkawa.import.path=/usr/local/share/kawa
         - -Dkawa.import.path=/usr/local/share/kawa/lib
-- Mosh >= 0.2.9-rc1
-    - R7RS
 - Racket >= 8.16 [cs]
     - R6RS
         - Unable to run tests as Rackets SRFI-64 implementation does not work
@@ -59,6 +57,7 @@
     - R7RS
 - Mosh
     - R6RS
+    - R7RS
 - Larceny
     - R6RS
     - R7RS

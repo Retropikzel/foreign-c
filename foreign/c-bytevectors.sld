@@ -48,7 +48,7 @@
 ;;; that constant were delayed.
 
 (define-library
-  (foreign c c-bytevectors)
+  (foreign c-bytevectors)
   (cond-expand
     ((and r6rs guile)
      (import (rnrs base)

@@ -46,7 +46,7 @@
               (scheme file)
               (scheme process-context)
               (scheme inexact))))
-  (import (foreign c c-bytevectors))
+  (import (foreign c-bytevectors))
   (cond-expand
     (chezscheme (import (foreign c chez-primitives))
                 (export foreign-procedure))

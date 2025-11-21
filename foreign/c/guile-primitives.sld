@@ -8,7 +8,7 @@
           (scheme process-context)
           (system foreign)
           (system foreign-library)
-          (foreign c c-bytevectors))
+          (foreign c-bytevectors))
   (export size-of-type
           align-of-type
           shared-object-load
