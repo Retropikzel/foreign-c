@@ -6,7 +6,8 @@
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context)
+              (rename (scheme process-context)
+                      (get-environment-variable getenv))
               (scheme inexact)))
     (r6rs
       (import (rnrs base)
@@ -41,8 +42,11 @@
     ;(gambit (import (foreign c gambit-primitives)))
     (gauche (import (foreign c gauche-primitives)))
     (guile (import (foreign c guile-primitives)))
-    (ikarus (import (foreign c ikarus-primitives)))
-    (ironscheme (import (foreign c ironscheme-primitives)))
+    (ikarus (import (foreign c ikarus-primitives)
+                    (only (ikarus) getenv)))
+    (ironscheme (import (foreign c ironscheme-primitives)
+                        (rename (ironscheme environment)
+                                (get-environment-variable getenv))))
     (kawa (import (foreign c kawa-primitives)))
     ;(mit-scheme (import (foreign c mit-scheme-primitives)))
     (larceny (import (foreign c larceny-primitives)))
@@ -55,7 +59,8 @@
             (export foreign-c:string-split
                     make-external-function
                     free-bytes))
-    (ypsilon (import (foreign c ypsilon-primitives))
+    (ypsilon (import (foreign c ypsilon-primitives)
+                     (only (core) getenv))
              (export c-function
                      bytevector-c-int8-set!
                      bytevector-c-uint8-ref))
