@@ -27,11 +27,13 @@
               (scheme write)
               (scheme char)
               (scheme file)
-              (scheme process-context)
+              (rename (scheme process-context)
+                      (get-environment-variable getenv))
               (scheme inexact))))
   (import (foreign c-bytevectors))
   (cond-expand
-    (chezscheme (import (foreign c chez-primitives))
+    (chezscheme (import (foreign c chez-primitives)
+                        (only (chezscheme) getenv))
                 (export foreign-procedure))
     (chibi (import (foreign c chibi-primitives)))
     (chicken (import (foreign c chicken-primitives)))
@@ -273,7 +275,7 @@
                                (list))))
                           (else
                             (append
-                              #;(if (getenv "FOREIGN_C_LOAD_PATH")
+                              (if (getenv "FOREIGN_C_LOAD_PATH")
                                 (foreign-c:string-split (getenv "FOREIGN_C_LOAD_PATH") (string-ref ":" 0))
                                 (list))
                               ; Guix
@@ -469,6 +471,7 @@
               (if (c-bytevector? pointer)
                 (= (c-memset-pointer->address pointer 0 0) 0)
                 #f))))))
+
   (begin
     ;; Foreign C
     (define c-type-signed?
