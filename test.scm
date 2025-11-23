@@ -7,7 +7,7 @@
 (test-begin "c-type-size")
 
 (test-equal "c-type-size int8" (c-type-size 'int8) 1)
-(test-equal "c-type-size uint8" (c-type-size 'uint8) 1)
+(test-equal "c-type-size uint8" (c-type-size 'uint8) 100)
 (test-equal "c-type-size int16" (c-type-size 'int16) 2)
 (test-equal "c-type-size uint16" (c-type-size 'uint16) 2)
 (test-equal "c-type-size int32" (c-type-size 'int32) 4)
@@ -39,7 +39,7 @@
                   libc-name
                   '((additional-versions ("0" "6"))))
 
-(test-assert "test-assert libc" libc)
+(test-assert "test-assert libc" (if libc #t #f))
 
 (define-c-procedure c-abs libc 'abs 'int '(int))
 (test-equal "c-abs" (c-abs -2) 2)
@@ -47,26 +47,26 @@
 ;; Skip these tests on 32 bit implementations
 ;(test-skip (cond-expand (i386 1) (else 0)))
 #;(cond-expand
-  (i386 #t)
-  (else
-    (define-c-library c-testlib
-                      '("libtest.h")
-                      "test"
-                      '((additional-paths ("." "./tests"))))))
+(i386 #t)
+(else
+  (define-c-library c-testlib
+                    '("libtest.h")
+                    "test"
+                    '((additional-paths ("." "./tests"))))))
 
 #;(cond-expand
-  (i386 #t)
-  (else
-    (define-c-procedure c-takes-no-args c-testlib 'takes_no_args 'void '())
-    (c-takes-no-args)))
+(i386 #t)
+(else
+  (define-c-procedure c-takes-no-args c-testlib 'takes_no_args 'void '())
+  (c-takes-no-args)))
 
 
 #;(cond-expand
-  (i386 #t)
-  (else
-    (define-c-procedure c-takes-no-args-returns-int c-testlib 'takes_no_args_returns_int 'int '())
-    (define takes-no-args-returns-int-result (c-takes-no-args-returns-int))
-    (test-equal takes-no-args-returns-int-result 0)))
+(i386 #t)
+(else
+  (define-c-procedure c-takes-no-args-returns-int c-testlib 'takes_no_args_returns_int 'int '())
+  (define takes-no-args-returns-int-result (c-takes-no-args-returns-int))
+  (test-equal takes-no-args-returns-int-result 0)))
 
 (test-end "define-c-library")
 
@@ -135,13 +135,13 @@
 (define-c-procedure c-strcat libc 'strcat 'pointer '(pointer pointer))
 (define c-string1 (string->c-utf8 "test123"))
 (test-assert "3" (string=? (c-utf8->string (c-strcat (string->c-utf8 "con2")
-                                                 (string->c-utf8 "cat2")))
-                       "con2cat2"))
+                                                     (string->c-utf8 "cat2")))
+                           "con2cat2"))
 
 (when (file-exists? "testfile.test") (delete-file "testfile.test"))
 (define-c-procedure c-fopen libc 'fopen 'pointer '(pointer pointer))
 (define output-file (c-fopen (string->c-utf8 "testfile.test")
-                              (string->c-utf8 "w")))
+                             (string->c-utf8 "w")))
 (define-c-procedure c-fprintf libc 'fprintf 'int '(pointer pointer int))
 (define characters-written (c-fprintf output-file (string->c-utf8 "Hello world %i") 1))
 (test-equal "4" characters-written 13)

@@ -20,8 +20,7 @@
           (ironscheme clr)
           (ironscheme clr internal)
           (ironscheme ffi)
-          (srfi 0)
-          (srfi :98))
+          (srfi :0))
   (export size-of-type
           align-of-type
           shared-object-load
@@ -128,5 +127,4 @@
 
     (define c-bytevector-pointer-ref
       (lambda (c-bytevector k)
-        (read-intptr c-bytevector k)))
-    ))
+        (read-intptr c-bytevector k)))))

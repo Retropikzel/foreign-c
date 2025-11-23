@@ -1,36 +1,12 @@
 (define-library
   (foreign c)
-  (cond-expand
-    (guile
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (rename (scheme process-context)
-                      (get-environment-variable getenv))
-              (scheme inexact)))
-    (r6rs
-      (import (rnrs base)
-              (rnrs lists)
-              (rnrs control)
-              (rnrs files)
-              (rnrs io simple)
-              (rnrs programs)
-              (only (rnrs bytevectors)
-                    make-bytevector
-                    bytevector-length
-                    utf8->string
-                    string->utf8
-                    bytevector-u8-ref
-                    bytevector-u8-set!)))
-    (else
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (rename (scheme process-context)
-                      (get-environment-variable getenv))
-              (scheme inexact))))
+  (import (scheme base)
+          (scheme write)
+          (scheme char)
+          (scheme file)
+          (rename (scheme process-context)
+                  (get-environment-variable getenv))
+          (scheme inexact))
   (import (foreign c-bytevectors))
   (cond-expand
     (chezscheme (import (foreign c chez-primitives)

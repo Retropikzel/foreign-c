@@ -1,5 +1,4 @@
-;; This is actually R6RS library, because chez only supports R6RS
-(library
+(define-library
   (foreign c chez-primitives)
   (export size-of-type
           align-of-type
@@ -13,7 +12,23 @@
           ;; Chez specific
           foreign-procedure
           type->native-type)
-  (import (chezscheme))
+  (import (rnrs base)
+          (rnrs lists)
+          (rnrs control)
+          (rnrs files)
+          (rnrs io simple)
+          (rnrs programs)
+          (only (rnrs bytevectors)
+                make-bytevector
+                bytevector-length
+                utf8->string
+                string->utf8
+                bytevector-u8-ref
+                bytevector-u8-set!)
+          (only (rnrs r5rs)
+                remainder
+                quotient)
+          (chezscheme))
   (begin
     (define-syntax type->native-type
       (syntax-rules ()
