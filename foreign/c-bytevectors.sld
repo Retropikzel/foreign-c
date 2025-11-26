@@ -74,7 +74,6 @@
       (begin
         (define (native-endianness)
           (cond-expand (little-endian 'little)
-                       (racket (if (system-big-endian?) 'big 'little))
                        (else 'big))))))
   (export c-bytevectors-init
     ;; TODO endianness

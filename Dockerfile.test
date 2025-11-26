@@ -4,23 +4,21 @@ FROM debian:trixie AS build
 RUN apt-get update && apt-get install -y gcc make git ca-certificates libffi-dev
 WORKDIR /build
 RUN git clone https://github.com/ashinn/chibi-scheme.git --depth=1
-RUN git clone https://gitea.scheme.org/Retropikzel/compile-r7rs.git --depth=1
+RUN git clone https://codeberg.org/retropikzel/compile-scheme.git --depth=1
 WORKDIR /build/chibi-scheme
 RUN make
 
 ARG SCHEME=chibi
 ARG IMAGE=${SCHEME}:head
 FROM schemers/${IMAGE}
+RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
 COPY --from=build /build /build
 WORKDIR /build
-RUN apt-get update && apt-get install -y gcc make libffi-dev
+RUN apt-get update && apt-get install -y gcc make libffi-dev gauche
 WORKDIR /build/chibi-scheme
 RUN make install
-RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
-RUN snow-chibi install --always-yes "(foreign c)"
-RUN snow-chibi install --always-yes "(srfi 170)"
-WORKDIR /build/compile-r7rs
-RUN make build-chibi && make install
+WORKDIR /build/compile-scheme
+RUN make build-gauche && make install
 WORKDIR /workdir
 ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
