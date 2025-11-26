@@ -24,32 +24,37 @@ pipeline {
             }
         }
 
-        stage('Tests R7RS x86_64 Debian') {
-            steps {
-                script {
-                    params.SCHEMES.split().each { SCHEME ->
-                        def IMG="${SCHEME}:head"
-                        if("${SCHEME}" == "chicken") {
-                            IMG="${SCHEME}:5"
-                        }
-                        stage("${SCHEME}") {
-                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "make SCHEME=${SCHEME} test-r7rs-docker"
+        stage('Tests') {
+            parallel {
+
+                stage('R7RS x86_64 Debian') {
+                    steps {
+                        script {
+                            params.SCHEMES.split().each { SCHEME ->
+                                def IMG="${SCHEME}:head"
+                                    if("${SCHEME}" == "chicken") {
+                                        IMG="${SCHEME}:5"
+                                    }
+                                stage("${SCHEME}") {
+                                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                        sh "make SCHEME=${SCHEME} test-r7rs-docker"
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            }
-        }
 
-        stage('Tests R6RS x86_64 Debian') {
-            steps {
-                script {
-                    params.R6RS_SCHEMES.split().each { SCHEME ->
-                        def IMG="${SCHEME}:head"
-                        stage("${SCHEME}") {
-                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "make SCHEME=${SCHEME} test-r6rs-docker"
+                stage('R6RS x86_64 Debian') {
+                    steps {
+                        script {
+                            params.R6RS_SCHEMES.split().each { SCHEME ->
+                                def IMG="${SCHEME}:head"
+                                    stage("${SCHEME}") {
+                                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                            sh "make SCHEME=${SCHEME} test-r6rs-docker"
+                                        }
+                                    }
                             }
                         }
                     }

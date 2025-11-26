@@ -4,14 +4,11 @@
           (scheme write)
           (scheme char)
           (scheme file)
-          (rename (scheme process-context)
-                  (get-environment-variable getenv))
+          (scheme process-context)
           (scheme inexact))
   (import (foreign c-bytevectors))
   (cond-expand
-    (chezscheme (import (foreign c chez-primitives)
-                        (only (chezscheme) getenv)
-                        (srfi :0))
+    (chezscheme (import (foreign c chez-primitives))
                 (export foreign-procedure))
     (chibi (import (foreign c chibi-primitives)))
     (chicken (import (foreign c chicken-primitives)
@@ -23,11 +20,10 @@
     ;(gambit (import (foreign c gambit-primitives)))
     (gauche (import (foreign c gauche-primitives)))
     (guile (import (foreign c guile-primitives)))
-    (ikarus (import (foreign c ikarus-primitives)
-                    (only (ikarus) getenv)))
+    (ikarus (import (foreign c ikarus-primitives)))
     (ironscheme (import (foreign c ironscheme-primitives)
-                        (rename (ironscheme environment)
-                                (get-environment-variable getenv))))
+                        ;(rename (ironscheme environment) (get-environment-variable getenv))
+                        ))
     (kawa (import (foreign c kawa-primitives)))
     ;(mit-scheme (import (foreign c mit-scheme-primitives)))
     (larceny (import (foreign c larceny-primitives)))
@@ -39,9 +35,7 @@
             (export foreign-c:string-split
                     make-external-function
                     free-bytes))
-    (ypsilon (import (foreign c ypsilon-primitives)
-                     ;(only (core) getenv)
-                     )
+    (ypsilon (import (foreign c ypsilon-primitives))
              (export c-function
                      bytevector-c-int8-set!
                      bytevector-c-uint8-ref))
@@ -152,5 +146,205 @@
     ;; c-variable
     ;define-c-variable (?)
     )
+  (cond-expand
+    (i386 (begin (define arch 'i386)))
+    (else (begin (define arch 'x86_64))))
+  (cond-expand
+    (gauche (begin (define scheme 'gauche)))
+    (else (begin (define scheme 'other))))
+  (cond-expand
+    (windows
+      (begin
+        (define os 'windows)
+        (define libc-name "ucrtbase")))
+    (haiku
+      (begin
+        (define os 'haiku)
+        (define libc-name "root")))
+    (else
+      (begin
+        (define os 'unix)
+        (define libc-name "c"))))
+  (cond-expand
+    (chicken
+      (begin
+        (define-syntax define-c-library
+          (syntax-rules ()
+            ((_ scheme-name headers object-name options)
+             (begin
+               (define scheme-name #t)
+               (shared-object-load headers)))))))
+    (else
+      (begin
+        (cond-expand
+          (stklos
+            (define os 'unix)
+            (define libc-name "c"))
+          (else))
+        (define-syntax define-c-library
+          (syntax-rules ()
+            ((_ scheme-name headers object-name options)
+             (define scheme-name
+               (let* ((string-split
+                        (lambda (str mark)
+                          (let* ((str-l (string->list str))
+                                 (res (list))
+                                 (last-index 0)
+                                 (index 0)
+                                 (splitter (lambda (c)
+                                             (cond ((char=? c mark)
+                                                    (begin
+                                                      (set! res (append res (list (substring str last-index index))))
+                                                      (set! last-index (+ index 1))))
+                                                   ((equal? (length str-l) (+ index 1))
+                                                    (set! res (append res (list (substring str last-index (+ index 1)))))))
+                                             (set! index (+ index 1)))))
+                            (for-each splitter str-l)
+                            res)))
+                      (internal-options (if (null? 'options)
+                                          (list)
+                                          (cadr 'options)))
+                      (additional-paths (if (assoc 'additional-paths internal-options)
+                                          (cadr (assoc 'additional-paths internal-options))
+                                          (list)))
+                      (additional-versions (if (assoc 'additional-versions internal-options)
+                                             (map (lambda (version)
+                                                    (if (number? version)
+                                                      (number->string version)
+                                                      version))
+                                                  (cadr (assoc 'additional-versions internal-options)))
+                                             (list)))
+                      (slash (if (symbol=? os 'windows) "\\" "/"))
+                      (auto-load-paths
+                        (cond
+                          ((symbol=? os 'windows)
+                           (append
+                             (if (get-environment-variable "FOREIGN_C_LOAD_PATH")
+                               (string-split (get-environment-variable "FOREIGN_C_LOAD_PATH") (string-ref ";" 0))
+                               (list))
+                             (if (get-environment-variable "SYSTEM")
+                               (list (get-environment-variable "SYSTEM"))
+                               (list))
+                             (if (get-environment-variable "WINDIR")
+                               (list (get-environment-variable "WINDIR"))
+                               (list))
+                             (if (get-environment-variable "WINEDLLDIR0")
+                               (list (get-environment-variable "WINEDLLDIR0"))
+                               (list))
+                             (if (get-environment-variable "SystemRoot")
+                               (list (string-append
+                                       (get-environment-variable "SystemRoot")
+                                       slash
+                                       "system32"))
+                               (list))
+                             (list ".")
+                             (if (get-environment-variable "PATH")
+                               (string-split (get-environment-variable "PATH") (string-ref ";" 0))
+                               (list))
+                             (if (get-environment-variable "PWD")
+                               (list (get-environment-variable "PWD"))
+                               (list))))
+                          (else
+                            (append
+                              (if (get-environment-variable "FOREIGN_C_LOAD_PATH")
+                                (string-split (get-environment-variable "FOREIGN_C_LOAD_PATH") (string-ref ":" 0))
+                                (list))
+                              ; Guix
+                              (list (if (get-environment-variable "GUIX_ENVIRONMENT")
+                                      (string-append (get-environment-variable "GUIX_ENVIRONMENT") slash "lib")
+                                      "")
+                                    "/run/current-system/profile/lib")
+                              ; Debian
+                              (if (get-environment-variable "LD_LIBRARY_PATH")
+                                (string-split (get-environment-variable "LD_LIBRARY_PATH") (string-ref ":" 0))
+                                (list))
+                              (cond
+                                ((symbol=? arch 'i386)
+                                 (list
+                                   "/lib/i386-linux-gnu"
+                                   "/usr/lib/i386-linux-gnu"
+                                   "/lib32"
+                                   "/usr/lib32"))
+                                (else
+                                  (list
+                                    ;;; x86-64
+                                    ; Debian
+                                    "/lib/x86_64-linux-gnu"
+                                    "/usr/lib/x86_64-linux-gnu"
+                                    "/usr/local/lib"
+                                    ; Fedora/Alpine
+                                    "/usr/lib"
+                                    "/usr/lib64"
+                                    ;;; aarch64
+                                    ; Debian
+                                    "/lib/aarch64-linux-gnu"
+                                    "/usr/lib/aarch64-linux-gnu"
+                                    "/usr/local/lib"
+                                    ; Fedora/Alpine
+                                    "/usr/lib"
+                                    "/usr/lib64"
+                                    ; NetBSD
+                                    "/usr/pkg/lib"
+                                    ; Haiku
+                                    "/boot/system/lib")))))))
+                      (auto-load-versions (list ""))
+                      (paths (append auto-load-paths additional-paths))
+                      (versions (append additional-versions auto-load-versions))
+                      (platform-lib-prefix (if (symbol=? os 'windows) "" "lib"))
+                      (platform-file-extension (if (symbol=? os 'windows) ".dll" ".so"))
+                      (shared-object #f)
+                      (searched-paths (list)))
+                 (for-each
+                   (lambda (path)
+                     (for-each
+                       (lambda (version)
+                         (let ((library-path
+                                 (string-append path
+                                                slash
+                                                platform-lib-prefix
+                                                object-name
+                                                (if (symbol=? os 'windows)
+                                                  ""
+                                                  platform-file-extension)
+                                                (if (string=? version "")
+                                                  ""
+                                                  (string-append
+                                                    (if (symbol=? os 'windows)
+                                                      "-"
+                                                      ".")
+                                                    version))
+                                                (if (symbol=? os 'windows)
+                                                  platform-file-extension
+                                                  "")))
+                               (library-path-without-suffixes (string-append path
+                                                                             slash
+                                                                             platform-lib-prefix
+                                                                             object-name)))
+                           (set! searched-paths (append searched-paths (list library-path)))
+                           (when (and (not shared-object)
+                                      (file-exists? library-path))
+                             (set! shared-object
+                               (cond-expand
+                                 (gauche library-path-without-suffixes)
+                                 (racket library-path-without-suffixes)
+                                 (else library-path))))))
+                       versions))
+                   paths)
+                 (if (not shared-object)
+                   (begin
+                     (display "Could not load shared object: ")
+                     (write (list (cons 'object object-name)
+                                  (cons 'searched-paths searched-paths)
+                                  (cons 'platform-file-extension platform-file-extension)
+                                  (cons 'versions versions)))
+                     (newline)
+                     (display "Searched paths: ")
+                     (write searched-paths)
+                     (newline)
+                     (exit 1))
+                   (cond-expand
+                     (stklos shared-object)
+                     (else (shared-object-load shared-object
+                                               `((additional-versions ,additional-versions))))))))))))))
   (include "c.scm"))
 

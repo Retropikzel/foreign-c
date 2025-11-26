@@ -46,7 +46,7 @@ Akku.manifest:
 	akku install chez-srfi akku-r7rs
 
 test-r6rs: libtest.o libtest.so libtest.a Akku.manifest
-	#if [ "${SCHEME}" = "mosh" ]; then rm -rf Akku.manifest ; rm -rf Akku.lock ; rm -rf .akku ; fi
+	if [ "${SCHEME}" = "mosh" ]; then rm -rf Akku.manifest ; rm -rf Akku.lock ; rm -rf .akku ; fi
 	rm -rf test-r6rs
 	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c) (srfi :64))\n" > test-r6rs.sps
 	cat test.scm >> test-r6rs.sps
