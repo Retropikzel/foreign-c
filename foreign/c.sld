@@ -174,7 +174,7 @@
                (shared-object-load headers)))))))
     (else (include "c/define-c-library.scm")))
   (cond-expand
-    #;(chicken
+    (chicken
       (begin
         (define-c-library libc
                           '("stdlib.h" "stdio.h" "string.h")
@@ -198,7 +198,7 @@
               (or (not pointer) ; #f counts as null pointer on Chicken
                   (= (pointer->address pointer) 0)))))))
     (else (include "c/libc.scm")))
-  (cond-expand
+  #;(cond-expand
     ;; FIXME
     (kawa
       (begin
@@ -207,7 +207,7 @@
           (static-field java.lang.foreign.MemorySegment 'NULL)))))
     (else))
 
-  (cond-expand
+  #;(cond-expand
     ;; FIXME
     (kawa
       (begin

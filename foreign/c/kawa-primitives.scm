@@ -82,7 +82,7 @@
                  'invokeWithArguments
                  (map value->object vals argument-types)))))))
 
-(define range
+#;(define range
   (lambda (from to)
     (letrec*
       ((looper

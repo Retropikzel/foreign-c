@@ -13,6 +13,8 @@
 (define (make-c-null) (c-memset-address->pointer 0 0 0))
 (define c-null?
   (lambda (pointer)
-    (if (c-bytevector? pointer)
-      (= (c-memset-pointer->address pointer 0 0) 0)
-      #f)))
+    (call-with-current-continuation
+      (lambda (k)
+        (with-exception-handler
+          (lambda (x) (k #f))
+          (lambda () (= (c-memset-pointer->address pointer 0 0) 0)))))))
