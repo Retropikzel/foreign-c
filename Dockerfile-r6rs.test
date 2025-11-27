@@ -24,7 +24,7 @@ WORKDIR /workdir
 ARG SCHEME=guile
 ENV COMPILE_R7RS=${SCHEME}
 RUN akku update
-RUN akku install akku-r7rs
+RUN akku install chez-srfi akku-r7rs
 COPY Makefile .
 COPY test.scm .
 COPY tests ./tests

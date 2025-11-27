@@ -1,4 +1,4 @@
-.PHONY: package test libtest.o tests/libtest.so libtest.a documentation README.html snow
+.PHONY: package test libtest.o tests/libtest.so libtest.a documentation README.html snow test-r7rs.scm
 .SILENT: build install test test-docker clean
 SCHEME=chibi
 DOCKERIMG=${SCHEME}:head
@@ -45,13 +45,16 @@ uninstall:
 Akku.manifest:
 	akku install chez-srfi akku-r7rs
 
-test-r6rs: libtest.o libtest.so libtest.a Akku.manifest
+test-r6rs.sps:
+	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c) (srfi :64))\n" > test-r6rs.sps
+	echo "(test-begin \"foreign-c-r6rs\")" >> test-r6rs.sps
+	cat tests/c-type-size.scm >> test-r6rs.sps
+	echo "(test-end \"foreign-c-r6rs\")" >> test-r6rs.sps
+
+test-r6rs: libtest.o libtest.so libtest.a Akku.manifest test-r6rs.sps
 	if [ "${SCHEME}" = "mosh" ]; then rm -rf Akku.manifest ; rm -rf Akku.lock ; rm -rf .akku ; fi
 	if [ "${SCHEME}" = "ypsilon" ]; then rm -rf Akku.manifest ; rm -rf Akku.lock ; rm -rf .akku ; fi
 	rm -rf test-r6rs
-	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c) (srfi :64))\n" > test-r6rs.sps
-	#printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c ypsilon-primitives) (srfi :64))\n" > test-r6rs.sps
-	cat test.scm >> test-r6rs.sps
 	akku install
 	COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib -o test-r6rs --debug test-r6rs.sps
 	./test-r6rs
@@ -61,10 +64,14 @@ test-r6rs-docker:
 	docker run -t retropikzel-foreign-c-r6rs-test-${SCHEME} \
 		sh -c "akku install && make SCHEME=${SCHEME} test-r6rs"
 
-test-r7rs: libtest.o libtest.so libtest.a
-	rm -rf test-r7rs
+test-r7rs.scm:
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > test-r7rs.scm
-	cat test.scm >> test-r7rs.scm
+	echo "(test-begin \"foreign-c-r7rs\")" >> test-r7rs.scm
+	cat tests/c-type-size.scm >> test-r7rs.scm
+	echo "(test-end \"foreign-c-r7rs\")" >> test-r7rs.scm
+
+test-r7rs: libtest.o libtest.so libtest.a test-r7rs.scm
+	rm -rf test-r7rs
 	COMPILE_R7RS_CHICKEN="-L -ltest -I./tests/c-include -L." \
 		COMPILE_R7RS=${SCHEME} compile-scheme -I . -o test-r7rs --debug test-r7rs.scm
 	LD_LIBRARY_PATH=. ./test-r7rs
