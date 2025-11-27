@@ -26,7 +26,20 @@ pipeline {
 
         stage('Tests') {
             parallel {
-
+                stage('R6RS x86_64 Debian') {
+                    steps {
+                        script {
+                            params.R6RS_SCHEMES.split().each { SCHEME ->
+                                def IMG="${SCHEME}:head"
+                                    stage("${SCHEME}") {
+                                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                            sh "make SCHEME=${SCHEME} test-r6rs-docker"
+                                        }
+                                    }
+                            }
+                        }
+                    }
+                }
                 stage('R7RS x86_64 Debian') {
                     steps {
                         script {
@@ -45,20 +58,6 @@ pipeline {
                     }
                 }
 
-                stage('R6RS x86_64 Debian') {
-                    steps {
-                        script {
-                            params.R6RS_SCHEMES.split().each { SCHEME ->
-                                def IMG="${SCHEME}:head"
-                                    stage("${SCHEME}") {
-                                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                            sh "make SCHEME=${SCHEME} test-r6rs-docker"
-                                        }
-                                    }
-                            }
-                        }
-                    }
-                }
             }
         }
 
