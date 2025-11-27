@@ -197,19 +197,7 @@
               #f
               (or (not pointer) ; #f counts as null pointer on Chicken
                   (= (pointer->address pointer) 0)))))))
-    (else
-      (begin
-        (define-c-library libc
-                          '("stdlib.h" "stdio.h" "string.h")
-                          libc-name
-                          '((additional-versions ("0" "6"))))
-
-        (define-c-procedure c-malloc libc 'malloc 'pointer '(int))
-        (define-c-procedure c-free libc 'free 'void '(pointer))
-        (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
-        (define-c-procedure c-memset-address->pointer libc 'memset 'pointer '(uint64 uint8 int))
-        (define-c-procedure c-memset-pointer->address libc 'memset 'uint64 '(pointer uint8 int))
-        (define (make-c-null) (c-memset-address->pointer 0 0 0)))))
+    (else (include "c/libc.scm")))
   (cond-expand
     ;; FIXME
     (kawa
@@ -220,7 +208,7 @@
     ;; FIXME
     (stklos
       (begin
-        (define make-c-null
+        (set! make-c-null
           (lambda ()
             (let ((pointer (make-c-bytevector 1)))
               (free-bytes pointer)
@@ -231,24 +219,18 @@
     ;; FIXME
     (kawa
       (begin
-      (define c-null?
+      (set! c-null?
         (lambda (pointer)
           (invoke pointer 'equals (make-c-null))))))
     ;; FIXME
     (chibi (begin #t)) ;; In chibi-primitives.stub
     (stklos
       (begin
-      (define c-null?
+      (set! c-null?
         (lambda (pointer)
           (cond ((void? pointer) #t)
                 ((= (c-memset-pointer->address pointer 0 0) 0) #t)
                 (else #f))))))
-    (else
-      (begin
-      (define c-null?
-        (lambda (pointer)
-          (if (c-bytevector? pointer)
-            (= (c-memset-pointer->address pointer 0 0) 0)
-            #f))))))
+    (else))
   (include "c.scm"))
 

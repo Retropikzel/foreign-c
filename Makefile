@@ -47,8 +47,10 @@ Akku.manifest:
 
 test-r6rs: libtest.o libtest.so libtest.a Akku.manifest
 	if [ "${SCHEME}" = "mosh" ]; then rm -rf Akku.manifest ; rm -rf Akku.lock ; rm -rf .akku ; fi
+	if [ "${SCHEME}" = "ypsilon" ]; then rm -rf Akku.manifest ; rm -rf Akku.lock ; rm -rf .akku ; fi
 	rm -rf test-r6rs
 	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c) (srfi :64))\n" > test-r6rs.sps
+	#printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c ypsilon-primitives) (srfi :64))\n" > test-r6rs.sps
 	cat test.scm >> test-r6rs.sps
 	akku install
 	COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib -o test-r6rs --debug test-r6rs.sps

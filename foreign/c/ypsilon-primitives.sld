@@ -1,28 +1,18 @@
 (define-library
   (foreign c ypsilon-primitives)
-  (cond-expand
-    (r6rs
-      (import (ypsilon c-ffi)
-              (ypsilon c-types)
-              (only (core)
-                    define-macro
-                    syntax-case
-                    bytevector-c-int8-set!
-                    bytevector-c-uint8-ref)))
-    (else
-      (import (scheme base)
-              (scheme write)
-              (scheme char)
-              (scheme file)
-              (scheme inexact)
-              (scheme process-context)
-              (ypsilon c-ffi)
-              (ypsilon c-types)
-              (only (core)
-                    define-macro
-                    syntax-case
-                    bytevector-c-int8-set!
-                    bytevector-c-uint8-ref))))
+  (import (scheme base)
+          (scheme write)
+          (scheme char)
+          (scheme file)
+          (scheme inexact)
+          (scheme process-context)
+          (ypsilon c-ffi)
+          (ypsilon c-types)
+          (only (core)
+                define-macro
+                syntax-case
+                bytevector-c-int8-set!
+                bytevector-c-uint8-ref))
   (export size-of-type
           align-of-type
           shared-object-load
