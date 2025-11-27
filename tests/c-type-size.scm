@@ -21,11 +21,19 @@
   (else
     (test-equal (c-type-size 'long) 8)))
 
-;(cond-expand (i386 (test-equal (c-type-size 'unsigned-long) 4)) (else (test-equal (c-type-size 'unsigned-long) 8)))
+(cond-expand
+  (i386
+    (test-equal (c-type-size 'unsigned-long) 4))
+  (else
+    (test-equal (c-type-size 'unsigned-long) 8)))
 
 (test-equal "c-type-size float" (c-type-size 'float) 4)
 (test-equal "c-type-size double" (c-type-size 'double) 8)
 
-;(cond-expand (i386 (test-equal (c-type-size 'pointer) 4)) (else (test-equal (c-type-size 'pointer) 8)))
+(cond-expand
+  (i386
+    (test-equal (c-type-size 'pointer) 4))
+  (else
+    (test-equal (c-type-size 'pointer) 8)))
 
 (test-end "c-type-size")

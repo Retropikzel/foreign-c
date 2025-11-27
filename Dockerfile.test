@@ -25,6 +25,5 @@ ENV COMPILE_R7RS=${SCHEME}
 RUN if [ ! "${SCHEME}" = "racket" ]; then snow-chibi install --always-yes --impls=${SCHEME} "(srfi 64)"; fi
 COPY Makefile .
 COPY README.md .
-COPY test.scm .
 COPY tests ./tests
 COPY foreign ./foreign

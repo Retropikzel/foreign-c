@@ -9,6 +9,17 @@ PKG=foreign-c-${VERSION}.tgz
 ifeq "${SCHEME}" "chicken"
 DOCKERIMG=${SCHEME}:5
 endif
+TESTFILES=\
+	c-type-size.scm \
+	define-c-library.scm \
+	make-c-bytevector.scm \
+	c-bytevector?.scm \
+	c-bytevector-u8-set!.scm \
+	c-bytevector-u8-ref.scm \
+	c-bytevector-pointer-set!.scm \
+	c-bytevector-pointer-ref.scm \
+	string-\>c-utf8.scm \
+	define-c-procedure.scm
 
 build:
 	rm -rf *.tgz
@@ -48,7 +59,7 @@ Akku.manifest:
 test-r6rs.sps:
 	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c) (srfi :64) (only (scheme base) cond-expand))\n" > test-r6rs.sps
 	echo "(test-begin \"foreign-c-r6rs\")" >> test-r6rs.sps
-	cat tests/c-type-size.scm >> test-r6rs.sps
+	cd tests && cat ${TESTFILES} >> ../test-r6rs.sps
 	echo "(test-end \"foreign-c-r6rs\")" >> test-r6rs.sps
 
 test-r6rs: libtest.o libtest.so libtest.a Akku.manifest test-r6rs.sps
@@ -67,7 +78,7 @@ test-r6rs-docker:
 test-r7rs.scm:
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > test-r7rs.scm
 	echo "(test-begin \"foreign-c-r7rs\")" >> test-r7rs.scm
-	cat tests/c-type-size.scm >> test-r7rs.scm
+	cd tests && cat ${TESTFILES} >> ../test-r7rs.scm
 	echo "(test-end \"foreign-c-r7rs\")" >> test-r7rs.scm
 
 test-r7rs: libtest.o libtest.so libtest.a test-r7rs.scm
