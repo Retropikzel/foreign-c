@@ -28,6 +28,10 @@ TESTFILES=\
 	string-\>c-utf8.scm \
 	c-utf8-\>string.scm \
 	libc-name.scm \
+	native-endianness.scm \
+	c-bytevector-s8-set!.scm \
+	c-bytevector-s8-ref.scm \
+	c-bytevector-uchar-ref
 
 build:
 	rm -rf *.tgz
