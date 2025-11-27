@@ -22,7 +22,7 @@ RUN make build-gauche && make install
 WORKDIR /workdir
 ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
-RUN snow-chibi install --always-yes --impls=${SCHEME} "(srfi 64)"
+RUN if [ ! "${SCHEME}" = "racket" ]; then snow-chibi install --always-yes --impls=${SCHEME} "(srfi 64)"; fi
 COPY Makefile .
 COPY README.md .
 COPY test.scm .
