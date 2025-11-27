@@ -79,10 +79,10 @@
     ;; TODO c-bytevector->u8-list
     ;; TODO u8-list->c-bytevector
 
-    c-bytevector-uchar-set!
-    c-bytevector-uchar-ref
     c-bytevector-char-set!
     c-bytevector-char-ref
+    c-bytevector-uchar-set!
+    c-bytevector-uchar-ref
 
     c-bytevector-sint-set!
     c-bytevector-sint-ref

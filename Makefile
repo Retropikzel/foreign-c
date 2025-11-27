@@ -31,7 +31,12 @@ TESTFILES=\
 	native-endianness.scm \
 	c-bytevector-s8-set!.scm \
 	c-bytevector-s8-ref.scm \
-	c-bytevector-uchar-ref
+	c-bytevector-char-set!.scm \
+	c-bytevector-char-ref.scm \
+	c-bytevector-uchar-set!.scm \
+	c-bytevector-uchar-ref.scm \
+	c-bytevector-sint-set!.scm \
+	c-bytevector-sint-ref.scm
 
 build:
 	rm -rf *.tgz
