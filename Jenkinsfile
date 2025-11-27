@@ -14,7 +14,7 @@ pipeline {
 
     parameters {
         string(name: 'SCHEMES', defaultValue: 'chibi chicken gauche guile kawa mosh racket sagittarius stklos ypsilon', description: '')
-        string(name: 'R6RS_SCHEMES', defaultValue: 'guile mosh racket sagittarius ypsilon', description: '')
+        string(name: 'R6RS_SCHEMES', defaultValue: 'chezscheme guile ikarus ironscheme mosh racket sagittarius ypsilon', description: '')
     }
 
     stages {
