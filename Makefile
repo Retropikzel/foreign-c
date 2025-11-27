@@ -36,6 +36,11 @@ build:
 	foreign/c/stklos-primitives.sld \
 	foreign/c/ypsilon-primitives.sld
 
+test-gambit:
+	gsc foreign/c.sld
+	#gsc -exe -nopreload test.scm
+	#./test
+
 install:
 	snow-chibi --impls=${SCHEME} --always-yes install ${PKG}
 
