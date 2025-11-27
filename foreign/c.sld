@@ -147,11 +147,13 @@
     ;define-c-variable (?)
     )
   (cond-expand
+    (gauche (begin (define implementation 'gauche)))
+    (racket (begin (define implementation 'racket)))
+    (stklos (begin (define implementation 'stklos)))
+    (else (begin (define implementation 'other))))
+  (cond-expand
     (i386 (begin (define arch 'i386)))
     (else (begin (define arch 'x86_64))))
-  (cond-expand
-    (gauche (begin (define scheme 'gauche)))
-    (else (begin (define scheme 'other))))
   (cond-expand
     (windows
       (begin
@@ -176,11 +178,6 @@
                (shared-object-load headers)))))))
     (else
       (begin
-        (cond-expand
-          (stklos
-            (define os 'unix)
-            (define libc-name "c"))
-          (else))
         (define-syntax define-c-library
           (syntax-rules ()
             ((_ scheme-name headers object-name options)
@@ -324,9 +321,10 @@
                            (when (and (not shared-object)
                                       (file-exists? library-path))
                              (set! shared-object
-                               (cond-expand
-                                 (gauche library-path-without-suffixes)
-                                 (racket library-path-without-suffixes)
+                               (cond
+                                 ((or (symbol=? implementation 'gauche)
+                                      (symbol=? implementation 'racket))
+                                  library-path-without-suffixes)
                                  (else library-path))))))
                        versions))
                    paths)
@@ -342,9 +340,8 @@
                      (write searched-paths)
                      (newline)
                      (exit 1))
-                   (cond-expand
-                     (stklos shared-object)
-                     (else (shared-object-load shared-object
-                                               `((additional-versions ,additional-versions))))))))))))))
+                   (cond ((symbol=? implementation 'stklos) shared-object)
+                         (else (shared-object-load shared-object
+                                                   `((additional-versions ,additional-versions))))))))))))))
   (include "c.scm"))
 

@@ -31,10 +31,10 @@
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
-       (foreign-library-function shared-object
-                                 (symbol->string c-name)
-                                 #:return-type (type->native-type return-type)
-                                 #:arg-types (map type->native-type argument-types))))))
+       (pointer->procedure (type->native-type return-type)
+                           (foreign-library-pointer shared-object
+                                                    (symbol->string c-name))
+                           (map type->native-type argument-types))))))
 
 (define-syntax define-c-callback
   (syntax-rules ()
