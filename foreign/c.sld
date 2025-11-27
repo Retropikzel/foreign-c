@@ -149,19 +149,19 @@
     (racket (begin (define implementation 'racket)))
     (else (begin (define implementation 'other))))
   (cond-expand
-    (i386 (begin (define arch 'i386)))
-    (else (begin (define arch 'x86_64))))
+    (i386 (begin (define system-arch 'i386)))
+    (else (begin (define system-arch 'x86_64))))
   (cond-expand
     (windows
       (begin
-        (define os 'windows)
+        (define operation-system 'windows)
         (define libc-name "ucrtbase")))
     (haiku
       (begin
-        (define os 'haiku)
+        (define operation-system 'haiku)
         (define libc-name "root")))
     (else
-      (begin (define os 'unix)
+      (begin (define operation-system 'unix)
              (define libc-name "c"))))
   (cond-expand
     (chicken
