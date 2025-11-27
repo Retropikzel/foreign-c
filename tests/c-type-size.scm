@@ -15,7 +15,11 @@
 (test-equal "c-type-size int" (c-type-size 'int) 4)
 (test-equal "c-type-size unsigned-int" (c-type-size 'unsigned-int) 4)
 
-;(cond-expand (i386 (test-equal (c-type-size 'long) 4)) (else (test-equal (c-type-size 'long) 8)))
+(cond-expand
+  (i386
+    (test-equal (c-type-size 'long) 4))
+  (else
+    (test-equal (c-type-size 'long) 8)))
 
 ;(cond-expand (i386 (test-equal (c-type-size 'unsigned-long) 4)) (else (test-equal (c-type-size 'unsigned-long) 8)))
 

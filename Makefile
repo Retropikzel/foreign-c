@@ -46,7 +46,7 @@ Akku.manifest:
 	akku install chez-srfi akku-r7rs
 
 test-r6rs.sps:
-	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c) (srfi :64))\n" > test-r6rs.sps
+	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c) (srfi :64) (only (scheme base) cond-expand))\n" > test-r6rs.sps
 	echo "(test-begin \"foreign-c-r6rs\")" >> test-r6rs.sps
 	cat tests/c-type-size.scm >> test-r6rs.sps
 	echo "(test-end \"foreign-c-r6rs\")" >> test-r6rs.sps
