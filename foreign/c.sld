@@ -174,7 +174,7 @@
                (shared-object-load headers)))))))
     (else (include "c/define-c-library.scm")))
   (cond-expand
-    (chicken
+    #;(chicken
       (begin
         (define-c-library libc
                           '("stdlib.h" "stdio.h" "string.h")
@@ -205,14 +205,6 @@
       (set! make-c-null
         (lambda ()
           (static-field java.lang.foreign.MemorySegment 'NULL)))))
-    ;; FIXME
-    (stklos
-      (begin
-        (set! make-c-null
-          (lambda ()
-            (let ((pointer (make-c-bytevector 1)))
-              (free-bytes pointer)
-              pointer)))))
     (else))
 
   (cond-expand
@@ -222,15 +214,6 @@
       (set! c-null?
         (lambda (pointer)
           (invoke pointer 'equals (make-c-null))))))
-    ;; FIXME
-    (chibi (begin #t)) ;; In chibi-primitives.stub
-    (stklos
-      (begin
-      (set! c-null?
-        (lambda (pointer)
-          (cond ((void? pointer) #t)
-                ((= (c-memset-pointer->address pointer 0 0) 0) #t)
-                (else #f))))))
     (else))
   (include "c.scm"))
 

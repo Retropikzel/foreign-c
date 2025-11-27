@@ -17,8 +17,6 @@
           c-bytevector-u8-ref
           c-bytevector-u8-set!
           c-bytevector-pointer-ref
-          c-bytevector-pointer-set!
-          ;; Chibi specific
-          c-null?)
+          c-bytevector-pointer-set!)
   (include-shared "chibi-primitives")
   (include "chibi-primitives.scm"))

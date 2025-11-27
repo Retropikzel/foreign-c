@@ -9,8 +9,8 @@
 (define-c-procedure c-memset-address->pointer libc 'memset 'pointer '(uint64 uint8 int))
 (define-c-procedure c-memset-pointer->address libc 'memset 'uint64 '(pointer uint8 int))
 (define (make-c-null) (c-memset-address->pointer 0 0 0))
-(define c-null?
-        (lambda (pointer)
-          (if (c-bytevector? pointer)
-            (= (c-memset-pointer->address pointer 0 0) 0)
-            #f)))
+(define (c-null? pointer)
+  ;(if (c-bytevector? pointer)
+    (= (c-memset-pointer->address pointer 0 0) 0)
+    ;#f)
+)

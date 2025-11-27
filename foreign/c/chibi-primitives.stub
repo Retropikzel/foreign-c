@@ -11,8 +11,8 @@
 (define-c (maybe-null pointer void*) make-c-null ())
 
 ;; c-null?
-(c-declare "sexp is_null(void* pointer) { if(pointer == NULL) { return SEXP_TRUE; } else { return SEXP_FALSE; } }")
-(define-c sexp (c-null? is_null) ((maybe-null pointer void*)))
+;(c-declare "sexp is_null(void* pointer) { if(pointer == NULL) { return SEXP_TRUE; } else { return SEXP_FALSE; } }")
+;(define-c sexp (c-null? is_null) ((maybe-null pointer void*)))
 
 ;; c-type-size
 (c-declare "
