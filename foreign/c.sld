@@ -144,25 +144,18 @@
     ;; c-variable
     ;define-c-variable (?)
     )
-  (cond-expand
+  #;(cond-expand
     (gauche (begin (define implementation 'gauche)))
+    (guile (begin (define implementation 'guile)))
     (racket (begin (define implementation 'racket)))
     (else (begin (define implementation 'other))))
-  (cond-expand
+  #;(cond-expand
     (i386 (begin (define system-arch 'i386)))
     (else (begin (define system-arch 'x86_64))))
   (cond-expand
-    (windows
-      (begin
-        (define operation-system 'windows)
-        (define libc-name "ucrtbase")))
-    (haiku
-      (begin
-        (define operation-system 'haiku)
-        (define libc-name "root")))
-    (else
-      (begin (define operation-system 'unix)
-             (define libc-name "c"))))
+    (windows (begin (define libc-name "ucrtbase")))
+    (haiku (begin (define libc-name "root")))
+    (else (begin (define libc-name "c"))))
   (cond-expand
     (chicken
       (begin
@@ -198,22 +191,5 @@
               (or (not pointer) ; #f counts as null pointer on Chicken
                   (= (pointer->address pointer) 0)))))))
     (else (include "c/libc.scm")))
-  #;(cond-expand
-    ;; FIXME
-    (kawa
-      (begin
-      (set! make-c-null
-        (lambda ()
-          (static-field java.lang.foreign.MemorySegment 'NULL)))))
-    (else))
-
-  #;(cond-expand
-    ;; FIXME
-    (kawa
-      (begin
-      (set! c-null?
-        (lambda (pointer)
-          (invoke pointer 'equals (make-c-null))))))
-    (else))
   (include "c.scm"))
 

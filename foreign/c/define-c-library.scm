@@ -2,9 +2,8 @@
   (syntax-rules ()
     ((_ scheme-name headers object-name options)
      (define scheme-name
-       (let* ((os (cond-expand (stklos 'unix) (else operation-system)))
-              (arch (cond-expand (stklos 'x86-64) (else system-arch)))
-              (scheme (cond-expand (stklos 'stklos) (else implementation)))
+       (let* ((os (cond-expand (windows 'windows) (guile 'unix) (else 'unix)))
+              (arch (cond-expand (i386 'i386) (guile 'x86_64) (else 'x86_64)))
               (string-split
                 (lambda (str mark)
                   (let* ((str-l (string->list str))
@@ -140,10 +139,11 @@
                    (when (and (not shared-object)
                               (file-exists? library-path))
                      (set! shared-object
-                       (if (or (symbol=? scheme 'gauche)
-                               (symbol=? scheme 'racket))
-                         library-path-without-suffixes
-                         library-path)))))
+                       (cond-expand
+                         (gauche library-path-without-suffixes)
+                         (racket library-path-without-suffixes)
+                         (guile library-path)
+                         (else library-path))))))
                versions))
            paths)
          (if (not shared-object)
@@ -160,5 +160,7 @@
              (exit 1))
            (cond-expand
              (stklos shared-object)
+             (guile (shared-object-load shared-object
+                                       `((additional-versions ,additional-versions))))
              (else (shared-object-load shared-object
                                        `((additional-versions ,additional-versions)))))))))))
