@@ -1,19 +1,4 @@
-(define foreign-c:string-split
-  (lambda (str mark)
-    (let* ((str-l (string->list str))
-           (res (list))
-           (last-index 0)
-           (index 0)
-           (splitter (lambda (c)
-                       (cond ((char=? c mark)
-                              (begin
-                                (set! res (append res (list (string-copy str last-index index))))
-                                (set! last-index (+ index 1))))
-                             ((equal? (length str-l) (+ index 1))
-                              (set! res (append res (list (string-copy str last-index (+ index 1)))))))
-                       (set! index (+ index 1)))))
-      (for-each splitter str-l)
-      res)))
+(define (shared-object-load path options) path)
 
 (define type->native-type
   (lambda (type)

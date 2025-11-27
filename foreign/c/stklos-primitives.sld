@@ -22,7 +22,7 @@
           (foreign c-bytevectors))
   (export size-of-type
           align-of-type
-          ;shared-object-load
+          shared-object-load
           define-c-procedure
           c-bytevector?
           c-bytevector-u8-ref
@@ -36,7 +36,6 @@
           file-exists?
           make-external-function
           ;address->c-bytevector
-          foreign-c:string-split
           ;c-bytevector-pointer-set!
           ;c-bytevector-pointer-ref
           void?

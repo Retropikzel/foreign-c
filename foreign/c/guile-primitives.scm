@@ -1,3 +1,8 @@
+(define os 'unix)
+(define implementation 'guile)
+(define arch 'x86_64)
+(define libc-name "c")
+
 (define type->native-type
   (lambda (type)
     (cond ((equal? type 'int8) int8)
