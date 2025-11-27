@@ -39,18 +39,21 @@
                      bytevector-c-int8-set!
                      bytevector-c-uint8-ref)))
   (export
-    ;;;; Primitives
+    ;; Primitives
     c-type-size
     c-type-align
     define-c-library
     define-c-procedure
+
+    make-c-bytevector
+
+    ;; Primitives
     c-bytevector?
     c-bytevector-u8-set!
     c-bytevector-u8-ref
     c-bytevector-pointer-set!
     c-bytevector-pointer-ref
 
-    ;;;; c-bytevector
     make-c-null
     c-null?
     c-free
@@ -59,15 +62,14 @@
     bytevector->c-bytevector
     c-bytevector->bytevector
 
-    ;;;; Utilities
-    libc-name
-    c-type-signed?
-    c-type-unsigned?
+    string->c-utf8
+    c-utf8->string
 
-    ;; TODO endianness
+    libc-name
+
+    ;; endianness
     native-endianness
-    make-c-bytevector
-    c-bytevector->address
+    ;; c-bytevector->address
     ;; TODO c-bytevector=?
     ;; TODO c-bytevector-fill!
     ;; TODO c-bytevector-copy!
@@ -130,11 +132,9 @@
     c-bytevector-ieee-double-native-set!
     c-bytevector-ieee-double-set!
 
-    string->c-utf8
     ;; TODO string->c-utf16
     ;; TODO string->c-utf32
 
-    c-utf8->string
     ;; TODO c-utf16->string
     ;; TODO c-utf32->string
 

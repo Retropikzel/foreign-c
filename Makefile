@@ -12,14 +12,22 @@ endif
 TESTFILES=\
 	c-type-size.scm \
 	define-c-library.scm \
+	define-c-procedure.scm \
 	make-c-bytevector.scm \
 	c-bytevector?.scm \
 	c-bytevector-u8-set!.scm \
 	c-bytevector-u8-ref.scm \
 	c-bytevector-pointer-set!.scm \
 	c-bytevector-pointer-ref.scm \
+	make-c-null.scm \
+	c-null?.scm \
+	c-free.scm \
+	call-with-address-of.scm \
+	bytevector-\>c-bytevector.scm \
+	c-bytevector-\>bytevector.scm \
 	string-\>c-utf8.scm \
-	define-c-procedure.scm
+	c-utf8-\>string.scm \
+	libc-name.scm \
 
 build:
 	rm -rf *.tgz
@@ -57,7 +65,7 @@ Akku.manifest:
 	akku install chez-srfi akku-r7rs
 
 test-r6rs.sps:
-	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c) (srfi :64) (only (scheme base) cond-expand))\n" > test-r6rs.sps
+	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c) (srfi :64) (only (scheme base) cond-expand) (only (rnrs bytevectors) make-bytevector bytevector?))\n" > test-r6rs.sps
 	echo "(test-begin \"foreign-c-r6rs\")" >> test-r6rs.sps
 	cd tests && cat ${TESTFILES} >> ../test-r6rs.sps
 	echo "(test-end \"foreign-c-r6rs\")" >> test-r6rs.sps
