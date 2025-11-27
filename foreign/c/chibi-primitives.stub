@@ -188,7 +188,7 @@
         break;
         case 6:
           c_atypes[i] = &ffi_type_uint32;
-          vals6[i] = (int64_t)sexp_uint_value(avalues[i]);
+          vals6[i] = (uint32_t)sexp_uint_value(avalues[i]);
           c_avalues[i] = &vals6[i];
         break;
         case 7:

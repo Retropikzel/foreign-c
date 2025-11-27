@@ -7,7 +7,7 @@
           (scheme process-context)
           (chibi ast)
           (scheme inexact)
-          (chibi)
+          (except (chibi) c-null?)
           (foreign c-bytevectors))
   (export size-of-type
           align-of-type
