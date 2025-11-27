@@ -70,7 +70,7 @@ test-r7rs: libtest.o libtest.so libtest.a
 test-r7rs-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-test-${SCHEME} -f Dockerfile.test .
 	docker run -t retropikzel-foreign-c-test-${SCHEME} \
-		sh -c "make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes build install test-r7rs && cat foreign-c.log"
+		sh -c "make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes build install test-r7rs"
 
 libtest.o: tests/c-src/libtest.c
 	${CC} ${CFLAGS} -o libtest.o -fPIC -c tests/c-src/libtest.c -I./include ${LDFLAGS}
