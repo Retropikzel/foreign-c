@@ -10,6 +10,9 @@ ifeq "${SCHEME}" "chicken"
 DOCKERIMG=${SCHEME}:5
 endif
 TESTFILES=\
+	c-type-size.scm
+
+TESTFILES_ALL=\
 	c-type-size.scm \
 	define-c-library.scm \
 	define-c-procedure.scm \
@@ -88,7 +91,7 @@ test-r6rs: libtest.o libtest.so libtest.a Akku.manifest test-r6rs.sps
 	./test-r6rs
 
 test-r6rs-docker:
-	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-r6rs-test-${SCHEME} -f Dockerfile-r6rs.test .
+	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-r6rs-test-${SCHEME} .
 	docker run -t retropikzel-foreign-c-r6rs-test-${SCHEME} \
 		sh -c "akku install && make SCHEME=${SCHEME} test-r6rs"
 
@@ -105,8 +108,8 @@ test-r7rs: libtest.o libtest.so libtest.a test-r7rs.scm
 	LD_LIBRARY_PATH=. ./test-r7rs
 
 test-r7rs-docker:
-	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-test-${SCHEME} -f Dockerfile.test .
-	docker run -t retropikzel-foreign-c-test-${SCHEME} \
+	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-r7rs-test-${SCHEME} .
+	docker run -t retropikzel-foreign-c-r7rs-test-${SCHEME} \
 		sh -c "make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes build install test-r7rs"
 
 libtest.o: tests/c-src/libtest.c
