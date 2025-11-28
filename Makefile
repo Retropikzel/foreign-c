@@ -1,3 +1,5 @@
+# Variables
+
 .PHONY: package test libtest.o tests/libtest.so libtest.a documentation README.html snow test-r7rs.scm
 .SILENT: build install test test-docker clean
 SCHEME=chibi
@@ -9,7 +11,13 @@ PKG=foreign-c-${VERSION}.tgz
 ifeq "${SCHEME}" "chicken"
 DOCKERIMG=${SCHEME}:5
 endif
+PRIM_TESTFILES=\
+	primitives.scm
+
 TESTFILES=\
+	c-type-size.scm
+
+TESTFILES_ALL=\
 	c-type-size.scm \
 	define-c-library.scm \
 	define-c-procedure.scm \
@@ -37,6 +45,9 @@ TESTFILES=\
 	c-bytevector-uchar-ref.scm \
 	c-bytevector-sint-set!.scm \
 	c-bytevector-sint-ref.scm
+
+
+# Build and install
 
 build:
 	rm -rf *.tgz
@@ -70,8 +81,28 @@ install:
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
-Akku.manifest:
-	akku install chez-srfi akku-r7rs
+
+# R6RS Primitives tests
+
+test-r6rs-primitives.sps:
+	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c ${SCHEME}-primitives) (srfi :64) (only (scheme base) cond-expand) (only (rnrs bytevectors) make-bytevector bytevector?))\n" > test-r6rs-primitives.sps
+	cd tests && cat ${PRIM_TESTFILES} >> ../test-r6rs-primitives.sps
+
+test-r6rs-primitives: Akku.manifest test-r6rs-primitives.sps
+	if [ "${SCHEME}" = "mosh" ]; then rm -rf Akku.manifest ; rm -rf Akku.lock ; rm -rf .akku ; fi
+	if [ "${SCHEME}" = "ypsilon" ]; then rm -rf Akku.manifest ; rm -rf Akku.lock ; rm -rf .akku ; fi
+	rm -rf test-r6rs-primitives
+	akku install
+	COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib -o test-r6rs-primitives --debug test-r6rs-primitives.sps
+	./test-r6rs-primitives
+
+test-r6rs-primitives-docker:
+	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-r6rs-test-${SCHEME} .
+	docker run -t retropikzel-foreign-c-r6rs-test-${SCHEME} \
+		sh -c "akku install && make SCHEME=${SCHEME} test-r6rs-primitives"
+
+
+# R6RS Tests
 
 test-r6rs.sps:
 	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c) (srfi :64) (only (scheme base) cond-expand) (only (rnrs bytevectors) make-bytevector bytevector?))\n" > test-r6rs.sps
@@ -92,6 +123,27 @@ test-r6rs-docker:
 	docker run -t retropikzel-foreign-c-r6rs-test-${SCHEME} \
 		sh -c "akku install && make SCHEME=${SCHEME} test-r6rs"
 
+
+# R7RS Primitives Tests
+
+test-r7rs-primitives.sps:
+	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > test-r7rs-primitives.scm
+	cd tests && cat ${PRIM_TESTFILES} >> ../test-r7rs-primitives.scm
+
+test-r7rs-primitives: Akku.manifest test-r7rs-primitives.sps
+	rm -rf test-r6rs
+	akku install
+	COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib -o test-r6rs-primitives --debug test-r7rs-primitives.scm
+	./test-r7rs-primitives
+
+test-r7rs-primitives-docker:
+	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-r7rs-test-${SCHEME} .
+	docker run -t retropikzel-foreign-c-r7rs-test-${SCHEME} \
+		sh -c "akku install && make SCHEME=${SCHEME} test-r7rs-primitives"
+
+
+# R7RS Tests
+
 test-r7rs.scm:
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > test-r7rs.scm
 	echo "(test-begin \"foreign-c-r7rs\")" >> test-r7rs.scm
@@ -109,6 +161,9 @@ test-r7rs-docker:
 	docker run -t retropikzel-foreign-c-r7rs-test-${SCHEME} \
 		sh -c "make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes build install test-r7rs"
 
+
+# C libraries for testing
+
 libtest.o: tests/c-src/libtest.c
 	${CC} ${CFLAGS} -o libtest.o -fPIC -c tests/c-src/libtest.c -I./include ${LDFLAGS}
 
@@ -117,6 +172,11 @@ libtest.so: tests/c-src/libtest.c
 
 libtest.a: libtest.o tests/c-src/libtest.c
 	ar rcs libtest.a libtest.o ${LDFLAGS}
+
+
+# Utils
+Akku.manifest:
+	akku install chez-srfi akku-r7rs
 
 clean:
 	git clean -X -f

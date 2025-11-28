@@ -18,7 +18,7 @@ FROM schemers/${IMAGE}
 RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
 COPY --from=build /build /build
 WORKDIR /build
-RUN apt-get update && apt-get install -y make libffi-dev libcurl4 gauche
+RUN apt-get update && apt-get install -y gcc make libffi-dev libcurl4 gauche
 WORKDIR /build/akku
 RUN bash install.sh
 ENV PATH=/root/.local/bin:${PATH}
