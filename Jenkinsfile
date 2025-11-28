@@ -13,7 +13,7 @@ pipeline {
     }
 
     parameters {
-        string(name: 'SCHEMES', defaultValue: 'chibi chicken gauche guile kawa mosh racket sagittarius stklos ypsilon', description: '')
+        string(name: 'R7RS_SCHEMES', defaultValue: 'chibi chicken gauche guile kawa mosh racket sagittarius stklos ypsilon', description: '')
         string(name: 'R6RS_SCHEMES', defaultValue: 'chezscheme guile ikarus ironscheme mosh racket sagittarius ypsilon', description: '')
     }
 
@@ -43,7 +43,7 @@ pipeline {
                 stage('R7RS x86_64 Debian') {
                     steps {
                         script {
-                            params.SCHEMES.split().each { SCHEME ->
+                            params.R7RS_SCHEMES.split().each { SCHEME ->
                                 def IMG="${SCHEME}:head"
                                     if("${SCHEME}" == "chicken") {
                                         IMG="${SCHEME}:5"
