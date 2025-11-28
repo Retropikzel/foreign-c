@@ -1,4 +1,4 @@
-(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c sagittarius-primitives))
+(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c chezscheme-primitives))
 (test-begin "foreign-c-r7rs-primitives")
 (test-begin "size-of-type")
 

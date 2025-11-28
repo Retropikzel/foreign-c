@@ -1,8 +1,8 @@
 
 #|
-exec sash -d  -r7  -L .akku/lib "$0" "$@"
+exec chezscheme  --libdirs '.akku/lib:' --program "$0" "$@"
 |#
-(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c sagittarius-primitives))
+(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c chezscheme-primitives))
 (test-begin "foreign-c-r7rs-primitives")
 (test-begin "size-of-type")
 

@@ -1,5 +1,5 @@
 (define-library
-  (foreign c chez-primitives)
+  (foreign c chezscheme-primitives)
   (import (chezscheme))
   (export size-of-type
           align-of-type
@@ -13,4 +13,4 @@
           ;; Chez specific
           foreign-procedure
           type->native-type)
-  (include "chez-primitives.scm"))
+  (include "chezscheme-primitives.scm"))
