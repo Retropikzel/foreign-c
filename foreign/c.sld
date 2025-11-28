@@ -152,7 +152,7 @@
   #;(cond-expand
     (i386 (begin (define system-arch 'i386)))
     (else (begin (define system-arch 'x86_64))))
-  (cond-expand
+  #;(cond-expand
     (windows (begin (define libc-name "ucrtbase")))
     (haiku (begin (define libc-name "root")))
     (else (begin (define libc-name "c"))))
@@ -169,6 +169,11 @@
   (cond-expand
     (chicken
       (begin
+        (define libc-name
+          (cond-expand
+            (windows "ucrtbase")
+            (haiku "root")
+            (else "c")))
         (define-c-library libc
                           '("stdlib.h" "stdio.h" "string.h")
                           libc-name

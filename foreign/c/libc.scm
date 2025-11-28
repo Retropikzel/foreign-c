@@ -1,3 +1,8 @@
+(define libc-name
+  (cond-expand
+    (windows "ucrtbase")
+    (haiku "root")
+    (else "c")))
 (define-c-library libc
                   '("stdlib.h" "stdio.h" "string.h")
                   libc-name
