@@ -1,4 +1,7 @@
-# Variables
+# (foreign c)
+
+
+## Variables
 
 .PHONY: \
 	package test libtest.o tests/libtest.so libtest.a documentation \
@@ -14,6 +17,9 @@ CC=gcc
 PKG=foreign-c-${VERSION}.tgz
 ifeq "${SCHEME}" "chicken"
 DOCKERIMG=${SCHEME}:5
+endif
+ifeq "${SCHEME}" "racket"
+DOCKERIMG=${SCHEME}:latest
 endif
 PRIM_TESTFILES=\
 	primitives/size-of-type.scm
@@ -40,18 +46,18 @@ TESTFILES_ALL=\
 	string-\>c-utf8.scm \
 	c-utf8-\>string.scm \
 	libc-name.scm \
-	native-endianness.scm \
-	c-bytevector-s8-set!.scm \
-	c-bytevector-s8-ref.scm \
-	c-bytevector-char-set!.scm \
-	c-bytevector-char-ref.scm \
-	c-bytevector-uchar-set!.scm \
-	c-bytevector-uchar-ref.scm \
-	c-bytevector-sint-set!.scm \
-	c-bytevector-sint-ref.scm
+	c-bytevectors/native-endianness.scm \
+	c-bytevectors/c-bytevector-s8-set!.scm \
+	c-bytevectors/c-bytevector-s8-ref.scm \
+	c-bytevectors/c-bytevector-char-set!.scm \
+	c-bytevectors/c-bytevector-char-ref.scm \
+	c-bytevectors/c-bytevector-uchar-set!.scm \
+	c-bytevectors/c-bytevector-uchar-ref.scm \
+	c-bytevectors/c-bytevector-sint-set!.scm \
+	c-bytevectors/c-bytevector-sint-ref.scm
 
 
-# Build and install
+## Build and install
 
 build:
 	rm -rf *.tgz
@@ -86,7 +92,7 @@ uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
 
-# R6RS Primitives tests
+## R6RS Primitives tests
 
 test-r6rs-primitives.sps:
 	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c ${SCHEME}-primitives) (srfi :64) (only (rnrs bytevectors) make-bytevector bytevector?))\n" > test-r6rs-primitives.sps
@@ -108,7 +114,7 @@ test-r6rs-primitives-docker:
 		sh -c "akku install && make SCHEME=${SCHEME} test-r6rs-primitives"
 
 
-# R6RS Tests
+## R6RS Tests
 
 test-r6rs.sps:
 	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c) (srfi :64) (only (rnrs bytevectors) make-bytevector bytevector?))\n" > test-r6rs.sps
@@ -130,7 +136,7 @@ test-r6rs-docker:
 		sh -c "akku install && make SCHEME=${SCHEME} test-r6rs"
 
 
-# R7RS Primitives Tests
+## R7RS Primitives Tests
 
 test-r7rs-primitives.sps:
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c ${SCHEME}-primitives))" > test-r7rs-primitives.scm
@@ -149,7 +155,7 @@ test-r7rs-primitives-docker:
 		sh -c "make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes build install test-r7rs"
 
 
-# R7RS Tests
+## R7RS Tests
 
 test-r7rs.scm:
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > test-r7rs.scm
@@ -169,7 +175,7 @@ test-r7rs-docker:
 		sh -c "make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes build install test-r7rs"
 
 
-# C libraries for testing
+## C libraries for testing
 
 libtest.o: tests/c-src/libtest.c
 	${CC} ${CFLAGS} -o libtest.o -fPIC -c tests/c-src/libtest.c -I./include ${LDFLAGS}
@@ -181,7 +187,7 @@ libtest.a: libtest.o tests/c-src/libtest.c
 	ar rcs libtest.a libtest.o ${LDFLAGS}
 
 
-# Utils
+## Utils
 Akku.manifest:
 	akku install chez-srfi akku-r7rs
 

@@ -143,18 +143,6 @@
     ;; c-variable
     ;define-c-variable (?)
     )
-  #;(cond-expand
-    (gauche (begin (define implementation 'gauche)))
-    (guile (begin (define implementation 'guile)))
-    (racket (begin (define implementation 'racket)))
-    (else (begin (define implementation 'other))))
-  #;(cond-expand
-    (i386 (begin (define system-arch 'i386)))
-    (else (begin (define system-arch 'x86_64))))
-  #;(cond-expand
-    (windows (begin (define libc-name "ucrtbase")))
-    (haiku (begin (define libc-name "root")))
-    (else (begin (define libc-name "c"))))
   (cond-expand
     (chicken
       (begin
