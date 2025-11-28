@@ -2,6 +2,7 @@
   (cond-expand
     (windows "ucrtbase")
     (haiku "root")
+    (guile "c")
     (else "c")))
 (define-c-library libc
                   '("stdlib.h" "stdio.h" "string.h")
