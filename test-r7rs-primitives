@@ -1,8 +1,8 @@
 
 #|
-exec chezscheme  --libdirs '.akku/lib:' --program "$0" "$@"
+exec chibi-scheme  -I .akku/lib "$0" "$@"
 |#
-(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c chezscheme-primitives))
+(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c chibi-primitives))
 (test-begin "foreign-c-r7rs-primitives")
 (test-begin "size-of-type")
 

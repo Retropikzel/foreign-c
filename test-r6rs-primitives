@@ -1,5 +1,10 @@
-(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c chibi-primitives))
-(test-begin "foreign-c-r7rs-primitives")
+
+#|
+exec chezscheme  --libdirs '.akku/lib:' --program "$0" "$@"
+|#
+#!r6rs
+(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c chezscheme-primitives) (srfi :64) (only (scheme base) cond-expand) (only (rnrs bytevectors) make-bytevector bytevector?))
+(test-begin "foreign-c-r6rs-primitives")
 (test-begin "size-of-type")
 
 (test-equal "size-of-type int8" (size-of-type 'int8) 1)
@@ -39,4 +44,4 @@
     (test-equal (size-of-type 'pointer) 8)))
 
 (test-end "size-of-type")
-(test-end "foreign-c-r7rs-primitives")
+(test-end "foreign-c-r6rs-primitives")

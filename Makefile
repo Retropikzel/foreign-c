@@ -146,7 +146,7 @@ test-r7rs-primitives: Akku.manifest test-r7rs-primitives.sps
 test-r7rs-primitives-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-r7rs-test-${SCHEME} .
 	docker run -t retropikzel-foreign-c-r7rs-test-${SCHEME} \
-		sh -c "akku install && make SCHEME=${SCHEME} test-r7rs-primitives"
+		sh -c "make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes build install test-r7rs"
 
 
 # R7RS Tests
