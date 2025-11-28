@@ -55,3 +55,7 @@ test-r7rs.scm
 Akku.lock
 Akku.manifest
 srfi
+test-r6rs-primitives
+test-r6rs-primitives.scm
+test-r7rs-primitives
+test-r7rs-primitives.scm
