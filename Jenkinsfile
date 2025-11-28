@@ -31,11 +31,11 @@ pipeline {
                         script {
                             params.R6RS_SCHEMES.split().each { SCHEME ->
                                 def IMG="${SCHEME}:head"
-                                    stage("${SCHEME}") {
-                                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                            sh "make SCHEME=${SCHEME} test-r6rs-docker"
-                                        }
+                                stage("${SCHEME}") {
+                                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                        sh "make SCHEME=${SCHEME} test-r6rs-docker"
                                     }
+                                }
                             }
                         }
                     }
@@ -45,9 +45,9 @@ pipeline {
                         script {
                             params.R7RS_SCHEMES.split().each { SCHEME ->
                                 def IMG="${SCHEME}:head"
-                                    if("${SCHEME}" == "chicken") {
-                                        IMG="${SCHEME}:5"
-                                    }
+                                if("${SCHEME}" == "chicken") {
+                                    IMG="${SCHEME}:5"
+                                }
                                 stage("${SCHEME}") {
                                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                         sh "make SCHEME=${SCHEME} test-r7rs-docker"
