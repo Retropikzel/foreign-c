@@ -1,11 +1,14 @@
 (define-library
   (foreign c)
-  (import (scheme base)
-          (scheme write)
-          (scheme char)
-          (scheme file)
-          (scheme process-context)
-          (scheme inexact))
+  (cond-expand
+    (r6rs (import (rnrs)))
+    (else
+      (import (scheme base)
+              (scheme write)
+              (scheme char)
+              (scheme file)
+              (scheme process-context)
+              (scheme inexact))))
   (import (foreign c-bytevectors))
   (cond-expand
     (chezscheme (import (foreign c chezscheme-primitives))
