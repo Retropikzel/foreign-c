@@ -10,6 +10,9 @@ ifeq "${SCHEME}" "chicken"
 DOCKERIMG=${SCHEME}:5
 endif
 TESTFILES=\
+	c-type-size.scm
+
+TESTFILES_ALL=\
 	c-type-size.scm \
 	define-c-library.scm \
 	define-c-procedure.scm \
