@@ -26,6 +26,20 @@ pipeline {
 
         stage('Tests') {
             parallel {
+                stage('R6RS primitives x86_64 Debian') {
+                    steps {
+                        script {
+                            params.R6RS_SCHEMES.split().each { SCHEME ->
+                                def IMG="${SCHEME}:head"
+                                stage("${SCHEME}") {
+                                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                        sh "make SCHEME=${SCHEME} test-r6rs-primitives-docker"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 stage('R6RS x86_64 Debian') {
                     steps {
                         script {
@@ -34,6 +48,23 @@ pipeline {
                                 stage("${SCHEME}") {
                                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                         sh "make SCHEME=${SCHEME} test-r6rs-docker"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                stage('R7RS primitives x86_64 Debian') {
+                    steps {
+                        script {
+                            params.R7RS_SCHEMES.split().each { SCHEME ->
+                                def IMG="${SCHEME}:head"
+                                if("${SCHEME}" == "chicken") {
+                                    IMG="${SCHEME}:5"
+                                }
+                                stage("${SCHEME}") {
+                                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                        sh "make SCHEME=${SCHEME} test-r7rs-primitives-docker"
                                     }
                                 }
                             }

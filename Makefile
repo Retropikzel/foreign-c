@@ -1,6 +1,10 @@
 # Variables
 
-.PHONY: package test libtest.o tests/libtest.so libtest.a documentation README.html snow test-r7rs.scm
+.PHONY: \
+	package test libtest.o tests/libtest.so libtest.a documentation \
+	README.html test-r6rs.sps test-r6rs test-r6rs-primitives.sps \
+	test-r6rs-primitives test-r7rs.scm test-r7rs test-r7rs-primitives.scm \
+	test-r7rs-primitives
 .SILENT: build install test test-docker clean
 SCHEME=chibi
 DOCKERIMG=${SCHEME}:head
@@ -12,7 +16,7 @@ ifeq "${SCHEME}" "chicken"
 DOCKERIMG=${SCHEME}:5
 endif
 PRIM_TESTFILES=\
-	primitives.scm
+	primitives/size-of-type.scm
 
 TESTFILES=\
 	c-type-size.scm
@@ -86,7 +90,9 @@ uninstall:
 
 test-r6rs-primitives.sps:
 	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c ${SCHEME}-primitives) (srfi :64) (only (scheme base) cond-expand) (only (rnrs bytevectors) make-bytevector bytevector?))\n" > test-r6rs-primitives.sps
+	echo "(test-begin \"foreign-c-r6rs-primitives\")" >> test-r6rs-primitives.sps
 	cd tests && cat ${PRIM_TESTFILES} >> ../test-r6rs-primitives.sps
+	echo "(test-end \"foreign-c-r6rs-primitives\")" >> test-r6rs-primitives.sps
 
 test-r6rs-primitives: Akku.manifest test-r6rs-primitives.sps
 	if [ "${SCHEME}" = "mosh" ]; then rm -rf Akku.manifest ; rm -rf Akku.lock ; rm -rf .akku ; fi
@@ -127,13 +133,14 @@ test-r6rs-docker:
 # R7RS Primitives Tests
 
 test-r7rs-primitives.sps:
-	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > test-r7rs-primitives.scm
+	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c ${SCHEME}-primitives))" > test-r7rs-primitives.scm
+	echo "(test-begin \"foreign-c-r7rs-primitives\")" >> test-r7rs-primitives.scm
 	cd tests && cat ${PRIM_TESTFILES} >> ../test-r7rs-primitives.scm
+	echo "(test-end \"foreign-c-r7rs-primitives\")" >> test-r7rs-primitives.scm
 
 test-r7rs-primitives: Akku.manifest test-r7rs-primitives.sps
-	rm -rf test-r6rs
-	akku install
-	COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib -o test-r6rs-primitives --debug test-r7rs-primitives.scm
+	rm -rf test-r7rs-primitives
+	COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib -o test-r7rs-primitives --debug test-r7rs-primitives.scm
 	./test-r7rs-primitives
 
 test-r7rs-primitives-docker:

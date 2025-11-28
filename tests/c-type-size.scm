@@ -1,7 +1,7 @@
 (test-begin "c-type-size")
 
 (test-equal "c-type-size int8" (c-type-size 'int8) 1)
-(test-equal "c-type-size uint8" (c-type-size 'uint8) 100)
+(test-equal "c-type-size uint8" (c-type-size 'uint8) 1)
 (test-equal "c-type-size int16" (c-type-size 'int16) 2)
 (test-equal "c-type-size uint16" (c-type-size 'uint16) 2)
 (test-equal "c-type-size int32" (c-type-size 'int32) 4)
