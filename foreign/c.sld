@@ -28,8 +28,7 @@
     ;(mit-scheme (import (foreign c mit-scheme-primitives)))
     (larceny (import (foreign c larceny-primitives)))
     (mosh (import (foreign c mosh-primitives)))
-    (racket (import (only (scheme base) cond-expand)
-                    (foreign c racket-primitives)))
+    (racket (import (foreign c racket-primitives)))
     (sagittarius (import (foreign c sagittarius-primitives)))
     (stklos (import (foreign c stklos-primitives))
             (export make-external-function

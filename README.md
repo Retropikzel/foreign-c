@@ -1,5 +1,7 @@
 (foreign c) is a C foreign function interface (FFI) library for R6RS and R7RS Schemes
 
+
+
 ## Supported implementations
 
 - Chez => 10.0.0
@@ -47,6 +49,8 @@
     - R6RS
     - R7RS
 
+
+
 ## Work in progress
 
 - Cyclone
@@ -62,11 +66,27 @@
     - R6RS
     - R7RS
 
+
+
 ## Installation
 
 
-### Snow-fort (R7RS)
+### R6RS - Akku
 
+In your project directory run:
+
+    akku install "(foreign c)"
+
+
+### R6RS - Manual
+
+    Dowloand the latest release or clone from git and copy directory named
+    "foreign" into your project, then run:
+
+        akku install
+
+
+### R7RS - Snow-fort
 
 [https://snow-fort.org/](https://snow-fort.org/)
 
@@ -80,15 +100,7 @@ You can test that library is found by your implementation like this:
 
 
 
-### Akku (R6RS)
-
-In your project directory run:
-
-    akku install "(foreign c)"
-
-
-
-### Manual system wide (R7RS)
+### R7RS Manual
 
 Manual system wide installation requires snow-chibi.
 
@@ -107,29 +119,7 @@ Example for how to install for Gauche:
 
 
 
-### Manual for project (R6RS/R7RS)
-
-Either download the latest release from
-[https://git.sr.ht/~retropikzel/foreign-c/refs](https://git.sr.ht/~retropikzel/foreign-c/refs)
-or git clone, tag, and copy the foreign directory to your
-library directory.
-
-Example assuming libraries in directory snow:
-
-    git clone https://git.sr.ht/~retropikzel/foreign-c --branch LATEST_VERSION
-    cd foreign-c
-    make SCHEME_IMPLEMENTATION_NAME
-    cd ..
-    mkdir -p snow
-    cp -r foreign-c/foreign snow/
-
-With most implementations the make command does not compile anything. When that
-is the case it will say "Nothing to build on SCHEME\_IMPLEMENTATION\_NAME."
-
-
-
 ## Documentation
-
 
 
 ### Types
@@ -158,7 +148,6 @@ Types are given as symbols, for example 'int8 or 'pointer.
     - c-bytevector on Scheme side
 - void
     - Can not be argument type, only return type
-
 
 
 ### Primitives 1
@@ -201,7 +190,6 @@ Example:
                         (additional-paths ("."))))
 
 
-
 #### Notes
 
 - Do not cond-expand inside the arguments, that might lead to problems on some
@@ -229,7 +217,6 @@ Example:
     (define-c-library libc '("stdlib.h") libc-name '("6"))
     (define-c-procedure c-puts libc 'puts 'int '(pointer))
     (c-puts "Message brought to you by foreign-c!")
-
 
 
 #### Notes
@@ -276,6 +263,7 @@ Stores the pointer(which is also c-bytevector) in element k of c-bytevector.
 If K is not a valid index of c-bytevector the behaviour is undefined.
 
 Returns the pointer(which is also c-bytevector) at index k of c-bytevector.
+
 
 ### c-bytevector
 
@@ -590,10 +578,7 @@ Returns a newly allocated string whose character sequence is
 encoded by the given c-bytevector. It is an error if c-bytevector is null.
 
 
-
 ### c-array
-
-
 
 (**make-c-array** type size)<br></br>
 (**make-c-array** type size fill)
@@ -644,8 +629,6 @@ what is in the c-bytevector the behaviour is unspecified.
 
 
 ### Utilities
-
-
 
 **libc-name**
 
