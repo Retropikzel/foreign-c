@@ -64,7 +64,7 @@ build:
 		--description="Portable foreign function interface for R7RS Schemes" \
 	foreign/c.sld \
 	foreign/c-bytevectors.sld \
-	foreign/c/chez-primitives.sld \
+	foreign/c/chezscheme-primitives.sld \
 	foreign/c/chibi-primitives.sld \
 	foreign/c/chicken-primitives.sld \
 	foreign/c/gauche-primitives.sld \
