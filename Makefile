@@ -89,7 +89,7 @@ uninstall:
 # R6RS Primitives tests
 
 test-r6rs-primitives.sps:
-	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c ${SCHEME}-primitives) (srfi :64) (only (scheme base) cond-expand) (only (rnrs bytevectors) make-bytevector bytevector?))\n" > test-r6rs-primitives.sps
+	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c ${SCHEME}-primitives) (srfi :64) (only (rnrs bytevectors) make-bytevector bytevector?))\n" > test-r6rs-primitives.sps
 	echo "(test-begin \"foreign-c-r6rs-primitives\")" >> test-r6rs-primitives.sps
 	cd tests && cat ${PRIM_TESTFILES} >> ../test-r6rs-primitives.sps
 	echo "(test-end \"foreign-c-r6rs-primitives\")" >> test-r6rs-primitives.sps
@@ -111,7 +111,7 @@ test-r6rs-primitives-docker:
 # R6RS Tests
 
 test-r6rs.sps:
-	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c) (srfi :64) (only (scheme base) cond-expand) (only (rnrs bytevectors) make-bytevector bytevector?))\n" > test-r6rs.sps
+	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c) (srfi :64) (only (rnrs bytevectors) make-bytevector bytevector?))\n" > test-r6rs.sps
 	echo "(test-begin \"foreign-c-r6rs\")" >> test-r6rs.sps
 	cd tests && cat ${TESTFILES} >> ../test-r6rs.sps
 	echo "(test-end \"foreign-c-r6rs\")" >> test-r6rs.sps

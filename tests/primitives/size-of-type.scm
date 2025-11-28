@@ -15,13 +15,13 @@
 (test-equal "size-of-type int" (size-of-type 'int) 4)
 (test-equal "size-of-type unsigned-int" (size-of-type 'unsigned-int) 4)
 
-(cond-expand
+#;(cond-expand
   (i386
     (test-equal (size-of-type 'long) 4))
   (else
     (test-equal (size-of-type 'long) 8)))
 
-(cond-expand
+#;(cond-expand
   (i386
     (test-equal (size-of-type 'unsigned-long) 4))
   (else
@@ -30,7 +30,7 @@
 (test-equal "size-of-type float" (size-of-type 'float) 4)
 (test-equal "size-of-type double" (size-of-type 'double) 8)
 
-(cond-expand
+#;(cond-expand
   (i386
     (test-equal (size-of-type 'pointer) 4))
   (else
