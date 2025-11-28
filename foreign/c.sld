@@ -8,7 +8,7 @@
           (scheme inexact))
   (import (foreign c-bytevectors))
   (cond-expand
-    (chezscheme (import (foreign c chez-primitives))
+    (chezscheme (import (foreign c chezscheme-primitives))
                 (export foreign-procedure))
     (chibi (import (foreign c chibi-primitives)))
     (chicken (import (foreign c chicken-primitives)
