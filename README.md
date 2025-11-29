@@ -57,6 +57,8 @@
     - R7RS
 - Gambit
     - R7RS
+- Gerbil
+    - R7RS
 - Mit-Scheme
     - R7RS
 - Mosh
