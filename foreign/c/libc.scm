@@ -23,4 +23,6 @@
       (lambda (k)
         (with-exception-handler
           (lambda (x) (k #f))
-          (lambda () (= (c-memset-pointer->address pointer 0 0) 0)))))))
+          (lambda ()
+            (and (c-bytevector? pointer)
+                 (= (c-memset-pointer->address pointer 0 0) 0))))))))
