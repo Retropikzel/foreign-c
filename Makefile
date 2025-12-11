@@ -27,8 +27,11 @@ endif
 PRIM_TESTFILES=\
 	primitives/size-of-type.scm
 
-TESTFILES=\
-	c-type-size.scm \
+ALL_R6RS_EXCEPT=capyscheme larceny
+ALL_R7RS_EXCEPT=capyscheme cyclone foment gauche larceny loko meevax \
+	mit-scheme skint tr7
+
+TESTFILES= \
 	c-type-size.scm \
 	define-c-library.scm \
 	define-c-procedure.scm \
@@ -110,8 +113,7 @@ test-r6rs-primitives: Akku.manifest test-r6rs-primitives.sps
 	./test-r6rs-primitives
 
 test-r6rs-primitives-docker:
-	echo "Building docker image..."
-	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-r6rs-test-${SCHEME} --quiet .
+	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-r6rs-test-${SCHEME} --quiet . > /dev/null
 	docker run -t retropikzel-foreign-c-r6rs-test-${SCHEME} \
 		sh -c "akku install && make SCHEME=${SCHEME} test-r6rs-primitives"
 
@@ -133,8 +135,7 @@ test-r6rs: libtest.o libtest.so libtest.a Akku.manifest test-r6rs.sps
 	./test-r6rs
 
 test-r6rs-docker:
-	echo "Building docker image..."
-	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-r6rs-test-${SCHEME} --quiet .
+	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-r6rs-test-${SCHEME} --quiet . > /dev/null
 	docker run -t retropikzel-foreign-c-r6rs-test-${SCHEME} \
 		sh -c "akku install && make SCHEME=${SCHEME} test-r6rs"
 
@@ -153,8 +154,7 @@ test-r7rs-primitives: Akku.manifest test-r7rs-primitives.sps
 	./test-r7rs-primitives
 
 test-r7rs-primitives-docker:
-	echo "Building docker image..."
-	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-r7rs-test-${SCHEME} --quiet .
+	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-r7rs-test-${SCHEME} --quiet . > /dev/null
 	docker run -t retropikzel-foreign-c-r7rs-test-${SCHEME} \
 		sh -c "make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes build install test-r7rs"
 
@@ -174,11 +174,9 @@ test-r7rs: libtest.o libtest.so libtest.a test-r7rs.scm
 	LD_LIBRARY_PATH=. ./test-r7rs
 
 test-r7rs-docker:
-	echo "Building docker image..."
-	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-r7rs-test-${SCHEME} --quiet .
+	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-r7rs-test-${SCHEME} --quiet . > /dev/null
 	docker run -t retropikzel-foreign-c-r7rs-test-${SCHEME} \
 		sh -c "make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes build install test-r7rs"
-
 
 ## C libraries for testing
 

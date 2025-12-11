@@ -26,7 +26,7 @@
                         ))
     (kawa (import (foreign c kawa-primitives)))
     ;(mit-scheme (import (foreign c mit-scheme-primitives)))
-    (larceny (import (foreign c larceny-primitives)))
+    ;(larceny (import (foreign c larceny-primitives)))
     (mosh (import (foreign c mosh-primitives)))
     (racket (import (foreign c racket-primitives)))
     (sagittarius (import (foreign c sagittarius-primitives)))
