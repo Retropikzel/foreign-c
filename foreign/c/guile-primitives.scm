@@ -92,4 +92,10 @@
                                          (native-endianness)
                                          (size-of-type 'pointer)))))
 
+(define (make-c-null) (make-pointer (pointer-address %null-pointer)))
+
+(define (c-null? pointer)
+  (and (pointer? pointer)
+       (null-pointer? pointer)))
+
 (c-bytevectors-init #f c-bytevector-u8-set! c-bytevector-u8-ref)

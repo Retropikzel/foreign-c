@@ -7,7 +7,7 @@
           (scheme process-context)
           (chibi ast)
           (scheme inexact)
-          (except (chibi) c-null?)
+          ;(except (chibi) c-null?)
           (foreign c-bytevectors))
   (export size-of-type
           align-of-type
@@ -17,6 +17,8 @@
           c-bytevector-u8-ref
           c-bytevector-u8-set!
           c-bytevector-pointer-ref
-          c-bytevector-pointer-set!)
+          c-bytevector-pointer-set!
+          make-c-null
+          c-null?)
   (include-shared "chibi-primitives")
   (include "chibi-primitives.scm"))

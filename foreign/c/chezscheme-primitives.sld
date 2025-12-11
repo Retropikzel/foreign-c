@@ -12,5 +12,7 @@
           c-bytevector-pointer-set!
           ;; Chez specific
           foreign-procedure
-          type->native-type)
+          type->native-type
+          make-c-null
+          c-null?)
   (include "chezscheme-primitives.scm"))

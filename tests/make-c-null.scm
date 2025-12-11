@@ -2,6 +2,6 @@
 
 (define null-pointer (make-c-null))
 
-(test-assert (c-bytevector? null-pointer))
+(test-assert "make-c-null-1" (c-bytevector? null-pointer))
 
 (test-end "make-c-null")

@@ -184,3 +184,13 @@
 (define c-bytevector-pointer-set!
   (lambda (c-bytevector k pointer)
     (pointer-u64-set! (pointer+ c-bytevector k) (pointer->address pointer))))
+
+(define (make-c-null) (foreign-value "NULL" c-pointer))
+
+(define c-null?
+  (lambda (pointer)
+    (if (and (not (pointer? pointer))
+             pointer)
+      #f
+      (or (not pointer) ; #f counts as null pointer on Chicken
+          (= (pointer->address pointer) 0)))))

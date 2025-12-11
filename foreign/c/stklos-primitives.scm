@@ -116,4 +116,7 @@
   (lambda (pointer offset)
     (cpointer-ref-abs pointer :pointer offset)))
 
+(define (make-c-null) #f) ;; FIXME
+(define c-null? cpointer-null?)
+
 (c-bytevectors-init #f c-bytevector-u8-set! c-bytevector-u8-ref)

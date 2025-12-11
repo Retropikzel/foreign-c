@@ -174,14 +174,8 @@
         ;(define-c-procedure c-memset-pointer->address libc 'memset 'uint64 '(pointer uint8 int))
         (define (c-memset-pointer->address pointer value offset) (pointer->address pointer))
         ;(define (make-c-null) (c-memset-address->pointer 0 0 0))
-        (define (make-c-null) (address->pointer 0))
-        (define c-null?
-          (lambda (pointer)
-            (if (and (not (pointer? pointer))
-                     pointer)
-              #f
-              (or (not pointer) ; #f counts as null pointer on Chicken
-                  (= (pointer->address pointer) 0)))))))
+        ;(define (make-c-null) (address->pointer 0))
+        ))
     (else (include "c/libc.scm")))
   (include "c.scm"))
 

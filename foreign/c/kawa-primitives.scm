@@ -164,3 +164,11 @@
             'get
             pointer-value-layout
             k)))
+
+(define (make-c-null)
+  (invoke-static java.lang.foreign.MemorySegment 'ofAddress 0))
+
+(define (c-null? pointer)
+  (and (c-bytevector? pointer)
+       (equal? (make-c-null)
+               pointer)))

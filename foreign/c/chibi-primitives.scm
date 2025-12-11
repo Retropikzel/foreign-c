@@ -176,4 +176,11 @@
      (define scheme-name
        (make-c-callback return-type 'argument-types procedure)))))
 
+(define (c-null? pointer)
+  (or (equal? pointer #f) ;; #f counts as null pointer on chibi
+      (and (c-bytevector? pointer)
+           (internal-c-null? pointer))))
+
 (c-bytevectors-init #f c-bytevector-u8-set! c-bytevector-u8-ref)
+
+

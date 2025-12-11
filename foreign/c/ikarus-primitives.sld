@@ -8,7 +8,9 @@
           c-bytevector-u8-ref
           c-bytevector-u8-set!
           c-bytevector-pointer-ref
-          c-bytevector-pointer-set!)
+          c-bytevector-pointer-set!
+          make-c-null
+          c-null?)
   (import (rnrs base)
           (rnrs lists)
           (rnrs control)
@@ -108,4 +110,11 @@
 
     (define c-bytevector-pointer-ref
       (lambda (c-bytevector k)
-        (pointer-ref-c-pointer c-bytevector k)))))
+        (pointer-ref-c-pointer c-bytevector k)))
+
+    (define (make-c-null)
+      (integer->pointer 0))
+
+    (define (c-null? pointer)
+      (and (pointer? pointer)
+           (= (pointer->integer pointer) 0)))))

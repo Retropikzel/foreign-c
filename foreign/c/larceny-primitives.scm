@@ -99,3 +99,7 @@
        (foreign-procedure (symbol->string c-name)
                           (map type->native-type argument-types)
                           (type->native-type return-type))))))
+
+(define (make-c-null) (foreign-null-pointer))
+(define (c-null? pointer) (foreign-null-pointer?))
+

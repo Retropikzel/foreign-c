@@ -29,7 +29,9 @@
           c-bytevector-u8-ref
           c-bytevector-u8-set!
           c-bytevector-pointer-ref
-          c-bytevector-pointer-set!)
+          c-bytevector-pointer-set!
+          make-c-null
+          c-null?)
   (begin
     (clr-using System.Runtime.InteropServices)
 
@@ -127,4 +129,9 @@
 
     (define c-bytevector-pointer-ref
       (lambda (c-bytevector k)
-        (read-intptr c-bytevector k)))))
+        (read-intptr c-bytevector k)))
+
+    (define make-c-null null-pointer)
+    (define (c-null? pointer)
+      (and (pointer? pointer)
+           (null-pointer? pointer)))))

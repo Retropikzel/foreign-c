@@ -106,3 +106,6 @@
        (make-c-callback (type->native-type return-type)
                         (map type->native-type argument-types)
                         procedure)))))
+
+(define (make-c-null) (integer->pointer 0))
+(define c-null? pointer-null?)

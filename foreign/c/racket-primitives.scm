@@ -69,3 +69,7 @@
 (define c-bytevector-pointer-ref
   (lambda (c-bytevector k)
     (ptr-ref c-bytevector _pointer 'abs k)))
+
+(define (make-c-null) #f)
+(define (c-null? pointer) (and (cpointer? pointer) (equal? #f)))
+

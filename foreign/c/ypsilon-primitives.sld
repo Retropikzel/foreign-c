@@ -22,6 +22,8 @@
           c-bytevector-u8-set!
           c-bytevector-pointer-ref
           c-bytevector-pointer-set!
+          ;;make-c-null ;; FIXME
+          ;c-null?  ;; FIXME
           ;; Ypsilon specific
           c-function
           bytevector-c-int8-set!

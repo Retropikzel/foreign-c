@@ -32,7 +32,9 @@
           c-bytevector-u8-ref
           c-bytevector-u8-set!
           c-bytevector-pointer-ref
-          c-bytevector-pointer-set!)
+          c-bytevector-pointer-set!
+          make-c-null
+          c-null?)
   ;(include "racket-primitives.scm")
   (begin
 (define type->native-type
