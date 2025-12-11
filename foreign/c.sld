@@ -46,15 +46,16 @@
 
     make-c-bytevector
 
+
     ;; Primitives
     c-bytevector?
     c-bytevector-u8-set!
     c-bytevector-u8-ref
     c-bytevector-pointer-set!
     c-bytevector-pointer-ref
-
     make-c-null
     c-null?
+
     c-free
     call-with-address-of
 

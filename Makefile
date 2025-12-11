@@ -24,12 +24,15 @@ endif
 ifeq "${SCHEME}" "racket"
 DOCKERIMG=${SCHEME}:latest
 endif
-PRIM_TESTFILES=\
-	primitives/size-of-type.scm
 
 ALL_R6RS_EXCEPT=capyscheme larceny
 ALL_R7RS_EXCEPT=capyscheme cyclone foment gauche larceny loko meevax \
 	mit-scheme skint tr7
+
+PRIM_TESTFILES=\
+	primitives/size-of-type.scm \
+	make-c-null.scm \
+	c-null?.scm
 
 TESTFILES= \
 	c-type-size.scm \
@@ -41,8 +44,6 @@ TESTFILES= \
 	c-bytevector-u8-ref.scm \
 	c-bytevector-pointer-set!.scm \
 	c-bytevector-pointer-ref.scm \
-	make-c-null.scm \
-	c-null?.scm \
 	c-free.scm \
 	call-with-address-of.scm \
 	bytevector-\>c-bytevector.scm \

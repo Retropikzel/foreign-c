@@ -71,5 +71,5 @@
     (ptr-ref c-bytevector _pointer 'abs k)))
 
 (define (make-c-null) #f)
-(define (c-null? pointer) (and (cpointer? pointer) (equal? #f)))
+(define (c-null? pointer) (and (cpointer? pointer) (equal? pointer #f)))
 

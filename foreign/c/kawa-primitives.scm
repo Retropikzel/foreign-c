@@ -82,16 +82,6 @@
                  'invokeWithArguments
                  (map value->object vals argument-types)))))))
 
-#;(define range
-  (lambda (from to)
-    (letrec*
-      ((looper
-         (lambda (count result)
-           (if (= count to)
-             (append result (list count))
-             (looper (+ count 1) (append result (list count)))))))
-      (looper from (list)))))
-
 (define size-of-type
   (lambda (type)
     (let ((native-type (type->native-type type)))
@@ -165,10 +155,13 @@
             pointer-value-layout
             k)))
 
+#;(define make-c-null
+  (lambda ()
+    (static-field java.lang.foreign.MemorySegment 'NULL)))
+
 (define (make-c-null)
   (invoke-static java.lang.foreign.MemorySegment 'ofAddress 0))
 
 (define (c-null? pointer)
   (and (c-bytevector? pointer)
-       (equal? (make-c-null)
-               pointer)))
+       (equal? pointer (make-c-null))))
