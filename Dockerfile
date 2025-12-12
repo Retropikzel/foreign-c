@@ -9,6 +9,7 @@ RUN wget https://gitlab.com/-/project/6808260/uploads/094ce726ce3c6cf8c14560f1e3
     && mv akku-1.1.0.amd64-linux akku
 RUN git clone https://github.com/ashinn/chibi-scheme.git --depth=1
 RUN git clone https://codeberg.org/retropikzel/compile-scheme.git --depth=1
+RUN git clone https://codeberg.org/retropikzel/scheme-libraries.git --depth=1
 WORKDIR /build/chibi-scheme
 RUN make
 
@@ -18,7 +19,7 @@ FROM schemers/${IMAGE}
 RUN mkdir -p ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
 COPY --from=build /build /build
 WORKDIR /build
-RUN apt-get update && apt-get install -y gcc make libffi-dev libcurl4 gauche
+RUN apt-get update && apt-get install -y gcc make libffi-dev libcurl4 gauche jq
 WORKDIR /build/akku
 RUN bash install.sh
 ENV PATH=/root/.local/bin:${PATH}
@@ -31,6 +32,7 @@ WORKDIR /workdir
 ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
 RUN timeout 30 then snow-chibi install --always-yes --impls=${SCHEME} "(srfi 64)" || true
+RUN mkdir -p retropikzel && cp -r /build/scheme-libraries/retropikzel/ctrf.* retropikzel/
 COPY Makefile .
 COPY README.md .
 COPY tests ./tests

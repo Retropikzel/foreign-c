@@ -43,6 +43,7 @@
     c-type-align
     define-c-library
     define-c-procedure
+    define-c-callback
 
     make-c-bytevector
 

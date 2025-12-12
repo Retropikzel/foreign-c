@@ -20,7 +20,7 @@
           ((equal? type 'double) _double)
           ((equal? type 'pointer) _pointer)
           ((equal? type 'void) _void)
-          ;((equal? type 'callback) _pointer)
+          ((equal? type 'callback) _pointer)
           (else #f))))
 
 (define c-bytevector?
@@ -35,6 +35,15 @@
                     shared-object
                     (_cprocedure (mlist->list (map type->native-type argument-types))
                                  (type->native-type return-type)))))))
+
+
+(define-syntax define-c-callback
+  (syntax-rules ()
+    ((_ scheme-name return-type argument-types procedure)
+     (define scheme-name (function-ptr procedure
+                                       (_cprocedure
+                                         (mlist->list (map type->native-type argument-types))
+                                         (type->native-type return-type)))))))
 
 (define size-of-type
   (lambda (type)

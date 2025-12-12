@@ -24,26 +24,28 @@ endif
 ifeq "${SCHEME}" "racket"
 DOCKERIMG=${SCHEME}:latest
 endif
+PRINTER="tee"
 
 ALL_R6RS_EXCEPT=capyscheme larceny
 ALL_R7RS_EXCEPT=capyscheme cyclone foment gauche larceny loko meevax \
 	mit-scheme skint tr7
 
 PRIM_TESTFILES=\
-	primitives/size-of-type.scm \
-	make-c-null.scm \
-	c-null?.scm
+	primitives/size-of-type.scm
 
 TESTFILES= \
 	c-type-size.scm \
 	define-c-library.scm \
 	define-c-procedure.scm \
+	define-c-callback.scm \
 	make-c-bytevector.scm \
 	c-bytevector?.scm \
 	c-bytevector-u8-set!.scm \
 	c-bytevector-u8-ref.scm \
 	c-bytevector-pointer-set!.scm \
 	c-bytevector-pointer-ref.scm \
+	make-c-null.scm \
+	c-null?.scm \
 	c-free.scm \
 	call-with-address-of.scm \
 	bytevector-\>c-bytevector.scm \
@@ -143,15 +145,15 @@ test-r6rs-docker:
 
 ## R7RS Primitives Tests
 
-test-r7rs-primitives.sps:
+test-r7rs-primitives.scm:
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c ${SCHEME}-primitives))" > test-r7rs-primitives.scm
 	echo "(test-begin \"foreign-c-r7rs-primitives\")" >> test-r7rs-primitives.scm
 	cd tests && cat ${PRIM_TESTFILES} >> ../test-r7rs-primitives.scm
 	echo "(test-end \"foreign-c-r7rs-primitives\")" >> test-r7rs-primitives.scm
 
-test-r7rs-primitives: Akku.manifest test-r7rs-primitives.sps
+test-r7rs-primitives: Akku.manifest test-r7rs-primitives.scm
 	rm -rf test-r7rs-primitives
-	COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib -o test-r7rs-primitives --debug test-r7rs-primitives.scm
+	COMPILE_R7RS=${SCHEME} compile-scheme -I . -o test-r7rs-primitives --debug test-r7rs-primitives.scm
 	./test-r7rs-primitives
 
 test-r7rs-primitives-docker:
@@ -159,11 +161,11 @@ test-r7rs-primitives-docker:
 	docker run -t retropikzel-foreign-c-r7rs-test-${SCHEME} \
 		sh -c "make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes build install test-r7rs"
 
-
 ## R7RS Tests
 
 test-r7rs.scm:
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > test-r7rs.scm
+	cat tests/setup.scm >> test-r7rs.scm
 	echo "(test-begin \"foreign-c-r7rs\")" >> test-r7rs.scm
 	cd tests && cat ${TESTFILES} >> ../test-r7rs.scm
 	echo "(test-end \"foreign-c-r7rs\")" >> test-r7rs.scm
@@ -172,12 +174,12 @@ test-r7rs: libtest.o libtest.so libtest.a test-r7rs.scm
 	rm -rf test-r7rs
 	COMPILE_R7RS_CHICKEN="-L -ltest -I./tests/c-include -L." \
 		COMPILE_R7RS=${SCHEME} compile-scheme -I . -o test-r7rs --debug test-r7rs.scm
-	LD_LIBRARY_PATH=. ./test-r7rs
+	LD_LIBRARY_PATH=. ./test-r7rs | ${PRINTER}
 
 test-r7rs-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-r7rs-test-${SCHEME} --quiet . > /dev/null
 	docker run -t retropikzel-foreign-c-r7rs-test-${SCHEME} \
-		sh -c "make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes build install test-r7rs"
+		sh -c "make SCHEME=${SCHEME} PRINTER="jq" SNOW_CHIBI_ARGS=--always-yes build install test-r7rs"
 
 ## C libraries for testing
 
