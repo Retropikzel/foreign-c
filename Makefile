@@ -165,7 +165,7 @@ test-r7rs-primitives-docker:
 ## R7RS Tests
 
 test-r7rs.scm:
-	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (retropikzel ctrf) (foreign c))" > test-r7rs.scm
+	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > test-r7rs.scm
 	cat tests/setup.scm >> test-r7rs.scm
 	echo "(test-begin \"foreign-c-r7rs\")" >> test-r7rs.scm
 	cd tests && cat ${TESTFILES} >> ../test-r7rs.scm

@@ -155,6 +155,7 @@
             pointer-value-layout
             k)))
 
+;; FIXME
 #;(define make-c-null
   (lambda ()
     (static-field java.lang.foreign.MemorySegment 'NULL)))
