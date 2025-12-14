@@ -59,3 +59,5 @@ test-r6rs-primitives
 test-r6rs-primitives.sps
 test-r7rs-primitives
 test-r7rs-primitives.scm
+*.json
+

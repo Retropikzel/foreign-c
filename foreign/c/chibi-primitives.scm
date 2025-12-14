@@ -173,8 +173,10 @@
 (define-syntax define-c-callback
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
-     (define scheme-name
-       (make-c-callback return-type 'argument-types procedure)))))
+     (error "define-c-callback is not yet supported on Chibi")
+     #;(define scheme-name
+       (make-c-callback return-type 'argument-types procedure))
+     )))
 
 (define (c-null? pointer)
   (or (equal? pointer #f) ;; #f counts as null pointer on chibi

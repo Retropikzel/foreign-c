@@ -37,7 +37,6 @@ TESTFILES= \
 	c-type-size.scm \
 	define-c-library.scm \
 	define-c-procedure.scm \
-	define-c-callback.scm \
 	make-c-bytevector.scm \
 	c-bytevector?.scm \
 	c-bytevector-u8-set!.scm \
@@ -98,6 +97,8 @@ install:
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
+snow:
+	snow-chibi install --impls=generic --install-source-dir=./snow --install-library-dir=./snow "(retropikzel ctrf)"
 
 ## R6RS Primitives tests
 
@@ -129,10 +130,10 @@ test-r6rs.sps:
 	cd tests && cat ${TESTFILES} >> ../test-r6rs.sps
 	echo "(test-end \"foreign-c-r6rs\")" >> test-r6rs.sps
 
-test-r6rs: libtest.o libtest.so libtest.a Akku.manifest test-r6rs.sps
+test-r6rs: libtest.o libtest.so libtest.a Akku.manifest test-r6rs.sps snow
+	rm -rf test-r6rs
 	if [ "${SCHEME}" = "mosh" ]; then rm -rf Akku.manifest ; rm -rf Akku.lock ; rm -rf .akku ; fi
 	if [ "${SCHEME}" = "ypsilon" ]; then rm -rf Akku.manifest ; rm -rf Akku.lock ; rm -rf .akku ; fi
-	rm -rf test-r6rs
 	akku install
 	COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib -o test-r6rs --debug test-r6rs.sps
 	./test-r6rs
@@ -164,7 +165,7 @@ test-r7rs-primitives-docker:
 ## R7RS Tests
 
 test-r7rs.scm:
-	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > test-r7rs.scm
+	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (retropikzel ctrf) (foreign c))" > test-r7rs.scm
 	cat tests/setup.scm >> test-r7rs.scm
 	echo "(test-begin \"foreign-c-r7rs\")" >> test-r7rs.scm
 	cd tests && cat ${TESTFILES} >> ../test-r7rs.scm

@@ -165,3 +165,8 @@
 (define (c-null? pointer)
   (and (c-bytevector? pointer)
        (equal? pointer (make-c-null))))
+
+(define-syntax define-c-callback
+  (syntax-rules ()
+    ((_ scheme-name return-type argument-types procedure)
+     (error "define-c-callback not supported on kawa yet"))))
