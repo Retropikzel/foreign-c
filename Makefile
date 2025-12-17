@@ -113,7 +113,7 @@ test-r6rs-primitives: Akku.manifest test-r6rs-primitives.sps
 	if [ "${SCHEME}" = "ypsilon" ]; then rm -rf Akku.manifest ; rm -rf Akku.lock ; rm -rf .akku ; fi
 	rm -rf test-r6rs-primitives
 	akku install
-	COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib -o test-r6rs-primitives --debug test-r6rs-primitives.sps
+	COMPILE_R7RS=${SCHEME} compile-scheme -I . -I .akku/lib -o test-r6rs-primitives --debug test-r6rs-primitives.sps
 	./test-r6rs-primitives
 
 test-r6rs-primitives-docker:

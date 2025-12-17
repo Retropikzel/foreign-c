@@ -46,7 +46,7 @@
 (define c-bytevector-u8-ref pointer-ref-c-uint8)
 (define c-bytevector-pointer-set! pointer-set-c-pointer!)
 (define c-bytevector-pointer-ref pointer-ref-c-pointer)
-(define make-c-null empty-pointer)
+(define make-c-null null-pointer)
 (define c-null? null-pointer?)
 
 

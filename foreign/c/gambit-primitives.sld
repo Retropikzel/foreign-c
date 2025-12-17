@@ -11,7 +11,7 @@
           align-of-type
           shared-object-load
           define-c-procedure
-          define-c-callback
+          ;define-c-callback
           c-bytevector?
           c-bytevector-u8-ref
           c-bytevector-u8-set!
