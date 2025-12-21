@@ -63,6 +63,8 @@
 
     bytevector->c-bytevector
     c-bytevector->bytevector
+    c-bytevector->address
+    address->c-bytevector
 
     string->c-utf8
     c-utf8->string
@@ -71,7 +73,6 @@
 
     ;; endianness
     native-endianness
-    ;; c-bytevector->address
     ;; TODO c-bytevector=?
     ;; TODO c-bytevector-fill!
     ;; TODO c-bytevector-copy!

@@ -335,6 +335,17 @@ Returns a newly allocated bytevector of the bytes of c-bytevector.
 
 
 
+(**c-bytevector->address**)
+
+Returns the address of the bytevector.
+
+
+
+(**address->c-bytevector**)
+
+Returns the bytevector in the address.
+
+
 (**native-endianness**)
 
 Returns the endianness symbol associated implementation’s preferred endianness
