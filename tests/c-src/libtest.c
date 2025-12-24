@@ -51,20 +51,20 @@ void print_string_pointer(char* p) {
 }
 
 void print_offsets() {
-    printf("C: Offset of a = %u\n", offsetof(struct test, a));
-    printf("C: Offset of b = %u\n", offsetof(struct test, b));
-    printf("C: Offset of c = %u\n", offsetof(struct test, c));
-    printf("C: Offset of d = %u\n", offsetof(struct test, d));
-    printf("C: Offset of e = %u\n", offsetof(struct test, e));
-    printf("C: Offset of f = %u\n", offsetof(struct test, f));
-    printf("C: Offset of g = %u\n", offsetof(struct test, g));
-    printf("C: Offset of h = %u\n", offsetof(struct test, h));
-    printf("C: Offset of i = %u\n", offsetof(struct test, i));
-    printf("C: Offset of j = %u\n", offsetof(struct test, j));
-    printf("C: Offset of k = %u\n", offsetof(struct test, k));
-    printf("C: Offset of l = %u\n", offsetof(struct test, l));
-    printf("C: Offset of m = %u\n", offsetof(struct test, m));
-    printf("C: Offset of n = %u\n", offsetof(struct test, n));
+    printf("C: Offset of a = %lu\n", offsetof(struct test, a));
+    printf("C: Offset of b = %lu\n", offsetof(struct test, b));
+    printf("C: Offset of c = %lu\n", offsetof(struct test, c));
+    printf("C: Offset of d = %lu\n", offsetof(struct test, d));
+    printf("C: Offset of e = %lu\n", offsetof(struct test, e));
+    printf("C: Offset of f = %lu\n", offsetof(struct test, f));
+    printf("C: Offset of g = %lu\n", offsetof(struct test, g));
+    printf("C: Offset of h = %lu\n", offsetof(struct test, h));
+    printf("C: Offset of i = %lu\n", offsetof(struct test, i));
+    printf("C: Offset of j = %lu\n", offsetof(struct test, j));
+    printf("C: Offset of k = %lu\n", offsetof(struct test, k));
+    printf("C: Offset of l = %lu\n", offsetof(struct test, l));
+    printf("C: Offset of m = %lu\n", offsetof(struct test, m));
+    printf("C: Offset of n = %lu\n", offsetof(struct test, n));
 }
 
 void check_offset(int member_index, int offset) {
@@ -197,7 +197,7 @@ EXPORT int test_check(struct test* test) {
     //assert(test->c == 3.0);
     printf("C: Value of d is %c\n", test->d);
     assert(test->d == 'd');
-    printf("C: Value of e is %s\n", test->e);
+    printf("C: Value of e is %s\n", (char*)test->e);
     assert(test->e == NULL);
     printf("C: Value of f is %f\n", test->f);
     //FIXME
@@ -207,7 +207,7 @@ EXPORT int test_check(struct test* test) {
     //assert(strcmp(test->g, "foo") == 0);
     printf("C: Value of h is %i\n", test->h);
     assert(test->h == 8);
-    printf("C: Value of i is %s\n", test->i);
+    printf("C: Value of i is %s\n", (char*)test->i);
     assert(test->i == NULL);
     //FIXME
     //printf("C: Value of j is %i\n", test->j);
@@ -236,7 +236,7 @@ EXPORT int test_check_by_value(struct test test) {
     assert(test.c == 3.0);
     printf("C: Value of d is %c\n", test.d);
     assert(test.d == 'd');
-    printf("C: Value of e is %s\n", test.e);
+    printf("C: Value of e is %s\n", (char*)test.e);
     assert(test.e == NULL);
     printf("C: Value of f is %f\n", test.f);
     assert(test.f == 6.0);
@@ -244,7 +244,7 @@ EXPORT int test_check_by_value(struct test test) {
     assert(strcmp(test.g, "foo") == 0);
     printf("C: Value of h is %i\n", test.h);
     assert(test.h == 8);
-    printf("C: Value of i is %s\n", test.i);
+    printf("C: Value of i is %s\n", (char*)test.i);
     assert(test.i == NULL);
     printf("C: Value of j is %i\n", test.j);
     assert(test.j == 10);
@@ -252,9 +252,9 @@ EXPORT int test_check_by_value(struct test test) {
     assert(test.k == 11);
     printf("C: Value of l is %i\n", test.l);
     assert(test.l == 12);
-    printf("C: Value of m is %i\n", test.m);
+    printf("C: Value of m is %f\n", test.m);
     assert(test.m == 13);
-    printf("C: Value of n is %i\n", test.n);
+    printf("C: Value of n is %f\n", test.n);
     assert(test.n == 14);
 }
 

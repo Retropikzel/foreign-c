@@ -8,6 +8,7 @@
           (scheme inexact))
   (import (foreign c-bytevectors))
   (cond-expand
+    (capyscheme (import (foreign c capyscheme-primitives)))
     (chezscheme (import (foreign c chezscheme-primitives))
                 (export foreign-procedure))
     (chibi (import (foreign c chibi-primitives)))

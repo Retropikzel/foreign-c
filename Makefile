@@ -34,7 +34,9 @@ PRIM_TESTFILES=\
 	primitives/size-of-type.scm
 
 TESTFILES= \
-	c-type-size.scm \
+	c-type-size.scm
+
+ALL_TESTFILES= \
 	define-c-library.scm \
 	define-c-procedure.scm \
 	make-c-bytevector.scm \
