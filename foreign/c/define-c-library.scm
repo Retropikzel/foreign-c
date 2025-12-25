@@ -147,20 +147,14 @@
                versions))
            paths)
          (if (not shared-object)
-           (begin
-             (display "Could not load shared object: ")
-             (write (list (cons 'object object-name)
-                          (cons 'searched-paths searched-paths)
-                          (cons 'platform-file-extension platform-file-extension)
-                          (cons 'versions versions)))
-             (newline)
-             (display "Searched paths: ")
-             (write searched-paths)
-             (newline)
-             (exit 1))
+           (error "Could not load shared object: "
+                  (list (cons 'object object-name)
+                        (cons 'searched-paths searched-paths)
+                        (cons 'platform-file-extension platform-file-extension)
+                        (cons 'versions versions)))
            (cond-expand
              (stklos shared-object)
              (guile (shared-object-load shared-object
-                                       `((additional-versions ,additional-versions))))
+                                        `((additional-versions ,additional-versions))))
              (else (shared-object-load shared-object
                                        `((additional-versions ,additional-versions)))))))))))

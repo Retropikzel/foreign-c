@@ -46,11 +46,6 @@
     define-c-procedure
     ;; TODO
     ;define-c-callback
-
-    make-c-bytevector
-
-
-    ;; Primitives
     c-bytevector?
     c-bytevector-u8-set!
     c-bytevector-u8-ref
@@ -59,21 +54,39 @@
     make-c-null
     c-null?
 
-    c-free
-    call-with-address-of
 
-    bytevector->c-bytevector
-    c-bytevector->bytevector
-    c-bytevector->address
-    address->c-bytevector
-
+    ;; Scheme strings
     string->c-utf8
     c-utf8->string
 
+
+    ;; Scheme bytevectors
+    bytevector->c-bytevector
+    c-bytevector->bytevector
+
+    ;; Bytevector addresses
+    c-bytevector->address
+    address->c-bytevector
+
+    ;; Pass pointer by address
+    call-with-address-of
+
+
+    ;; C structs
+    define-c-struct
+
+
+    ;; Utilities
     libc-name
+
 
     ;; endianness
     native-endianness
+
+
+    ;; c-bytevector
+    make-c-bytevector
+    c-free
     ;; TODO c-bytevector=?
     ;; TODO c-bytevector-fill!
     ;; TODO c-bytevector-copy!
@@ -92,10 +105,10 @@
     c-bytevector-sint-ref
     c-bytevector-uint-set!
     c-bytevector-uint-ref
-    ;; TODO bytevector->uint-list
-    ;; TODO bytevector->sint-list
-    ;; TODO uint-list->bytevector
-    ;; TODO sint-list->bytevector
+    ;; TODO c-bytevector->uint-list
+    ;; TODO c-bytevector->sint-list
+    ;; TODO uint-list->c-bytevector
+    ;; TODO sint-list->c-bytevector
 
     c-bytevector-s16-set!
     c-bytevector-s16-ref
@@ -134,20 +147,7 @@
     c-bytevector-ieee-double-ref
 
     c-bytevector-ieee-double-native-set!
-    c-bytevector-ieee-double-native-ref
-
-    ;; TODO string->c-utf16
-    ;; TODO string->c-utf32
-
-    ;; TODO c-utf16->string
-    ;; TODO c-utf32->string
-
-
-    ;c-utf8-length ;; TODO ??
-
-    ;; c-variable
-    ;define-c-variable (?)
-    )
+    c-bytevector-ieee-double-native-ref)
   (cond-expand
     (chicken
       (begin

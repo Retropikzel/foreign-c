@@ -33,10 +33,10 @@ ALL_R7RS_EXCEPT=capyscheme cyclone foment gauche larceny loko meevax \
 PRIM_TESTFILES=\
 	primitives/size-of-type.scm
 
-TESTFILES= \
-	c-type-size.scm
+TESTFILES=c-struct.scm
 
 ALL_TESTFILES= \
+	c-type-size.scm \
 	define-c-library.scm \
 	define-c-procedure.scm \
 	make-c-bytevector.scm \
@@ -54,6 +54,7 @@ ALL_TESTFILES= \
 	string-\>c-utf8.scm \
 	c-utf8-\>string.scm \
 	libc-name.scm \
+	c-struct.scm \
 	c-bytevectors/native-endianness.scm \
 	c-bytevectors/c-bytevector-s8-set!.scm \
 	c-bytevectors/c-bytevector-s8-ref.scm \
@@ -202,3 +203,4 @@ Akku.manifest:
 
 clean:
 	git clean -X -f
+	rm -rf .akku

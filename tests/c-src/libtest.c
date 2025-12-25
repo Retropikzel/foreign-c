@@ -240,7 +240,7 @@ EXPORT int test_check_by_value(struct test test) {
     assert(test.e == NULL);
     printf("C: Value of f is %f\n", test.f);
     assert(test.f == 6.0);
-    printf("C: Value of g is %f\n", test.g);
+    printf("C: Value of g is %s\n", test.g);
     assert(strcmp(test.g, "foo") == 0);
     printf("C: Value of h is %i\n", test.h);
     assert(test.h == 8);
