@@ -42,7 +42,6 @@ build:
 		--foreign-depends=ffi \
 		--description="Portable foreign function interface for R7RS Schemes" \
 	foreign/c.sld \
-	foreign/c-bytevectors.sld \
 	foreign/c/chezscheme-primitives.sld \
 	foreign/c/chibi-primitives.sld \
 	foreign/c/chicken-primitives.sld \
@@ -64,9 +63,6 @@ install:
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
-snow:
-	snow-chibi install --impls=generic --install-source-dir=./snow --install-library-dir=./snow "(retropikzel ctrf)"
-
 ## R6RS Tests
 
 test-r6rs.sps:
@@ -75,7 +71,7 @@ test-r6rs.sps:
 	cat test.scm >> test-r6rs.sps
 	echo "(test-end \"foreign-c-r6rs\")" >> test-r6rs.sps
 
-test-r6rs: libtest.o libtest.so libtest.a Akku.manifest test-r6rs.sps snow
+test-r6rs: libtest.o libtest.so libtest.a Akku.manifest test-r6rs.sps
 	rm -rf test-r6rs
 	if [ "${SCHEME}" = "mosh" ]; then rm -rf Akku.manifest ; rm -rf Akku.lock ; rm -rf .akku ; fi
 	if [ "${SCHEME}" = "ypsilon" ]; then rm -rf Akku.manifest ; rm -rf Akku.lock ; rm -rf .akku ; fi
@@ -83,10 +79,8 @@ test-r6rs: libtest.o libtest.so libtest.a Akku.manifest test-r6rs.sps snow
 	COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib -o test-r6rs --debug test-r6rs.sps
 	./test-r6rs
 
-test-r6rs-docker:
-	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-r6rs-test-${SCHEME} --quiet . > /dev/null
-	docker run -t retropikzel-foreign-c-r6rs-test-${SCHEME} \
-		sh -c "akku install && make SCHEME=${SCHEME} test-r6rs"
+test-r6rs-docker: build
+	COMPILE_SCHEME=${SCHEME} AKKU_PACKAGES="akku-r7rs chez-srfi" test-scheme --debug foreign-c-${VERSION}.tgz test-r6rs.sps
 
 ## R7RS Tests
 
@@ -103,10 +97,8 @@ test-r7rs: libtest.o libtest.so libtest.a test-r7rs.scm
 		COMPILE_R7RS=${SCHEME} compile-scheme -I . -o test-r7rs --debug test-r7rs.scm
 	LD_LIBRARY_PATH=. ./test-r7rs | ${PRINTER}
 
-test-r7rs-docker:
-	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=retropikzel-foreign-c-r7rs-test-${SCHEME} --quiet . > /dev/null
-	docker run -t retropikzel-foreign-c-r7rs-test-${SCHEME} \
-		sh -c "make SCHEME=${SCHEME} PRINTER="jq" SNOW_CHIBI_ARGS=--always-yes build install test-r7rs"
+test-r7rs-docker: build
+	COMPILE_SCHEME=${SCHEME} SNOW_PACKAGES="srfi.64" test-scheme --debug foreign-c-${VERSION}.tgz test-r7rs.scm
 
 ## C libraries for testing
 

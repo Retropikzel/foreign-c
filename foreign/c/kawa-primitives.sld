@@ -6,7 +6,8 @@
           (scheme file)
           (scheme inexact)
           (scheme process-context))
-  (export size-of-type
+  (export primitives-init
+          size-of-type
           align-of-type
           shared-object-load
           define-c-procedure

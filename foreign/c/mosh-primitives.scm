@@ -1,3 +1,5 @@
+(define (primitives-init set-procedure get-procedure) #t)
+
 (define size-of-type
   (lambda (type)
     (cond ((eq? type 'i8) 1)

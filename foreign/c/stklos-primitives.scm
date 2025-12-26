@@ -1,3 +1,5 @@
+(define (primitives-init set-procedure get-procedure) #t)
+
 (define (shared-object-load path options) path)
 
 (define type->native-type
@@ -118,5 +120,3 @@
 
 (define (make-c-null) #f) ;; FIXME
 (define c-null? cpointer-null?)
-
-(c-bytevectors-init #f c-bytevector-u8-set! c-bytevector-u8-ref)

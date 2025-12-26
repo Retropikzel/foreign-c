@@ -1,3 +1,5 @@
+(define (primitives-init set-procedure get-procedure) #t)
+
 (define shared-object-load
   (lambda (path options)
     (if (null? options)

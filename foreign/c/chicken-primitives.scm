@@ -1,3 +1,5 @@
+(define (primitives-init set-procedure get-procedure) #t)
+
 (define type->native-type ; Chicken has this procedure in three places
   (lambda (type)
     (cond ((equal? type 'i8) 'byte)
@@ -69,7 +71,7 @@
           `(define ,scheme-name
              (foreign-safe-lambda ,return-type ,c-name ,@ argument-types)))))))
 
-(define-syntax define-c-callback
+#;(define-syntax define-c-callback
   (er-macro-transformer
     (lambda (expr rename compare)
       (let* ((type->native-type ; Chicken has this procedure in three places

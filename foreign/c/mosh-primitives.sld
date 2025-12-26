@@ -8,7 +8,8 @@
               (scheme inexact)
               (scheme process-context)
               (mosh ffi))
-  (export size-of-type
+  (export primitives-init
+          size-of-type
           align-of-type
           shared-object-load
           define-c-procedure

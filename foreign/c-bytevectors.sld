@@ -89,16 +89,6 @@
     ;; TODO c-bytevector->u8-list
     ;; TODO u8-list->c-bytevector
 
-    c-bytevector-char-set!
-    c-bytevector-char-ref
-    c-bytevector-uchar-set!
-    c-bytevector-uchar-ref
-
-    c-bytevector-short-set!
-    c-bytevector-short-ref
-    c-bytevector-ushort-set!
-    c-bytevector-ushort-ref
-
     c-bytevector-uint-ref
     c-bytevector-sint-ref
     c-bytevector-sint-set!
@@ -633,18 +623,6 @@
 
 (define (c-bytevector-uchar-set! c-bytevector index char)
   (c-bytevector-u8-set! c-bytevector index (char->integer char)))
-
-(define (c-bytevector-uchar-set! c-bytevector index char)
-  (c-bytevector-u8-set! c-bytevector index (char->integer char)))
-
-(define (c-bytevector-char-set! c-bytevector index char)
-  (c-bytevector-s8-set! c-bytevector index (char->integer char)))
-
-(define (c-bytevector-short-ref c-bytevector index)
-  (c-bytevector-sint-ref c-bytevector index (native-endianness) (c-type-size 'short)))
-
-(define (c-bytevector-ushort-ref c-bytevector index)
-  (c-bytevector-sint-ref c-bytevector index (native-endianness) (c-type-size 'unsigned-short)))
 
 (define (c-bytevector-uint-ref c-bytevector index endness size)
   (cond ((equal? endness 'big)

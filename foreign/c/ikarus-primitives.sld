@@ -1,6 +1,7 @@
 (define-library
   (foreign c ikarus-primitives)
-  (export size-of-type
+  (export primitives-init
+          size-of-type
           align-of-type
           shared-object-load
           define-c-procedure
@@ -30,6 +31,8 @@
           (ikarus include)
           (ikarus foreign))
   (begin
+    (define (primitives-init set-procedure get-procedure) #t)
+
     (define size-of-type
       (lambda (type)
         (cond ((eq? type 'i8) 1)

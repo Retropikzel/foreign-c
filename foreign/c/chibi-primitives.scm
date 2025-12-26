@@ -1,23 +1,6 @@
-(define (c-bytevector-get bv type offset)
-  (cond ((equal? type 'i8) (c-bytevector-s8-ref bv offset))
-        ((equal? type 'u8) (c-bytevector-u8-ref bv offset))
-        ((equal? type 'i16) (c-bytevector-s16-ref bv offset))
-        ((equal? type 'u16) (c-bytevector-u16-ref bv offset))
-        ((equal? type 'i32) (c-bytevector-s32-ref bv offset))
-        ((equal? type 'u32) (c-bytevector-u32-ref bv offset))
-        ((equal? type 'i64) (c-bytevector-s64-ref bv offset))
-        ((equal? type 'u64) (c-bytevector-u64-ref bv offset))
-        ((equal? type 'char) (integer->char (c-bytevector-s8-ref bv offset)))
-        ((equal? type 'uchar) (integer->char (c-bytevector-u8-ref bv offset)))
-        ((equal? type 'short) (c-bytevector-sint-ref bv offset (native-endianness) (size-of-type 'short)))
-        ((equal? type 'ushort) (c-bytevector-uint-ref bv offset (native-endianness) (size-of-type 'ushort)))
-        ((equal? type 'int) (c-bytevector-sint-ref bv offset (native-endianness) (size-of-type 'int)))
-        ((equal? type 'uint) (c-bytevector-uint-ref bv offset (native-endianness) (size-of-type 'uint)))
-        ((equal? type 'long) (c-bytevector-sint-ref bv offset (native-endianness) (size-of-type 'long)))
-        ((equal? type 'ulong) (c-bytevector-uint-ref bv offset (native-endianness) (size-of-type 'ulong)))
-        ((equal? type 'float) (c-bytevector-ieee-single-native-ref bv offset))
-        ((equal? type 'double) (c-bytevector-ieee-double-native-ref bv offset))
-        ((equal? type 'pointer) (c-bytevector-pointer-ref bv offset))))
+(define c-bytevector-ref #f)
+(define (primitives-init set-procedure get-procedure)
+  (set! c-bytevector-ref get-procedure))
 
 (define type->libffi-type-number
   (lambda (type)
@@ -178,7 +161,4 @@
   (or (equal? pointer #f) ;; #f counts as null pointer on chibi
       (and (c-bytevector? pointer)
            (internal-c-null? pointer))))
-
-(c-bytevectors-init #f c-bytevector-u8-set! c-bytevector-u8-ref)
-
 

@@ -7,9 +7,9 @@
           (scheme inexact)
           (scheme process-context)
           (system foreign)
-          (system foreign-library)
-          (foreign c-bytevectors))
-  (export size-of-type
+          (system foreign-library))
+  (export primitives-init
+          size-of-type
           align-of-type
           shared-object-load
           define-c-procedure

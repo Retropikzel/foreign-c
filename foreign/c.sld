@@ -6,7 +6,6 @@
           (scheme file)
           (scheme process-context)
           (scheme inexact))
-  (import (foreign c-bytevectors))
   (cond-expand
     (capyscheme (import (foreign c capyscheme-primitives)))
     (chezscheme (import (foreign c chezscheme-primitives))
@@ -77,6 +76,17 @@
 
     ;; endianness
     native-endianness)
+  (cond-expand
+    (chezscheme
+      (import (only (rnrs bytevectors) native-endianness)))
+    (r6rs
+      (import (only (rnrs bytevectors) native-endianness)))
+    (guile
+      (import (only (rnrs bytevectors) native-endianness)))
+    (else
+      (begin
+        (define (native-endianness)
+          (cond-expand (little-endian 'little) (else 'big))))))
   (cond-expand
     (chicken
       (begin

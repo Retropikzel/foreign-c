@@ -18,9 +18,9 @@
                 cpointer-set-abs!
                 cpointer-ref-abs
                 c-size-of
-                void?)
-          (foreign c-bytevectors))
-  (export size-of-type
+                void?))
+  (export primitives-init
+          size-of-type
           align-of-type
           shared-object-load
           define-c-procedure

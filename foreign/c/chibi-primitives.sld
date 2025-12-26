@@ -6,10 +6,9 @@
           (scheme file)
           (scheme process-context)
           (chibi ast)
-          (scheme inexact)
-          ;(except (chibi) c-null?)
-          (foreign c-bytevectors))
-  (export size-of-type
+          (scheme inexact))
+  (export primitives-init
+          size-of-type
           align-of-type
           shared-object-load
           define-c-procedure

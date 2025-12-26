@@ -8,7 +8,8 @@
           (scheme process-context)
           (except (sagittarius ffi) c-free c-malloc define-c-struct)
           (sagittarius))
-  (export size-of-type
+  (export primitives-init
+          size-of-type
           align-of-type
           shared-object-load
           define-c-procedure

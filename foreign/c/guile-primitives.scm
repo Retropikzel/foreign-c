@@ -1,3 +1,9 @@
+(define c-bytevector-set! #f)
+(define c-bytevector-ref #f)
+(define (primitives-init set-procedure get-procedure)
+  (set! c-bytevector-set! set-procedure)
+  (set! c-bytevector-ref get-procedure))
+
 (define os 'unix)
 (define implementation 'guile)
 (define arch 'x86_64)
@@ -78,24 +84,15 @@
       (bytevector-u8-ref p k))))
 
 (define c-bytevector-pointer-set!
-  (lambda (c-bytevector k pointer)
-    (c-bytevector-uint-set! c-bytevector
-                            k
-                            (pointer-address pointer)
-                            (native-endianness)
-                            (size-of-type 'pointer))))
+  (lambda (cbv offset pointer)
+    (c-bytevector-set! cbv 'uint offset pointer)))
 
 (define c-bytevector-pointer-ref
-  (lambda (c-bytevector k)
-    (make-pointer (c-bytevector-uint-ref c-bytevector
-                                         k
-                                         (native-endianness)
-                                         (size-of-type 'pointer)))))
+  (lambda (cbv offset)
+    (make-pointer (c-bytevector-ref cbv 'uint offset))))
 
 (define (make-c-null) (make-pointer (pointer-address %null-pointer)))
 
 (define (c-null? pointer)
   (and (pointer? pointer)
        (null-pointer? pointer)))
-
-(c-bytevectors-init #f c-bytevector-u8-set! c-bytevector-u8-ref)

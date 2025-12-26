@@ -24,7 +24,8 @@
               (compatibility mlist)
               (ffi unsafe)
               (ffi vector))))
-  (export size-of-type
+  (export primitives-init
+          size-of-type
           align-of-type
           shared-object-load
           define-c-procedure

@@ -21,7 +21,8 @@
           (ironscheme clr internal)
           (ironscheme ffi)
           (srfi :0))
-  (export size-of-type
+  (export primitives-init
+          size-of-type
           align-of-type
           shared-object-load
           define-c-procedure
@@ -34,6 +35,8 @@
           c-null?)
   (begin
     (clr-using System.Runtime.InteropServices)
+
+    (define (primitives-init set-procedure get-procedure) #t)
 
     ;; FIXME
     (define size-of-type
