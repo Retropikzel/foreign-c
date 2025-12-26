@@ -94,7 +94,7 @@
       (round-to-next-modulo-of (+ to-round 1) roundee))))
 
 (define calculate-struct-members
-  (lambda (members)
+  (lambda (members . return-just-size)
     (let*
       ((size 0)
        (largest-member-size 0)
@@ -115,12 +115,17 @@
                           (set! size (+ next-alignment type-alignment))
                           (list name type next-alignment accessor)))))
                   members)))
-      data)))
+      (if (null? return-just-size)
+        data
+        size))))
 
+(define calculate-struct-size
+  (lambda (members)
+    (calculate-struct-members members #t)))
 
 (define-syntax define-c-struct
   (syntax-rules ()
-    ((_ name members struct-pointer (field-name field-type accessor modifier) ...)
+    ((_ name members struct-size-variable struct-pointer (field-name field-type accessor modifier) ...)
      (begin
        (define accessor
          (lambda (c-bytevector)
@@ -182,6 +187,8 @@
        ...
        (define members (calculate-struct-members
                          (list (list 'field-name field-type accessor) ...)))
+       (define struct-size-variable (calculate-struct-size
+                                      (list (list 'field-name field-type accessor) ...)))
        (define name
          (if (not struct-pointer)
            (make-c-bytevector (+ (c-type-size field-type) ...) 0)

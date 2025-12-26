@@ -1,5 +1,6 @@
 (define-c-struct s
                  s-members
+                 s-size
                  #f
                  (field1 'int s-field1 s-field1!)
                  (field2 'int s-field2 s-field2!)
@@ -25,6 +26,7 @@
 
 (define-c-struct s1
                  s1-members
+                 s-size
                  s1-pointer
                  (field1 'int s1-field1 s1-field1!)
                  (field2 'int s1-field2 s1-field2!)
