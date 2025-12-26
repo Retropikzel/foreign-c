@@ -1,6 +1,13 @@
-(define c-bytevector-get #f)
+(define c-bytevector-set! #f)
+(define c-bytevector-ref #f)
 (define (primitives-init set-procedure get-procedure)
-  (set! c-bytevector-get get-procedure))
+  (set! c-bytevector-set! set-procedure)
+  (set! c-bytevector-ref get-procedure))
+
+(define os 'unix)
+(define implementation 'guile)
+(define arch 'x86_64)
+(define libc-name "c")
 
 (define type->native-type
   (lambda (type)
@@ -24,7 +31,8 @@
           ((equal? type 'double) double)
           ((equal? type 'pointer) '*)
           ((equal? type 'void) void)
-          ((equal? type 'callback) '*))))
+          ((equal? type 'callback) '*)
+          (else #f))))
 
 (define c-bytevector?
   (lambda (object)
@@ -81,12 +89,10 @@
 
 (define c-bytevector-pointer-ref
   (lambda (cbv offset)
-    (make-pointer (c-bytevector-get cbv 'uint offset))))
+    (make-pointer (c-bytevector-ref cbv 'uint offset))))
 
 (define (make-c-null) (make-pointer (pointer-address %null-pointer)))
 
 (define (c-null? pointer)
   (and (pointer? pointer)
        (null-pointer? pointer)))
-
-(c-bytevectors-init #f c-bytevector-u8-set! c-bytevector-u8-ref)

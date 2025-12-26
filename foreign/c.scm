@@ -762,6 +762,7 @@
            struct-cbv))))))
 
 (cond-expand
+  (capyscheme (primitives-init c-bytevector-set! c-bytevector-ref))
   (chibi (primitives-init c-bytevector-set! c-bytevector-ref))
   (guile (primitives-init c-bytevector-set! c-bytevector-ref))
   (else))

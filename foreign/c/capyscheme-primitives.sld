@@ -7,9 +7,7 @@
           (scheme inexact)
           (scheme process-context)
           (core foreign)
-          (core foreign-library)
-          (foreign c-bytevectors)
-          )
+          (core foreign-library))
   (export size-of-type
           align-of-type
           shared-object-load

@@ -13,7 +13,7 @@
   (lambda (type)
     (cond ((equal? type 'i8) int8)
           ((equal? type 'u8) uint8)
-          ((equal? type 'i6) int16)
+          ((equal? type 'i16) int16)
           ((equal? type 'u16) uint16)
           ((equal? type 'i32) int32)
           ((equal? type 'u32) uint32)
