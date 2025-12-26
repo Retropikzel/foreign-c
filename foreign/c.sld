@@ -46,11 +46,11 @@
     ;; Libraries and procedures
     define-c-library
     define-c-procedure
-    ;; TODO
-    ;define-c-callback
+    ;define-c-callback ;; TODO
 
     ;; c-bytevectors
     make-c-bytevector
+    c-bytevector
     c-bytevector?
     c-free
     make-c-null

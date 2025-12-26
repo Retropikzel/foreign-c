@@ -146,13 +146,16 @@ returned c-bytevector are unspecified.
 If the fill argument is present, it's value must confine to C uint8\_t values,
 it specifies the initial value for the bytes of the c-bytevector.
 
+(**c-bytevector** byte ...)</br>
+
+Returns a newly allocated c-bytevector containing its arguments.
 
 (**c-bytevector?** obj)
 
 Returns #t if obj is c-bytevector, otherwise returns #f.
 
 
-(**c-free** c-bytevector)
+(**c-free** cbv)
 
 Frees c-bytevector from memory. Behaviour using the bytevector after it's freed
 is unspecified.
@@ -168,46 +171,46 @@ Returns a null C pointer.
 Returns #t if obj is a null C pointer, otherwise returns #f.
 
 
-(**c-bytevector-set! bv type offset value**)
+(**c-bytevector-set! cbv type offset value**)
 
 Set value of given type on offset on bytevector bv. Offset is counted as bytes,
 no matter the given type.
 
 
-(**c-bytevector-ref! bv type offset**)
+(**c-bytevector-ref! cbv type offset**)
 
 Get value of given type from offset of bytevector bv. Offset is counted as bytes,
 
 
-(**bytevector->c-bytevector** bytevector)
+(**bytevector->c-bytevector** bv)
 
 Returns a newly allocated c-bytevector of the bytes of bytevector.
 
 
-(**c-bytevector->bytevector**)
+(**c-bytevector->bytevector** cbv)
 
 Returns a newly allocated bytevector of the bytes of c-bytevector.
 
 
-(**c-bytevector->address**)
+(**c-bytevector->address** cbv)
 
 Returns the address of the bytevector.
 
 
-(**address->c-bytevector**)
+(**address->c-bytevector** adress)
 
 Returns the bytevector in the address.
 
 
 ## Strings
 
-(**string->c-utf8** string)
+(**string->c-utf8** str)
 
 Returns a newly allocated (unless empty) c-bytevector that contains the
 UTF-8 encoding of the given string.
 
 
-(**c-utf8->string** c-bytevector)
+(**c-utf8->string** cbv)
 
 Returns a newly allocated string whose character sequence is
 encoded by the given c-bytevector. If c-bytevector is null empty string is
@@ -215,9 +218,9 @@ returned.
 
 ## Pass pointer by address
 
-(**call-with-address-of** c-bytevector thunk)
+(**call-with-address-of** cbv thunk)
 
-Calls thunk with address pointer of c-bytevector.
+Calls thunk with address c-bytevector of c-bytevector.
 
 Since the support for calling C functions taking pointer address arguments,
 ones prefixed with & in C, varies, some additional ceremony is needed on
@@ -245,7 +248,7 @@ call to call-with-addres-of ends.
 
 ## Structs
 
-(**define-c-struct** name members struct-pointer (field-name field-type accessor modifier) ...)
+(**define-c-struct** name members struct-cbv (field-name field-type accessor modifier) ...)
 
 This procedure is used to create new or access existing c structs that you
 have a pointer of.
