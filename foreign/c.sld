@@ -39,115 +39,44 @@
                      bytevector-c-int8-set!
                      bytevector-c-uint8-ref)))
   (export
-    ;; Primitives
+    ;; Types
     c-type-size
     c-type-align
+
+    ;; Libraries and procedures
     define-c-library
     define-c-procedure
     ;; TODO
     ;define-c-callback
+
+    ;; c-bytevectors
+    make-c-bytevector
     c-bytevector?
-    c-bytevector-u8-set!
-    c-bytevector-u8-ref
-    c-bytevector-pointer-set!
-    c-bytevector-pointer-ref
+    c-free
     make-c-null
     c-null?
-
-
-    ;; Scheme strings
-    string->c-utf8
-    c-utf8->string
-
-
-    ;; Scheme bytevectors
+    c-bytevector-set!
+    c-bytevector-ref
     bytevector->c-bytevector
     c-bytevector->bytevector
-
-    ;; Bytevector addresses
     c-bytevector->address
     address->c-bytevector
+
+    ;; Strings
+    string->c-utf8
+    c-utf8->string
 
     ;; Pass pointer by address
     call-with-address-of
 
-
-    ;; C structs
+    ;; Structs
     define-c-struct
-
 
     ;; Utilities
     libc-name
 
-
     ;; endianness
-    native-endianness
-
-
-    ;; c-bytevector
-    make-c-bytevector
-    c-free
-    ;; TODO c-bytevector=?
-    ;; TODO c-bytevector-fill!
-    ;; TODO c-bytevector-copy!
-    ;; TODO c-bytevector-copy
-    c-bytevector-s8-set!
-    c-bytevector-s8-ref
-    ;; TODO c-bytevector->u8-list
-    ;; TODO u8-list->c-bytevector
-
-    c-bytevector-char-set!
-    c-bytevector-char-ref
-    c-bytevector-uchar-set!
-    c-bytevector-uchar-ref
-
-    c-bytevector-sint-set!
-    c-bytevector-sint-ref
-    c-bytevector-uint-set!
-    c-bytevector-uint-ref
-    ;; TODO c-bytevector->uint-list
-    ;; TODO c-bytevector->sint-list
-    ;; TODO uint-list->c-bytevector
-    ;; TODO sint-list->c-bytevector
-
-    c-bytevector-s16-set!
-    c-bytevector-s16-ref
-    c-bytevector-u16-set!
-    c-bytevector-u16-ref
-    c-bytevector-s16-native-set!
-    c-bytevector-s16-native-ref
-    c-bytevector-u16-native-set!
-    c-bytevector-u16-native-ref
-
-    c-bytevector-s32-set!
-    c-bytevector-s32-ref
-    c-bytevector-u32-set!
-    c-bytevector-u32-ref
-    c-bytevector-s32-native-set!
-    c-bytevector-s32-native-ref
-    c-bytevector-u32-native-set!
-    c-bytevector-u32-native-ref
-
-    c-bytevector-s64-set!
-    c-bytevector-s64-ref
-    c-bytevector-u64-set!
-    c-bytevector-u64-ref
-    c-bytevector-s64-native-set!
-    c-bytevector-s64-native-ref
-    c-bytevector-u64-native-set!
-    c-bytevector-u64-native-ref
-
-    c-bytevector-ieee-single-native-set!
-    c-bytevector-ieee-single-native-ref
-
-    c-bytevector-ieee-single-set!
-    c-bytevector-ieee-single-ref
-
-    c-bytevector-ieee-double-set!
-    c-bytevector-ieee-double-ref
-
-    c-bytevector-ieee-double-native-set!
-    c-bytevector-ieee-double-native-ref)
+    native-endianness)
   (cond-expand
     (chicken
       (begin

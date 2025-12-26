@@ -1,22 +1,54 @@
 (define c-type-size
   (lambda (type)
-    (size-of-type type)))
+    (cond ((not (symbol? type)) (error "c-type-size: Type must be symbol" type))
+          ((symbol=? type 'void) 0)
+          ((or (symbol=? type 'i8)
+               (symbol=? type 'u8)
+               (symbol=? type 'i16)
+               (symbol=? type 'u16)
+               (symbol=? type 'i32)
+               (symbol=? type 'u32)
+               (symbol=? type 'i64)
+               (symbol=? type 'u64)
+               (symbol=? type 'char)
+               (symbol=? type 'uchar)
+               (symbol=? type 'short)
+               (symbol=? type 'ushort)
+               (symbol=? type 'int)
+               (symbol=? type 'uint)
+               (symbol=? type 'long)
+               (symbol=? type 'ulong)
+               (symbol=? type 'float)
+               (symbol=? type 'double)
+               (symbol=? type 'pointer))
+           (size-of-type type))
+          (else (error "Unknown type" type)))))
 
 (define c-type-align
   (lambda (type)
-    (align-of-type type)))
-
-(define c-type-signed?
-  (lambda (type)
-    (if (member type '(int8 int16 int32 int64 char short int long float double))
-      #t
-      #f)))
-
-(define c-type-unsigned?
-  (lambda (type)
-    (if (member type '(uint8 uint16 uint32 uint64 unsigned-char unsigned-short unsigned-int unsigned-long))
-      #t
-      #f)))
+    (cond ((not (symbol? type)) (error "c-type-align: Type must be symbol" type))
+          ((symbol=? type 'void) 0)
+          ((or (symbol=? type 'i8)
+               (symbol=? type 'u8)
+               (symbol=? type 'i16)
+               (symbol=? type 'u16)
+               (symbol=? type 'i32)
+               (symbol=? type 'u32)
+               (symbol=? type 'i64)
+               (symbol=? type 'u64)
+               (symbol=? type 'char)
+               (symbol=? type 'uchar)
+               (symbol=? type 'short)
+               (symbol=? type 'ushort)
+               (symbol=? type 'int)
+               (symbol=? type 'uint)
+               (symbol=? type 'long)
+               (symbol=? type 'ulong)
+               (symbol=? type 'float)
+               (symbol=? type 'double)
+               (symbol=? type 'pointer))
+           (align-of-type type))
+          (else (error "Unknown type" type)))))
 
 (define make-c-bytevector
   (lambda (k . byte)
@@ -24,10 +56,56 @@
       (c-malloc k)
       (bytevector->c-bytevector (make-bytevector k (car byte))))))
 
-(define c-bytevector
+#;(define c-bytevector
   (lambda bytes
     (bytevector->c-bytevector
       (apply (lambda (b) (make-bytevector 1 b)) bytes))))
+
+(define (c-bytevector-set! bv type offset value)
+  (cond ((not (symbol? type)) (error "c-bytevector-set!: type must be symbol" type))
+        ((symbol=? type 'i8) (c-bytevector-s8-set! bv offset value))
+        ((symbol=? type 'u8) (c-bytevector-u8-set! bv offset value))
+        ((symbol=? type 'i16) (c-bytevector-s16-set! bv offset value))
+        ((symbol=? type 'u16) (c-bytevector-u16-set! bv offset value))
+        ((symbol=? type 'i32) (c-bytevector-s32-set! bv offset value))
+        ((symbol=? type 'u32) (c-bytevector-u32-set! bv offset value))
+        ((symbol=? type 'i64) (c-bytevector-s64-set! bv offset value))
+        ((symbol=? type 'u64) (c-bytevector-u64-set! bv offset value))
+        ((symbol=? type 'char) (c-bytevector-s8-set! bv offset (char->integer value)))
+        ((symbol=? type 'uchar) (c-bytevector-u8-ref bv offset (char->integer value)))
+        ((symbol=? type 'short) (c-bytevector-sint-set! bv offset value (native-endianness) (c-type-size 'short)))
+        ((symbol=? type 'ushort) (c-bytevector-sint-set! bv offset value (native-endianness) (c-type-size 'unsigned-short)))
+        ((symbol=? type 'int) (c-bytevector-sint-set! bv offset value (native-endianness) (c-type-size 'int)))
+        ((symbol=? type 'uint) (c-bytevector-sint-set! bv offset value (native-endianness) (c-type-size 'unsigned-int)))
+        ((symbol=? type 'long) (c-bytevector-sint-set! bv offset value (native-endianness) (c-type-size 'long)))
+        ((symbol=? type 'ulong) (c-bytevector-sint-set! bv offset value (native-endianness) (c-type-size 'unsigned-long)))
+        ((symbol=? type 'float) (c-bytevector-ieee-single-native-set! bv offset value))
+        ((symbol=? type 'double) (c-bytevector-ieee-double-native-set! bv offset value))
+        ((symbol=? type 'pointer) (c-bytevector-pointer-set! bv offset value))
+        (else (error "c-bytevector-set!: Unknown type" type))))
+
+(define (c-bytevector-get bv type offset)
+  (cond ((not (symbol? type)) (error "c-bytevector-ref: type must be symbol" type))
+        ((symbol=? type 'i8) (c-bytevector-s8-ref bv offset))
+        ((symbol=? type 'u8) (c-bytevector-u8-ref bv offset))
+        ((symbol=? type 'i16) (c-bytevector-s16-ref bv offset))
+        ((symbol=? type 'u16) (c-bytevector-u16-ref bv offset))
+        ((symbol=? type 'i32) (c-bytevector-s32-ref bv offset))
+        ((symbol=? type 'u32) (c-bytevector-u32-ref bv offset))
+        ((symbol=? type 'i64) (c-bytevector-s64-ref bv offset))
+        ((symbol=? type 'u64) (c-bytevector-u64-ref bv offset))
+        ((symbol=? type 'char) (integer->char (c-bytevector-s8-ref bv offset)))
+        ((symbol=? type 'uchar) (integer->char (c-bytevector-u8-ref bv offset)))
+        ((symbol=? type 'short) (c-bytevector-sint-ref bv offset (native-endianness) (c-type-size 'short)))
+        ((symbol=? type 'ushort) (c-bytevector-uint-ref bv offset (native-endianness) (c-type-size 'ushort)))
+        ((symbol=? type 'int) (c-bytevector-sint-ref bv offset (native-endianness) (c-type-size 'int)))
+        ((symbol=? type 'uint) (c-bytevector-uint-ref bv offset (native-endianness) (c-type-size 'uint)))
+        ((symbol=? type 'long) (c-bytevector-sint-ref bv offset (native-endianness) (c-type-size 'long)))
+        ((symbol=? type 'ulong) (c-bytevector-uint-ref bv offset (native-endianness) (c-type-size 'ulong)))
+        ((symbol=? type 'float) (c-bytevector-ieee-single-native-ref bv offset))
+        ((symbol=? type 'double) (c-bytevector-ieee-double-native-ref bv offset))
+        ((equal? type 'pointer) (c-bytevector-pointer-ref bv offset))
+        (else (error "c-bytevector-ref!: Unknown type" type))))
 
 (define bytevector->c-bytevector
   (lambda (bytes)
@@ -141,19 +219,8 @@
                                       (c-type-align (list-ref member 1))))))
                              members)
                            offset)))
-             (cond
-               ((equal? 'pointer field-type)
-                (c-bytevector-pointer-ref c-bytevector offset))
-               ((c-type-signed? field-type)
-                (c-bytevector-sint-ref c-bytevector
-                                       offset
-                                       (native-endianness)
-                                       (c-type-size field-type)))
-               (else
-                 (c-bytevector-uint-ref c-bytevector
-                                        offset
-                                        (native-endianness)
-                                        (c-type-size field-type)))))))
+             ;; TODO
+             )))
        ...
        (define modifier
          (lambda (c-bytevector value)
@@ -194,4 +261,4 @@
            (make-c-bytevector (+ (c-type-size field-type) ...) 0)
            struct-pointer))))))
 
-(c-bytevectors-init make-c-bytevector c-bytevector-u8-set! c-bytevector-u8-ref)
+(c-bytevectors-init make-c-bytevector c-bytevector-u8-set! c-bytevector-u8-ref c-type-size)
