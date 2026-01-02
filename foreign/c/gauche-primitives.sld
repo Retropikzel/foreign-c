@@ -8,7 +8,7 @@
           (scheme process-context)
           (gauche ffi))
   (export primitives-init
-          size-of-type
+          internal-size-of-type
           align-of-type
           shared-object-load
           define-c-procedure
@@ -18,5 +18,7 @@
           c-bytevector-pointer-ref
           c-bytevector-pointer-set!
           make-c-null
-          c-null?)
+          c-null?
+          (rename internal-size-of-type size-of-type)
+          (rename internal-align-of-type align-of-type))
   (include "gauche-primitives.scm"))

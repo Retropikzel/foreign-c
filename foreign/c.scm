@@ -556,25 +556,120 @@
   (when (not (integer? offset))
     (error "c-bytevector-set!: offset argument must be integer" offset))
   (cond ((not (symbol? type)) (error "c-bytevector-set!: type must be symbol" type))
-        ((symbol=? type 'i8) (c-bytevector-s8-set! cbv offset value))
-        ((symbol=? type 'u8) (c-bytevector-u8-set! cbv offset value))
-        ((symbol=? type 'i16) (c-bytevector-sint-set! cbv offset value 2))
-        ((symbol=? type 'u16) (c-bytevector-uint-set! cbv offset value 2))
-        ((symbol=? type 'i32) (c-bytevector-sint-set! cbv offset value 4))
-        ((symbol=? type 'u32) (c-bytevector-uint-set! cbv offset value 4))
-        ((symbol=? type 'i64) (c-bytevector-sint-set! cbv offset value 8))
-        ((symbol=? type 'u64) (c-bytevector-uint-set! cbv offset value 8))
-        ((symbol=? type 'char) (c-bytevector-s8-set! cbv offset (char->integer value)))
-        ((symbol=? type 'uchar) (c-bytevector-u8-set! cbv offset (char->integer value)))
-        ((symbol=? type 'short) (c-bytevector-sint-set! cbv offset value (c-type-size 'short)))
-        ((symbol=? type 'ushort) (c-bytevector-sint-set! cbv offset value (c-type-size 'ushort)))
-        ((symbol=? type 'int) (c-bytevector-sint-set! cbv offset value (c-type-size 'int)))
-        ((symbol=? type 'uint) (c-bytevector-sint-set! cbv offset value (c-type-size 'uint)))
-        ((symbol=? type 'long) (c-bytevector-sint-set! cbv offset value (c-type-size 'long)))
-        ((symbol=? type 'ulong) (c-bytevector-sint-set! cbv offset value (c-type-size 'ulong)))
-        ((symbol=? type 'float) (c-bytevector-ieee-single-native-set! cbv offset value))
-        ((symbol=? type 'double) (c-bytevector-ieee-double-native-set! cbv offset value))
-        ((symbol=? type 'pointer) (c-bytevector-pointer-set! cbv offset value))
+        ((symbol=? type 'i8)
+         (when (not (number? value))
+           (error "c-bytevector-set!: value for given type must be number"
+                  `((type ,type)
+                    (value ,value))))
+         (c-bytevector-s8-set! cbv offset value))
+        ((symbol=? type 'u8)
+         (when (not (number? value))
+           (error "c-bytevector-set!: value for given type must be number"
+                  `((type ,type)
+                    (value ,value))))
+         (c-bytevector-u8-set! cbv offset value))
+        ((symbol=? type 'i16)
+         (when (not (number? value))
+           (error "c-bytevector-set!: value for given type must be number"
+                  `((type ,type)
+                    (value ,value))))
+         (c-bytevector-sint-set! cbv offset value 2))
+        ((symbol=? type 'u16)
+         (when (not (number? value))
+           (error "c-bytevector-set!: value for given type must be number"
+                  `((type ,type)
+                    (value ,value))))
+         (c-bytevector-uint-set! cbv offset value 2))
+        ((symbol=? type 'i32)
+         (when (not (number? value))
+           (error "c-bytevector-set!: value for given type must be number"
+                  `((type ,type)
+                    (value ,value))))
+         (c-bytevector-sint-set! cbv offset value 4))
+        ((symbol=? type 'u32)
+         (when (not (number? value))
+           (error "c-bytevector-set!: value for given type must be number"
+                  `((type ,type)
+                    (value ,value))))
+         (c-bytevector-uint-set! cbv offset value 4))
+        ((symbol=? type 'i64)
+         (when (not (number? value))
+           (error "c-bytevector-set!: value for given type must be number"
+                  `((type ,type)
+                    (value ,value))))
+         (c-bytevector-sint-set! cbv offset value 8))
+        ((symbol=? type 'u64)
+         (when (not (number? value))
+           (error "c-bytevector-set!: value for given type must be number"
+                  `((type ,type)
+                    (value ,value))))
+         (c-bytevector-uint-set! cbv offset value 8))
+        ((symbol=? type 'char)
+         (when (not (char? value))
+           (error "c-bytevector-set!: value for given type must be char"
+                  `((type ,type)
+                    (value ,value))))
+         (c-bytevector-s8-set! cbv offset (char->integer value)))
+        ((symbol=? type 'uchar)
+         (when (not (char? value))
+           (error "c-bytevector-set!: value for given type must be char"
+                  `((type ,type)
+                    (value ,value))))
+         (c-bytevector-u8-set! cbv offset (char->integer value)))
+        ((symbol=? type 'short)
+         (when (not (number? value))
+           (error "c-bytevector-set!: value for given type must be number"
+                  `((type ,type)
+                    (value ,value))))
+         (c-bytevector-sint-set! cbv offset value (c-type-size 'short)))
+        ((symbol=? type 'ushort)
+         (when (not (number? value))
+           (error "c-bytevector-set!: value for given type must be number"
+                  `((type ,type)
+                    (value ,value))))
+         (c-bytevector-sint-set! cbv offset value (c-type-size 'ushort)))
+        ((symbol=? type 'int)
+         (when (not (number? value))
+           (error "c-bytevector-set!: value for given type must be number"
+                  `((type ,type)
+                    (value ,value))))
+         (c-bytevector-sint-set! cbv offset value (c-type-size 'int)))
+        ((symbol=? type 'uint)
+         (when (not (number? value))
+           (error "c-bytevector-set!: value for given type must be number"
+                  `((type ,type)
+                    (value ,value))))
+         (c-bytevector-sint-set! cbv offset value (c-type-size 'uint)))
+        ((symbol=? type 'long)
+         (when (not (number? value))
+           (error "c-bytevector-set!: value for given type must be number"
+                  `((type ,type)
+                    (value ,value))))
+         (c-bytevector-sint-set! cbv offset value (c-type-size 'long)))
+        ((symbol=? type 'ulong)
+         (when (not (number? value))
+           (error "c-bytevector-set!: value for given type must be number"
+                  `((type ,type)
+                    (value ,value))))
+         (c-bytevector-sint-set! cbv offset value (c-type-size 'ulong)))
+        ((symbol=? type 'float)
+         (when (not (number? value))
+           (error "c-bytevector-set!: value for given type must be number"
+                  `((type ,type)
+                    (value ,value))))
+         (c-bytevector-ieee-single-native-set! cbv offset value))
+        ((symbol=? type 'double)
+         (when (not (number? value))
+           (error "c-bytevector-set!: value for given type must be number"
+                  `((type ,type)
+                    (value ,value))))
+         (c-bytevector-ieee-double-native-set! cbv offset value))
+        ((symbol=? type 'pointer)
+         (when (not (c-bytevector? value))
+           (error "c-bytevector-set!: value for given type must be pointer"
+                  `((type ,type)
+                    (value ,value))))
+         (c-bytevector-pointer-set! cbv offset value))
         (else (error "c-bytevector-set!: Unknown type" type))))
 
 (define (c-bytevector-ref cbv type offset)
@@ -605,63 +700,57 @@
         ((equal? type 'pointer) (c-bytevector-pointer-ref cbv offset))
         (else (error "c-bytevector-ref: Unknown type" type))))
 
-(define bytevector->c-bytevector
-  (lambda (bv)
-    (when (not (bytevector? bv))
-      (error "bytevector->c-bytevector: bv argument must be bytevector" bv))
-    (letrec* ((bytes-length (bytevector-length bv))
-              (pointer (make-c-bytevector bytes-length))
-              (looper (lambda (index)
-                        (when (< index bytes-length)
-                          (c-bytevector-u8-set! pointer
-                                                index
-                                                (bytevector-u8-ref bv index))
-                          (looper (+ index 1))))))
-      (looper 0)
-      pointer)))
+(define (bytevector->c-bytevector bv)
+  (when (not (bytevector? bv))
+    (error "bytevector->c-bytevector: bv argument must be bytevector" bv))
+  (letrec* ((bytes-length (bytevector-length bv))
+            (pointer (make-c-bytevector bytes-length))
+            (looper (lambda (index)
+                      (when (< index bytes-length)
+                        (c-bytevector-u8-set! pointer
+                                              index
+                                              (bytevector-u8-ref bv index))
+                        (looper (+ index 1))))))
+    (looper 0)
+    pointer))
 
-(define c-bytevector->bytevector
-  (lambda (cbv size)
-    (when (not (c-bytevector? cbv))
-      (error "c-bytevector->bytevector: cbv argument must be c-bytevector" cbv))
-    (when (not (integer? size))
-      (error "c-bytevector->bytevector: size argument must be integer" size))
-    (letrec* ((bv (make-bytevector size))
-              (looper (lambda (index)
-                        (let ((byte (c-bytevector-u8-ref cbv index)))
-                          (if (= index size)
-                            bv
-                            (begin
-                              (bytevector-u8-set! bv index byte)
-                              (looper (+ index 1))))))))
-      (looper 0))))
+(define (c-bytevector->bytevector cbv size)
+  (when (not (c-bytevector? cbv))
+    (error "c-bytevector->bytevector: cbv argument must be c-bytevector" cbv))
+  (when (not (integer? size))
+    (error "c-bytevector->bytevector: size argument must be integer" size))
+  (letrec* ((bv (make-bytevector size))
+            (looper (lambda (index)
+                      (let ((byte (c-bytevector-u8-ref cbv index)))
+                        (if (= index size)
+                          bv
+                          (begin
+                            (bytevector-u8-set! bv index byte)
+                            (looper (+ index 1))))))))
+    (looper 0)))
 
-(define c-utf8->string
-  (lambda (cbv)
-    (when (not (c-bytevector? cbv))
-      (error "c-utf8->string: cbv argument must be c-bytevector" cbv))
-    (let ((size (c-strlen cbv)))
-      (utf8->string (c-bytevector->bytevector cbv size)))))
+(define (c-utf8->string cbv)
+  (when (not (c-bytevector? cbv))
+    (error "c-utf8->string: cbv argument must be c-bytevector" cbv))
+  (let ((size (c-strlen cbv)))
+    (utf8->string (c-bytevector->bytevector cbv size))))
 
-(define string->c-utf8
-  (lambda (str)
-    (when (not (string? str))
-      (error "string->c-utf8-: str argument must be string" str))
-    (bytevector->c-bytevector
-      (string->utf8
-        (string-append str (string (integer->char 0)))))))
+(define (string->c-utf8 str)
+  (when (not (string? str))
+    (error "string->c-utf8-: str argument must be string" str))
+  (bytevector->c-bytevector
+    (string->utf8
+      (string-append str (string (integer->char 0))))))
 
-(define c-bytevector->address
-  (lambda (cbv)
-    (when (not (c-bytevector? cbv))
-      (error "c-bytevector->address cbv argument must be c-bytevector" cbv))
-    (c-memset-pointer->address cbv 0 0)))
+(define (c-bytevector->address cbv)
+  (when (not (c-bytevector? cbv))
+    (error "c-bytevector->address cbv argument must be c-bytevector" cbv))
+  (c-memset-pointer->address cbv 0 0))
 
-(define address->c-bytevector
-  (lambda (address)
-    (when (not (integer? address))
-      (error "c-bytevector->string: address argument must be integer" address))
-    (c-memset-address->pointer address 0 0)))
+(define (address->c-bytevector address)
+  (when (not (integer? address))
+    (error "c-bytevector->string: address argument must be integer" address))
+  (c-memset-address->pointer address 0 0))
 
 (define-syntax call-with-address-of
   (syntax-rules ()
@@ -677,37 +766,35 @@
          (c-free address-cbv)
          result)))))
 
-(define round-to-next-modulo-of
-  (lambda (to-round roundee)
-    (if (= (modulo to-round roundee) 0)
-      to-round
-      (round-to-next-modulo-of (+ to-round 1) roundee))))
+(define (round-to-next-modulo-of to-round roundee)
+  (if (= (modulo to-round roundee) 0)
+    to-round
+    (round-to-next-modulo-of (+ to-round 1) roundee)))
 
-(define calculate-struct-members
-  (lambda (members . return-just-size)
-    (let*
-      ((size 0)
-       (largest-member-size 0)
-       (data (map (lambda (member)
-                    (let* ((name (list-ref member 0))
-                           (type (list-ref member 1))
-                           (accessor (list-ref member 2))
-                           (type-alignment (c-type-align type)))
-                      (when (> (size-of-type type) largest-member-size)
-                        (set! largest-member-size (size-of-type type)))
-                      (if (or (= size 0)
-                              (= (modulo size type-alignment) 0))
-                        (begin
-                          (set! size (+ size type-alignment))
-                          (list name type (- size type-alignment) accessor))
-                        (let ((next-alignment
-                                (round-to-next-modulo-of size type-alignment)))
-                          (set! size (+ next-alignment type-alignment))
-                          (list name type next-alignment accessor)))))
-                  members)))
-      (if (null? return-just-size)
-        data
-        size))))
+(define (calculate-struct-members members . return-just-size)
+  (let*
+    ((size 0)
+     (largest-member-size 0)
+     (data (map (lambda (member)
+                  (let* ((name (list-ref member 0))
+                         (type (list-ref member 1))
+                         (accessor (list-ref member 2))
+                         (type-alignment (c-type-align type)))
+                    (when (> (size-of-type type) largest-member-size)
+                      (set! largest-member-size (size-of-type type)))
+                    (if (or (= size 0)
+                            (= (modulo size type-alignment) 0))
+                      (begin
+                        (set! size (+ size type-alignment))
+                        (list name type (- size type-alignment) accessor))
+                      (let ((next-alignment
+                              (round-to-next-modulo-of size type-alignment)))
+                        (set! size (+ next-alignment type-alignment))
+                        (list name type next-alignment accessor)))))
+                members)))
+    (if (null? return-just-size)
+      data
+      size)))
 
 (define calculate-struct-size
   (lambda (members)

@@ -2,7 +2,8 @@
   (foreign c racket-primitives)
   (cond-expand
     (r6rs
-      (import (rnrs)
+      (import (except (rnrs)
+                      native-endianness)
               (only (racket base)
                     system-type
                     system-big-endian?)

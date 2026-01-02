@@ -32,7 +32,7 @@
           ((eq? type 'i16) align-of-int16_t)
           ((eq? type 'u16) align-of-uint16_t)
           ((eq? type 'i32) align-of-int32_t)
-          ((eq? type 'ut32) align-of-uint32_t)
+          ((eq? type 'u32) align-of-uint32_t)
           ((eq? type 'i64) align-of-int64_t)
           ((eq? type 'u64) align-of-uint64_t)
           ((eq? type 'char) align-of-char)

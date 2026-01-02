@@ -27,7 +27,7 @@
   (lambda (type)
     (cond ((eq? type 'i8) alignof:int8_t)
           ((eq? type 'u8) alignof:int8_t)
-          ((eq? type 'i6) alignof:int16_t)
+          ((eq? type 'i16) alignof:int16_t)
           ((eq? type 'u16) alignof:int16_t)
           ((eq? type 'i32) alignof:int32_t)
           ((eq? type 'u32) alignof:int32_t)

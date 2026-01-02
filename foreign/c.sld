@@ -15,7 +15,8 @@
                      (chicken base)
                      (chicken foreign))
              (export foreign-declare
-                     foreign-safe-lambda))
+                     foreign-safe-lambda
+                     foreign-value))
     ;(cyclone (import (foreign c cyclone-primitives)))
     ;(gambit (import (foreign c gambit-primitives)))
     (gauche (import (foreign c gauche-primitives)))
@@ -30,7 +31,10 @@
     (sagittarius (import (foreign c sagittarius-primitives)))
     (stklos (import (foreign c stklos-primitives))
             (export make-external-function
-                    free-bytes))
+                    free-bytes
+                    file-exists?
+                    c-bytevector-pointer-set!
+                    c-bytevector-pointer-ref))
     (ypsilon (import (foreign c ypsilon-primitives))
              (export c-function
                      bytevector-c-int8-set!

@@ -4,7 +4,7 @@
   (lambda (type)
     (cond ((eq? type 'i8) 1)
           ((eq? type 'u8) 1)
-          ((eq? type 'i6) 2)
+          ((eq? type 'i16) 2)
           ((eq? type 'u16) 2)
           ((eq? type 'i32) 4)
           ((eq? type 'u32) 4)

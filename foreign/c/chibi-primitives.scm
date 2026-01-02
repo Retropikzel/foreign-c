@@ -32,7 +32,7 @@
   (lambda (type)
     (cond ((eq? type 'i8) (size-of-int8_t))
           ((eq? type 'u8) (size-of-uint8_t))
-          ((eq? type 'i6) (size-of-int16_t))
+          ((eq? type 'i16) (size-of-int16_t))
           ((eq? type 'u16) (size-of-uint16_t))
           ((eq? type 'i32) (size-of-int32_t))
           ((eq? type 'u32) (size-of-uint32_t))
@@ -134,7 +134,8 @@
                                     c-function
                                     (size-of-type return-type)
                                     arguments)))
-          (c-bytevector-get return-pointer return-type 0))))))
+          (when (not (symbol=? return-type 'void))
+            (c-bytevector-ref return-pointer return-type 0)))))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()
