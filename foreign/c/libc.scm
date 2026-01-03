@@ -10,6 +10,8 @@
                   '((additional-versions ("0" "6"))))
 
 (define-c-procedure c-malloc libc 'malloc 'pointer '(int))
+(define-c-procedure c-calloc libc 'calloc 'pointer '(int int))
+(define-c-procedure c-perror libc 'perror 'void '(pointer))
 (define-c-procedure c-free libc 'free 'void '(pointer))
 (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
 (define-c-procedure c-memset-address->pointer libc 'memset 'pointer '(u64 u8 int))

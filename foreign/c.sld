@@ -60,8 +60,8 @@
     c-bytevector-ref
     bytevector->c-bytevector
     c-bytevector->bytevector
-    c-bytevector->address
-    address->c-bytevector
+    c-bytevector->integer
+    integer->c-bytevector
 
     ;; Strings
     string->c-utf8
@@ -77,7 +77,13 @@
     libc-name
 
     ;; endianness
-    native-endianness)
+    native-endianness
+
+    ;; Arenas
+    make-arena
+    arena-allocate
+    free-arena
+    )
   (cond-expand
     (chezscheme
       (import (only (rnrs bytevectors) native-endianness)))

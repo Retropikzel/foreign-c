@@ -539,9 +539,13 @@
 (define (make-c-bytevector size . byte)
   (when (not (integer? size))
     (error "make-c-bytevector: Size must be integer" size))
-  (if (null? byte)
-    (c-malloc size)
-    (bytevector->c-bytevector (make-bytevector size (car byte)))))
+  (let ((cbv (cond ((null? byte) (c-malloc size))
+                   ((= (car byte?) 0) (c-calloc 1 size))
+                   (else (bytevector->c-bytevector (make-bytevector size (car byte)))))))
+    (when (c-null? cbv)
+      (c-perror (string->c-utf8 "make-c-bytevector error"))
+      (error "make-c-bytevector error: malloc returned null" size))
+    cbv))
 
 (define c-bytevector
   (lambda bytes
@@ -742,12 +746,15 @@
     (string->utf8
       (string-append str (string (integer->char 0))))))
 
-(define (c-bytevector->address cbv)
+(define (c-bytevector->integer cbv . offset)
   (when (not (c-bytevector? cbv))
-    (error "c-bytevector->address cbv argument must be c-bytevector" cbv))
-  (c-memset-pointer->address cbv 0 0))
+    (error "c-bytevector->integer cbv argument must be c-bytevector" cbv))
+  (let ((internal-offset (if (null? offset) 0 (car offset))))
+    (when (not (integer? internal-offset))
+      (error "c-bytevector->integer offset argument must be integer" (car offset)))
+    (+ (c-memset-pointer->address cbv 0 0) internal-offset)))
 
-(define (address->c-bytevector address)
+(define (integer->c-bytevector address)
   (when (not (integer? address))
     (error "c-bytevector->string: address argument must be integer" address))
   (c-memset-address->pointer address 0 0))
@@ -847,6 +854,13 @@
          (if (not struct-cbv)
            (make-c-bytevector (+ (c-type-size field-type) ...) 0)
            struct-cbv))))))
+
+(define make-arena
+  (lambda size
+    (let ((internal-size (if (null? size) 0 (car size))))
+      (when (not (integer? internal-size))
+        (error "make-arena: Size must be integer" (car size)))
+
 
 (cond-expand
   (capyscheme (primitives-init c-bytevector-set! c-bytevector-ref))

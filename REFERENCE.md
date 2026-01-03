@@ -146,6 +146,8 @@ returned c-bytevector are unspecified.
 If the fill argument is present, it's value must confine to C uint8\_t values,
 it specifies the initial value for the bytes of the c-bytevector.
 
+If allocation fails, error is signaled.
+
 (**c-bytevector** byte ...)</br>
 
 Returns a newly allocated c-bytevector containing its arguments.
@@ -192,14 +194,15 @@ Returns a newly allocated c-bytevector of the bytes of bytevector.
 Returns a newly allocated bytevector of the bytes of c-bytevector.
 
 
-(**c-bytevector->address** cbv)
+(**c-bytevector->integer** cbv [offset])
 
-Returns the address of the bytevector.
+Returns the address of the bytevector as integer. If offset is given it is
+added to the the returned integer. Offset must be an integer.
 
 
-(**address->c-bytevector** adress)
+(**integer->c-bytevector** adress)
 
-Returns the bytevector in the address.
+Returns the bytevector in the integer address.
 
 
 ## Strings
@@ -315,6 +318,7 @@ Example:
     (define-c-procedure c-puts libc 'puts 'int '(pointer))
     (c-puts "Message brought to you by foreign-c!")
 
+
 ## Endianness
 
 (**native-endianness**)
@@ -322,6 +326,45 @@ Example:
 Returns the endianness symbol associated implementation’s preferred endianness
 (usually that of the underlying machine architecture).  Currently returns
 either 'little or 'big.
+
+
+## Arenas
+
+Arena is static or growing size of memory which can be use to allocate
+c-bytevectors and then free them all at once. All memory allocated in arenas
+is zeroed by default.
+
+(**make-arena** [options])
+
+Creates and returns a new arena. Options is list of pairs.
+
+Options:
+
+  - (size . N)
+    - If the size argument is given, that much memory is allocated up front.
+  - (fixed? . #t/#f)
+    - #f means the arena grows automatically on allocation, #t means it does not
+    and any allocation that would go over arena size will throw an error.
+    - If #t and size is not given error will thrown
+
+
+(**call-with-arena** arena thunk)
+
+Call thunk with given arena as first argument. After the thunk returns arena
+is freed. If the thunk does not return, for example error occurs, the arena is
+not freed.
+
+
+(**arena-allocate** arena size)
+
+Allocate c-bytevector of given size from the given arena and return it. If
+allocation fails, error is signaled.
+
+
+(**free-arena** arena)
+
+Free the whole arena.
+
 
 ## Environment variables
 
