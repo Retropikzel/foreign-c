@@ -122,4 +122,16 @@ Example for how to install for Gauche:
     make SCHEME=gauche install
 
 
+### Adding support for new implementation
 
+See from any foreign/c/SCHEME-primitives.sld what needs to be exported. Make the
+library files foreign/c/YOURSCHEME-primitives.sld
+foreign/c/YOURSCHEME-primitives.scm. Import it in cond expand in foreign/c.sld.
+
+Run tests with:
+
+    make SCHEME=YOURSCHEME test-r6rs
+
+or
+
+    make SCHEME=YOURSCHEME test-r6rs
