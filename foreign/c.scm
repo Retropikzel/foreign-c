@@ -540,7 +540,7 @@
   (when (not (integer? size))
     (error "make-c-bytevector: Size must be integer" size))
   (let ((cbv (cond ((null? byte) (c-malloc size))
-                   ((= (car byte?) 0) (c-calloc 1 size))
+                   ((= (car byte) 0) (c-calloc 1 size))
                    (else (bytevector->c-bytevector (make-bytevector size (car byte)))))))
     (when (c-null? cbv)
       (c-perror (string->c-utf8 "make-c-bytevector error"))
@@ -854,13 +854,6 @@
          (if (not struct-cbv)
            (make-c-bytevector (+ (c-type-size field-type) ...) 0)
            struct-cbv))))))
-
-(define make-arena
-  (lambda size
-    (let ((internal-size (if (null? size) 0 (car size))))
-      (when (not (integer? internal-size))
-        (error "make-arena: Size must be integer" (car size)))
-
 
 (cond-expand
   (capyscheme (primitives-init c-bytevector-set! c-bytevector-ref))

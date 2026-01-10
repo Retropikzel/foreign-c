@@ -80,9 +80,9 @@
     native-endianness
 
     ;; Arenas
-    make-arena
-    arena-allocate
-    free-arena
+    ;TODO make-arena
+    ;TODO arena-allocate
+    ;TODO free-arena
     )
   (cond-expand
     (chezscheme
@@ -94,7 +94,7 @@
     (else
       (begin
         (define (native-endianness)
-          (cond-expand (little-endian 'little) (else 'big))))))
+          (cond-expand (big-endian 'big) (else 'little))))))
   (cond-expand
     (chicken
       (begin

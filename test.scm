@@ -123,11 +123,14 @@
 (test-begin "c-bytevector->bytevector")
 (test-end "c-bytevector->bytevector")
 
-(test-begin "c-bytevector->address")
-(test-end "c-bytevector->address")
+(test-begin "c-bytevector->integer")
+(define cbv-cbc-int (c-bytevector->integer (make-c-bytevector 128)))
+(test-assert (number? cbv-cbc-int))
+(test-assert (integer? cbv-cbc-int))
+(test-end "c-bytevector->integer")
 
-(test-begin "address->c-bytevector")
-(test-end "address->c-bytevector")
+(test-begin "integer->c-bytevector")
+(test-end "integer->c-bytevector")
 
 
 ;; Strings
