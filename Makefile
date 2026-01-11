@@ -76,7 +76,7 @@ test-r6rs: libtest.o libtest.so libtest.a Akku.manifest test-r6rs.sps
 	COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib -o test-r6rs --debug test-r6rs.sps
 	./test-r6rs
 
-test-r6rs-docker: build
+test-r6rs-docker: test-r6rs.sps
 	COMPILE_SCHEME=${SCHEME} test-scheme foreign test-r6rs.sps
 
 ## R7RS Tests
@@ -94,7 +94,7 @@ test-r7rs: libtest.o libtest.so libtest.a test-r7rs.scm
 		COMPILE_R7RS=${SCHEME} compile-scheme -I . -o test-r7rs --debug test-r7rs.scm
 	LD_LIBRARY_PATH=. ./test-r7rs | ${PRINTER}
 
-test-r7rs-docker:
+test-r7rs-docker: test-r7rs.scm
 	COMPILE_SCHEME=${SCHEME} SNOW_PACKAGES="srfi.64" test-scheme foreign test-r7rs.scm
 
 ## C libraries for testing
