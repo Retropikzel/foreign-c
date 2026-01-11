@@ -2,5 +2,8 @@ FROM debian
 RUN apt-get update && apt-get install -y \
     make git ca-certificates docker.io gauche
 RUN git clone https://codeberg.org/retropikzel/test-scheme.git --depth=1
+RUN git clone https://github.com/ashinn/chibi-scheme.git --depth=1
+WORKDIR /chibi-scheme
+RUN make && make install
 WORKDIR /test-scheme
 RUN make && make install
