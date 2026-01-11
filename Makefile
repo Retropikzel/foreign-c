@@ -77,7 +77,7 @@ test-r6rs: libtest.o libtest.so libtest.a Akku.manifest test-r6rs.sps
 	./test-r6rs
 
 test-r6rs-docker: build
-	COMPILE_SCHEME=${SCHEME} AKKU_PACKAGES="akku-r7rs chez-srfi" test-scheme --debug foreign-c-${VERSION}.tgz test-r6rs.sps
+	COMPILE_SCHEME=${SCHEME} test-scheme foreign test-r6rs.sps
 
 ## R7RS Tests
 
