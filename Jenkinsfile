@@ -1,8 +1,8 @@
 pipeline {
     agent {
-        docker {
+        dockerfile {
             label 'docker-x86_64'
-            image 'debian'
+            filepath 'Dockerfile.jenkins'
             args '--user=root --privileged -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
