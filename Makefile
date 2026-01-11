@@ -95,7 +95,7 @@ test-r7rs: libtest.o libtest.so libtest.a test-r7rs.scm
 	LD_LIBRARY_PATH=. ./test-r7rs | ${PRINTER}
 
 test-r7rs-docker: build
-	COMPILE_SCHEME=${SCHEME} SNOW_PACKAGES="srfi.64" test-scheme --debug foreign-c-${VERSION}.tgz test-r7rs.scm
+	COMPILE_SCHEME=${SCHEME} SNOW_PACKAGES="srfi.64" test-scheme foreign-c-${VERSION}.tgz test-r7rs.scm
 
 ## C libraries for testing
 

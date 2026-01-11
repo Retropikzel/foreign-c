@@ -1,3 +1,12 @@
+(import (scheme base)
+        (scheme write)
+        (scheme read)
+        (scheme char)
+        (scheme file)
+        (scheme process-context)
+        (srfi 64)
+        (foreign c))
+
 ;; Types
 
 (test-begin "c-type-size")
