@@ -5,7 +5,8 @@
 
 .PHONY: \
 	package test libtest.o tests/libtest.so libtest.a documentation \
-	README.html test-r6rs.sps test-r6rs test-r7rs.scm test-r7rs
+	README.html test-r6rs.sps test-r6rs test-r7rs.scm test-r7rs \
+	foreign/c/chibi-primitives.so
 .SILENT: build install clean test-r6rs test-r6rs-docker test-r7rs \
 	test-r7rs-docker
 
@@ -95,6 +96,7 @@ test-r7rs: libtest.o libtest.so libtest.a test-r7rs.scm
 	./test-r7rs
 
 test-r7rs-docker: test-r7rs.scm libtest.o libtest.so libtest.a
+	if [ "${SCHEME}" = "chibi" ];then make foreign/c/chibi-primitives.so; fi
 	COMPILE_SCHEME=${SCHEME} test-scheme foreign tests test-r7rs.scm
 
 ## C libraries for testing
@@ -107,6 +109,14 @@ libtest.so: tests/c-src/libtest.c
 
 libtest.a: libtest.o tests/c-src/libtest.c
 	ar rcs libtest.a libtest.o ${LDFLAGS}
+
+foreign/c/chibi-primitives.so:
+	chibi-ffi foreign/c/chibi-primitives.stub
+	gcc -fPIC -shared \
+		-Os \
+		-o foreign/c/chibi-primitives.so \
+		foreign/c/chibi-primitives.c \
+	-lffi -lchibi-scheme
 
 Akku.manifest:
 	akku install chez-srfi akku-r7rs
