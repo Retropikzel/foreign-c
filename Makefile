@@ -5,12 +5,9 @@
 
 .PHONY: \
 	package test libtest.o tests/libtest.so libtest.a documentation \
-	README.html test-r6rs.sps test-r6rs test-r6rs-primitives.sps \
-	test-r6rs-primitives test-r7rs.scm test-r7rs test-r7rs-primitives.scm \
-	test-r7rs-primitives
-.SILENT: build install clean test-r6rs test-r6rs-docker test-r6rs-primitives \
-	test-r6rs-primitives-docker test-r7rs test-r7rs-docker \
-	test-r7rs-primitives  test-r7rs-primitives-docker
+	README.html test-r6rs.sps test-r6rs test-r7rs.scm test-r7rs
+.SILENT: build install clean test-r6rs test-r6rs-docker test-r7rs \
+	test-r7rs-docker
 
 SCHEME=chibi
 DOCKERIMG=${SCHEME}:head
