@@ -1,7 +1,7 @@
 FROM debian
 RUN apt-get update && apt-get install -y docker.io build-essential libffi-dev
 RUN git clone https://github.com/Retropikzel/chibi-scheme --depth=1
-RUN git clone https://codeberg.org/retropikzel/test-scheme.git --depth=2
+RUN git clone https://codeberg.org/retropikzel/test-scheme.git --depth=3
 WORKDIR /chibi-scheme
 RUN make && make uninstall install
 WORKDIR /test-scheme
