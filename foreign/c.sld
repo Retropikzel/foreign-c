@@ -77,13 +77,7 @@
     libc-name
 
     ;; endianness
-    native-endianness
-
-    ;; Arenas
-    ;TODO make-arena
-    ;TODO arena-allocate
-    ;TODO free-arena
-    )
+    native-endianness)
   (cond-expand
     (chezscheme
       (import (only (rnrs bytevectors) native-endianness)))
