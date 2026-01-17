@@ -2,7 +2,7 @@
 
 (test-equal "size-of-type i8" (size-of-type 'i8) 1)
 (test-equal "size-of-type u8" (size-of-type 'u8) 1)
-(test-equal "size-of-type i16" (size-of-type 'i6) 2)
+(test-equal "size-of-type i16" (size-of-type 'i16) 2)
 (test-equal "size-of-type u16" (size-of-type 'u16) 2)
 (test-equal "size-of-type i32" (size-of-type 'i32) 4)
 (test-equal "size-of-type u32" (size-of-type 'u32) 4)

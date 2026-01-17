@@ -71,7 +71,10 @@
 
 (define shared-object-load
   (lambda (path options)
-    (load-foreign-library path)))
+    (display "HERE: ")
+    (write path)
+    (newline)
+    (load-foreign-library `(filename ,path))))
 
 (define c-bytevector-u8-set!
   (lambda (c-bytevector k byte)

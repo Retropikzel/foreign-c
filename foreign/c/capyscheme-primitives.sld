@@ -20,4 +20,4 @@
           c-bytevector-pointer-set!
           make-c-null
           c-null?)
-  (include "guile-primitives.scm"))
+  (include "capyscheme-primitives.scm"))

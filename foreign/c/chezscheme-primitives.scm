@@ -24,7 +24,8 @@
 
 (define c-bytevector?
   (lambda (object)
-    (ftype-pointer? object)))
+    (or (number? object)
+        (ftype-pointer? object))))
 
 (define-syntax define-macro!
   (lambda (x)

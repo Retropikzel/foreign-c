@@ -5,10 +5,12 @@
 
 .PHONY: \
 	package test libtest.o tests/libtest.so libtest.a documentation \
-	README.html test-r6rs.sps test-r6rs test-r7rs.scm test-r7rs \
-	foreign/c/chibi-primitives.so
-.SILENT: build install clean test-r6rs test-r6rs-docker test-r7rs \
-	test-r7rs-docker
+	README.html test-r6rs.sps test-r6rs test-r6rs-primitives.sps \
+	test-r6rs-primitives test-r7rs.scm test-r7rs test-r7rs-primitives.scm \
+	test-r7rs-primitives foreign/c/chibi-primitives.so
+.SILENT: build install clean test-r6rs.sps test-r6rs test-r6rs-primitives.sps \
+	test-r6rs-primitives test-r6rs-docker test-r7rs.scm test-r7rs \
+	test-r7rs-primitives.scm test-r7rs-primitives test-r7rs-docker
 
 SCHEME=chibi
 DOCKERIMG=${SCHEME}:head
@@ -82,9 +84,20 @@ test-r6rs-docker: test-r6rs.sps Akku.manifest test-r7rs.scm libtest.o libtest.so
 
 ## R7RS Tests
 
+test-r7rs-primitives.scm:
+	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (foreign c ${SCHEME}-primitives) (srfi 64))" > test-r7rs-primitives.scm
+	echo "(test-begin \"foreign-c-r7rs-primitives\")" >> test-r7rs-primitives.scm
+	cat test-primitives.scm >> test-r7rs-primitives.scm
+	echo "(test-end \"foreign-c-r7rs-primitives\")" >> test-r7rs-primitives.scm
+
+test-r7rs-primitives: libtest.o libtest.so libtest.a test-r7rs-primitives.scm
+	rm -rf test-r7rs-primitives
+	COMPILE_R7RS_CHICKEN="-L -ltest -I./tests/c-include -L." \
+		COMPILE_R7RS=${SCHEME} compile-scheme -I . -o test-r7rs-primitives test-r7rs-primitives.scm
+	./test-r7rs-primitives
+
 test-r7rs.scm:
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > test-r7rs.scm
-	cat tests/setup.scm >> test-r7rs.scm
 	echo "(test-begin \"foreign-c-r7rs\")" >> test-r7rs.scm
 	cat test.scm >> test-r7rs.scm
 	echo "(test-end \"foreign-c-r7rs\")" >> test-r7rs.scm
