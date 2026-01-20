@@ -53,9 +53,7 @@
     (ironscheme (import (ironscheme clr)
                         (ironscheme clr internal)
                         (ironscheme ffi))
-                ;; TODO Fix guile include bug
-                ;(include "c/ironscheme-primitives.scm")
-                )
+                (include "c/ironscheme-primitives.scm"))
     (kawa (include "c/kawa-primitives.scm"))
     ;(mit-scheme (import (foreign c mit-scheme-primitives)))
     ;(larceny (import (foreign c larceny-primitives)))
