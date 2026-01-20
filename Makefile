@@ -14,7 +14,7 @@
 
 SCHEME=chibi
 DOCKERIMG=${SCHEME}:head
-VERSION=0.13.1
+VERSION=0.13.2
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
 PKG=foreign-c-${VERSION}.tgz
