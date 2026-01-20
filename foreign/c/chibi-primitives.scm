@@ -1,7 +1,3 @@
-(define c-bytevector-ref #f)
-(define (primitives-init set-procedure get-procedure)
-  (set! c-bytevector-ref get-procedure))
-
 (define type->libffi-type-number
   (lambda (type)
     (cond ((equal? type 'i8) 1)

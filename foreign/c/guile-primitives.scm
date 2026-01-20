@@ -1,8 +1,5 @@
-(define c-bytevector-set! #f)
-(define c-bytevector-ref #f)
 (define (primitives-init set-procedure get-procedure)
-  (set! c-bytevector-set! set-procedure)
-  (set! c-bytevector-ref get-procedure))
+  #t)
 
 (define os 'unix)
 (define implementation 'guile)
@@ -73,23 +70,24 @@
   (lambda (path options)
     (load-foreign-library path)))
 
-(define c-bytevector-u8-set!
-  (lambda (c-bytevector k byte)
-    (let ((p (pointer->bytevector c-bytevector (+ k 100))))
-      (bytevector-u8-set! p k byte))))
+(define (c-bytevector-u8-set! cbv offset byte)
+  (bytevector-u8-set! (pointer->bytevector cbv (+ offset 100)) offset byte))
 
-(define c-bytevector-u8-ref
-  (lambda (c-bytevector k)
-    (let ((p (pointer->bytevector c-bytevector (+ k 100))))
-      (bytevector-u8-ref p k))))
+(define (c-bytevector-u8-ref cbv offset)
+  (bytevector-u8-ref (pointer->bytevector cbv (+ offset 100)) offset))
 
-(define c-bytevector-pointer-set!
-  (lambda (cbv offset pointer)
-    (c-bytevector-set! cbv 'uint offset pointer)))
+(define (c-bytevector-pointer-set! cbv offset pointer)
+  (bytevector-uint-set! (pointer->bytevector cbv (+ offset 100))
+                        offset
+                        (pointer-address pointer)
+                        (native-endianness)
+                        (size-of-type 'uint)))
 
-(define c-bytevector-pointer-ref
-  (lambda (cbv offset)
-    (make-pointer (c-bytevector-ref cbv 'uint offset))))
+(define (c-bytevector-pointer-ref cbv offset)
+  (make-pointer (bytevector-uint-ref (pointer->bytevector cbv (+ offset 100))
+                                     offset
+                                     (native-endianness)
+                                     (size-of-type 'uint))))
 
 (define (make-c-null) (make-pointer (pointer-address %null-pointer)))
 

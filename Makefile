@@ -24,7 +24,11 @@ endif
 ifeq "${SCHEME}" "racket"
 DOCKERIMG=${SCHEME}:latest
 endif
-PRINTER="tee"
+ifeq "${SCHEME}" "kawa"
+DOCKERIMG=${SCHEME}:latest
+endif
+
+DOCKER_TAG=foreign-c-test-${SCHEME}
 
 ALL_R6RS_EXCEPT=capyscheme larceny
 ALL_R7RS_EXCEPT=capyscheme cyclone foment gauche larceny loko meevax \
@@ -41,21 +45,7 @@ build:
 		--doc=README.html \
 		--foreign-depends=ffi \
 		--description="Portable foreign function interface for R7RS Schemes" \
-	foreign/c.sld \
-	foreign/c/chezscheme-primitives.sld \
-	foreign/c/chibi-primitives.sld \
-	foreign/c/chicken-primitives.sld \
-	foreign/c/gauche-primitives.sld \
-	foreign/c/guile-primitives.sld \
-	foreign/c/ikarus-primitives.sld \
-	foreign/c/ironscheme-primitives.sld \
-	foreign/c/kawa-primitives.sld \
-	foreign/c/larceny-primitives.sld \
-	foreign/c/mosh-primitives.sld \
-	foreign/c/racket-primitives.sld \
-	foreign/c/sagittarius-primitives.sld \
-	foreign/c/stklos-primitives.sld \
-	foreign/c/ypsilon-primitives.sld
+	foreign/c.sld
 
 install:
 	snow-chibi --impls=${SCHEME} --always-yes install ${PKG}
@@ -79,8 +69,10 @@ test-r6rs: libtest.o libtest.so libtest.a Akku.manifest test-r6rs.sps
 	COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib -o test-r6rs --debug test-r6rs.sps
 	./test-r6rs
 
-test-r6rs-docker: test-r6rs.sps Akku.manifest test-r7rs.scm libtest.o libtest.so libtest.a
-	COMPILE_SCHEME=${SCHEME} test-scheme foreign Akku.manifest test-r6rs.sps
+test-r6rs-docker: test-r6rs.sps libtest.o libtest.so libtest.a
+	echo "Building docker image..."
+	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=${DOCKER_TAG} -f Dockerfile.test .
+	docker run -t ${DOCKER_TAG} sh -c "make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes LIBRARY=${LIBRARY} build install test-r6rs"
 
 ## R7RS Tests
 
@@ -109,8 +101,9 @@ test-r7rs: libtest.o libtest.so libtest.a test-r7rs.scm
 	./test-r7rs
 
 test-r7rs-docker: test-r7rs.scm libtest.o libtest.so libtest.a
-	if [ "${SCHEME}" = "chibi" ];then make foreign/c/chibi-primitives.so; fi
-	COMPILE_SCHEME=${SCHEME} test-scheme foreign tests test-r7rs.scm
+	echo "Building docker image..."
+	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=${DOCKER_TAG} -f Dockerfile.test .
+	docker run -t ${DOCKER_TAG} sh -c "make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes LIBRARY=${LIBRARY} build install test-r7rs"
 
 ## C libraries for testing
 

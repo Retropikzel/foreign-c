@@ -29,4 +29,5 @@
            (lambda ()
              (and (c-bytevector? pointer)
                   (= (c-memset-pointer->address pointer 0 0) 0))))))))
+  (guile #t) ; Guile R6RS requires to be in every cond-expand, or it whines
   (else))
