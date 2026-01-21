@@ -18,12 +18,6 @@ pipeline {
     }
 
     stages {
-        stage('Init') {
-            steps {
-                sh "apk add gcc make musl-dev chibi-scheme"
-            }
-        }
-
         stage('Tests') {
             parallel {
                 stage('R6RS x86_64 Debian') {
