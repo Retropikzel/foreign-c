@@ -20,7 +20,7 @@ pipeline {
     stages {
         stage('Init') {
             steps {
-                sh "apt-get update && apt-get -y libffi-dev"
+                sh "apt-get update && apt-get install -y libffi-dev"
             }
         }
 
