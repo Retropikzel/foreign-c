@@ -18,6 +18,12 @@ pipeline {
     }
 
     stages {
+        stage('Init') {
+            steps {
+                sh "apk add libffi-dev"
+            }
+        }
+
         stage('Tests') {
             parallel {
                 stage('R6RS x86_64 Debian') {
