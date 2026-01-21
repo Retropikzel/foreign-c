@@ -20,7 +20,7 @@ pipeline {
     stages {
         stage('Init') {
             steps {
-                sh "apk add gcc make musl-dev"
+                sh "apk add gcc make musl-dev chibi-scheme"
             }
         }
 
