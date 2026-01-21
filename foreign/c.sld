@@ -20,10 +20,17 @@
   ;; c-null?
   (cond-expand
     ;(capyscheme (import (foreign c capyscheme-primitives)))
-    (chezscheme (import (chezscheme))
-                (include "chezscheme-primitives.scm")
+    (chezscheme (import (only (chezscheme)
+                              syntax-case
+                              syntax
+                              identifier?
+                              with-syntax
+                              datum->syntax-object
+                              datum
+                              gensym
+                              append!))
+                (include "c/chezscheme-primitives.scm")
                 (export foreign-procedure
-                        foreign-procedure
                         type->native-type
                         make-c-null
                         c-null?))

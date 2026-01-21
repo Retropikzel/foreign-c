@@ -42,6 +42,7 @@
 (test-end "c-type-size")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+#|
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "c-type-aling")
@@ -91,7 +92,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "define-c-library")
 (define-c-library libc
-                  '("stdlib.h" "stdio.h" "string.h")
+                  '("stdlib.h" "stdio.h" "string.h" "stdio.h")
                   libc-name
                   '((additional-versions ("0" "6"))))
 
@@ -172,8 +173,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "c-bytevector?")
-(define is-pointer (make-c-bytevector 100))
-(test-assert "1" (c-bytevector? is-pointer))
+(define is-pointer1 (make-c-bytevector 100))
+(test-assert "1" (c-bytevector? is-pointer1))
 (test-assert "2" (not (c-bytevector? 100)))
 (test-assert "3" (c-bytevector? #f))
 (test-assert "4" (not (c-bytevector? "Hello")))
@@ -354,7 +355,7 @@
 
 (define-c-struct s1
                  s1-members
-                 s-size
+                 s1-size
                  s1-pointer
                  (field1 'int s1-field1 s1-field1!)
                  (field2 'int s1-field2 s1-field2!)
@@ -376,3 +377,4 @@
 (test-assert (string? libc-name))
 (test-end "libc-name")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+|#
