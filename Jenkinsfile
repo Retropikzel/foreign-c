@@ -26,7 +26,7 @@ pipeline {
                             params.R6RS_SCHEMES.split().each { SCHEME ->
                                 stage("${SCHEME}") {
                                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                        sh "COMPILE_SCHEME=${SCHEME} test-scheme foreign retropikzel srfi libtest.o libtest.so libtest.a Akku.manifest test-r6rs.sps"
+                                        sh "timeout 6000 make SCHEME=${SCHEME} test-r6rs"
                                     }
                                 }
                             }
@@ -39,7 +39,7 @@ pipeline {
                             params.R7RS_SCHEMES.split().each { SCHEME ->
                                 stage("${SCHEME}") {
                                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                        sh "COMPILE_SCHEME=${SCHEME} test-scheme foreign libtest.o libtest.so libtest.a test-r7rs.scm"
+                                        sh "timeout 6000 make SCHEME=${SCHEME} test-r7rs"
                                     }
                                 }
                             }
