@@ -1,9 +1,2 @@
-FROM debian
-RUN apt-get update && apt-get install -y docker.io build-essential libffi-dev
-RUN git clone https://github.com/Retropikzel/chibi-scheme --depth=1
-RUN git clone https://codeberg.org/retropikzel/test-scheme.git --depth=6
-WORKDIR /chibi-scheme
-RUN make && make uninstall install
-WORKDIR /test-scheme
-RUN snow-chibi install-dependencies --always-yes test-scheme.scm
-RUN make build-chibi && make install
+FROM retropikzel1/test-scheme
+RUN apk add make gcc

@@ -18,6 +18,10 @@ pipeline {
     }
 
     stages {
+        stage('Init') {
+            sh "apk add gcc make"
+        }
+
         stage('Tests') {
             parallel {
                 stage('R6RS x86_64 Debian') {
