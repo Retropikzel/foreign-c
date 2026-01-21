@@ -21,7 +21,7 @@ ARG SCHEME=chibi
 ARG IMAGE=${SCHEME}:head
 FROM schemers/${IMAGE}
 RUN apt-get update && apt-get install -y \
-    make gcc libffi-dev libcurl4 gauche lighttpd
+    make gcc libffi-dev libcurl4 gauche lighttpd jq
 RUN mkdir ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
 COPY --from=build /build /build
 ARG SCHEME=chibi
@@ -35,6 +35,7 @@ ENV PATH=/root/.local/bin:${PATH}
 RUN akku update
 WORKDIR /workdir
 RUN if [ ! "${SCHEME}" = "racket" ] && [ ! "${SCHEME}" = "stklos" ] && [ ! "${SCHEME}" = "ypsilon" ]; then snow-chibi --impls=${SCHEME} --always-yes install "(srfi 64)"; fi
+RUN snow-chibi --impls=${SCHEME} --always-yes install "(retropikzel ctrf)"
 RUN akku install akku-r7rs chez-srfi
 COPY README.md .
 COPY Makefile .

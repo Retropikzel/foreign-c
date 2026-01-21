@@ -66,3 +66,5 @@ test-r7rs-primitives.scm
 *.json
 .akku
 foreign/c/*.c
+retropikzel
+srfi

@@ -9,7 +9,6 @@ Table of content
 - Pass pointer by address
 - Structs
 - Utilities
-- Endianness
 - Environment variables
 
 ## Types
@@ -318,14 +317,6 @@ Example:
     (define-c-procedure c-puts libc 'puts 'int '(pointer))
     (c-puts "Message brought to you by foreign-c!")
 
-
-## Endianness
-
-(**native-endianness**)
-
-Returns the endianness symbol associated implementation’s preferred endianness
-(usually that of the underlying machine architecture).  Currently returns
-either 'little or 'big.
 
 ## Environment variables
 

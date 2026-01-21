@@ -43,28 +43,28 @@ struct test {
 
 
 void Scm_hello() {
-    printf("Hello from Scm_hello");
+    fprintf(stderr, "Hello from Scm_hello");
 }
 
 void print_string_pointer(char* p) {
-    printf("C print_string_pointer: %s\n", p);
+    fprintf(stderr, "C print_string_pointer: %s\n", p);
 }
 
 void print_offsets() {
-    printf("C: Offset of a = %lu\n", offsetof(struct test, a));
-    printf("C: Offset of b = %lu\n", offsetof(struct test, b));
-    printf("C: Offset of c = %lu\n", offsetof(struct test, c));
-    printf("C: Offset of d = %lu\n", offsetof(struct test, d));
-    printf("C: Offset of e = %lu\n", offsetof(struct test, e));
-    printf("C: Offset of f = %lu\n", offsetof(struct test, f));
-    printf("C: Offset of g = %lu\n", offsetof(struct test, g));
-    printf("C: Offset of h = %lu\n", offsetof(struct test, h));
-    printf("C: Offset of i = %lu\n", offsetof(struct test, i));
-    printf("C: Offset of j = %lu\n", offsetof(struct test, j));
-    printf("C: Offset of k = %lu\n", offsetof(struct test, k));
-    printf("C: Offset of l = %lu\n", offsetof(struct test, l));
-    printf("C: Offset of m = %lu\n", offsetof(struct test, m));
-    printf("C: Offset of n = %lu\n", offsetof(struct test, n));
+    fprintf(stderr, "C: Offset of a = %lu\n", offsetof(struct test, a));
+    fprintf(stderr, "C: Offset of b = %lu\n", offsetof(struct test, b));
+    fprintf(stderr, "C: Offset of c = %lu\n", offsetof(struct test, c));
+    fprintf(stderr, "C: Offset of d = %lu\n", offsetof(struct test, d));
+    fprintf(stderr, "C: Offset of e = %lu\n", offsetof(struct test, e));
+    fprintf(stderr, "C: Offset of f = %lu\n", offsetof(struct test, f));
+    fprintf(stderr, "C: Offset of g = %lu\n", offsetof(struct test, g));
+    fprintf(stderr, "C: Offset of h = %lu\n", offsetof(struct test, h));
+    fprintf(stderr, "C: Offset of i = %lu\n", offsetof(struct test, i));
+    fprintf(stderr, "C: Offset of j = %lu\n", offsetof(struct test, j));
+    fprintf(stderr, "C: Offset of k = %lu\n", offsetof(struct test, k));
+    fprintf(stderr, "C: Offset of l = %lu\n", offsetof(struct test, l));
+    fprintf(stderr, "C: Offset of m = %lu\n", offsetof(struct test, m));
+    fprintf(stderr, "C: Offset of n = %lu\n", offsetof(struct test, n));
 }
 
 void check_offset(int member_index, int offset) {
@@ -281,7 +281,8 @@ EXPORT struct test* test_new() {
 }
 
 EXPORT void takes_no_args() {
-    puts("I take no arguments :)");
+    fprintf(stderr, "I take no arguments :)");
+
 }
 
 EXPORT int takes_no_args_returns_int() {

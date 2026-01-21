@@ -1,8 +1,8 @@
 pipeline {
     agent {
-        dockerfile {
+        docker {
+            image 'retropikzel1/test-scheme'
             label 'docker-x86_64'
-            filename 'Dockerfile.jenkins'
             args '--user=root --privileged -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
@@ -26,7 +26,7 @@ pipeline {
                             params.R6RS_SCHEMES.split().each { SCHEME ->
                                 stage("${SCHEME}") {
                                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                        sh "timeout 6000 make SCHEME=${SCHEME} test-r6rs-docker"
+                                        sh "COMPILE_SCHEME=${SCHEME} test-scheme foreign retropikzel srfi libtest.o libtest.so libtest.a Akku.manifest test-r6rs.sps"
                                     }
                                 }
                             }
@@ -39,7 +39,7 @@ pipeline {
                             params.R7RS_SCHEMES.split().each { SCHEME ->
                                 stage("${SCHEME}") {
                                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                        sh "timeout 6000 make SCHEME=${SCHEME} test-r7rs-docker"
+                                        sh "COMPILE_SCHEME=${SCHEME} test-scheme foreign libtest.o libtest.so libtest.a test-r7rs.scm"
                                     }
                                 }
                             }

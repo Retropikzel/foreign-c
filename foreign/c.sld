@@ -19,9 +19,14 @@
   ;; make-c-null
   ;; c-null?
   (cond-expand
-    (capyscheme (import (foreign c capyscheme-primitives)))
-    (chezscheme (import (foreign c chezscheme-primitives))
-                (export foreign-procedure))
+    ;(capyscheme (import (foreign c capyscheme-primitives)))
+    (chezscheme (import (chezscheme))
+                (include "chezscheme-primitives.scm")
+                (export foreign-procedure
+                        foreign-procedure
+                        type->native-type
+                        make-c-null
+                        c-null?))
     (chibi (include-shared "c/chibi-primitives")
            (include "c/chibi-primitives.scm"))
     (chicken (import (chicken base)
@@ -134,10 +139,7 @@
     define-c-struct
 
     ;; Utilities
-    libc-name
-
-    ;; endianness
-    native-endianness)
+    libc-name)
   (cond-expand
     (chezscheme
       (import (only (rnrs bytevectors) native-endianness)))
