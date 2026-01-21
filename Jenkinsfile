@@ -20,7 +20,7 @@ pipeline {
     stages {
         stage('Init') {
             steps {
-                sh "apk add libffi-dev"
+                sh "apt-get update && apt-get -y libffi-dev"
             }
         }
 
