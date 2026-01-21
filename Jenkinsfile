@@ -19,7 +19,9 @@ pipeline {
 
     stages {
         stage('Init') {
-            sh "apk add gcc make"
+            steps {
+                sh "apk add gcc make"
+            }
         }
 
         stage('Tests') {
