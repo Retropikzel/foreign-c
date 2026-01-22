@@ -62,7 +62,7 @@ test-r6rs-docker-old: test-r6rs.sps libtest.o libtest.so libtest.a
 	docker run -t ${DOCKER_TAG} sh -c "make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes LIBRARY=${LIBRARY} build install test-r6rs"
 
 test-r6rs-docker: test-r6rs.sps libtest.o libtest.so libtest.a Akku.manifest
-	COMPILE_SCHEME=${SCHEME} test-scheme foreign tests libtest.o libtest.so libtest.a Akku.manifest test-r6rs.sps
+	COMPILE_SCHEME=${SCHEME} test-scheme --docker-head foreign tests libtest.o libtest.so libtest.a Akku.manifest test-r6rs.sps
 
 ## R7RS Tests
 
@@ -86,7 +86,7 @@ test-r7rs-docker-old: test-r7rs.scm libtest.o libtest.so libtest.a
 test-r7rs-docker: test-r7rs.scm libtest.o libtest.so libtest.a foreign/c/chibi-primitives.so
 	COMPILE_SCHEME=${SCHEME} \
 	COMPILE_R7RS_CHICKEN="-L -ltest -I./tests/c-include -L." \
-	test-scheme tests foreign libtest.o libtest.so libtest.a test-r7rs.scm
+	test-scheme --docker-head tests foreign libtest.o libtest.so libtest.a test-r7rs.scm
 
 ## C libraries for testing
 

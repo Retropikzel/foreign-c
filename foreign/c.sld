@@ -158,49 +158,5 @@
       (begin
         (define (native-endianness)
           (cond-expand (big-endian 'big) (else 'little))))))
-  (cond-expand
-    (chicken
-      (begin
-        (define-syntax define-c-library
-          (syntax-rules ()
-            ((_ scheme-name headers object-name options)
-             (begin
-               (define scheme-name #t)
-               (shared-object-load headers)))))))
-    (else (include "c/define-c-library.scm")))
-  (cond-expand
-    (chicken
-      (begin
-        (define libc-name
-          (cond-expand
-            (windows "ucrtbase")
-            (haiku "root")
-            (else "c")))
-        (define-c-library libc
-                          '("stdlib.h" "stdio.h" "string.h")
-                          libc-name
-                          '((additional-versions ("0" "6"))))
-
-        (define-c-procedure c-malloc libc 'malloc 'pointer '(int))
-        (define-c-procedure c-free libc 'free 'void '(pointer))
-        (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
-        (define-c-procedure c-calloc libc 'calloc 'pointer '(int int))
-        (define-c-procedure c-perror libc 'perror 'void '(pointer))
-        (define (c-memset-address->pointer address value offset) (address->pointer address))
-        (define (c-memset-pointer->address pointer value offset) (pointer->address pointer))))
-    (else (include "c/libc.scm")))
-  (cond-expand
-    #;(chicken
-      ;; FIXME These are in primitives too but error
-      (begin
-        (define (make-c-null) (foreign-value "NULL" c-pointer))
-        (define c-null?
-          (lambda (pointer)
-            (if (and (not (pointer? pointer))
-                     pointer)
-              #f
-              (or (not pointer) ; #f counts as null pointer on Chicken
-                  (= (pointer->address pointer) 0)))))))
-    (else))
   (include "c.scm"))
 
