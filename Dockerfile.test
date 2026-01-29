@@ -1,45 +1,10 @@
 ARG SCHEME=chibi
-ARG IMAGE=${SCHEME}:head
-FROM debian:trixie AS build
-RUN apt-get update && apt-get install -y \
-git ca-certificates make gcc libffi-dev libffi-dev wget xz-utils libcurl4
-RUN mkdir ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
-WORKDIR /build
-RUN wget https://gitlab.com/-/project/6808260/uploads/094ce726ce3c6cf8c14560f1e31aaea0/akku-1.1.0.amd64-linux.tar.xz \
-    && tar -xf akku-1.1.0.amd64-linux.tar.xz \
-    && mv akku-1.1.0.amd64-linux akku
-#RUN git clone https://github.com/ashinn/chibi-scheme.git --depth=2
-RUN git clone https://github.com/Retropikzel/chibi-scheme.git --branch=snow-chibi-kawa-fixes --depth=1
-RUN git clone https://codeberg.org/retropikzel/compile-scheme.git --depth=3
-WORKDIR /build/chibi-scheme
-RUN make
-RUN make install
-WORKDIR /build/compile-scheme
-RUN make build-gauche
-
-ARG SCHEME=chibi
-ARG IMAGE=${SCHEME}:head
-FROM schemers/${IMAGE}
-RUN apt-get update && apt-get install -y \
-    make gcc libffi-dev libcurl4 gauche lighttpd jq
-RUN mkdir ${HOME}/.snow && echo "()" > ${HOME}/.snow/config.scm
-COPY --from=build /build /build
-ARG SCHEME=chibi
-WORKDIR /build/compile-scheme
-RUN make install
-WORKDIR /build/chibi-scheme
-RUN make install
-WORKDIR /build/akku
-RUN bash install.sh
-ENV PATH=/root/.local/bin:${PATH}
-RUN akku update
+FROM docker.io/schemers/${SCHEME}:head
+RUN apt-get update && apt-get install -y make gcc libffi-dev git ca-certificates curl xz-utils
 WORKDIR /workdir
-RUN if [ ! "${SCHEME}" = "racket" ] && [ ! "${SCHEME}" = "stklos" ] && [ ! "${SCHEME}" = "ypsilon" ]; then snow-chibi --impls=${SCHEME} --always-yes install "(srfi 64)"; fi
-RUN snow-chibi --impls=${SCHEME} --always-yes install "(retropikzel ctrf)"
-RUN akku install akku-r7rs chez-srfi
+COPY testvenv testvenv/
 COPY README.md .
 COPY Makefile .
-COPY foreign foreign/
-COPY tests tests/
-COPY test.scm test.scm
-ENV LD_LIBRARY_PATH=/workdir
+RUN . testvenv/bin/activate ;  echo "${PATH}"
+RUN ls
+#RUN ./testvenv/bin/snow-chibi install retropikzel.hello

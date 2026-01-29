@@ -68,3 +68,6 @@ test-r7rs-primitives.scm
 foreign/c/*.c
 retropikzel
 srfi
+test.sps
+testvenv
+scheme-venv

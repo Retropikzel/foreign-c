@@ -1,30 +1,10 @@
-.PHONY: \
-	package test libtest.o tests/libtest.so libtest.a documentation \
-	README.html test-r6rs.sps test-r6rs test-r6rs-primitives.sps \
-	test-r6rs-primitives test-r7rs.scm test-r7rs test-r7rs-primitives.scm \
-	test-r7rs-primitives foreign/c/chibi-primitives.so \
-	libtest.o libtest.a libtest.so Akku.manifest
-.SILENT: build install clean test-r6rs.sps test-r6rs test-r6rs-primitives.sps \
-	test-r6rs-primitives test-r6rs-docker test-r7rs.scm test-r7rs \
-	test-r7rs-primitives.scm test-r7rs-primitives test-r7rs-docker \
-	libtest.o libtest.a libtest.so
-
-SCHEME=chibi
-DOCKERIMG=${SCHEME}:head
 VERSION=0.13.4
+SCHEME=chibi
+RNRS=r7rs
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
-PKG=foreign-c-${VERSION}.tgz
-ifeq "${SCHEME}" "chicken"
-DOCKERIMG=${SCHEME}:5
-endif
 
-ALL_R6RS_SCHEME=chezscheme,guile,ikarus,ironscheme,mosh,racket,sagittarius,ypsilon
-ALL_R7RS_SCHEME=chibi,chicken,gauche,guile,mosh,racket,sagittarius,stklos,ypsilon
-
-DOCKER_TAG=foreign-c-test-${SCHEME}
-
-## Build and install
+all: build
 
 build:
 	rm -rf *.tgz
@@ -43,59 +23,34 @@ install:
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
-## R6RS Tests
+init-testvenv:
+	scheme-venv ${SCHEME} ${RNRS} testvenv
+	cp test.scm testvenv/test.scm
+	cp test.scm testvenv/test.sps
+	sed -i 's/srfi 64/srfi :64/' testvenv/test.sps
 
-test-r6rs.sps:
-	printf "#!r6rs\n(import (rnrs base) (rnrs control) (rnrs io simple) (rnrs files) (rnrs programs) (foreign c)  (srfi :64) (only (rnrs bytevectors) make-bytevector bytevector?))\n" > test-r6rs.sps
-	echo "(test-begin \"foreign-c-r6rs\")" >> test-r6rs.sps
-	cat test.scm >> test-r6rs.sps
-	echo "(test-end \"foreign-c-r6rs\")" >> test-r6rs.sps
+run-test: libtest.o libtest.so libtest.a ${TESTVENV} build
+	./testvenv/bin/snow-chibi install --always-yes ${PKG} srfi.64
+	./testvenv/bin/snow-chibi install --always-yes srfi.64
+	./testvenv/bin/akku install akku-r7rs chez-srfi
+	if [ "${RNRS}" = "r6rs" ]; then ./testvenv/bin/scheme-compile test.sps; fi
+	if [ "${RNRS}" = "r7rs" ]; then ./testvenv/bin/scheme-compile test.scm; fi
+	./test
 
-test-r6rs: libtest.o libtest.so libtest.a Akku.manifest test-r6rs.sps
-	rm -rf test-r6rs
-	#if [ "${SCHEME}" = "mosh" ]; then rm -rf Akku.manifest ; rm -rf Akku.lock ; rm -rf .akku ; fi
-	#if [ "${SCHEME}" = "ypsilon" ]; then rm -rf Akku.manifest ; rm -rf Akku.lock ; rm -rf .akku ; fi
-	#akku install
-	COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib -o test-r6rs --debug test-r6rs.sps
-	./test-r6rs
 
-test-r6rs-docker-old: test-r6rs.sps libtest.o libtest.so libtest.a
-	echo "Building docker image..."
-	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=${DOCKER_TAG} -f Dockerfile.test .
-	docker run -t ${DOCKER_TAG} sh -c "make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes LIBRARY=${LIBRARY} build install test-r6rs"
+run-test-docker: init-testvenv
+	docker build --build-arg SCHEME=${SCHEME} -f Dockerfile.test .
+	#docker run foreign-c-${SCHEME}-${RNRS} sh -c ". testvenv/bin/activate && make SCHEME=${SCHEME} RNRS=${RNRS} run-test"
 
-test-r6rs-docker: test-r6rs.sps libtest.o libtest.so libtest.a Akku.manifest
-	COMPILE_SCHEME=${SCHEME} test-scheme --docker-head --docker-quiet foreign tests libtest.o libtest.so libtest.a Akku.manifest test-r6rs.sps
+test-r7rs: libtest.o libtest.so libtest.a init-testvenv build
+	rm -rf test
+	./testvenv/bin/snow-chibi install --always-yes ${PKG}
+	./testvenv/bin/snow-chibi install --always-yes srfi.64
+	./testvenv/bin/scheme-compile test.scm
+	./test
 
-test-all-r6rs-docker: test-r6rs.sps libtest.o libtest.so libtest.a Akku.manifest
-	COMPILE_SCHEME=${ALL_R6RS_SCHEME} test-scheme --docker-head --docker-quiet foreign tests libtest.o libtest.so libtest.a Akku.manifest test-r6rs.sps
-
-## R7RS Tests
-
-test-r7rs.scm:
-	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context)  (srfi 64) (foreign c))" > test-r7rs.scm
-	echo "(test-begin \"foreign-c-r7rs\")" >> test-r7rs.scm
-	cat test.scm >> test-r7rs.scm
-	echo "(test-end \"foreign-c-r7rs\")" >> test-r7rs.scm
-
-test-r7rs: libtest.o libtest.so libtest.a test-r7rs.scm
-	rm -rf test-r7rs
-	COMPILE_R7RS_CHICKEN="-L -ltest -I./tests/c-include -L." \
-		COMPILE_R7RS=${SCHEME} compile-scheme -I . -o test-r7rs test-r7rs.scm
-	LD_LIBRARY_PATH=. ./test-r7rs
-
-test-r7rs-docker-old: test-r7rs.scm libtest.o libtest.so libtest.a
-	echo "Building ${SCHEME} docker image..."
-	docker build --build-arg IMAGE=${DOCKERIMG} --build-arg SCHEME=${SCHEME} --tag=${DOCKER_TAG} -f Dockerfile.test --quiet .
-	docker run -t ${DOCKER_TAG} sh -c "make SCHEME=${SCHEME} SNOW_CHIBI_ARGS=--always-yes LIBRARY=${LIBRARY} build install test-r7rs"
-
-test-r7rs-docker: test-r7rs.scm libtest.o libtest.so libtest.a foreign/c/chibi-primitives.so
+test-r7rs-docker: build-docker-image
 	COMPILE_SCHEME=${SCHEME} \
-	COMPILE_R7RS_CHICKEN="-L -ltest -I./tests/c-include -L." \
-	test-scheme --docker-head --docker-quiet tests foreign libtest.o libtest.so libtest.a test-r7rs.scm
-
-test-all-r7rs-docker: test-r7rs.scm libtest.o libtest.so libtest.a foreign/c/chibi-primitives.so
-	COMPILE_SCHEME=${ALL_R7RS_SCHEME} \
 	COMPILE_R7RS_CHICKEN="-L -ltest -I./tests/c-include -L." \
 	test-scheme --docker-head --docker-quiet tests foreign libtest.o libtest.so libtest.a test-r7rs.scm
 
@@ -124,3 +79,4 @@ Akku.manifest:
 clean:
 	git clean -X -f
 	rm -rf .akku
+	rm -rf testvenv

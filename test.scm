@@ -1,3 +1,13 @@
+(import (scheme base)
+        (scheme write)
+        (scheme read)
+        (scheme char)
+        (scheme file)
+        (scheme process-context)
+        (srfi 64)
+        (foreign c))
+
+(test-begin "foreign-c")
 ;; Types
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -378,3 +388,5 @@
 (test-end "libc-name")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 |#
+
+(test-end "foreign-c")
