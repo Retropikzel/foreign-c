@@ -3,6 +3,7 @@ SCHEME=chibi
 RNRS=r7rs
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
+TESTNAME=main
 
 all: build
 
@@ -23,36 +24,25 @@ install:
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
-init-testvenv:
-	scheme-venv ${SCHEME} ${RNRS} testvenv
-	cp test.scm testvenv/test.scm
-	cp test.scm testvenv/test.sps
-	sed -i 's/srfi 64/srfi :64/' testvenv/test.sps
+init-venv:
+	rm -rf venv
+	scheme-venv ${SCHEME} ${RNRS} venv
+	cp tests/${TESTNAME}.scm venv/${TESTNAME}.scm
+	cp tests/${TESTNAME}.scm venv/${TESTNAME}.sps
+	sed -i 's/srfi 64/srfi :64/' venv/${TESTNAME}.sps
+	cp -r foreign venv/lib
+	./venv/bin/snow-chibi install --always-yes ${PKG}
+	./venv/bin/snow-chibi install --always-yes srfi.64
+	./venv/bin/akku install akku-r7rs chez-srfi
 
-run-test: libtest.o libtest.so libtest.a ${TESTVENV} build
-	./testvenv/bin/snow-chibi install --always-yes ${PKG} srfi.64
-	./testvenv/bin/snow-chibi install --always-yes srfi.64
-	./testvenv/bin/akku install akku-r7rs chez-srfi
-	if [ "${RNRS}" = "r6rs" ]; then ./testvenv/bin/scheme-compile test.sps; fi
-	if [ "${RNRS}" = "r7rs" ]; then ./testvenv/bin/scheme-compile test.scm; fi
-	./test
+run-test: libtest.o libtest.so libtest.a init-venv build
+	if [ "${RNRS}" = "r6rs" ]; then ./venv/bin/scheme-compile venv/${TESTNAME}.sps; fi
+	if [ "${RNRS}" = "r7rs" ]; then ./venv/bin/scheme-compile venv/${TESTNAME}.scm; fi
+	./venv/${TESTNAME}
 
-
-run-test-docker: init-testvenv
+run-test-docker: init-venv
 	docker build --build-arg SCHEME=${SCHEME} -f Dockerfile.test .
-	#docker run foreign-c-${SCHEME}-${RNRS} sh -c ". testvenv/bin/activate && make SCHEME=${SCHEME} RNRS=${RNRS} run-test"
-
-test-r7rs: libtest.o libtest.so libtest.a init-testvenv build
-	rm -rf test
-	./testvenv/bin/snow-chibi install --always-yes ${PKG}
-	./testvenv/bin/snow-chibi install --always-yes srfi.64
-	./testvenv/bin/scheme-compile test.scm
-	./test
-
-test-r7rs-docker: build-docker-image
-	COMPILE_SCHEME=${SCHEME} \
-	COMPILE_R7RS_CHICKEN="-L -ltest -I./tests/c-include -L." \
-	test-scheme --docker-head --docker-quiet tests foreign libtest.o libtest.so libtest.a test-r7rs.scm
+	#docker run foreign-c-${SCHEME}-${RNRS} sh -c ". venv/bin/activate && make SCHEME=${SCHEME} RNRS=${RNRS} run-test"
 
 ## C libraries for testing
 
@@ -65,18 +55,7 @@ libtest.so: tests/c-src/libtest.c
 libtest.a: libtest.o tests/c-src/libtest.c
 	ar rcs libtest.a libtest.o ${LDFLAGS}
 
-foreign/c/chibi-primitives.so:
-	chibi-ffi foreign/c/chibi-primitives.stub
-	gcc -fPIC -shared \
-		-Os \
-		-o foreign/c/chibi-primitives.so \
-		foreign/c/chibi-primitives.c \
-	-lffi -lchibi-scheme
-
-Akku.manifest:
-	akku install chez-srfi akku-r7rs
-
 clean:
 	git clean -X -f
 	rm -rf .akku
-	rm -rf testvenv
+	rm -rf venv

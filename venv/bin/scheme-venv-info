@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "Scheme: chibi"
+echo "RNRS: r7rs"

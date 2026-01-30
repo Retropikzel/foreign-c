@@ -1,0 +1,28 @@
+deactivate () {
+    unset SCHEME
+    unset COMPILE_R7RS
+    unset COMPILE_SCHEME
+    unset TEST_SCHEME
+    unset venvname
+    export PS1="${SCHEME_VENV_OLD_PS1}"
+    unset SCHEME_VENV_OLD_PS1
+    export PATH="${SCHEME_VENV_OLD_PATH}"
+    unset SCHEME_VENV_OLD_PATH
+    hash -r 2> /dev/null
+}
+
+export COMPILE_R7RS=chibi
+export COMPILE_SCHEME=chibi
+export TEST_SCHEME=chibi
+export SCHEME=chibi
+
+venvname="venv"
+
+export SCHEME_VENV_OLD_PS1="${PS1}"
+export PS1="(${venvname}) ${PS1:-}"
+
+export SCHEME_VENV_OLD_PATH="${PATH}"
+export PATH="/home/retropikzel/Projects/foreign-c/venv/bin:${PATH}"
+hash -r 2> /dev/null
+echo "chibi r7rs"
+echo "if [ "r7rs" = "r6rs" ]; then . /home/retropikzel/Projects/foreign-c/venv/lib/.akku/bin/activate; fi"
