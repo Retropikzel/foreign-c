@@ -1,7 +1,0 @@
-#!/bin/sh
-if [ "${1}" = "install" ]; then
-    shift
-    snow-chibi     install         --impls=chibi         --install-source-dir=/home/retropikzel/Projects/foreign-c/venv/lib         --install-library-dir=/home/retropikzel/Projects/foreign-c/venv/lib         --install-data-dir=/home/retropikzel/Projects/foreign-c/venv/lib         --install-binary-dir=/home/retropikzel/Projects/foreign-c/venv/bin         "$@"
-else
-    snow-chibi "$@"
-fi

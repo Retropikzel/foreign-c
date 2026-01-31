@@ -1,6 +1,0 @@
-#!/bin/sh
-if [ "${1}" = "" ]; then echo 'scheme-venv (chibi r7rs) Give script file as argument' && exit 1; fi
-if [ "${1}" = "--help" ]; then echo 'scheme-venv (chibi r7rs) Give script file as argument' && exit 1; fi
-IF="${1}"
-shift
-chibi-scheme -I "/home/retropikzel/Projects/foreign-c/venv/lib" "${IF}" "$@"

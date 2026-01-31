@@ -31,8 +31,8 @@ init-venv:
 	cp tests/${TESTNAME}.scm venv/${TESTNAME}.sps
 	sed -i 's/srfi 64/srfi :64/' venv/${TESTNAME}.sps
 	cp -r foreign venv/lib
-	./venv/bin/snow-chibi install --always-yes ${PKG}
-	./venv/bin/snow-chibi install --always-yes srfi.64
+	./venv/bin/snow-chibi install --impls=${SCHEME} --always-yes srfi.64
+	./venv/bin/snow-chibi install --impls=${SCHEME} --always-yes ${PKG}
 	./venv/bin/akku install akku-r7rs chez-srfi
 
 run-test: libtest.o libtest.so libtest.a init-venv build

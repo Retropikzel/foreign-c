@@ -52,7 +52,6 @@
 (test-end "c-type-size")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "c-type-aling")
@@ -387,6 +386,5 @@
 (test-assert (string? libc-name))
 (test-end "libc-name")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-|#
 
 (test-end "foreign-c")

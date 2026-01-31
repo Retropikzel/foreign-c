@@ -1,4 +1,5 @@
-(define (make-c-bytevector size . byte)
+(define make-c-bytevector
+  (lambda (size . byte)
   (when (not (integer? size))
     (error "make-c-bytevector: Size must be integer" size))
   (let ((cbv (cond ((null? byte) (c-malloc size))
@@ -7,7 +8,7 @@
     (when (c-null? cbv)
       (c-perror (string->c-utf8 "make-c-bytevector error"))
       (error "make-c-bytevector error: malloc returned null" size))
-    cbv))
+    cbv)))
 
 (define c-bytevector
   (lambda bytes

@@ -1,2 +1,0 @@
-docker build -f "/home/retropikzel/Projects/foreign-c/venv/etc/Dockerfile" --tag="venv-chibi-r7rs"
-docker run -v "/home/retropikzel/Projects/foreign-c/venv":"/home/retropikzel/Projects/foreign-c/venv" -it "venv-chibi-r7rs"

@@ -11,6 +11,12 @@
 ;;; the benefit of the Scheme community.
 ;;;
 
+(cond-expand
+  (chezscheme #t)
+  (else
+    (define (native-endianness)
+      (cond-expand (big-endian 'big) (else 'little)))))
+
 (define c-bytevector:single-maxexponent 255)
 (define c-bytevector:single-bias (quotient c-bytevector:single-maxexponent 2))
 (define c-bytevector:single-hidden-bit (expt 2 23))
