@@ -12,7 +12,7 @@
 ;;;
 
 (cond-expand
-  (chezscheme #t)
+  (chezscheme (define one 1))
   (else
     (define (native-endianness)
       (cond-expand (big-endian 'big) (else 'little)))))

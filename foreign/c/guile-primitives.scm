@@ -67,10 +67,10 @@
   (lambda (path options)
     (load-foreign-library path)))
 
-(define (c-bytevector-set! cbv 'u8 offset byte)
+(define (c-bytevector-u8-set! cbv offset byte)
   (bytevector-u8-set! (pointer->bytevector cbv (+ offset 100)) offset byte))
 
-(define (c-bytevector-ref cbv 'u8 offset)
+(define (c-bytevector-u8-ref cbv offset)
   (bytevector-u8-ref (pointer->bytevector cbv (+ offset 100)) offset))
 
 (define (c-bytevector-pointer-set! cbv offset pointer)

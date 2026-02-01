@@ -1,9 +1,9 @@
-VERSION=0.13.4
+VERSION=0.13.5
 SCHEME=chibi
 RNRS=r7rs
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
-TESTNAME=main
+TEST=main
 
 all: build
 
@@ -24,21 +24,24 @@ install:
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
-init-venv:
+init-venv: build
 	rm -rf venv
 	scheme-venv ${SCHEME} ${RNRS} venv
-	cp tests/${TESTNAME}.scm venv/${TESTNAME}.scm
-	cp tests/${TESTNAME}.scm venv/${TESTNAME}.sps
-	sed -i 's/srfi 64/srfi :64/' venv/${TESTNAME}.sps
+	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > venv/test.scm
+	echo "(import (rnrs) (foreign c))" > venv/test.sps
+	cat tests/${TEST}.scm >> venv/test.scm
+	cat tests/${TEST}.scm >> venv/test.sps
+	sed -i 's/srfi 64/srfi :64/' venv/test.sps
 	cp -r foreign venv/lib
-	./venv/bin/snow-chibi install --impls=${SCHEME} --always-yes srfi.64
-	./venv/bin/snow-chibi install --impls=${SCHEME} --always-yes ${PKG}
+	if [ "${RNRS}" = "r7rs" ]; then ./venv/bin/snow-chibi install --always-yes srfi.39; fi
+	if [ "${RNRS}" = "r7rs" ]; then ./venv/bin/snow-chibi install --always-yes srfi.64; fi
+	if [ "${RNRS}" = "r7rs" ]; then ./venv/bin/snow-chibi install --always-yes ${PKG}; fi
 	./venv/bin/akku install akku-r7rs chez-srfi
 
-run-test: libtest.o libtest.so libtest.a init-venv build
-	if [ "${RNRS}" = "r6rs" ]; then ./venv/bin/scheme-compile venv/${TESTNAME}.sps; fi
-	if [ "${RNRS}" = "r7rs" ]; then ./venv/bin/scheme-compile venv/${TESTNAME}.scm; fi
-	./venv/${TESTNAME}
+run-test: libtest.o libtest.so libtest.a init-venv
+	if [ "${RNRS}" = "r6rs" ]; then ./venv/bin/scheme-compile venv/test.sps; fi
+	if [ "${RNRS}" = "r7rs" ]; then ./venv/bin/scheme-compile venv/test.scm; fi
+	./venv/test
 
 run-test-docker: init-venv
 	docker build --build-arg SCHEME=${SCHEME} -f Dockerfile.test .
