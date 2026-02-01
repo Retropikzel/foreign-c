@@ -1,5 +1,3 @@
-(define (primitives-init set-procedure get-procedure) #t)
-
 (define type->native-type ; Chicken has this procedure in three places
   (lambda (type)
     (cond ((equal? type 'i8) 'byte)

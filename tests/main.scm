@@ -242,6 +242,7 @@
 (test-end "c-bytevector-set!")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "c-bytevector-ref")
 (test-equal (c-bytevector-ref char-cbv 'char 0) #\a)

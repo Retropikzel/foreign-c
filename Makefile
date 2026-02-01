@@ -8,9 +8,9 @@ TEST=main
 all: build
 
 build:
-	rm -rf *.tgz
-	echo "<pre>$$(cat README.md)</pre>" > README.html
-	snow-chibi package \
+	@rm -rf *.tgz
+	@echo "<pre>$$(cat README.md)</pre>" > README.html
+	@snow-chibi package \
 		--version=${VERSION} \
 		--authors="Retropikzel" \
 		--doc=README.html \
@@ -19,7 +19,7 @@ build:
 	foreign/c.sld
 
 install:
-	snow-chibi --impls=${SCHEME} --always-yes install ${PKG}
+	snow-chibi --impls=${SCHEME} install ${PKG}
 
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
@@ -27,19 +27,19 @@ uninstall:
 init-venv: build
 	rm -rf venv
 	scheme-venv ${SCHEME} ${RNRS} venv
-	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > venv/test.scm
-	echo "(import (rnrs) (srfi :64) (foreign c))" > venv/test.sps
-	cat tests/${TEST}.scm >> venv/test.scm
-	cat tests/${TEST}.scm >> venv/test.sps
-	cp -r foreign venv/lib
+	@echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > venv/test.scm
+	@echo "(import (rnrs) (srfi :64) (foreign c))" > venv/test.sps
+	@cat tests/${TEST}.scm >> venv/test.scm
+	@cat tests/${TEST}.scm >> venv/test.sps
+	@cp -r foreign venv/lib
 	if [ "${RNRS}" = "r7rs" ]; then ./venv/bin/snow-chibi install --always-yes srfi.64; fi
-	if [ "${RNRS}" = "r7rs" ]; then ./venv/bin/snow-chibi install --always-yes ${PKG}; fi
-	./venv/bin/akku install akku-r7rs chez-srfi
+	if [ "${RNRS}" = "r7rs" ]; then ./venv/bin/snow-chibi install ${PKG}; fi
+	if [ "${RNRS}" = "r6rs" ]; then ./venv/bin/akku install akku-r7rs chez-srfi; fi
 
-run-test: libtest.o libtest.so libtest.a init-venv
+run-test: init-venv venv/include/libtest.h venv/lib/libtest.o venv/lib/libtest.so venv/lib/libtest.a
 	if [ "${RNRS}" = "r6rs" ]; then ./venv/bin/scheme-compile venv/test.sps; fi
-	if [ "${RNRS}" = "r7rs" ]; then ./venv/bin/scheme-compile venv/test.scm; fi
-	./venv/test
+	if [ "${RNRS}" = "r7rs" ]; then VENV_CSC_ARGS="-L -ltest" ./venv/bin/scheme-compile venv/test.scm; fi
+	LD_LIBRARY_PATH=venv/lib ./venv/test
 
 run-test-docker: init-venv
 	docker build --build-arg SCHEME=${SCHEME} -f Dockerfile.test .
@@ -47,14 +47,17 @@ run-test-docker: init-venv
 
 ## C libraries for testing
 
-libtest.o: tests/c-src/libtest.c
-	${CC} ${CFLAGS} -o libtest.o -fPIC -c tests/c-src/libtest.c -I./include ${LDFLAGS}
+venv/lib/libtest.o: tests/c-src/libtest.c
+	${CC} ${CFLAGS} -o venv/lib/libtest.o -fPIC -c tests/c-src/libtest.c -I./tests/c-include ${LDFLAGS}
 
-libtest.so: tests/c-src/libtest.c
-	${CC} ${CFLAGS} -o libtest.so -shared -fPIC tests/c-src/libtest.c -I./include ${LDFLAGS}
+venv/lib/libtest.so: tests/c-src/libtest.c
+	${CC} ${CFLAGS} -o venv/lib/libtest.so -shared -fPIC tests/c-src/libtest.c -I./tests/c-include ${LDFLAGS}
 
-libtest.a: libtest.o tests/c-src/libtest.c
+venv/lib/libtest.a: libtest.o tests/c-src/libtest.c
 	ar rcs libtest.a libtest.o ${LDFLAGS}
+
+venv/include/libtest.h: tests/c-include/libtest.h
+	cp tests/c-include/libtest.h venv/include/libtest.h
 
 clean:
 	git clean -X -f
