@@ -172,10 +172,8 @@
           (c-bytevector-uint-ref c-bytevector index size))))
 
 (define (c-bytevector-sint-set! c-bytevector index val size)
-  (let ((uval (if (< val 0)
-                (+ val (expt 256 size))
-                val)))
-    (c-bytevector-set! c-bytevector 'uint index uval size)))
+  (let ((uval (if (< val 0) (+ val (expt 256 size)) val)))
+    (c-bytevector-set! c-bytevector 'uint index uval)))
 
 (define (c-bytevector-sint-ref c-bytevector index size)
   (let* ((high-byte (c-bytevector-u8-ref c-bytevector
