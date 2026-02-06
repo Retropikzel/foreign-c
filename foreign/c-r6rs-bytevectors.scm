@@ -153,7 +153,7 @@
         (unspecified))
        (c-bytevector-u8-set! c-bytevector (+ index i) (remainder val 256))))
     (else
-      (c-bytevector-set! c-bytevector 'uint index val size))))
+      (c-bytevector-set! c-bytevector 'uint index val))))
 
 (define (c-bytevector-uint-ref c-bytevector index size)
   (cond ((equal? (native-endianness) 'big)
@@ -173,7 +173,7 @@
 
 (define (c-bytevector-sint-set! c-bytevector index val size)
   (let ((uval (if (< val 0) (+ val (expt 256 size)) val)))
-    (c-bytevector-set! c-bytevector 'uint index uval)))
+    (c-bytevector-uint-set! c-bytevector index uval size)))
 
 (define (c-bytevector-sint-ref c-bytevector index size)
   (let* ((high-byte (c-bytevector-u8-ref c-bytevector

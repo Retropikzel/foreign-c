@@ -118,5 +118,11 @@
   (lambda (pointer offset)
     (cpointer-ref-abs pointer :pointer offset)))
 
-(define (make-c-null) #f) ;; FIXME
+(define-external stklos-address->pointer
+                 ((a :uint64) (b :uint8) (c :int))
+                 :return-type :pointer
+                 :entry-name "memset")
+
+(define (make-c-null)
+  (stklos-address->pointer 0 0 0))
 (define c-null? cpointer-null?)

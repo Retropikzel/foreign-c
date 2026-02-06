@@ -38,7 +38,8 @@
      (begin
        (when (not (or (equal? struct-cbv #f)
                       (c-bytevector? struct-cbv)))
-         (error "define-c-struct: struct-cbv argument must be c-bytevector or #f"))
+         (error "define-c-struct: struct-cbv argument must be c-bytevector or #f"
+                struct-cbv))
        (define accessor
          (lambda (cbv)
            (let ((offset (let ((offset 0)

@@ -107,8 +107,15 @@
                       "test"
                       '((additional-paths ("." "./tests"))))
 
+(display "HERE: c-testlib ")
+(write c-testlib)
+(newline)
 (define-c-procedure c-takes-no-args c-testlib 'takes_no_args 'void '())
+(display "HERE1: ")
+(newline)
 (c-takes-no-args)
+(display "HERE2: ")
+(newline)
 
 
 (define-c-procedure c-takes-no-args-returns-int c-testlib 'takes_no_args_returns_int 'int '())
@@ -193,6 +200,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "make-c-null")
+(display "HERE:")
+(newline)
 (define null-pointer (make-c-null))
 
 (test-assert "make-c-null-1" (c-bytevector? null-pointer))

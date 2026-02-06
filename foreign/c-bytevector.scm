@@ -171,7 +171,8 @@
   (when (not (bytevector? bv))
     (error "bytevector->c-bytevector: bv argument must be bytevector" bv))
   (letrec* ((bytes-length (bytevector-length bv))
-            (pointer (make-c-bytevector bytes-length))
+            ;; Kawa gets stuck compiling if make-c-bytevector is used here
+            (pointer (c-malloc bytes-length))
             (looper (lambda (index)
                       (when (< index bytes-length)
                         (c-bytevector-u8-set! pointer

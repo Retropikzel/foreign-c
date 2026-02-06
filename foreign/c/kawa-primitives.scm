@@ -1,5 +1,3 @@
-(define (primitives-init set-procedure get-procedure) #t)
-
 (define arena (invoke-static java.lang.foreign.Arena 'global))
 (define method-handle-lookup (invoke-static java.lang.invoke.MethodHandles 'lookup))
 (define native-linker (invoke-static java.lang.foreign.Linker 'nativeLinker))
@@ -9,7 +7,7 @@
   (lambda (value type)
     (cond ((equal? type 'byte)
            (java.lang.Byte value))
-          ((equal? type 's8)
+          ((equal? type 'i8)
            (java.lang.Integer value))
           ((equal? type 'u8)
            (java.lang.Integer value))

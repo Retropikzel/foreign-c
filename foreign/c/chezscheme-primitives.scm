@@ -50,7 +50,7 @@
   (lambda (c-bytevector k)
     (foreign-ref 'void* c-bytevector k)))
 
-(define (make-c-null) (make-ftype-pointer void* 0))
+(define (make-c-null) (c-memset-address->pointer 0 0 0))
 (define (c-null? pointer)
   (and (ftype-pointer? pointer)
        (ftype-pointer-null? pointer)))

@@ -1,8 +1,3 @@
-(define os 'unix)
-(define implementation 'guile)
-(define arch 'x86_64)
-(define libc-name "c")
-
 (define type->native-type
   (lambda (type)
     (cond ((equal? type 'i8) int8)
@@ -74,15 +69,13 @@
   (bytevector-u8-ref (pointer->bytevector cbv (+ offset 100)) offset))
 
 (define (c-bytevector-pointer-set! cbv offset pointer)
-  (bytevector-set! (pointer->bytevector cbv (+ offset 100))
-                   'uint
-                   offset
-                   (pointer-address pointer)))
+  (bytevector-u64-native-set! (pointer->bytevector cbv (+ offset 100))
+                              offset
+                              (pointer-address pointer)))
 
 (define (c-bytevector-pointer-ref cbv offset)
-  (make-pointer (bytevector-ref (pointer->bytevector cbv (+ offset 100))
-                                'uint
-                                offset)))
+  (make-pointer (bytevector-u64-native-ref (pointer->bytevector cbv (+ offset 100))
+                                           offset)))
 
 (define (make-c-null) (make-pointer (pointer-address %null-pointer)))
 

@@ -1,8 +1,5 @@
-(import (scheme base)
-        (scheme write)
-        (foreign c chezscheme-primitives)
-        )
 
 (display "HERE")
+(write (make-c-bytevector 100))
 (newline)
 

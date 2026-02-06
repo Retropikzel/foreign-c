@@ -2,9 +2,9 @@ ARG SCHEME=chibi
 FROM docker.io/schemers/${SCHEME}:head
 RUN apt-get update && apt-get install -y make gcc libffi-dev git ca-certificates curl xz-utils
 WORKDIR /workdir
-COPY testvenv testvenv/
+COPY venv venv/
 COPY README.md .
 COPY Makefile .
-RUN . testvenv/bin/activate ;  echo "${PATH}"
-RUN ls
+#RUN . testvenv/bin/activate ;  echo "${PATH}"
+#RUN ls
 #RUN ./testvenv/bin/snow-chibi install retropikzel.hello
