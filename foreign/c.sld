@@ -204,6 +204,12 @@
 
     ;; Utilities
     libc-name)
+  (begin
+    (define os-name
+      (cond-expand
+	(windows 'windows)
+	(else (cond ((get-environment-variable "BE_HOST_CPU") 'haiku)
+		    (else 'unix))))))
   (include "c-r6rs-bytevectors.scm")
   (include "c-types.scm")
   (include "c-bytevector.scm")
@@ -224,10 +230,9 @@
     (chicken
       (begin
         (define libc-name
-          (cond-expand
-            (windows "ucrtbase")
-            (haiku "root")
-            (else "c")))
+	  (cond ((symbol=? os-name 'windows) "ucrtbase")
+	    ((symbol=? os-name 'haiku) "root")
+	    (else "c")))
         (define-c-library libc
                           '("stdlib.h" "stdio.h" "string.h")
                           libc-name

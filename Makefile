@@ -24,7 +24,7 @@ install:
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
-init-venv: build
+init-venv: #build
 	@rm -rf venv
 	@scheme-venv ${SCHEME} ${RNRS} venv
 	@echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > venv/test.scm
@@ -40,7 +40,8 @@ init-venv: build
 	@if [ "${SCHEME}" = "chicken" ]; then ./venv/bin/snow-chibi install --always-yes srfi.64; fi
 	@if [ "${SCHEME}-${RNRS}" = "mosh-r7rs" ]; then ./venv/bin/snow-chibi install --always-yes srfi.64; fi
 	#@if [ -d ../foreign-c ]; then make -C ../foreign-c build && ./venv/bin/snow-chibi install --always-yes ../foreign-c/*.tgz; fi
-	@if [ "${RNRS}" = "r7rs" ]; then ./venv/bin/snow-chibi install --always-yes ${PKG}; fi
+	#@if [ "${RNRS}" = "r7rs" ]; then ./venv/bin/snow-chibi install --always-yes ${PKG}; fi
+	cp -r foreign venv/lib/
 
 run-test: init-venv venv/include/libtest.h venv/lib/libtest.o venv/lib/libtest.so venv/lib/libtest.a
 	if [ "${RNRS}" = "r6rs" ]; then ./venv/bin/scheme-compile venv/test.sps; fi

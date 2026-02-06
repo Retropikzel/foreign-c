@@ -1,9 +1,7 @@
 (define libc-name
-  (cond-expand
-    (windows "ucrtbase")
-    (haiku "root")
-    (guile "c")
-    (else "c")))
+  (cond ((symbol=? os-name 'windows) "ucrtbase")
+	((symbol=? os-name 'haiku) "root")
+	(else "c")))
 
 (define-c-library libc
                   '("stdlib.h" "stdio.h" "string.h")
