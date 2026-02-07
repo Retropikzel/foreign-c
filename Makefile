@@ -47,10 +47,10 @@ run-test: init-venv venv/include/libtest.h venv/lib/libtest.o venv/lib/libtest.s
 	if [ "${RNRS}" = "r7rs" ]; then VENV_CSC_ARGS="-L -ltest" ./venv/bin/scheme-compile venv/test.scm; fi
 	LD_LIBRARY_PATH=venv/lib ./venv/test
 
-run-test-docker: venv
-	#docker build --build-arg SCHEME=${SCHEME} --tag=foreign-c-${SCHEME}-${RNRS} -f Dockerfile.test .
-	#docker run schemers/${SCHEME}:head foreign-c-${SCHEME}-${RNRS} sh -c ". venv/bin/activate && make SCHEME=${SCHEME} RNRS=${RNRS} run-test"
-	#docker run -v "${PWD}:${PWD}" -w "${PWD}" schemers/${SCHEME}:head sh -c "apt-get update && apt-get install -y make && make SCHEME=${SCHEME} RNRS=${RNRS} run-test"
+run-test-docker: init-venv
+	./venv/bin/docker-build
+	if [ "${RNRS}" = "r6rs" ]; then ./venv/bin/docker-run sh -c "scheme-compile test.sps && ./test" ;fi
+	if [ "${RNRS}" = "r7rs" ]; then ./venv/bin/docker-run sh -c "scheme-compile test.scm && ./test" ;fi
 
 ## C libraries for testing
 

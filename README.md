@@ -13,9 +13,6 @@ See REFERENCE.md
     - At the time only 0.11 is out so build from git
 - Chicken >= 5.4.0 < 6
     - R7RS
-- Gauche > 0.9.15
-    - R7RS
-    - At the time support is work in progress in fork or pull request https://github.com/Retropikzel/Gauche
 - Guile >= 3
     - R6RS
     - R7RS
@@ -59,6 +56,9 @@ See REFERENCE.md
     - R7RS
 - Gambit
     - R7RS
+- Gauche
+    - R7RS
+    - Waiting for Gauche to support dynamic FFI
 - Gerbil
     - R7RS
 - Mit-Scheme

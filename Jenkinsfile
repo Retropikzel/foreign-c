@@ -1,7 +1,7 @@
 pipeline {
     agent {
-        docker {
-            image 'retropikzel1/test-scheme'
+        dockerfile {
+            filename 'Dockerfile.jenkins'
             label 'docker-x86_64'
             args '--user=root --privileged -v /var/run/docker.sock:/var/run/docker.sock'
         }
@@ -13,48 +13,25 @@ pipeline {
     }
 
     parameters {
-        string(name: 'R6RS_SCHEMES', defaultValue: 'chezscheme guile ikarus ironscheme mosh racket sagittarius', description: '')
-        string(name: 'R7RS_SCHEMES', defaultValue: 'chibi chicken gauche guile mosh racket sagittarius stklos ypsilon', description: '')
+        string(name: 'RNRS', defaultValue: 'r6rs r7rs', description: '')
+        string(name: 'SCHEMES', defaultValue: 'chezscheme guile ikarus ironscheme mosh racket sagittarius', description: '')
     }
 
     stages {
-        stage('Init') {
-            steps {
-                sh "apt-get update && apt-get install -y libffi-dev build-essential make"
-            }
-        }
-
         stage('Tests') {
-            parallel {
-                stage('R6RS x86_64 Debian') {
-                    steps {
-                        script {
-                            params.R6RS_SCHEMES.split().each { SCHEME ->
-                                stage("${SCHEME}") {
-                                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                        sh "timeout 6000 make SCHEME=${SCHEME} test-r6rs-docker"
-                                    }
+            steps {
+                script {
+                    params.RNRS.split().each { RNRS ->
+                        params.SCHEMES.split().each { SCHEME ->
+                            stage("${RNRS} ${SCHEME}") {
+                                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                    sh "make RNRS=${RNRS} SCHEME=${SCHEME} run-test-docker"
                                 }
                             }
                         }
                     }
                 }
-                stage('R7RS x86_64 Debian') {
-                    steps {
-                        script {
-                            params.R7RS_SCHEMES.split().each { SCHEME ->
-                                stage("${SCHEME}") {
-                                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                        sh "timeout 6000 make SCHEME=${SCHEME} test-r7rs-docker"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
             }
         }
-
     }
 }

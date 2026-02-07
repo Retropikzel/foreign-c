@@ -1,2 +1,2 @@
-FROM retropikzel1/test-scheme
-RUN apk add make gcc
+FROM docker.io/debian
+RUN apt-get update && apt-get -y install git ca-certificates make
