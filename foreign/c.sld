@@ -1,11 +1,5 @@
 (define-library
   (foreign c)
-  (import (scheme base)
-          (scheme write)
-          (scheme char)
-          (scheme file)
-          (scheme process-context)
-          (scheme inexact))
   ;; SCHEME-primitives.scm must implement:
   ;; size-of-type
   ;; align-of-type
@@ -20,23 +14,29 @@
   ;; c-null?
   (cond-expand
     ;(capyscheme (import (foreign c capyscheme-primitives)))
-    (chezscheme (import (only (chezscheme)
-                              syntax-case
-                              syntax
-                              identifier?
-                              with-syntax
-                              datum->syntax-object
-                              datum
-                              gensym
-                              append!))
+    (chezscheme (import (chezscheme)
+                        (srfi :0)
+                        (srfi :98))
                 (include "c/chezscheme-primitives.scm")
                 (export foreign-procedure
                         type->native-type
                         make-c-null
                         c-null?))
-    (chibi (include-shared "c/chibi-primitives")
+    (chibi (import (scheme base)
+                   (scheme write)
+                   (scheme char)
+                   (scheme file)
+                   (scheme process-context)
+                   (scheme inexact))
+           (include-shared "c/chibi-primitives")
            (include "c/chibi-primitives.scm"))
-    (chicken (import (chicken base)
+    (chicken (import (scheme base)
+                     (scheme write)
+                     (scheme char)
+                     (scheme file)
+                     (scheme process-context)
+                     (scheme inexact)
+                     (chicken base)
                      (chicken foreign)
                      (chicken locative)
                      (chicken syntax)
@@ -52,36 +52,85 @@
                      define-c-procedure)
              (include "c/chicken-primitives.scm"))
     ;(cyclone (import (foreign c cyclone-primitives)))
-    ;(gambit (import (foreign c gambit-primitives)))
-    (gauche (import (rename (gauche ffi)
-                            (size-of-type gauche:size-of-type)
-                            (align-of-type gauche:align-of-type)))
-            (include "c/gauche-primitives.scm"))
-    (guile (import (system foreign)
-                   (system foreign-library))
+    ;(gambit (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact)) (include "c/gambit-primitives.scm"))
+    ;(gauche (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact)) ;(rename (gauche ffi) (size-of-type gauche:size-of-type) (align-of-type gauche:align-of-type)) (include "c/gauche-primitives.scm"))
+    (guile (import (scheme base)
+                   (scheme write)
+                   (scheme char)
+                   (scheme file)
+                   (scheme process-context)
+                   (scheme inexact)
+                   (system foreign)
+                   (system foreign-library)
+                   (only (rnrs bytevectors)
+                         bytevector-u64-native-set!
+                         bytevector-u64-native-ref
+                         native-endianness))
            (include "c/guile-primitives.scm"))
-    (ikarus (import (ikarus foreign))
+    (ikarus (import (scheme base)
+                    (scheme write)
+                    (scheme char)
+                    (scheme file)
+                    (scheme process-context)
+                    (scheme inexact)
+                    (ikarus foreign))
             (include "c/ikarus-primitives.scm"))
-    (ironscheme (import (ironscheme clr)
+    (ironscheme (import (scheme base)
+                        (scheme write)
+                        (scheme char)
+                        (scheme file)
+                        (scheme process-context)
+                        (scheme inexact)
+                        (ironscheme clr)
                         (ironscheme clr internal)
                         (ironscheme ffi))
                 (include "c/ironscheme-primitives.scm"))
-    (kawa (include "c/kawa-primitives.scm"))
+    (kawa (import (scheme base)
+                  (scheme write)
+                  (scheme char)
+                  (scheme file)
+                  (scheme process-context)
+                  (scheme inexact))
+          (include "c/kawa-primitives.scm"))
     ;(mit-scheme (import (foreign c mit-scheme-primitives)))
     ;(larceny (import (foreign c larceny-primitives)))
-    (mosh (import (mosh ffi))
+    (mosh (import (scheme base)
+                  (scheme write)
+                  (scheme char)
+                  (scheme file)
+                  (scheme process-context)
+                  (scheme inexact)
+                  (mosh ffi))
           (include "c/mosh-primitives.scm"))
-    (racket (import (ffi winapi)
+    (racket (import (scheme base)
+                    (scheme write)
+                    (scheme char)
+                    (scheme file)
+                    (scheme process-context)
+                    (scheme inexact)
+                    (ffi winapi)
                     (compatibility mlist)
                     (ffi unsafe)
                     (ffi vector))
             (include "c/racket-primitives.scm"))
-    (sagittarius (import (except (sagittarius ffi)
+    (sagittarius (import (scheme base)
+                         (scheme write)
+                         (scheme char)
+                         (scheme file)
+                         (scheme process-context)
+                         (scheme inexact)
+                         (except (sagittarius ffi)
                                  c-free
                                  c-malloc
                                  define-c-struct))
                  (include "c/sagittarius-primitives.scm"))
-    (stklos (import (only (stklos)
+    (stklos (import (scheme base)
+                    (scheme write)
+                    (scheme char)
+                    (scheme file)
+                    (scheme process-context)
+                    (scheme inexact)
+                    (only (stklos)
                           %make-callback
                           make-external-function
                           allocate-bytes
@@ -99,8 +148,16 @@
                     free-bytes
                     file-exists?
                     c-bytevector-pointer-set!
-                    c-bytevector-pointer-ref))
-    (ypsilon (import (ypsilon c-ffi)
+                    c-bytevector-pointer-ref
+                    calculate-struct-members
+                    calculate-struct-size))
+    (ypsilon (import (scheme base)
+                     (scheme write)
+                     (scheme char)
+                     (scheme file)
+                     (scheme process-context)
+                     (scheme inexact)
+                     (ypsilon c-ffi)
                      (ypsilon c-types)
                      (only (core)
                            define-macro
@@ -147,16 +204,46 @@
 
     ;; Utilities
     libc-name)
+  (begin
+    (define os-name
+      (cond-expand
+	(windows 'windows)
+	(else (cond ((get-environment-variable "BE_HOST_CPU") 'haiku)
+		    (else 'unix))))))
+  (include "c-r6rs-bytevectors.scm")
+  (include "c-types.scm")
+  (include "c-bytevector.scm")
+  (include "c-call-with-address-of.scm")
+  (include "c-struct.scm")
   (cond-expand
-    (chezscheme
-      (import (only (rnrs bytevectors) native-endianness)))
-    (r6rs
-      (import (only (rnrs bytevectors) native-endianness)))
-    (guile
-      (import (only (rnrs bytevectors) native-endianness)))
-    (else
+    (chicken
       (begin
-        (define (native-endianness)
-          (cond-expand (big-endian 'big) (else 'little))))))
-  (include "c.scm"))
+        (define-syntax define-c-library
+          (syntax-rules ()
+            ((_ scheme-name headers object-name options)
+             (begin
+               (define scheme-name #t)
+               (shared-object-load headers)))))))
+    (else (include "c-define-c-library.scm")))
+
+  (cond-expand
+    (chicken
+      (begin
+        (define libc-name
+	  (cond ((symbol=? os-name 'windows) "ucrtbase")
+	    ((symbol=? os-name 'haiku) "root")
+	    (else "c")))
+        (define-c-library libc
+                          '("stdlib.h" "stdio.h" "string.h")
+                          libc-name
+                          '((additional-versions ("0" "6"))))
+
+        (define-c-procedure c-malloc libc 'malloc 'pointer '(int))
+        (define-c-procedure c-free libc 'free 'void '(pointer))
+        (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
+        (define-c-procedure c-calloc libc 'calloc 'pointer '(int int))
+        (define-c-procedure c-perror libc 'perror 'void '(pointer))
+        (define (c-memset-address->pointer address value offset) (address->pointer address))
+        (define (c-memset-pointer->address pointer value offset) (pointer->address pointer))))
+    (else (include "c-libc.scm"))))
 

@@ -22,6 +22,39 @@
            ((equal? type 'pointer) 'void*)
            ((equal? type 'void) 'void)))))
 
+(define size-of-type
+  (lambda (type)
+    (foreign-sizeof (type->native-type type))))
+
+(define align-of-type
+  (lambda (type)
+    (foreign-alignof (type->native-type type))))
+
+(define shared-object-load
+  (lambda (path options)
+    (load-shared-object path)))
+
+(define c-bytevector-u8-set!
+  (lambda (c-bytevector k byte)
+    (foreign-set! 'unsigned-8 c-bytevector k byte)))
+
+(define c-bytevector-u8-ref
+  (lambda (c-bytevector k)
+    (foreign-ref 'unsigned-8 c-bytevector k)))
+
+(define c-bytevector-pointer-set!
+  (lambda (c-bytevector k pointer)
+    (foreign-set! 'void* c-bytevector k pointer)))
+
+(define c-bytevector-pointer-ref
+  (lambda (c-bytevector k)
+    (foreign-ref 'void* c-bytevector k)))
+
+(define (make-c-null) (c-memset-address->pointer 0 0 0))
+(define (c-null? pointer)
+  (and (ftype-pointer? pointer)
+       (ftype-pointer-null? pointer)))
+
 (define c-bytevector?
   (lambda (object)
     (or (number? object)
@@ -152,36 +185,3 @@
                             ,(symbol->string (cadr c-name))
                             ,native-argument-types
                             ,native-return-type)))))
-
-(define size-of-type
-  (lambda (type)
-    (foreign-sizeof (type->native-type type))))
-
-(define align-of-type
-  (lambda (type)
-    (foreign-alignof (type->native-type type))))
-
-(define shared-object-load
-  (lambda (path options)
-    (load-shared-object path)))
-
-(define c-bytevector-u8-set!
-  (lambda (c-bytevector k byte)
-    (foreign-set! 'unsigned-8 c-bytevector k byte)))
-
-(define c-bytevector-u8-ref
-  (lambda (c-bytevector k)
-    (foreign-ref 'unsigned-8 c-bytevector k)))
-
-(define c-bytevector-pointer-set!
-  (lambda (c-bytevector k pointer)
-    (foreign-set! 'void* c-bytevector k pointer)))
-
-(define c-bytevector-pointer-ref
-  (lambda (c-bytevector k)
-    (foreign-ref 'void* c-bytevector k)))
-
-(define (make-c-null) (make-ftype-pointer void* 0))
-(define (c-null? pointer)
-  (and (ftype-pointer? pointer)
-       (ftype-pointer-null? pointer)))

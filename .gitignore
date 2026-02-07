@@ -71,3 +71,6 @@ srfi
 test.sps
 testvenv
 scheme-venv
+test.sps
+venv
+OLD*

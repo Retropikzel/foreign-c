@@ -49,7 +49,7 @@
         ((equal? type 'float) 'float)
         ((equal? type 'double) 'double)
         ((equal? type 'void) 'void)
-        ((equal? type 'pointer) 'void*)
+        ((equal? type 'pointer) 'intptr)
         (error "Unsupported type: " type)))
 
 (define c-bytevector?
@@ -60,19 +60,36 @@
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
+       (begin
+         (display "HERE: ")
+         (write shared-object)
+         (newline)
+         (write c-name)
+         (newline)
+         (write return-type)
+         (newline)
+         (write argument-types)
+         (newline)
        ((make-ffi-callout (type->native-type return-type)
                           (map type->native-type argument-types))
         (cond-expand
           (windows (dlsym shared-object (symbol->string c-name)))
-          (else (apply (pinvoke-call libc dlsym void* (void* string))
-                       (list shared-object (symbol->string c-name))))))))))
+          (else (apply (pinvoke-call libc dlsym intptr (intptr string))
+                       (list shared-object (symbol->string c-name)))))))))))
 
 (define shared-object-load
   (lambda (path options)
-    (cond-expand
-      (windows (dlopen path))
-      (else (apply (pinvoke-call libc dlopen void* (string int))
-                   (list path 0))))))
+    (let ((shared-object
+            (cond-expand
+              (windows (dlopen path))
+              (else (apply (pinvoke-call libc dlopen intptr (string))
+                           (list path))))))
+      (display "HERE: shared-object ")
+      (write shared-object)
+      (newline)
+      (if (c-null? shared-object)
+        (error "Could not load library" path)
+        shared-object))))
 
 (define c-bytevector-u8-set!
   (lambda (c-bytevector k byte)
@@ -96,7 +113,7 @@
   (lambda (c-bytevector k)
     (read-intptr c-bytevector k)))
 
-(define make-c-null null-pointer)
+(define (make-c-null) (c-memset-address->pointer 0 0 0))
 (define (c-null? pointer)
   (and (pointer? pointer)
        (null-pointer? pointer)))

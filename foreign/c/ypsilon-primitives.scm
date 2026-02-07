@@ -56,14 +56,14 @@
     ;; or other bytevector-c-u*-set! procedures so we use
     ;; bytevector-c-int8-set!
     (bytevector-c-int8-set! (make-bytevector-mapping (+ c-bytevector k)
-                                                     (size-of-type 'uint8))
+                                                     (size-of-type 'u8))
                             0
                             byte)))
 
 (define c-bytevector-u8-ref
   (lambda (c-bytevector k)
       (bytevector-c-uint8-ref (make-bytevector-mapping (+ c-bytevector k)
-                                                      (size-of-type 'uint8))
+                                                      (size-of-type 'u8))
                              0)))
 
 (define c-bytevector-pointer-set!
@@ -145,3 +145,13 @@
          (native-argument-types (map type->native-type (cadr argument-types))))
     `(define ,scheme-name
        (c-callback ,native-return-type ,native-argument-types ,procedure))))
+
+(define (make-c-null) (c-memset-address->pointer 0 0 0))
+(define (c-null? pointer)
+  (call-with-current-continuation
+    (lambda (k)
+      (with-exception-handler
+        (lambda (x) (k #f))
+        (lambda ()
+          (and (c-bytevector? pointer)
+               (= (c-memset-pointer->address pointer 0 0) 0)))))))

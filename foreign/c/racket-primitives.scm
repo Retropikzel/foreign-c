@@ -1,5 +1,3 @@
-(define (primitives-init set-procedure get-procedure) #t)
-
 (define type->native-type
   (lambda (type)
     (cond ((equal? type 'i8) _byte)

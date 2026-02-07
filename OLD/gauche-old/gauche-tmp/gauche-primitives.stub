@@ -1,1 +1,0 @@
-(declcode "ScmObj size_of_int8() { return Scm_MakeInteger(sizeof(int8_t)); }")
