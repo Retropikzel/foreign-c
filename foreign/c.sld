@@ -121,8 +121,7 @@
                          (scheme inexact)
                          (except (sagittarius ffi)
                                  c-free
-                                 c-malloc
-                                 define-c-struct))
+                                 c-malloc))
                  (include "c/sagittarius-primitives.scm"))
     (stklos (import (scheme base)
                     (scheme write)
@@ -148,9 +147,7 @@
                     free-bytes
                     file-exists?
                     c-bytevector-pointer-set!
-                    c-bytevector-pointer-ref
-                    calculate-struct-members
-                    calculate-struct-size))
+                    c-bytevector-pointer-ref))
     (ypsilon (import (scheme base)
                      (scheme write)
                      (scheme char)
@@ -199,22 +196,18 @@
     ;; Pass pointer by address
     call-with-address-of
 
-    ;; Structs
-    define-c-struct
-
     ;; Utilities
     libc-name)
   (begin
     (define os-name
       (cond-expand
-	(windows 'windows)
-	(else (cond ((get-environment-variable "BE_HOST_CPU") 'haiku)
-		    (else 'unix))))))
+  (windows 'windows)
+  (else (cond ((get-environment-variable "BE_HOST_CPU") 'haiku)
+        (else 'unix))))))
   (include "c-r6rs-bytevectors.scm")
   (include "c-types.scm")
   (include "c-bytevector.scm")
   (include "c-call-with-address-of.scm")
-  (include "c-struct.scm")
   (cond-expand
     (chicken
       (begin
@@ -230,9 +223,9 @@
     (chicken
       (begin
         (define libc-name
-	  (cond ((symbol=? os-name 'windows) "ucrtbase")
-	    ((symbol=? os-name 'haiku) "root")
-	    (else "c")))
+    (cond ((symbol=? os-name 'windows) "ucrtbase")
+      ((symbol=? os-name 'haiku) "root")
+      (else "c")))
         (define-c-library libc
                           '("stdlib.h" "stdio.h" "string.h")
                           libc-name

@@ -3,13 +3,14 @@
 Table of content
 
 - Types
-- Libraries and procedures
-- c-bytevectors
-- Strings
-- Pass pointer by address
-- Structs
-- Utilities
-- Environment variables
+- (foreign c)
+    - c-bytevectors
+    - Strings
+    - Pass pointer by address
+    - Utilities
+    - Environment variables
+- (foreign c struct)
+- (foreign c stdio)
 
 ## Types
 
@@ -58,6 +59,7 @@ is after the foreign c name.
     - void
     - Can not be argument type, only return type
 
+## (foreign c)
 
 (**c-type-size** type)
 
@@ -66,9 +68,6 @@ Returns the size of given type.
 (**c-type-align** type)
 
 Returns the align of given type.
-
-
-## Libraries and procedures
 
 (**define-c-library** scheme-name headers object-name options)
 
@@ -99,7 +98,7 @@ Example:
                       '((additional-versions ("" "0" "6"))
                         (additional-paths ("."))))
 
-### Notes
+#### Notes
 
 - Do not cond-expand inside the arguments, that might lead to problems on some
 implementations.
@@ -126,13 +125,13 @@ Example:
     (c-puts "Message brought to you by foreign-c!")
 
 
-### Notes
+#### Notes
 
 - Pass the return-types using quote
     - As '(...) and not (list...)
 
 
-## c-bytevectors
+### c-bytevectors
 
 (**make-c-bytevector** size)</br>
 (**make-c-bytevector** size fill)
@@ -204,7 +203,7 @@ added to the the returned integer. Offset must be an integer.
 Returns the bytevector in the integer address.
 
 
-## Strings
+### Strings
 
 (**string->c-utf8** str)
 
@@ -218,7 +217,7 @@ Returns a newly allocated string whose character sequence is
 encoded by the given c-bytevector. If c-bytevector is null empty string is
 returned.
 
-## Pass pointer by address
+### Pass pointer by address
 
 (**call-with-address-of** cbv thunk)
 
@@ -247,8 +246,42 @@ Calling from Scheme:
 The passed c-bytevector, in example named cbv, should only be used **after**
 call to call-with-addres-of ends.
 
+### Utilities
 
-## Structs
+**libc-name**
+
+Name of the C standard library on the current operating system. Supported OS:
+
+- Windows
+- Linux
+- Haiku
+
+See foreign/c/libc.scm to see which headers are included and what shared
+libraries are loaded.
+
+Example:
+
+    (define-c-library libc '("stdlib.h") libc-name '("" "6"))
+    (define-c-procedure c-puts libc 'puts 'int '(pointer))
+    (c-puts "Message brought to you by foreign-c!")
+
+
+### Environment variables
+
+Setting environment variables like this on Windows works for this library:
+
+    set "FOREIGN_C_LOAD_PATH=C:\Program Files (x86)/foo/bar"
+
+
+
+#### FOREIGN\_C_\_LOAD\_PATH
+
+To add more paths to where foreign c looks for libraries set
+FOREIGN\_C\_LOAD\_PATH to paths separated by ; on windows, and : on other
+operating systems.
+
+
+## (foreign c struct)
 
 (**define-c-struct** name members struct-cbv (field-name field-type accessor modifier) ...)
 
@@ -298,37 +331,4 @@ Example:
 (newline)
 
 
-## Utilities
-
-**libc-name**
-
-Name of the C standard library on the current operating system. Supported OS:
-
-- Windows
-- Linux
-- Haiku
-
-See foreign/c/libc.scm to see which headers are included and what shared
-libraries are loaded.
-
-Example:
-
-    (define-c-library libc '("stdlib.h") libc-name '("" "6"))
-    (define-c-procedure c-puts libc 'puts 'int '(pointer))
-    (c-puts "Message brought to you by foreign-c!")
-
-
-## Environment variables
-
-Setting environment variables like this on Windows works for this library:
-
-    set "FOREIGN_C_LOAD_PATH=C:\Program Files (x86)/foo/bar"
-
-
-
-### FOREIGN\_C_\_LOAD\_PATH
-
-To add more paths to where foreign c looks for libraries set
-FOREIGN\_C\_LOAD\_PATH to paths separated by ; on windows, and : on other
-operating systems.
-
+## (foreign c stdio)
