@@ -43,4 +43,6 @@ RUN mkdir -p /root/.snow && echo "()" > /root/.snow/config.scm
 WORKDIR /workdir
 ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
-
+COPY Makefile .
+COPY tests tests/
+COPY foreign foreign/

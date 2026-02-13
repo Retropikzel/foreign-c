@@ -71,16 +71,16 @@ run-test-system: libtest.so libtest.o libtest.a snow build
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (retropikzel ctrf) (foreign c))" > run-test.scm
 	echo "(test-runner-current (ctrf-runner))" >> run-test.scm
 	cat tests/${TEST}.scm >> run-test.scm
-	akku install akku-r7rs
+	if [ "${RNRS}" = "r6rs" ]; then akku install akku-r7rs; fi
 	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --always-yes retropikzel.ctrf; fi
 	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --always-yes ${PKG}; fi
 	if [ "${RNRS}" = "r6rs" ]; then COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib run-test.sps; fi
-	if [ "${RNRS}" = "r7rs" ]; then COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -I." compile-scheme run-test.scm; fi
+	if [ "${RNRS}" = "r7rs" ]; then COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I./tests/c-include" compile-scheme run-test.scm; fi
 	LD_LIBRARY_PATH=. ./run-test
 
 run-test-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} -f Dockerfile.test --tag=foreign-c-${SCHEME}-${RNRS} .
-	docker run -v "${PWD}:/workdir" -w /workdir foreign-c-${SCHEME}-${RNRS} sh -c "make SCHEME=${SCHEME} RNRS=${RNRS} run-test-system"
+	docker run -v "${PWD}/logs:/workdir/logs" -w /workdir foreign-c-${SCHEME}-${RNRS} sh -c "make SCHEME=${SCHEME} RNRS=${RNRS} TEST=${TEST} run-test-system ; mv *.json logs/ || true"
 
 ## C libraries for testing
 
