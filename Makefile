@@ -2,6 +2,9 @@ VERSION=0.13.7
 SCHEME=chibi
 RNRS=r7rs
 DOCKERIMG=${SCHEME}:head
+ifeq "${SCHEME}" "chicken"
+DOCKERIMG=${SCHEME}:latest
+endif
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
 TEST=main
