@@ -75,3 +75,4 @@ test.sps
 venv*
 OLD*
 a.out
+run-test*

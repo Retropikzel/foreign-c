@@ -13,20 +13,31 @@ pipeline {
     }
 
     parameters {
-        string(name: 'RNRS', defaultValue: 'r6rs r7rs', description: '')
-        string(name: 'SCHEMES', defaultValue: 'chezscheme guile ikarus ironscheme mosh racket sagittarius', description: '')
+        string(name: 'R6RS_SCHEMES', defaultValue: 'chezscheme guile ikarus ironscheme mosh racket sagittarius ypsilon', description: '')
+        string(name: 'R7RS_SCHEMES', defaultValue: 'chibi chicken guile kawa mosh racket sagittarius stklos ypsilon', description: '')
     }
 
     stages {
-        stage('Tests') {
+        stage('Test R6RS') {
             steps {
                 script {
-                    params.RNRS.split().each { RNRS ->
-                        params.SCHEMES.split().each { SCHEME ->
-                            stage("${RNRS} ${SCHEME}") {
-                                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                    sh "make RNRS=${RNRS} SCHEME=${SCHEME} run-test-docker"
-                                }
+                    params.R6RS_SCHEMES.split().each { SCHEME ->
+                        stage("${SCHEME}") {
+                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                sh "make RNRS=${RNRS} SCHEME=${SCHEME} run-test-docker"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage('Test R7RS') {
+            steps {
+                script {
+                    params.R7RS_SCHEMES.split().each { SCHEME ->
+                        stage("${SCHEME}") {
+                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                sh "make RNRS=${RNRS} SCHEME=${SCHEME} run-test-docker"
                             }
                         }
                     }

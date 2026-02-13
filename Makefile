@@ -1,6 +1,7 @@
 VERSION=0.13.7
 SCHEME=chibi
 RNRS=r7rs
+DOCKERIMG=${SCHEME}:head
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
 TEST=main
@@ -26,7 +27,7 @@ install:
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
-run-test: libtest.so libtest.o libtest.a build
+run-test-venv: libtest.so libtest.o libtest.a build
 	rm -rf venv
 	scheme-venv ${SCHEME} ${RNRS} venv
 	echo "(import (rnrs) (srfi :64) (foreign c))" > venv/test.sps
@@ -56,9 +57,27 @@ run-test: libtest.so libtest.o libtest.a build
 	if [ "${RNRS}" = "r7rs" ]; then CSC_OPTIONS="-L -ltest -I." ./venv/bin/scheme-compile ./venv/test.scm; fi
 	LD_LIBRARY_PATH=. ./venv/test
 
+snow:
+	snow-chibi install --impls=generic --always-yes --install-source-dir=snow --install-library-dir=snow retropikzel.ctrf
+	snow-chibi install --impls=generic --always-yes --install-source-dir=snow --install-library-dir=snow srfi.64
+
+run-test-system: libtest.so libtest.o libtest.a snow build
+	echo "(import (rnrs) (srfi :64) (retropikzel ctrf) (foreign c))" > run-test.sps
+	echo "(test-runner-current (ctrf-runner))" >> run-test.sps
+	cat tests/${TEST}.scm >> run-test.sps
+	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (retropikzel ctrf) (foreign c))" > run-test.scm
+	echo "(test-runner-current (ctrf-runner))" >> run-test.scm
+	cat tests/${TEST}.scm >> run-test.scm
+	akku install akku-r7rs
+	snow-chibi install --impls=${SCHEME} --always-yes retropikzel.ctrf
+	snow-chibi install --impls=${SCHEME} --always-yes ${PKG}
+	if [ "${RNRS}" = "r6rs" ]; then COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib run-test.sps; fi
+	if [ "${RNRS}" = "r7rs" ]; then COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -I." compile-scheme run-test.scm; fi
+	LD_LIBRARY_PATH=. ./run-test
+
 run-test-docker:
-	docker build -f Dockerfile.test --tag=foreign-c-${SCHEME}-${RNRS} .
-	docker run -v "${PWD}:/workdir" -w /workdir foreign-c-${SCHEME}-${RNRS} sh -c "make SCHEME=${SCHEME} RNRS=${RNRS} run-test"
+	docker build --build-arg IMAGE=${DOCKERIMG} -f Dockerfile.test --tag=foreign-c-${SCHEME}-${RNRS} .
+	docker run -v "${PWD}:/workdir" -w /workdir foreign-c-${SCHEME}-${RNRS} sh -c "make SCHEME=${SCHEME} RNRS=${RNRS} run-test-system"
 
 ## C libraries for testing
 
