@@ -69,8 +69,8 @@ run-test-system: libtest.so libtest.o libtest.a snow build
 	echo "(test-runner-current (ctrf-runner))" >> run-test.scm
 	cat tests/${TEST}.scm >> run-test.scm
 	akku install akku-r7rs
-	snow-chibi install --impls=${SCHEME} --always-yes retropikzel.ctrf
-	snow-chibi install --impls=${SCHEME} --always-yes ${PKG}
+	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --always-yes retropikzel.ctrf; fi
+	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --always-yes ${PKG}; fi
 	if [ "${RNRS}" = "r6rs" ]; then COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib run-test.sps; fi
 	if [ "${RNRS}" = "r7rs" ]; then COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -I." compile-scheme run-test.scm; fi
 	LD_LIBRARY_PATH=. ./run-test
