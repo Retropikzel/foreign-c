@@ -72,6 +72,7 @@ run-test-system: libtest.so libtest.o libtest.a snow build
 	echo "(test-runner-current (ctrf-runner))" >> run-test.scm
 	cat tests/${TEST}.scm >> run-test.scm
 	if [ "${RNRS}" = "r6rs" ]; then akku install akku-r7rs; fi
+	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --always-yes srfi.64; fi
 	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --always-yes retropikzel.ctrf; fi
 	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --always-yes ${PKG}; fi
 	if [ "${RNRS}" = "r6rs" ]; then COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib run-test.sps; fi
