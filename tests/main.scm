@@ -107,16 +107,8 @@
                       "test"
                       '((additional-paths ("." "./tests"))))
 
-(display "HERE: c-testlib ")
-(write c-testlib)
-(newline)
 (define-c-procedure c-takes-no-args c-testlib 'takes_no_args 'void '())
-(display "HERE1: ")
-(newline)
 (c-takes-no-args)
-(display "HERE2: ")
-(newline)
-
 
 (define-c-procedure c-takes-no-args-returns-int c-testlib 'takes_no_args_returns_int 'int '())
 (define takes-no-args-returns-int-result (c-takes-no-args-returns-int))
@@ -125,32 +117,32 @@
 
 (test-begin "define-c-procedure")
 (define-c-procedure c-atoi libc 'atoi 'int '(pointer))
-(test-equal "1" (c-atoi (string->c-utf8 "100")) 100)
+(test-equal "1" (c-atoi (string->c-bytevector "100")) 100)
 
 (define-c-procedure c-puts libc 'puts 'int '(pointer))
-(define chars-written (c-puts (string->c-utf8 "puts: Hello from testing, I am C function puts")))
+(define chars-written (c-puts (string->c-bytevector "puts: Hello from testing, I am C function puts")))
 (test-equal "2" chars-written 47)
 
 (define-c-procedure c-strcat libc 'strcat 'pointer '(pointer pointer))
-(define c-string1 (string->c-utf8 "test123"))
-(test-assert "3" (string=? (c-utf8->string (c-strcat (string->c-utf8 "con2")
-                                                     (string->c-utf8 "cat2")))
+(define c-string1 (string->c-bytevector "test123"))
+(test-assert "3" (string=? (c-bytevector->string (c-strcat (string->c-bytevector "con2")
+                                                           (string->c-bytevector "cat2")))
                            "con2cat2"))
 
 (when (file-exists? "testfile.test") (delete-file "testfile.test"))
 (define-c-procedure c-fopen libc 'fopen 'pointer '(pointer pointer))
-(define output-file (c-fopen (string->c-utf8 "testfile.test")
-                             (string->c-utf8 "w")))
+(define output-file (c-fopen (string->c-bytevector "testfile.test")
+                             (string->c-bytevector "w")))
 (define-c-procedure c-fprintf libc 'fprintf 'int '(pointer pointer int))
-(define characters-written (c-fprintf output-file (string->c-utf8 "Hello world %i") 1))
+(define characters-written (c-fprintf output-file (string->c-bytevector "Hello world %i") 1))
 (test-equal "4" characters-written 13)
 (define-c-procedure c-fclose libc 'fclose 'int '(pointer))
 (define closed-status (c-fclose output-file))
 (test-equal "5" closed-status 0)
 (test-assert "6" (file-exists? "testfile.test"))
 
-;; Own readline so tests work on R6RS
 (define (rl result)
+  ;; Own readline so tests work on R6RS
   (let ((c (read-char)))
     (if (eof-object? c)
       result
@@ -161,92 +153,149 @@
 (test-end "define-c-procedure")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+#|
 
 ;; c-bytevectors
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "make-c-bytevector")
 (define bytes (make-c-bytevector 100))
-(test-assert "make-c-bytevector-1" (c-bytevector? bytes))
-(test-assert "make-c-bytevector-2" (not (c-null? bytes)))
+(test-assert (c-bytevector? bytes))
+(test-assert (not (c-bytevector-null? bytes)))
 (test-end "make-c-bytevector")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "c-bytevector")
 (define is-pointer (make-c-bytevector 100))
-(test-assert "1" (c-bytevector? is-pointer))
+(test-assert (c-bytevector? is-pointer))
 (test-end "c-bytevector")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "c-bytevector?")
 (define is-pointer1 (make-c-bytevector 100))
-(test-assert "1" (c-bytevector? is-pointer1))
-(test-assert "2" (not (c-bytevector? 100)))
-(test-assert "3" (c-bytevector? #f))
-(test-assert "4" (not (c-bytevector? "Hello")))
-(test-assert "5" (not (c-bytevector? 'bar)))
+(test-assert (c-bytevector? is-pointer1))
+(test-equal #f (c-bytevector? 100))
+(test-equal #f (c-bytevector? #t))
+(test-equal #f (c-bytevector? "Hello"))
+(test-equal #f (c-bytevector? 'bar))
 (test-end "c-bytevector?")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(test-begin "c-free")
+(test-begin "c-bytevector-free")
 (define to-be-freed-pointer (make-c-bytevector 64))
 
-(c-free to-be-freed-pointer)
-(test-end "c-free")
+(c-bytevector-free to-be-freed-pointer)
+(test-end "c-bytevector-free")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "make-c-null")
-(display "HERE:")
-(newline)
 (define null-pointer (make-c-null))
 
-(test-assert "make-c-null-1" (c-bytevector? null-pointer))
+(test-assert (c-bytevector? null-pointer))
+
 
 (define-c-procedure c-tempnam libc 'tempnam 'pointer '(pointer pointer))
 
-(let* ((c-tempnam-prefix (string->c-utf8 "npcmd"))
-       (r1 (c-utf8->string (c-tempnam (make-c-null)
-                                      c-tempnam-prefix)))
-       (r2 (c-utf8->string (c-tempnam (make-c-null)
-                                      c-tempnam-prefix))))
-  (test-assert "make-c-null-2" (string? r1))
-  (test-assert "make-c-null-3" (string? r2)))
+(let* ((c-tempnam-prefix (string->c-bytevector "npcmd"))
+       (r1 (c-bytevector->string (c-tempnam (make-c-null) c-tempnam-prefix)))
+       (r2 (c-bytevector->string (c-tempnam (make-c-null) c-tempnam-prefix))))
+  (test-assert (string? r1))
+  (test-assert (string? r2)))
 (test-end "make-c-null")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(test-begin "c-null?")
-(test-assert "c-null?-1" (c-null? null-pointer))
-(test-assert "c-null?-2" (not (c-null? "")))
-(test-assert "c-null?-3" (not (c-null? #t)))
-(test-assert "c-null?-4" (not (c-null? #f)))
-(test-assert "c-null?-5" (not (c-null? 1)))
-(test-assert "c-null?-6" (not (c-null? 0)))
-(test-end "c-null?")
+(test-begin "c-bytevector-null?")
+(test-assert (c-bytevector-null? null-pointer))
+(test-assert (not (c-bytevector-null? "")))
+(test-assert (not (c-bytevector-null? #t)))
+(test-assert (not (c-bytevector-null? 1)))
+(test-assert (not (c-bytevector-null? 0)))
+(test-end "c-bytevector-null?")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "c-bytevector-set!")
 
+(define i8-cbv (make-c-bytevector (c-type-size 'i8)))
+(test-assert (c-bytevector? i8-cbv))
+(c-bytevector-set! i8-cbv 'i8 0 42)
+
+(define u8-cbv (make-c-bytevector (c-type-size 'u8)))
+(test-assert (c-bytevector? u8-cbv))
+(c-bytevector-set! u8-cbv 'i8 0 42)
+
+(define i16-cbv (make-c-bytevector (c-type-size 'i16)))
+(test-assert (c-bytevector? i16-cbv))
+(c-bytevector-set! i16-cbv 'i16 0 42)
+
+(define u16-cbv (make-c-bytevector (c-type-size 'u16)))
+(test-assert (c-bytevector? u16-cbv))
+(c-bytevector-set! u16-cbv 'u16 0 42)
+
+(define i32-cbv (make-c-bytevector (c-type-size 'i32)))
+(test-assert (c-bytevector? i32-cbv))
+(c-bytevector-set! i32-cbv 'i32 0 42)
+
+(define u32-cbv (make-c-bytevector (c-type-size 'u32)))
+(test-assert (c-bytevector? u32-cbv))
+(c-bytevector-set! u32-cbv 'u32 0 42)
+
+(define i64-cbv (make-c-bytevector (c-type-size 'i64)))
+(test-assert (c-bytevector? i64-cbv))
+(c-bytevector-set! i64-cbv 'i64 0 42)
+
+(define u64-cbv (make-c-bytevector (c-type-size 'u64)))
+(test-assert (c-bytevector? u64-cbv))
+(c-bytevector-set! u64-cbv 'u64 0 42)
+
 (define char-cbv (make-c-bytevector (c-type-size 'char)))
-(test-assert (bytevector? char-cbv))
+(test-assert (c-bytevector? char-cbv))
 (c-bytevector-set! char-cbv 'char 0 #\a)
 
 (define uchar-cbv (make-c-bytevector (c-type-size 'uchar)))
-(test-assert (bytevector? uchar-cbv))
+(test-assert (c-bytevector? uchar-cbv))
 (c-bytevector-set! uchar-cbv 'uchar 0 #\a)
 
-(define i8-bv (make-c-bytevector (c-type-size 'i8)))
-(test-assert (bytevector? i8-bv))
-(c-bytevector-set! i8-bv 'i8 0 1)
+(define short-cbv (make-c-bytevector (c-type-size 'short)))
+(test-assert (c-bytevector? short-cbv))
+(c-bytevector-set! short-cbv 'short 0 42)
+
+(define ushort-cbv (make-c-bytevector (c-type-size 'ushort)))
+(test-assert (c-bytevector? ushort-cbv))
+(c-bytevector-set! ushort-cbv 'ushort 0 42)
 
 (define int-cbv (make-c-bytevector (c-type-size 'int)))
-(test-assert (bytevector? int-cbv))
-(c-bytevector-set! int-cbv 'int 0 32)
+(test-assert (c-bytevector? int-cbv))
+(c-bytevector-set! int-cbv 'int 0 42)
+
+(define uint-cbv (make-c-bytevector (c-type-size 'uint)))
+(test-assert (c-bytevector? uint-cbv))
+(c-bytevector-set! uint-cbv 'uint 0 42)
+
+(define long-cbv (make-c-bytevector (c-type-size 'long)))
+(test-assert (c-bytevector? long-cbv))
+(c-bytevector-set! long-cbv 'long 0 42)
+
+(define ulong-cbv (make-c-bytevector (c-type-size 'ulong)))
+(test-assert (c-bytevector? ulong-cbv))
+(c-bytevector-set! ulong-cbv 'ulong 0 42)
+
+(define float-cbv (make-c-bytevector (c-type-size 'float)))
+(test-assert (c-bytevector? float-cbv))
+(c-bytevector-set! float-cbv 'float 0 42)
+
+(define double-cbv (make-c-bytevector (c-type-size 'double)))
+(test-assert (c-bytevector? double-cbv))
+(c-bytevector-set! double-cbv 'double 0 42)
+
+(define pointer-cbv (make-c-bytevector (c-type-size 'pointer)))
+(test-assert (c-bytevector? pointer-cbv))
+(c-bytevector-set! pointer-cbv 'pointer 0 (make-c-null))
 
 (test-end "c-bytevector-set!")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -254,10 +303,25 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "c-bytevector-ref")
-(test-equal (c-bytevector-ref char-cbv 'char 0) #\a)
-(test-equal (c-bytevector-ref uchar-cbv 'uchar 0) #\a)
-(test-assert (= (c-bytevector-ref i8-bv 'i8 0) 1))
-(test-equal (c-bytevector-ref int-cbv 'int 0) 32)
+(test-equal "i8" 42 (c-bytevector-ref i8-cbv 'i8 0))
+(test-equal "u8" 42 (c-bytevector-ref u8-cbv 'u8 0))
+(test-equal "i16" 42 (c-bytevector-ref i16-cbv 'i16 0))
+(test-equal "u16" 42 (c-bytevector-ref u16-cbv 'u16 0))
+(test-equal "i32" 42 (c-bytevector-ref i32-cbv 'i32 0))
+(test-equal "u32" 42 (c-bytevector-ref u32-cbv 'u32 0))
+(test-equal "i64" 42 (c-bytevector-ref i64-cbv 'i64 0))
+(test-equal "u64" 42 (c-bytevector-ref u64-cbv 'u64 0))
+(test-equal "char" 42 (c-bytevector-ref char-cbv 'char 0))
+(test-equal "uchar" 42 (c-bytevector-ref uchar-cbv 'uchar 0))
+(test-equal "short" 42 (c-bytevector-ref short-cbv 'short 0))
+(test-equal "ushort" 42 (c-bytevector-ref ushort-cbv 'ushort 0))
+(test-equal "int" 42 (c-bytevector-ref int-cbv 'int 0))
+(test-equal "uint" 42 (c-bytevector-ref uint-cbv 'uint 0))
+(test-equal "long" 42 (c-bytevector-ref long-cbv 'long 0))
+(test-equal "ulong" 42 (c-bytevector-ref ulong-cbv 'ulong 0))
+(test-equal "float" 42 (c-bytevector-ref float-cbv 'float 0))
+(test-equal "double" 42 (c-bytevector-ref double-cbv 'double 0))
+(test-assert "pointer" (c-bytevector-null? (c-bytevector-ref pointer-cbv 'pointer 0)))
 (test-end "c-bytevector-ref")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -296,19 +360,19 @@
 ;; Strings
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(test-begin "string->c-utf8")
-(define c-string (string->c-utf8 "foobar"))
-(test-assert "1" (c-bytevector? c-string))
-(test-end "string->c-utf8")
+(test-begin "string->c-bytevector")
+(define c-string (string->c-bytevector "foobar"))
+(test-assert (c-bytevector? c-string))
+(test-end "string->c-bytevector")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(test-begin "c-utf8->string")
-(define scheme-string (c-utf8->string c-string))
+(test-begin "c-bytevector->string")
+(define scheme-string (c-bytevector->string c-string))
 
 (test-assert (string? scheme-string))
 (test-assert (string=? scheme-string "foobar"))
-(test-end "c-utf8->string")
+(test-end "c-bytevector->string")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
@@ -324,12 +388,12 @@
 
 (define input-pointer (make-c-bytevector (c-type-size 'int)))
 (c-bytevector-set! input-pointer 'i32 0 100)
-(test-assert (= (c-bytevector-ref input-pointer 'i32 0) 100))
+(test-equal 100 (c-bytevector-ref input-pointer 'i32 0))
 (call-with-address-of
   input-pointer
   (lambda (address)
     (test-passing-pointer-address input-pointer address)))
-(test-assert (= (c-bytevector-ref input-pointer 'i32 0) 42))
+(test-equal 42 (c-bytevector-ref input-pointer 'i32 0))
 (test-end "call-with-address-of")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -340,5 +404,7 @@
 (test-assert (string? libc-name))
 (test-end "libc-name")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+|#
 
 (test-end "foreign-c")

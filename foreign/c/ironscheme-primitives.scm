@@ -52,7 +52,7 @@
         ((equal? type 'pointer) 'intptr)
         (error "Unsupported type: " type)))
 
-(define c-bytevector?
+#;(define c-bytevector?
   (lambda (object)
     (pointer? object)))
 
@@ -60,22 +60,17 @@
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
-       (begin
-         (display "HERE: ")
-         (write shared-object)
-         (newline)
-         (write c-name)
-         (newline)
-         (write return-type)
-         (newline)
-         (write argument-types)
-         (newline)
-       ((make-ffi-callout (type->native-type return-type)
-                          (map type->native-type argument-types))
-        (cond-expand
-          (windows (dlsym shared-object (symbol->string c-name)))
-          (else (apply (pinvoke-call libc dlsym intptr (intptr string))
-                       (list shared-object (symbol->string c-name)))))))))))
+       (lambda args
+         (let ((internal
+                 ((make-ffi-callout (type->native-type return-type)
+                                    (map type->native-type argument-types))
+                  (cond-expand
+                    (windows (dlsym shared-object (symbol->string c-name)))
+                    (else (apply (pinvoke-call libc dlsym intptr (intptr string))
+                                 (list shared-object (symbol->string c-name))))))))
+           (if (equal? return-type 'pointer)
+             (internal-make-c-bytevector (apply internal (map value->native-value args)))
+             (apply internal (map value->native-value args)))))))))
 
 (define shared-object-load
   (lambda (path options)
@@ -84,14 +79,9 @@
               (windows (dlopen path))
               (else (apply (pinvoke-call libc dlopen intptr (string))
                            (list path))))))
-      (display "HERE: shared-object ")
-      (write shared-object)
-      (newline)
-      (if (c-null? shared-object)
-        (error "Could not load library" path)
-        shared-object))))
+      shared-object)))
 
-(define c-bytevector-u8-set!
+(define c-u8-set!
   (lambda (c-bytevector k byte)
     (clr-static-call Marshal
                      (WriteByte IntPtr Int32 Byte)
@@ -99,21 +89,21 @@
                      k
                      (clr-static-call Convert (ToByte Int32) byte))))
 
-(define c-bytevector-u8-ref
+(define c-u8-ref
   (lambda (c-bytevector k)
     (clr-static-call Convert
                      (ToInt32 Byte)
                      (clr-static-call Marshal (ReadByte IntPtr Int32) c-bytevector k))))
 
-(define c-bytevector-pointer-set!
+(define c-pointer-set!
   (lambda (c-bytevector k pointer)
     (write-intptr! c-bytevector k pointer)))
 
-(define c-bytevector-pointer-ref
+(define c-pointer-ref
   (lambda (c-bytevector k)
     (read-intptr c-bytevector k)))
 
-(define (make-c-null) (c-memset-address->pointer 0 0 0))
-(define (c-null? pointer)
+(define (c-null) (c-memset-address->pointer 0 0 0))
+#;(define (c-null? pointer)
   (and (pointer? pointer)
        (null-pointer? pointer)))

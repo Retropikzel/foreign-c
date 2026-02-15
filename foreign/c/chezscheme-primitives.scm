@@ -34,28 +34,28 @@
   (lambda (path options)
     (load-shared-object path)))
 
-(define c-bytevector-u8-set!
+(define c-u8-set!
   (lambda (c-bytevector k byte)
     (foreign-set! 'unsigned-8 c-bytevector k byte)))
 
-(define c-bytevector-u8-ref
+(define c-u8-ref
   (lambda (c-bytevector k)
     (foreign-ref 'unsigned-8 c-bytevector k)))
 
-(define c-bytevector-pointer-set!
+(define c-pointer-set!
   (lambda (c-bytevector k pointer)
     (foreign-set! 'void* c-bytevector k pointer)))
 
-(define c-bytevector-pointer-ref
+(define c-pointer-ref
   (lambda (c-bytevector k)
     (foreign-ref 'void* c-bytevector k)))
 
-(define (make-c-null) (c-memset-address->pointer 0 0 0))
-(define (c-null? pointer)
+(define (c-null) (c-memset-address->pointer 0 0 0))
+#;(define (c-null? pointer)
   (and (ftype-pointer? pointer)
        (ftype-pointer-null? pointer)))
 
-(define c-bytevector?
+#;(define c-bytevector?
   (lambda (object)
     (or (number? object)
         (ftype-pointer? object))))
@@ -176,12 +176,20 @@
                 (else return-type))))
     (if (null? argument-types)
       `(define ,scheme-name
-         (foreign-procedure #f
-                            ,(symbol->string (cadr c-name))
-                            ()
-                            ,native-return-type))
+         (lambda args
+           (let ((internal (foreign-procedure #f
+                                              ,(symbol->string (cadr c-name))
+                                              ()
+                                              ,native-return-type)))
+             (if (symbol=? ,return-type 'pointer)
+               (internal-make-c-bytevector (apply internal (map value->native-value args)))
+               (apply internal (map value->native-value args))))))
       `(define ,scheme-name
-         (foreign-procedure #f
-                            ,(symbol->string (cadr c-name))
-                            ,native-argument-types
-                            ,native-return-type)))))
+         (lambda args
+           (let ((internal (foreign-procedure #f
+                                              ,(symbol->string (cadr c-name))
+                                              ,native-argument-types
+                                              ,native-return-type)))
+             (if (symbol=? ,return-type 'pointer)
+               (internal-make-c-bytevector (apply internal (map value->native-value args)))
+               (apply internal (map value->native-value args)))))))))

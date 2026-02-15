@@ -52,16 +52,16 @@
   (lambda (path options)
     (open-shared-library path)))
 
-(define c-bytevector?
+#;(define c-bytevector?
   (lambda (object)
     (pointer? object)))
 
-(define c-bytevector-u8-set! pointer-set-c-uint8!)
-(define c-bytevector-u8-ref pointer-ref-c-uint8)
-(define c-bytevector-pointer-set!
+(define c-u8-set! pointer-set-c-uint8!)
+(define c-u8-ref pointer-ref-c-uint8)
+(define c-pointer-set!
   (lambda (pointer offset value)
     (pointer-set-c-pointer! pointer offset value)))
-(define c-bytevector-pointer-ref
+(define c-pointer-ref
   (lambda (pointer offset)
     (pointer-ref-c-pointer pointer offset)))
 
@@ -94,10 +94,15 @@
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
-       (make-c-function shared-object
-                        (type->native-type return-type)
-                        c-name
-                        (map type->native-type argument-types))))))
+       (lambda args
+         (let ((internal
+                 (make-c-function shared-object
+                                  (type->native-type return-type)
+                                  c-name
+                                  (map type->native-type argument-types))))
+           (if (equal? return-type 'pointer)
+             (internal-make-c-bytevector (apply internal (map value->native-value args)))
+             (apply internal (map value->native-value args)))))))))
 
 (define-syntax define-c-callback
   (syntax-rules ()
@@ -107,5 +112,5 @@
                         (map type->native-type argument-types)
                         procedure)))))
 
-(define (make-c-null) (integer->pointer 0))
-(define c-null? pointer-null?)
+(define (c-null) (integer->pointer 0))
+#;(define c-null? pointer-null?)

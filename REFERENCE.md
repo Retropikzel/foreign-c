@@ -163,12 +163,14 @@ is unspecified.
 
 (**make-c-null**)
 
-Returns a null C pointer.
+Returns a null C pointer. On some implementations #f is null pointer, this
+behaviour should not be used or counted on.
 
 
 (**c-null?** obj)
 
-Returns #t if obj is a null C pointer, otherwise returns #f.
+Returns #t if obj is a null C pointer, otherwise returns #f. On some
+implementations #f is null pointer, this behaviour should not be used or counted on.
 
 
 (**c-bytevector-set! cbv type offset value**)

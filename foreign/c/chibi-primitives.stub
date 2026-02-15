@@ -6,13 +6,13 @@
 (c-system-include "ffi.h")
 (c-link "ffi")
 
-;; make-c-null
-(c-declare "void* make_c_null() { return NULL; }")
-(define-c (maybe-null pointer void*) make-c-null ())
+;; c-null
+(c-declare "void* c_null() { return NULL; }")
+(define-c (maybe-null pointer void*) c-null ())
 
 ;; c-null?
-(c-declare "sexp is_null(void* pointer) { if(pointer == NULL) { return SEXP_TRUE; } else { return SEXP_FALSE; } }")
-(define-c sexp (internal-c-null? is_null) ((maybe-null pointer void*)))
+;(c-declare "sexp is_null(void* pointer) { if(pointer == NULL) { return SEXP_TRUE; } else { return SEXP_FALSE; } }")
+;(define-c sexp (internal-c-null? is_null) ((maybe-null pointer void*)))
 
 ;; c-type-size
 (c-declare "
@@ -108,17 +108,17 @@
 (c-declare "sexp is_pointer(struct sexp_struct* object) { if(sexp_cpointerp(object)) { return SEXP_TRUE; } else { return SEXP_FALSE; } }")
 (define-c sexp (pointer? is_pointer) (sexp))
 
-(c-declare "void c_bytevector_u8_set(void* pointer, int offset, uint8_t value) { *(uint8_t*)((uint8_t*)pointer + offset) = value; }")
-(define-c void (c-bytevector-u8-set! c_bytevector_u8_set) ((maybe-null pointer void*) int uint8_t))
+(c-declare "void c_u8_set(void* pointer, int offset, uint8_t value) { *(uint8_t*)((uint8_t*)pointer + offset) = value; }")
+(define-c void (c-u8-set! c_u8_set) ((maybe-null pointer void*) int uint8_t))
 
-(c-declare "uint8_t c_bytevector_u8_ref (void* pointer, int offset) { return *(uint8_t*)((uint8_t*)pointer + offset); }")
-(define-c uint8_t (c-bytevector-u8-ref c_bytevector_u8_ref) ((maybe-null pointer void*) int))
+(c-declare "uint8_t c_u8_ref (void* pointer, int offset) { return *(uint8_t*)((uint8_t*)pointer + offset); }")
+(define-c uint8_t (c-u8-ref c_u8_ref) ((maybe-null pointer void*) int))
 
-(c-declare "void c_bytevector_pointer_set (void* pointer, int offset, void* value) { char* p = (char*)pointer + offset; *(char**)p = value; }")
-(define-c void (c-bytevector-pointer-set! c_bytevector_pointer_set) ((pointer void*) int (maybe-null pointer void*)))
+(c-declare "void c_pointer_set (void* pointer, int offset, void* value) { char* p = (char*)pointer + offset; *(char**)p = value; }")
+(define-c void (c-pointer-set! c_pointer_set) ((pointer void*) int (maybe-null pointer void*)))
 
-(c-declare "void* c_bytevector_pointer_ref (void* pointer, int offset) { char* p = (char*)pointer + offset; return (void*)*(char**)p;}")
-(define-c (maybe-null pointer void*) (c-bytevector-pointer-ref c_bytevector_pointer_ref) ((maybe-null pointer void*) int))
+(c-declare "void* c_pointer_ref (void* pointer, int offset) { char* p = (char*)pointer + offset; return (void*)*(char**)p;}")
+(define-c (maybe-null pointer void*) (c-pointer-ref c_pointer_ref) ((maybe-null pointer void*) int))
 
 (c-declare "ffi_cif cif;")
 (define-c (maybe-null pointer void*) dlsym ((maybe-null pointer void*) string))

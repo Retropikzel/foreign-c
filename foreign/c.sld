@@ -5,23 +5,26 @@
   ;; align-of-type
   ;; shared-object-load
   ;; define-c-procedure
-  ;; c-bytevector?
-  ;; c-bytevector-u8-ref
-  ;; c-bytevector-u8-set!
-  ;; c-bytevector-pointer-ref
-  ;; c-bytevector-pointer-set!
-  ;; make-c-null
-  ;; c-null?
+  ;; c-u8-ref
+  ;; c-u8-set!
+  ;; c-pointer-ref
+  ;; c-pointer-set!
+  ;; c-null
   (cond-expand
     ;(capyscheme (import (foreign c capyscheme-primitives)))
-    (chezscheme (import (chezscheme)
+    (chezscheme (import (except (chezscheme)
+                                native-endianness
+                                endianness)
                         (srfi :0)
                         (srfi :98))
+                (begin
+                  (define-record-type (<c-bytevector> internal-make-c-bytevector c-bytevector?)
+                    (fields
+                      (immutable pointer c-bytevector-pointer))))
                 (include "c/chezscheme-primitives.scm")
                 (export foreign-procedure
                         type->native-type
-                        make-c-null
-                        c-null?))
+                        make-c-null))
     (chibi (import (scheme base)
                    (scheme write)
                    (scheme char)
@@ -29,7 +32,12 @@
                    (scheme process-context)
                    (scheme inexact))
            (include-shared "c/chibi-primitives")
-           (include "c/chibi-primitives.scm"))
+           (include "c/chibi-primitives.scm")
+           (begin
+             (define-record-type <c-bytevector>
+               (internal-make-c-bytevector pointer)
+               c-bytevector?
+               (pointer c-bytevector-pointer))))
     (chicken (import (scheme base)
                      (scheme write)
                      (scheme char)
@@ -46,14 +54,20 @@
                      foreign-safe-lambda
                      foreign-value
                      unspecified
-                     u8->s8
-                     s8->u8
                      shared-object-load
-                     define-c-procedure)
+                     define-c-procedure
+                     bytevector-mod
+                     bytevector-div)
+             (begin
+               (define-record-type <c-bytevector>
+                 (internal-make-c-bytevector pointer)
+                 c-bytevector?
+                 (pointer c-bytevector-pointer)))
              (include "c/chicken-primitives.scm"))
     ;(cyclone (import (foreign c cyclone-primitives)))
     ;(gambit (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact)) (include "c/gambit-primitives.scm"))
     ;(gauche (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact)) ;(rename (gauche ffi) (size-of-type gauche:size-of-type) (align-of-type gauche:align-of-type)) (include "c/gauche-primitives.scm"))
+    ;; TODO
     (guile (import (scheme base)
                    (scheme write)
                    (scheme char)
@@ -66,6 +80,11 @@
                          bytevector-u64-native-set!
                          bytevector-u64-native-ref
                          native-endianness))
+           (begin
+               (define-record-type <c-bytevector>
+                 (internal-make-c-bytevector pointer)
+                 c-bytevector?
+                 (pointer c-bytevector-pointer)))
            (include "c/guile-primitives.scm"))
     (ikarus (import (scheme base)
                     (scheme write)
@@ -74,6 +93,11 @@
                     (scheme process-context)
                     (scheme inexact)
                     (ikarus foreign))
+           (begin
+               (define-record-type <c-bytevector>
+                 (internal-make-c-bytevector pointer)
+                 c-bytevector?
+                 (pointer c-bytevector-pointer)))
             (include "c/ikarus-primitives.scm"))
     (ironscheme (import (scheme base)
                         (scheme write)
@@ -84,6 +108,11 @@
                         (ironscheme clr)
                         (ironscheme clr internal)
                         (ironscheme ffi))
+           (begin
+               (define-record-type <c-bytevector>
+                 (internal-make-c-bytevector pointer)
+                 c-bytevector?
+                 (pointer c-bytevector-pointer)))
                 (include "c/ironscheme-primitives.scm"))
     (kawa (import (scheme base)
                   (scheme write)
@@ -91,6 +120,11 @@
                   (scheme file)
                   (scheme process-context)
                   (scheme inexact))
+          (begin
+            (define-record-type <c-bytevector>
+              (internal-make-c-bytevector pointer)
+              c-bytevector?
+              (pointer c-bytevector-pointer)))
           (include "c/kawa-primitives.scm"))
     ;(mit-scheme (import (foreign c mit-scheme-primitives)))
     ;(larceny (import (foreign c larceny-primitives)))
@@ -101,6 +135,11 @@
                   (scheme process-context)
                   (scheme inexact)
                   (mosh ffi))
+          (begin
+            (define-record-type <c-bytevector>
+              (internal-make-c-bytevector pointer)
+              c-bytevector?
+              (pointer c-bytevector-pointer)))
           (include "c/mosh-primitives.scm"))
     (racket (import (scheme base)
                     (scheme write)
@@ -112,6 +151,11 @@
                     (compatibility mlist)
                     (ffi unsafe)
                     (ffi vector))
+            (begin
+              (define-record-type <c-bytevector>
+                (internal-make-c-bytevector pointer)
+                c-bytevector?
+                (pointer c-bytevector-pointer)))
             (include "c/racket-primitives.scm"))
     (sagittarius (import (scheme base)
                          (scheme write)
@@ -120,9 +164,16 @@
                          (scheme process-context)
                          (scheme inexact)
                          (except (sagittarius ffi)
+                                 c-pointer
                                  c-free
                                  c-malloc))
+                 (begin
+                   (define-record-type <c-bytevector>
+                     (internal-make-c-bytevector pointer)
+                     c-bytevector?
+                     (pointer c-bytevector-pointer)))
                  (include "c/sagittarius-primitives.scm"))
+    ;; TODO
     (stklos (import (scheme base)
                     (scheme write)
                     (scheme char)
@@ -142,6 +193,11 @@
                           cpointer-ref-abs
                           c-size-of
                           void?))
+            (begin
+              (define-record-type <c-bytevector>
+                (internal-make-c-bytevector pointer)
+                c-bytevector?
+                (pointer c-bytevector-pointer)))
             (include "c/stklos-primitives.scm")
             (export make-external-function
                     free-bytes
@@ -161,6 +217,11 @@
                            syntax-case
                            bytevector-c-int8-set!
                            bytevector-c-uint8-ref))
+            (begin
+              (define-record-type <c-bytevector>
+                (internal-make-c-bytevector pointer)
+                c-bytevector?
+                (pointer c-bytevector-pointer)))
              (include "c/ypsilon-primitives.scm")
              (export c-function
                      bytevector-c-int8-set!
@@ -177,11 +238,13 @@
 
     ;; c-bytevectors
     make-c-bytevector
+    internal-make-c-bytevector
     c-bytevector
     c-bytevector?
-    c-free
+    c-bytevector-pointer
+    c-bytevector-free
     make-c-null
-    c-null?
+    c-bytevector-null?
     c-bytevector-set!
     c-bytevector-ref
     bytevector->c-bytevector
@@ -190,23 +253,25 @@
     integer->c-bytevector
 
     ;; Strings
-    string->c-utf8
-    c-utf8->string
+    string->c-bytevector
+    c-bytevector->string
 
     ;; Pass pointer by address
     call-with-address-of
 
     ;; Utilities
-    libc-name)
+    libc-name
+    value->native-value ;; TODO remove from exports
+    )
   (begin
     (define os-name
       (cond-expand
-  (windows 'windows)
-  (else (cond ((get-environment-variable "BE_HOST_CPU") 'haiku)
-        (else 'unix))))))
-  (include "c-r6rs-bytevectors.scm")
+        (windows 'windows)
+        (else (cond ((get-environment-variable "BE_HOST_CPU") 'haiku)
+                    (else 'unix))))))
   (include "c-types.scm")
   (include "c-bytevector.scm")
+  (include "c-value-to-native-value.scm")
   (include "c-call-with-address-of.scm")
   (cond-expand
     (chicken

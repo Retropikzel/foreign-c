@@ -46,11 +46,11 @@
           ((eq? type 'pointer) alignof:void*)
           ((eq? type 'callback) alignof:void*))))
 
-(define c-bytevector?
+#;(define c-bytevector?
   (lambda (object)
     (number? object)))
 
-(define c-bytevector-u8-set!
+(define c-u8-set!
   (lambda (c-bytevector k byte)
     ;; Ypsilon for some reason does not have bytevector-c-uint8-set!
     ;; or other bytevector-c-u*-set! procedures so we use
@@ -60,20 +60,20 @@
                             0
                             byte)))
 
-(define c-bytevector-u8-ref
+(define c-u8-ref
   (lambda (c-bytevector k)
       (bytevector-c-uint8-ref (make-bytevector-mapping (+ c-bytevector k)
                                                       (size-of-type 'u8))
                              0)))
 
-(define c-bytevector-pointer-set!
+(define c-pointer-set!
   (lambda (c-bytevector k pointer)
     (bytevector-c-void*-set! (make-bytevector-mapping (+ c-bytevector k)
                                                       (size-of-type 'pointer))
                              0
                              pointer)))
 
-(define c-bytevector-pointer-ref
+(define c-pointer-ref
   (lambda (c-bytevector k)
     (bytevector-c-void*-ref (make-bytevector-mapping (+ c-bytevector k)
                                                      (size-of-type 'pointer))
@@ -111,9 +111,14 @@
                     ((equal? type 'callback) 'void*)
                     (else (error "type->native-type -- No such type" type))))))
       `(define ,scheme-name
-         (c-function ,(type->native-type (cadr return-type))
-                     ,(cadr c-name)
-                     ,(map type->native-type (cadr argument-types)))))))
+         (lambda args
+           (let ((internal
+                   (c-function ,(type->native-type (cadr return-type))
+                               ,(cadr c-name)
+                               ,(map type->native-type (cadr argument-types)))))
+             (if (equal? ,return-type 'pointer)
+               (internal-make-c-bytevector (apply internal (map value->native-value args)))
+               (apply internal (map value->native-value args)))))))))
 
 (define-macro
   (define-c-callback scheme-name return-type argument-types procedure)
@@ -146,8 +151,8 @@
     `(define ,scheme-name
        (c-callback ,native-return-type ,native-argument-types ,procedure))))
 
-(define (make-c-null) (c-memset-address->pointer 0 0 0))
-(define (c-null? pointer)
+(define (c-null) (c-memset-address->pointer 0 0 0))
+#;(define (c-null? pointer)
   (call-with-current-continuation
     (lambda (k)
       (with-exception-handler

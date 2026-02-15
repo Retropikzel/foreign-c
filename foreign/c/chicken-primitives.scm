@@ -24,7 +24,7 @@
           ((equal? type 'struct) 'c-pointer)
           (else (error "type->native-type -- No such pffi type" type)))))
 
-(define c-bytevector?
+#;(define c-bytevector?
   (lambda (object)
     (pointer? object)))
 
@@ -61,13 +61,21 @@
              (return-type (type->native-type (cadr (list-ref expr 4))))
              (argument-types (if (null? (cdr (list-ref expr 5)))
                                (list)
-                               (map type->native-type
-                                    (cadr (list-ref expr 5))))))
+                               (map type->native-type (cadr (list-ref expr 5))))))
         (if (null? argument-types)
           `(define ,scheme-name
-             (foreign-safe-lambda ,return-type ,c-name))
+             (let ((internal (foreign-safe-lambda ,return-type ,c-name)))
+               (lambda args
+                 (if (equal? (quote ,return-type) 'c-pointer)
+                   (internal-make-c-bytevector (apply internal (map value->native-value args)))
+                   (apply internal (map value->native-value args))))))
           `(define ,scheme-name
-             (foreign-safe-lambda ,return-type ,c-name ,@ argument-types)))))))
+             (lambda args
+               (let ((internal (foreign-safe-lambda ,return-type ,c-name ,@ argument-types)))
+                 (if (equal? (quote ,return-type) 'c-pointer)
+                   (internal-make-c-bytevector (apply internal (map value->native-value args)))
+                   (apply internal (map value->native-value args)))))))))))
+
 
 #;(define-syntax define-c-callback
   (er-macro-transformer
@@ -169,25 +177,25 @@
                   `(foreign-declare ,(string-append "#include <" header ">")))
                 headers))))))
 
-(define c-bytevector-u8-ref
-  (lambda (c-bytevector k)
-    (pointer-u8-ref (pointer+ c-bytevector k))))
+(define c-u8-ref
+  (lambda (pointer k)
+    (pointer-u8-ref (pointer+ pointer k))))
 
-(define c-bytevector-u8-set!
-  (lambda (c-bytevector k byte)
-    (pointer-u8-set! (pointer+ c-bytevector k) byte)))
+(define c-u8-set!
+  (lambda (pointer k byte)
+    (pointer-u8-set! (pointer+ pointer k) byte)))
 
-(define c-bytevector-pointer-ref
-  (lambda (c-bytevector k)
-    (address->pointer (pointer-u64-ref (pointer+ c-bytevector k)))))
+(define c-pointer-ref
+  (lambda (pointer k)
+    (address->pointer (pointer-u64-ref (pointer+ pointer k)))))
 
-(define c-bytevector-pointer-set!
-  (lambda (c-bytevector k pointer)
-    (pointer-u64-set! (pointer+ c-bytevector k) (pointer->address pointer))))
+(define c-pointer-set!
+  (lambda (pointer k value-pointer)
+    (pointer-u64-set! (pointer+ pointer k) (pointer->address value-pointer))))
 
-(define (make-c-null) (foreign-value "NULL" c-pointer))
+(define (c-null) (foreign-value "NULL" c-pointer))
 
-(define c-null?
+#;(define c-null?
   (lambda (pointer)
     (if (and (not (pointer? pointer))
              pointer)

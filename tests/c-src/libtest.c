@@ -281,7 +281,7 @@ EXPORT struct test* test_new() {
 }
 
 EXPORT void takes_no_args() {
-    fprintf(stderr, "I take no arguments :)");
+    fprintf(stderr, "I take no arguments :)\n");
 
 }
 

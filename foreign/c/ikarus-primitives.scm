@@ -48,7 +48,7 @@
         ((equal? type 'void) 'void)
         (error "Unsupported type: " type)))
 
-(define c-bytevector?
+#;(define c-bytevector?
   (lambda (object)
     (pointer? object)))
 
@@ -56,33 +56,37 @@
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
-       ((make-c-callout (type->native-type return-type)
-                        (map type->native-type argument-types))
-        (dlsym shared-object (symbol->string c-name)))))))
+       (lambda args
+         (let ((internal
+                 ((make-c-callout (type->native-type return-type)
+                                  (map type->native-type argument-types))
+                  (dlsym shared-object (symbol->string c-name)))))
+           (if (equal? return-type 'pointer)
+             (internal-make-c-bytevector (apply internal (map value->native-value args)))
+             (apply internal (map value->native-value args)))))))))
 
 (define shared-object-load
   (lambda (path options)
     (dlopen path)))
 
-(define c-bytevector-u8-set!
+(define c-u8-set!
   (lambda (c-bytevector k byte)
     (pointer-set-c-char! c-bytevector k byte)))
 
-(define c-bytevector-u8-ref
+(define c-u8-ref
   (lambda (c-bytevector k)
     (pointer-ref-c-unsigned-char c-bytevector k)))
 
-(define c-bytevector-pointer-set!
+(define c-pointer-set!
   (lambda (c-bytevector k pointer)
     (pointer-set-c-pointer! c-bytevector k pointer)))
 
-(define c-bytevector-pointer-ref
+(define c-pointer-ref
   (lambda (c-bytevector k)
     (pointer-ref-c-pointer c-bytevector k)))
 
-(define (make-c-null)
-  (integer->pointer 0))
+(define (c-null) (integer->pointer 0))
 
-(define (c-null? pointer)
+#;(define (c-null? pointer)
   (and (pointer? pointer)
        (= (pointer->integer pointer) 0)))

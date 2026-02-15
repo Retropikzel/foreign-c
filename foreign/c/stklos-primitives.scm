@@ -1,5 +1,3 @@
-(define (primitives-init set-procedure get-procedure) #t)
-
 (define (shared-object-load path options) path)
 
 (define type->native-type
@@ -27,7 +25,7 @@
           ((equal? type 'callback) :pointer)
           (else (error "type->native-type -- No such pffi type" type)))))
 
-(define c-bytevector?
+#;(define c-bytevector?
   (lambda (object)
     (and (not (void? object))
          (cpointer? object))))
@@ -61,19 +59,27 @@
                  ((equal? type 'callback) :pointer)
                  (else (error "type->native-type -- No such pffi type" type)))))
        (define scheme-name
-         (make-external-function
-           (symbol->string c-name)
-           (map type->native-type argument-types)
-           (type->native-type return-type)
-           shared-object))))))
+         (lambda args
+           (let ((internal
+                   (make-external-function (symbol->string c-name)
+                                           (map type->native-type argument-types)
+                                           (type->native-type return-type)
+                                           shared-object)))
+             (if (equal? return-type 'pointer)
+               (internal-make-c-bytevector (apply internal (map value->native-value args)))
+               (apply internal (map value->native-value args))))))))))
 
-(define-syntax define-c-callback
+#;(define-syntax define-c-callback
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
      (define scheme-name
-       (%make-callback procedure
-                       (map type->native-type argument-types)
-                       (type->native-type return-type))))))
+       (lambda args
+         (let ((internal (%make-callback procedure
+                                         (map type->native-type argument-types)
+                                         (type->native-type return-type))))
+           (if (equal? return-type 'pointer)
+             (internal-make-c-bytevector (apply internal (map value->native-value args)))
+             (apply internal (map value->native-value args)))))))))
 
 (define size-of-type
   (lambda (type)
@@ -102,19 +108,19 @@
   (lambda (type)
     (size-of-type type)))
 
-(define c-bytevector-u8-set!
+(define c-u8-set!
   (lambda (pointer offset value)
     (cpointer-set-abs! pointer :uint8 value offset)))
 
-(define c-bytevector-u8-ref
+(define c-u8-ref
   (lambda (pointer offset)
     (cpointer-ref-abs pointer :uint8 offset)))
 
-(define c-bytevector-pointer-set!
+(define c-pointer-set!
   (lambda (pointer offset value)
     (cpointer-set-abs! pointer :pointer value offset)))
 
-(define c-bytevector-pointer-ref
+(define c-pointer-ref
   (lambda (pointer offset)
     (cpointer-ref-abs pointer :pointer offset)))
 
@@ -123,6 +129,5 @@
                  :return-type :pointer
                  :entry-name "memset")
 
-(define (make-c-null)
-  (stklos-address->pointer 0 0 0))
-(define c-null? cpointer-null?)
+(define (c-null) (stklos-address->pointer 0 0 0))
+;(define c-null? cpointer-null?)

@@ -85,7 +85,7 @@
 
 (define c-bytevector?
   (lambda (object)
-    (or (equal? object #f) ; False can be null pointer
+    (or (equal? object #f) ; #f counts as null pointer
         (pointer? object))))
 
 (define type->native-type
@@ -118,10 +118,7 @@
 
 (define make-c-function
   (lambda (shared-object c-name return-type argument-types)
-    ;(dlerror) ;; Clean all previous errors
-    (let ((c-function (dlsym shared-object c-name))
-          ;(maybe-dlerror (dlerror))
-          )
+    (let ((c-function (dlsym shared-object c-name)))
       (lambda arguments
         (let* ((return-pointer
                  (internal-ffi-call (length argument-types)
@@ -129,9 +126,9 @@
                                     (map type->libffi-type-number argument-types)
                                     c-function
                                     (size-of-type return-type)
-                                    arguments)))
+                                    (map value->native-value arguments))))
           (when (not (symbol=? return-type 'void))
-            (c-bytevector-ref return-pointer return-type 0)))))))
+              (c-bytevector-ref (internal-make-c-bytevector return-pointer) return-type 0)))))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()
@@ -154,8 +151,8 @@
        (make-c-callback return-type 'argument-types procedure))
      )))
 
-(define (c-null? pointer)
-  (or (equal? pointer #f) ;; #f counts as null pointer on chibi
+#;(define (c-null? pointer)
+  (or (equal? pointer #f) ;; #f counts as null pointer
       (and (c-bytevector? pointer)
            (internal-c-null? pointer))))
 

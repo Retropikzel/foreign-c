@@ -23,7 +23,7 @@
           ((equal? type 'callback) '*)
           (else #f))))
 
-(define c-bytevector?
+#;(define c-bytevector?
   (lambda (object)
     (pointer? object)))
 
@@ -31,10 +31,14 @@
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
-       (pointer->procedure (type->native-type return-type)
-                           (foreign-library-pointer shared-object
-                                                    (symbol->string c-name))
-                           (map type->native-type argument-types))))))
+       (lambda args
+         (let ((internal (pointer->procedure (type->native-type return-type)
+                                             (foreign-library-pointer shared-object
+                                                                      (symbol->string c-name))
+                                             (map type->native-type argument-types))))
+           (if (equal? return-type 'pointer)
+             (internal-make-c-bytevector (apply internal (map value->native-value args)))
+             (apply internal (map value->native-value args)))))))))
 
 (define-syntax define-c-callback
   (syntax-rules ()

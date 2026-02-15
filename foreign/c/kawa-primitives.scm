@@ -57,7 +57,7 @@
       ((equal? type 'struct) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
       (else #f))))
 
-(define c-bytevector?
+#;(define c-bytevector?
   (lambda (object)
     (string=? (invoke (invoke object 'getClass) 'getName)
               "jdk.internal.foreign.NativeMemorySegmentImpl")))
@@ -67,20 +67,23 @@
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
        (lambda vals
-         (invoke (invoke (cdr (assoc 'linker shared-object))
-                         'downcallHandle
-                         (invoke (invoke (cdr (assoc 'lookup shared-object))
-                                         'find
-                                         (symbol->string c-name))
-                                 'orElseThrow)
-                         (if (equal? return-type 'void)
-                           (apply (class-methods java.lang.foreign.FunctionDescriptor 'ofVoid)
-                                  (map type->native-type argument-types))
-                           (apply (class-methods java.lang.foreign.FunctionDescriptor 'of)
-                                  (type->native-type return-type)
-                                  (map type->native-type argument-types))))
-                 'invokeWithArguments
-                 (map value->object vals argument-types)))))))
+         (let ((result (invoke (invoke (cdr (assoc 'linker shared-object))
+                                       'downcallHandle
+                                       (invoke (invoke (cdr (assoc 'lookup shared-object))
+                                                       'find
+                                                       (symbol->string c-name))
+                                               'orElseThrow)
+                                       (if (equal? return-type 'void)
+                                         (apply (class-methods java.lang.foreign.FunctionDescriptor 'ofVoid)
+                                                (map type->native-type argument-types))
+                                         (apply (class-methods java.lang.foreign.FunctionDescriptor 'of)
+                                                (type->native-type return-type)
+                                                (map type->native-type argument-types))))
+                               'invokeWithArguments
+                               (map value->object (map value->native-value vals) argument-types))))
+           (if (equal? return-type 'pointer)
+             (internal-make-c-bytevector result)
+             result)))))))
 
 (define size-of-type
   (lambda (type)
@@ -117,7 +120,7 @@
           'withByteAlignment
           1))
 
-(define c-bytevector-u8-set!
+(define c-u8-set!
   (lambda (c-bytevector k byte)
     (invoke (invoke c-bytevector 'reinterpret INTEGER-MAX-VALUE)
             'set
@@ -125,7 +128,7 @@
             k
             byte)))
 
-(define c-bytevector-u8-ref
+(define c-u8-ref
   (lambda (c-bytevector k)
     (invoke (java.lang.Byte 1)
             'toUnsignedInt
@@ -140,7 +143,7 @@
           'withByteAlignment
           8))
 
-(define c-bytevector-pointer-set!
+(define c-pointer-set!
   (lambda (c-bytevector k pointer)
     (invoke (invoke c-bytevector 'reinterpret INTEGER-MAX-VALUE)
             'set
@@ -148,7 +151,7 @@
             k
             pointer)))
 
-(define c-bytevector-pointer-ref
+(define c-pointer-ref
   (lambda (c-bytevector k)
     (invoke (invoke c-bytevector 'reinterpret INTEGER-MAX-VALUE)
             'get
@@ -160,10 +163,10 @@
   (lambda ()
     (static-field java.lang.foreign.MemorySegment 'NULL)))
 
-(define (make-c-null)
+(define (c-null)
   (invoke-static java.lang.foreign.MemorySegment 'ofAddress 0))
 
-(define (c-null? pointer)
+#;(define (c-null? pointer)
   (and (c-bytevector? pointer)
        (equal? pointer (make-c-null))))
 

@@ -23,7 +23,7 @@
           ((equal? type 'callback) _pointer)
           (else #f))))
 
-(define c-bytevector?
+#;(define c-bytevector?
   (lambda (object)
     (cpointer? object)))
 
@@ -31,10 +31,14 @@
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
-       (get-ffi-obj c-name
-                    shared-object
-                    (_cprocedure (mlist->list (map type->native-type argument-types))
-                                 (type->native-type return-type)))))))
+       (lambda args
+         (let ((internal (get-ffi-obj c-name
+                                      shared-object
+                                      (_cprocedure (mlist->list (map type->native-type argument-types))
+                                                   (type->native-type return-type)))))
+           (if (equal? return-type 'pointer)
+             (internal-make-c-bytevector (apply internal (map value->native-value args)))
+             (apply internal (map value->native-value args)))))))))
 
 
 (define-syntax define-c-callback
@@ -63,22 +67,22 @@
                                          (list #f))))
       (ffi-lib path))))
 
-(define c-bytevector-u8-set!
+(define c-u8-set!
   (lambda (c-bytevector k byte)
     (ptr-set! c-bytevector _uint8 'abs k byte)))
 
-(define c-bytevector-u8-ref
+(define c-u8-ref
   (lambda (c-bytevector k)
     (ptr-ref c-bytevector _uint8 'abs k)))
 
-(define c-bytevector-pointer-set!
+(define c-pointer-set!
   (lambda (c-bytevector k pointer)
     (ptr-set! c-bytevector _pointer 'abs k pointer)))
 
-(define c-bytevector-pointer-ref
+(define c-pointer-ref
   (lambda (c-bytevector k)
     (ptr-ref c-bytevector _pointer 'abs k)))
 
-(define (make-c-null) #f)
-(define (c-null? pointer) (and (cpointer? pointer) (equal? pointer #f)))
+(define (c-null) #f)
+#;(define (c-null? pointer) (and (cpointer? pointer) (equal? pointer #f)))
 
