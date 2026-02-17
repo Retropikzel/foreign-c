@@ -92,10 +92,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "define-c-library")
-(define-c-library libc
-                  '("stdlib.h" "stdio.h" "string.h" "stdio.h")
-                  #f
-                  '((additional-versions ("0" "6"))))
+(define-c-library libc '("stdlib.h" "stdio.h" "string.h" "stdio.h") #f)
 
 (test-assert "test-assert libc" (if libc #t #f))
 

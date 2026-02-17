@@ -1,8 +1,4 @@
-(define-c-library libc
-                  '("stdlib.h" "stdio.h" "string.h")
-                  #f
-                  '((additional-versions ("0" "6"))))
-
+(define-c-library libc '("stdlib.h" "stdio.h" "string.h") #f)
 (define-c-procedure c-malloc libc 'malloc 'pointer '(int))
 (define-c-procedure c-calloc libc 'calloc 'pointer '(int int))
 (define-c-procedure c-perror libc 'perror 'void '(pointer))

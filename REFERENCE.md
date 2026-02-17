@@ -69,11 +69,11 @@ Returns the size of given type.
 
 Returns the align of given type.
 
-(**define-c-library** scheme-name headers object-name options)
+(**define-c-library** scheme-name headers object-name . options)
 
 Takes a scheme-name to bind the library to, list of C headers as
-strings, shared-object name or #f and options. If shared-object name is given
-as #f then platforms C library is loaded.
+strings, shared-object name or #f and optionally options. If shared-object name
+is given as #f then platforms C library is used.
 
 The C header strings should not contain "<" or ">", they are added
 automatically.
@@ -91,11 +91,13 @@ Options:
 - additional-paths
     - Give additional paths to search shared objects from
 
-Example:
+Examples:
 
-    (define-c-library libc
-                      (list "stdlib.h")
-                      #f
+    (define-c-library libc (list "stdio.h") #f)
+
+    (define-c-library libcurl
+                      (list "curl/curl.h")
+                      "curl"
                       '((additional-versions ("" "0" "6"))
                         (additional-paths ("."))))
 

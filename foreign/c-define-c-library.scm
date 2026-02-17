@@ -1,5 +1,7 @@
 (define-syntax define-c-library
   (syntax-rules ()
+    ((_ scheme-name headers object-name)
+     (define-c-library scheme-name headers object-name '()))
     ((_ scheme-name headers object-name options)
      (define scheme-name
        (let* ((os (cond-expand (windows 'windows) (guile 'unix) (else 'unix)))
@@ -32,13 +34,18 @@
                                   (cadr (assoc 'additional-paths internal-options))
                                   (list)))
               (additional-versions
+                (append
                 (if (assoc 'additional-versions internal-options)
                   (map (lambda (version)
                          (if (number? version)
                            (number->string version)
                            version))
                        (cadr (assoc 'additional-versions internal-options)))
-                  (list)))
+                  (list))
+                (if (and (not object-name)
+                         (string=? so-name "c"))
+                  '("0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "10")
+                  (list))))
               (slash (if (symbol=? os 'windows) "\\" "/"))
               (auto-load-paths
                 (if (symbol=? os 'windows)
