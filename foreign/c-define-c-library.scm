@@ -4,6 +4,11 @@
      (define scheme-name
        (let* ((os (cond-expand (windows 'windows) (guile 'unix) (else 'unix)))
               (arch (cond-expand (i386 'i386) (guile 'x86_64) (else 'x86_64)))
+              (so-name (if object-name
+                         object-name
+                         (cond ((equal? os 'windows) "ucrtbase")
+                               ((get-environment-variable "BE_HOST_CPU") "root")
+                               (else "c"))))
               (string-split
                 (lambda (str mark)
                   (let* ((str-l (string->list str))
@@ -26,13 +31,14 @@
               (additional-paths (if (assoc 'additional-paths internal-options)
                                   (cadr (assoc 'additional-paths internal-options))
                                   (list)))
-              (additional-versions (if (assoc 'additional-versions internal-options)
-                                     (map (lambda (version)
-                                            (if (number? version)
-                                              (number->string version)
-                                              version))
-                                          (cadr (assoc 'additional-versions internal-options)))
-                                     (list)))
+              (additional-versions
+                (if (assoc 'additional-versions internal-options)
+                  (map (lambda (version)
+                         (if (number? version)
+                           (number->string version)
+                           version))
+                       (cadr (assoc 'additional-versions internal-options)))
+                  (list)))
               (slash (if (symbol=? os 'windows) "\\" "/"))
               (auto-load-paths
                 (if (symbol=? os 'windows)
@@ -117,7 +123,7 @@
                          (string-append path
                                         slash
                                         platform-lib-prefix
-                                        object-name
+                                        so-name
                                         (if (symbol=? os 'windows)
                                           ""
                                           platform-file-extension)
@@ -134,7 +140,7 @@
                        (library-path-without-suffixes (string-append path
                                                                      slash
                                                                      platform-lib-prefix
-                                                                     object-name)))
+                                                                     so-name)))
                    (set! searched-paths (append searched-paths (list library-path)))
                    (when (and (not shared-object)
                               (file-exists? library-path))
@@ -148,7 +154,7 @@
            paths)
          (if (not shared-object)
            (error "Could not load shared object: "
-                  (list (cons 'object object-name)
+                  (list (cons 'object so-name)
                         (cons 'searched-paths searched-paths)
                         (cons 'platform-file-extension platform-file-extension)
                         (cons 'versions versions)))

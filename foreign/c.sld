@@ -173,7 +173,6 @@
                      c-bytevector?
                      (pointer c-bytevector-pointer)))
                  (include "c/sagittarius-primitives.scm"))
-    ;; TODO
     (stklos (import (scheme base)
                     (scheme write)
                     (scheme char)
@@ -202,8 +201,8 @@
             (export make-external-function
                     free-bytes
                     file-exists?
-                    c-bytevector-pointer-set!
-                    c-bytevector-pointer-ref))
+                    c-pointer-set!
+                    c-pointer-ref))
     (ypsilon (import (scheme base)
                      (scheme write)
                      (scheme char)
@@ -259,16 +258,8 @@
     ;; Pass pointer by address
     call-with-address-of
 
-    ;; Utilities
-    libc-name
     value->native-value ;; TODO remove from exports
     )
-  (begin
-    (define os-name
-      (cond-expand
-        (windows 'windows)
-        (else (cond ((get-environment-variable "BE_HOST_CPU") 'haiku)
-                    (else 'unix))))))
   (include "c-types.scm")
   (include "c-bytevector.scm")
   (include "c-value-to-native-value.scm")
@@ -287,13 +278,9 @@
   (cond-expand
     (chicken
       (begin
-        (define libc-name
-    (cond ((symbol=? os-name 'windows) "ucrtbase")
-      ((symbol=? os-name 'haiku) "root")
-      (else "c")))
         (define-c-library libc
                           '("stdlib.h" "stdio.h" "string.h")
-                          libc-name
+                          #f
                           '((additional-versions ("0" "6"))))
 
         (define-c-procedure c-malloc libc 'malloc 'pointer '(int))

@@ -1,11 +1,6 @@
-(define libc-name
-  (cond ((symbol=? os-name 'windows) "ucrtbase")
-        ((symbol=? os-name 'haiku) "root")
-        (else "c")))
-
 (define-c-library libc
                   '("stdlib.h" "stdio.h" "string.h")
-                  libc-name
+                  #f
                   '((additional-versions ("0" "6"))))
 
 (define-c-procedure c-malloc libc 'malloc 'pointer '(int))

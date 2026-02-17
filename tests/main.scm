@@ -94,7 +94,7 @@
 (test-begin "define-c-library")
 (define-c-library libc
                   '("stdlib.h" "stdio.h" "string.h" "stdio.h")
-                  libc-name
+                  #f
                   '((additional-versions ("0" "6"))))
 
 (test-assert "test-assert libc" (if libc #t #f))
@@ -395,14 +395,6 @@
     (test-passing-pointer-address input-pointer address)))
 (test-equal 42 (c-bytevector-ref input-pointer 'i32 0))
 (test-end "call-with-address-of")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Utilities
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(test-begin "libc-name")
-(test-assert (string? libc-name))
-(test-end "libc-name")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 |#

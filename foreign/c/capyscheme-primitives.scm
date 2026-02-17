@@ -1,14 +1,3 @@
-(define c-bytevector-set! #f)
-(define c-bytevector-ref #f)
-(define (primitives-init set-procedure get-procedure)
-  (set! c-bytevector-set! set-procedure)
-  (set! c-bytevector-ref get-procedure))
-
-(define os 'unix)
-(define implementation 'guile)
-(define arch 'x86_64)
-(define libc-name "c")
-
 (define type->native-type
   (lambda (type)
     (cond ((equal? type 'i8) int8)

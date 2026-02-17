@@ -72,7 +72,8 @@ Returns the align of given type.
 (**define-c-library** scheme-name headers object-name options)
 
 Takes a scheme-name to bind the library to, list of C headers as
-strings, shared-object name and options.
+strings, shared-object name or #f and options. If shared-object name is given
+as #f then platforms C library is loaded.
 
 The C header strings should not contain "<" or ">", they are added
 automatically.
@@ -94,7 +95,7 @@ Example:
 
     (define-c-library libc
                       (list "stdlib.h")
-                      libc-name
+                      #f
                       '((additional-versions ("" "0" "6"))
                         (additional-paths ("."))))
 
@@ -120,7 +121,7 @@ Defines a new foreign function to be used from Scheme code.
 
 Example:
 
-    (define-c-library libc '("stdlib.h") libc-name '("6"))
+    (define-c-library libc '("stdlib.h") #f '("6"))
     (define-c-procedure c-puts libc 'puts 'int '(pointer))
     (c-puts "Message brought to you by foreign-c!")
 
@@ -247,26 +248,6 @@ Calling from Scheme:
 
 The passed c-bytevector, in example named cbv, should only be used **after**
 call to call-with-addres-of ends.
-
-### Utilities
-
-**libc-name**
-
-Name of the C standard library on the current operating system. Supported OS:
-
-- Windows
-- Linux
-- Haiku
-
-See foreign/c/libc.scm to see which headers are included and what shared
-libraries are loaded.
-
-Example:
-
-    (define-c-library libc '("stdlib.h") libc-name '("" "6"))
-    (define-c-procedure c-puts libc 'puts 'int '(pointer))
-    (c-puts "Message brought to you by foreign-c!")
-
 
 ### Environment variables
 
