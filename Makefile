@@ -3,12 +3,13 @@ SCHEME=chibi
 RNRS=r7rs
 VENV=venv-${SCHEME}
 DOCKERIMG=${SCHEME}:head
-ifeq "${SCHEME}" "chicken"
-DOCKERIMG=${SCHEME}:latest
-endif
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
 TEST=main
+
+ifeq "${SCHEME}" "chicken"
+DOCKERIMG=${SCHEME}:latest
+endif
 
 all: build
 
