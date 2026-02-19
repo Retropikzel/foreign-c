@@ -189,9 +189,9 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "c-bytevector-null")
-(define null-pointer (c-bytevector-null))
+(define null-cbv (c-bytevector-null))
 
-(test-assert (c-bytevector? null-pointer))
+(test-assert (c-bytevector? null-cbv))
 
 
 (define-c-procedure c-tempnam libc 'tempnam 'pointer '(pointer pointer))
@@ -206,7 +206,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "c-bytevector-null?")
-(test-assert (c-bytevector-null? null-pointer))
+(test-assert (c-bytevector-null? null-cbv))
 (test-assert (not (c-bytevector-null? "")))
 (test-assert (not (c-bytevector-null? #t)))
 (test-assert (not (c-bytevector-null? 1)))

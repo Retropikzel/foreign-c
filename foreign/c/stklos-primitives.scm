@@ -25,11 +25,6 @@
           ((equal? type 'callback) :pointer)
           (else (error "type->native-type -- No such pffi type" type)))))
 
-#;(define c-bytevector?
-  (lambda (object)
-    (and (not (void? object))
-         (cpointer? object))))
-
 (define-syntax define-c-procedure
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
@@ -130,4 +125,4 @@
                  :entry-name "memset")
 
 (define (c-null) (stklos-address->pointer 0 0 0))
-;(define c-null? cpointer-null?)
+(define (c-null? pointer) (or (void? pointer) (cpointer-null? pointer)))

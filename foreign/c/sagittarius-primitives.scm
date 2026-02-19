@@ -93,17 +93,12 @@
                         (map type->native-type argument-types)
                         procedure)))))
 
-#;(define c-bytevector?
-  (lambda (object)
-    (and (not (number? object))
-         (pointer? object))))
-
 (define c-u8-set! pointer-set-c-uint8_t!)
 (define c-u8-ref pointer-ref-c-uint8_t)
 (define c-pointer-set! pointer-set-c-pointer!)
 (define c-pointer-ref pointer-ref-c-pointer)
 
 (define c-null empty-pointer)
-;(define c-null? null-pointer?)
+(define c-null? null-pointer?)
 
 

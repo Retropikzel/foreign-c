@@ -113,4 +113,4 @@
                         procedure)))))
 
 (define (c-null) (integer->pointer 0))
-#;(define c-null? pointer-null?)
+(define c-null? pointer-null?)
