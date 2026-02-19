@@ -152,11 +152,8 @@
        (c-callback ,native-return-type ,native-argument-types ,procedure))))
 
 (define (c-null) (c-memset-address->pointer 0 0 0))
-#;(define (c-null? pointer)
-  (call-with-current-continuation
-    (lambda (k)
-      (with-exception-handler
-        (lambda (x) (k #f))
-        (lambda ()
-          (and (c-bytevector? pointer)
-               (= (c-memset-pointer->address pointer 0 0) 0)))))))
+(define (c-null? pointer)
+  (or (and (number? pointer)
+           (= pointer 0))
+      (and (c-bytevector? pointer)
+           (=  (c-memset-pointer->address pointer 0 0) 0))))
