@@ -87,6 +87,6 @@
 
 (define (c-null) (integer->pointer 0))
 
-#;(define (c-null? pointer)
+(define (c-null? pointer)
   (and (pointer? pointer)
        (= (pointer->integer pointer) 0)))
