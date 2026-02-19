@@ -57,11 +57,6 @@
       ((equal? type 'struct) (invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
       (else #f))))
 
-#;(define c-bytevector?
-  (lambda (object)
-    (string=? (invoke (invoke object 'getClass) 'getName)
-              "jdk.internal.foreign.NativeMemorySegmentImpl")))
-
 (define-syntax define-c-procedure
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
@@ -158,19 +153,8 @@
             pointer-value-layout
             k)))
 
-;; FIXME
-#;(define make-c-null
-  (lambda ()
-    (static-field java.lang.foreign.MemorySegment 'NULL)))
-
 (define (c-null)
   (invoke-static java.lang.foreign.MemorySegment 'ofAddress 0))
 
-#;(define (c-null? pointer)
-  (and (c-bytevector? pointer)
-       (equal? pointer (make-c-null))))
-
-#;(define-syntax define-c-callback
-  (syntax-rules ()
-    ((_ scheme-name return-type argument-types procedure)
-     (error "define-c-callback not supported on kawa yet"))))
+(define (c-null? pointer)
+  (equal? (invoke-static java.lang.foreign.MemorySegment 'ofAddress 0) pointer))

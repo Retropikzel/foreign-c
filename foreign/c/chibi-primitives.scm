@@ -78,9 +78,7 @@
 
 (define shared-object-load
   (lambda (path options)
-    (let ((shared-object (dlopen path RTLD-NOW))
-          ;(maybe-error (dlerror))
-          )
+    (let ((shared-object (dlopen path RTLD-NOW)))
       shared-object)))
 
 (define c-bytevector?
@@ -143,7 +141,7 @@
   (lambda (return-type argument-types procedure)
     (scheme-procedure-to-pointer procedure)))
 
-(define-syntax define-c-callback
+#;(define-syntax define-c-callback
   (syntax-rules ()
     ((_ scheme-name return-type argument-types procedure)
      (error "define-c-callback is not yet supported on Chibi")
@@ -151,7 +149,9 @@
        (make-c-callback return-type 'argument-types procedure))
      )))
 
-#;(define (c-null? pointer)
+(define (c-null) (internal-c-null))
+
+(define (c-null? pointer)
   (or (equal? pointer #f) ;; #f counts as null pointer
       (and (c-bytevector? pointer)
            (internal-c-null? pointer))))

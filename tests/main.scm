@@ -151,7 +151,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-#|
 ;; c-bytevectors
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -189,8 +188,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(test-begin "make-c-null")
-(define null-pointer (make-c-null))
+(test-begin "c-bytevector-null")
+(define null-pointer (c-bytevector-null))
 
 (test-assert (c-bytevector? null-pointer))
 
@@ -198,11 +197,11 @@
 (define-c-procedure c-tempnam libc 'tempnam 'pointer '(pointer pointer))
 
 (let* ((c-tempnam-prefix (string->c-bytevector "npcmd"))
-       (r1 (c-bytevector->string (c-tempnam (make-c-null) c-tempnam-prefix)))
-       (r2 (c-bytevector->string (c-tempnam (make-c-null) c-tempnam-prefix))))
+       (r1 (c-bytevector->string (c-tempnam (c-bytevector-null) c-tempnam-prefix)))
+       (r2 (c-bytevector->string (c-tempnam (c-bytevector-null) c-tempnam-prefix))))
   (test-assert (string? r1))
   (test-assert (string? r2)))
-(test-end "make-c-null")
+(test-end "c-bytevector-null")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -292,7 +291,7 @@
 
 (define pointer-cbv (make-c-bytevector (c-type-size 'pointer)))
 (test-assert (c-bytevector? pointer-cbv))
-(c-bytevector-set! pointer-cbv 'pointer 0 (make-c-null))
+(c-bytevector-set! pointer-cbv 'pointer 0 (c-bytevector-null))
 
 (test-end "c-bytevector-set!")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -308,16 +307,16 @@
 (test-equal "u32" 42 (c-bytevector-ref u32-cbv 'u32 0))
 (test-equal "i64" 42 (c-bytevector-ref i64-cbv 'i64 0))
 (test-equal "u64" 42 (c-bytevector-ref u64-cbv 'u64 0))
-(test-equal "char" 42 (c-bytevector-ref char-cbv 'char 0))
-(test-equal "uchar" 42 (c-bytevector-ref uchar-cbv 'uchar 0))
+(test-equal "char" #\a (c-bytevector-ref char-cbv 'char 0))
+(test-equal "uchar" #\a (c-bytevector-ref uchar-cbv 'uchar 0))
 (test-equal "short" 42 (c-bytevector-ref short-cbv 'short 0))
 (test-equal "ushort" 42 (c-bytevector-ref ushort-cbv 'ushort 0))
 (test-equal "int" 42 (c-bytevector-ref int-cbv 'int 0))
 (test-equal "uint" 42 (c-bytevector-ref uint-cbv 'uint 0))
 (test-equal "long" 42 (c-bytevector-ref long-cbv 'long 0))
 (test-equal "ulong" 42 (c-bytevector-ref ulong-cbv 'ulong 0))
-(test-equal "float" 42 (c-bytevector-ref float-cbv 'float 0))
-(test-equal "double" 42 (c-bytevector-ref double-cbv 'double 0))
+(test-equal "float" 42 (exact (c-bytevector-ref float-cbv 'float 0)))
+(test-equal "double" 42 (exact (c-bytevector-ref double-cbv 'double 0)))
 (test-assert "pointer" (c-bytevector-null? (c-bytevector-ref pointer-cbv 'pointer 0)))
 (test-end "c-bytevector-ref")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -373,6 +372,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
+#|
 ;; Pass pointer by address
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -393,7 +393,6 @@
 (test-equal 42 (c-bytevector-ref input-pointer 'i32 0))
 (test-end "call-with-address-of")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 |#
 
 (test-end "foreign-c")

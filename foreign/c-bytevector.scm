@@ -347,18 +347,20 @@
       ;(internal-make-c-bytevector pointer)
       cbv)))
 
-(define (make-c-null) (internal-make-c-bytevector (c-null)))
-
 (define (c-bytevector-free cbv)
   (when (not (c-bytevector? cbv))
     (error "c-bytevector-free: cbv must be c-bytevector" cbv))
   (c-free (c-bytevector-pointer cbv)))
 
+(define (c-bytevector-null)
+  (let ((null-cbv (c-null)))
+    (if (c-bytevector? null-cbv)
+      null-cbv
+      (internal-make-c-bytevector (c-null)))))
+
 (define (c-bytevector-null? cbv)
-  (when (not (c-bytevector? cbv))
-    (error "c-bytevector-null?: cbv must be c-bytevector" cbv))
   (and (c-bytevector? cbv)
-       (= (c-memset-pointer->address (c-bytevector-pointer cbv) 0 0) 0)))
+       (c-null? (c-bytevector-pointer cbv))))
 
 (define c-bytevector
   (lambda bytes
@@ -483,10 +485,12 @@
          (c-bytevector-ieee-double-set! cbv offset value))
         ((symbol=? type 'pointer)
          (when (not (c-bytevector? value))
-           (error "c-bytevector-set!: value for given type must be pointer"
+           (error "c-bytevector-set!: value for given type must be c-bytevector"
                   `((type ,type)
                     (value ,value))))
-         (c-pointer-set! (c-bytevector-pointer cbv) offset value))
+         (c-pointer-set! (c-bytevector-pointer cbv)
+                         offset
+                         (c-bytevector-pointer value)))
         (else (error "c-bytevector-set!: Unknown type" type))))
 
 (define (c-bytevector-ref cbv type offset)

@@ -24,10 +24,6 @@
           ((equal? type 'struct) 'c-pointer)
           (else (error "type->native-type -- No such pffi type" type)))))
 
-#;(define c-bytevector?
-  (lambda (object)
-    (pointer? object)))
-
 (define-syntax define-c-procedure
   (er-macro-transformer
     (lambda (expr rename compare)
@@ -191,14 +187,12 @@
 
 (define c-pointer-set!
   (lambda (pointer k value-pointer)
-    (pointer-u64-set! (pointer+ pointer k) (pointer->address value-pointer))))
+    (pointer-u64-set! (pointer+ pointer k)
+                      (pointer->address value-pointer))))
 
-(define (c-null) (foreign-value "NULL" c-pointer))
+(define (c-null) (address->pointer 0))
 
-#;(define c-null?
+(define c-null?
   (lambda (pointer)
-    (if (and (not (pointer? pointer))
-             pointer)
-      #f
-      (or (not pointer) ; #f counts as null pointer on Chicken
-          (= (pointer->address pointer) 0)))))
+    (or (not pointer)
+        (= (pointer->address pointer) 0))))

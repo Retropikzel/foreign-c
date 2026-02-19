@@ -24,7 +24,7 @@
                 (include "c/chezscheme-primitives.scm")
                 (export foreign-procedure
                         type->native-type
-                        make-c-null))
+                        c-bytevector-null))
     (chibi (import (scheme base)
                    (scheme write)
                    (scheme char)
@@ -242,7 +242,7 @@
     c-bytevector?
     c-bytevector-pointer
     c-bytevector-free
-    make-c-null
+    c-bytevector-null
     c-bytevector-null?
     c-bytevector-set!
     c-bytevector-ref

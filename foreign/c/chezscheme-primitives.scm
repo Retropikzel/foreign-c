@@ -51,14 +51,11 @@
     (foreign-ref 'void* c-bytevector k)))
 
 (define (c-null) (c-memset-address->pointer 0 0 0))
-#;(define (c-null? pointer)
-  (and (ftype-pointer? pointer)
-       (ftype-pointer-null? pointer)))
-
-#;(define c-bytevector?
-  (lambda (object)
-    (or (number? object)
-        (ftype-pointer? object))))
+(define (c-null? pointer)
+  (or (and (number? pointer)
+           (= pointer 0))
+      (and (ftype-pointer? pointer)
+           (ftype-pointer-null? pointer))))
 
 (define-syntax define-macro!
   (lambda (x)

@@ -66,18 +66,18 @@
   (lambda (path options)
     (load-foreign-library path)))
 
-(define (c-bytevector-u8-set! cbv offset byte)
+(define (c-u8-set! cbv offset byte)
   (bytevector-u8-set! (pointer->bytevector cbv (+ offset 100)) offset byte))
 
-(define (c-bytevector-u8-ref cbv offset)
+(define (c-u8-ref cbv offset)
   (bytevector-u8-ref (pointer->bytevector cbv (+ offset 100)) offset))
 
-(define (c-bytevector-pointer-set! cbv offset pointer)
+(define (c-pointer-set! cbv offset pointer)
   (bytevector-u64-native-set! (pointer->bytevector cbv (+ offset 100))
                               offset
                               (pointer-address pointer)))
 
-(define (c-bytevector-pointer-ref cbv offset)
+(define (c-pointer-ref cbv offset)
   (make-pointer (bytevector-u64-native-ref (pointer->bytevector cbv (+ offset 100))
                                            offset)))
 

@@ -159,9 +159,6 @@
                          (else library-path))))))
                versions))
            paths)
-         (display "HERE: ")
-         (write shared-object)
-         (newline)
          (if (not shared-object)
            (error "Could not load shared object: "
                   (list (cons 'object so-name)
