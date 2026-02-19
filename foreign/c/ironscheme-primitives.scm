@@ -110,6 +110,6 @@
     (read-intptr c-bytevector k)))
 
 (define (c-null) (c-memset-address->pointer 0 0 0))
-#;(define (c-null? pointer)
+(define (c-null? pointer)
   (and (pointer? pointer)
        (null-pointer? pointer)))
