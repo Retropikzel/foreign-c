@@ -33,8 +33,8 @@ uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
 snow:
-	snow-chibi install --impls=generic --always-yes --install-source-dir=snow --install-library-dir=snow retropikzel.ctrf
-	snow-chibi install --impls=generic --always-yes --install-source-dir=snow --install-library-dir=snow srfi.64
+	snow-chibi install --impls=generic --always-yes --install-source-dir=snow --install-library-dir=snow retropikzel.ctrf | true
+	snow-chibi install --impls=generic --always-yes --install-source-dir=snow --install-library-dir=snow srfi.64 | true
 
 ${VENV}:
 	scheme-venv ${SCHEME} ${RNRS} ${VENV}

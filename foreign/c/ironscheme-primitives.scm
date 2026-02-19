@@ -1,3 +1,5 @@
+(define RTLD-NOW 2)
+
 (clr-using System.Runtime.InteropServices)
 
 ;; FIXME
@@ -16,7 +18,7 @@
           ((eq? type 'short) 2)
           ((eq? type 'ushort) 2)
           ((eq? type 'int) 4)
-          ((eq? type 'unsigned-int) 4)
+          ((eq? type 'uint) 4)
           ((eq? type 'long) 8)
           ((eq? type 'ulong) 8)
           ((eq? type 'float) 4)
@@ -77,8 +79,12 @@
     (let ((shared-object
             (cond-expand
               (windows (dlopen path))
-              (else (apply (pinvoke-call libc dlopen intptr (string))
-                           (list path))))))
+              (else (apply (pinvoke-call libc dlopen intptr (string int))
+                           (list path RTLD-NOW))))))
+      (when (null-pointer? shared-object)
+        (apply (pinvoke-call libc perror void (string))
+               '("Failed to load shared-object: "))
+        (error "Failed to load shared-object" path))
       shared-object)))
 
 (define c-u8-set!

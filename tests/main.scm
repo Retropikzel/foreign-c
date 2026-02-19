@@ -46,7 +46,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(test-begin "c-type-aling")
+(test-begin "c-type-align")
 
 (test-equal "c-type-align i8" (c-type-align 'i8) 1)
 (test-equal "c-type-align u8" (c-type-align 'u8) 1)
@@ -84,7 +84,7 @@
   (else
     (test-equal (c-type-align 'pointer) 8)))
 
-(test-end "c-type-aling")
+(test-end "c-type-align")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
@@ -150,8 +150,8 @@
 (test-end "define-c-procedure")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 
+#|
 ;; c-bytevectors
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
