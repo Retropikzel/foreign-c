@@ -119,7 +119,12 @@
                   (scheme char)
                   (scheme file)
                   (scheme process-context)
-                  (scheme inexact))
+                  (scheme inexact)
+                  (only (kawa reflect)
+                        invoke
+                        invoke-static
+                        static-field
+                        make))
           (begin
             (define-record-type <c-bytevector>
               (internal-make-c-bytevector pointer)
@@ -288,5 +293,16 @@
         (define-c-procedure c-perror libc 'perror 'void '(pointer))
         (define (c-memset-address->pointer address value offset) (address->pointer address))
         (define (c-memset-pointer->address pointer value offset) (pointer->address pointer))))
+    (kawa
+      (begin
+        (define-c-library libc '("stdlib.h" "stdio.h" "string.h") #f)
+        (define-c-procedure c-malloc libc 'malloc 'pointer '(int))
+        (define-c-procedure c-free libc 'free 'void '(pointer))
+        (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
+        (define-c-procedure c-calloc libc 'calloc 'pointer '(int int))
+        (define-c-procedure c-perror libc 'perror 'void '(pointer))
+        (define (c-memset-address->pointer address value offset)
+          (invoke-static java.lang.foreign.MemorySegment 'ofAddress address))
+        (define (c-memset-pointer->address pointer value offset) (invoke pointer 'address))))
     (else (include "c-libc.scm"))))
 

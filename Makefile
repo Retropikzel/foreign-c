@@ -27,14 +27,14 @@ build:
 	#foreign/c/stdio.sld
 
 install:
-	snow-chibi --impls=${SCHEME} install ${PKG}
+	snow-chibi --impls=${SCHEME} --skip-tests?=1 install ${PKG}
 
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
 snow:
-	snow-chibi install --impls=generic --always-yes --install-source-dir=snow --install-library-dir=snow retropikzel.ctrf | true
-	snow-chibi install --impls=generic --always-yes --install-source-dir=snow --install-library-dir=snow srfi.64 | true
+	snow-chibi install --impls=generic --skip-tests?=1 --always-yes --install-source-dir=snow --install-library-dir=snow retropikzel.ctrf | true
+	snow-chibi install --impls=generic --skip-tests?=1 --always-yes --install-source-dir=snow --install-library-dir=snow srfi.64 | true
 
 ${VENV}:
 	scheme-venv ${SCHEME} ${RNRS} ${VENV}
@@ -54,7 +54,7 @@ run-test-venv: libtest.so libtest.o libtest.a snow build ${VENV}
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (retropikzel ctrf) (foreign c))" > run-test.scm
 	echo "(test-runner-current (ctrf-runner))" >> run-test.scm
 	cat tests/${TEST}.scm >> run-test.scm
-	if [ "${RNRS}" = "r7rs" ]; then ./${VENV}/bin/snow-chibi install ${PKG}; fi
+	if [ "${RNRS}" = "r7rs" ]; then ./${VENV}/bin/snow-chibi install --skip-tests?=1 ${PKG}; fi
 	if [ "${RNRS}" = "r6rs" ]; then COMPILE_R7RS=${SCHEME} ./${VENV}/bin/scheme-compile run-test.sps; fi
 	if [ "${RNRS}" = "r7rs" ]; then COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I./tests/c-include" ./${VENV}/bin/scheme-compile run-test.scm; fi
 	LD_LIBRARY_PATH=. ./run-test
@@ -67,8 +67,8 @@ run-test-system: libtest.so libtest.o libtest.a snow build
 	echo "(test-runner-current (ctrf-runner))" >> run-test.scm
 	cat tests/${TEST}.scm >> run-test.scm
 	if [ "${RNRS}" = "r6rs" ]; then akku install akku-r7rs; fi
-	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --always-yes srfi.64; fi
-	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --always-yes retropikzel.ctrf; fi
+	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.64; fi
+	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes retropikzel.ctrf; fi
 	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --always-yes ${PKG}; fi
 	if [ "${RNRS}" = "r6rs" ]; then COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib run-test.sps; fi
 	if [ "${RNRS}" = "r7rs" ]; then COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I./tests/c-include" compile-scheme run-test.scm; fi

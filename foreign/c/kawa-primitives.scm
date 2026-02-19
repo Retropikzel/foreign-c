@@ -35,7 +35,7 @@
   (lambda (type)
     (cond
       ((equal? type 'i8) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 1))
-      ((equal? type 'u8) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_BYTE) 'withByteAlignment 1))
+      ((equal? type 'u8) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 1))
       ((equal? type 'i16) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 2))
       ((equal? type 'u16) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 2))
       ((equal? type 'i32) (invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
@@ -61,7 +61,7 @@
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
-       (lambda vals
+       (lambda args
          (let ((result (invoke (invoke (cdr (assoc 'linker shared-object))
                                        'downcallHandle
                                        (invoke (invoke (cdr (assoc 'lookup shared-object))
@@ -75,7 +75,7 @@
                                                 (type->native-type return-type)
                                                 (map type->native-type argument-types))))
                                'invokeWithArguments
-                               (map value->object (map value->native-value vals) argument-types))))
+                               (map value->native-value args argument-types))))
            (if (equal? return-type 'pointer)
              (internal-make-c-bytevector result)
              result)))))))
