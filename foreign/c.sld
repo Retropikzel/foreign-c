@@ -66,8 +66,19 @@
              (include "c/chicken-primitives.scm"))
     ;(cyclone (import (foreign c cyclone-primitives)))
     ;(gambit (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact)) (include "c/gambit-primitives.scm"))
-    ;(gauche (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact)) ;(rename (gauche ffi) (size-of-type gauche:size-of-type) (align-of-type gauche:align-of-type)) (include "c/gauche-primitives.scm"))
     ;; TODO
+    (gauche (import (scheme base)
+                    (scheme write)
+                    (scheme char)
+                    (scheme file)
+                    (scheme process-context)
+                    (scheme inexact))
+            (rename (gauche ffi)
+                    (size-of-type gauche:size-of-type)
+                    (align-of-type gauche:align-of-type))
+            (include "c/gauche-primitives.scm"))
+    ;; TODO r6rs tests
+    ;; TODO r7rs tests
     (guile (import (scheme base)
                    (scheme write)
                    (scheme char)
@@ -133,6 +144,7 @@
           (include "c/kawa-primitives.scm"))
     ;(mit-scheme (import (foreign c mit-scheme-primitives)))
     ;(larceny (import (foreign c larceny-primitives)))
+    ;; TODO r6rs tests
     (mosh (import (scheme base)
                   (scheme write)
                   (scheme char)
@@ -146,6 +158,8 @@
               c-bytevector?
               (pointer c-bytevector-pointer)))
           (include "c/mosh-primitives.scm"))
+    ; TODO r6rs tests
+    ; TODO r7rs tests
     (racket (import (scheme base)
                     (scheme write)
                     (scheme char)
@@ -162,6 +176,7 @@
                 c-bytevector?
                 (pointer c-bytevector-pointer)))
             (include "c/racket-primitives.scm"))
+    ;; TODO r6rs tests
     (sagittarius (import (scheme base)
                          (scheme write)
                          (scheme char)
@@ -208,6 +223,7 @@
                     file-exists?
                     c-pointer-set!
                     c-pointer-ref))
+    ;; TODO r6rs tests
     (ypsilon (import (scheme base)
                      (scheme write)
                      (scheme char)

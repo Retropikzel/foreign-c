@@ -1,5 +1,3 @@
-(define (primitives-init set-procedure get-procedure) #t)
-
 (define size-of-type
   (lambda (type)
     (cond ((eq? type 'i8) (gauche:size-of-type 'int8))
@@ -84,15 +82,11 @@
                         c-name
                         (map type->native-type argument-types))))))
 
-(define c-bytevector?
-  (lambda (object)
-    (pointer? object)))
-
-(define c-bytevector-u8-set! pointer-set-c-uint8!)
-(define c-bytevector-u8-ref pointer-ref-c-uint8)
-(define c-bytevector-pointer-set! pointer-set-c-pointer!)
-(define c-bytevector-pointer-ref pointer-ref-c-pointer)
-(define make-c-null null-pointer)
+(define c-u8-set! pointer-set-c-uint8!)
+(define c-u8-ref pointer-ref-c-uint8)
+(define c-pointer-set! pointer-set-c-pointer!)
+(define c-pointer-ref pointer-ref-c-pointer)
+;(define make-c-null null-pointer)
 (define c-null? null-pointer?)
 
 

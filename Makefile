@@ -36,18 +36,18 @@ snow:
 	snow-chibi install --impls=generic --skip-tests?=1 --always-yes --install-source-dir=snow --install-library-dir=snow retropikzel.ctrf | true
 	snow-chibi install --impls=generic --skip-tests?=1 --always-yes --install-source-dir=snow --install-library-dir=snow srfi.64 | true
 
-${VENV}:
+${VENV}: snow
 	scheme-venv ${SCHEME} ${RNRS} ${VENV}
 	if [ "${RNRS}" = "r6rs" ]; then ./${VENV}/bin/akku install akku-r7rs; fi
-	if [ "${RNRS}" = "r7rs" ]; then ./${VENV}/bin/snow-chibi install --always-yes srfi.64; fi
-	if [ "${RNRS}" = "r7rs" ]; then ./${VENV}/bin/snow-chibi install --always-yes retropikzel.ctrf; fi
+	cp -r snow ./${VENV}/lib/
+	if [ "${RNRS}" = "r6rs" ]; then ./${VENV}/bin/akku install; fi
+	if [ "${RNRS}" = "r7rs" ]; then ./${VENV}/bin/snow-chibi install --impls=${SCHEME} --always-yes srfi.64; fi
+	if [ "${RNRS}" = "r7rs" ]; then ./${VENV}/bin/snow-chibi install --impls=${SCHEME} --always-yes retropikzel.ctrf; fi
 
-run-test-venv: libtest.so libtest.o libtest.a snow build ${VENV}
+run-test-venv: libtest.so libtest.o libtest.a build ${VENV}
 	rm -rf run-test.sps
 	rm -rf run-test.scm
 	rm -rf run-test
-	cp -r snow ./${VENV}/lib/
-	cp -r foreign ./${VENV}/lib/
 	echo "(import (rnrs) (srfi :64) (retropikzel ctrf) (foreign c))" > run-test.sps
 	echo "(test-runner-current (ctrf-runner))" >> run-test.sps
 	cat tests/${TEST}.scm >> run-test.sps
@@ -55,6 +55,8 @@ run-test-venv: libtest.so libtest.o libtest.a snow build ${VENV}
 	echo "(test-runner-current (ctrf-runner))" >> run-test.scm
 	cat tests/${TEST}.scm >> run-test.scm
 	if [ "${RNRS}" = "r7rs" ]; then ./${VENV}/bin/snow-chibi install --skip-tests?=1 ${PKG}; fi
+	if [ "${RNRS}" = "r6rs" ]; then cp -r foreign ./${VENV}/lib/; fi
+	if [ "${RNRS}" = "r6rs" ]; then ./${VENV}/bin/akku install; fi
 	if [ "${RNRS}" = "r6rs" ]; then COMPILE_R7RS=${SCHEME} ./${VENV}/bin/scheme-compile run-test.sps; fi
 	if [ "${RNRS}" = "r7rs" ]; then COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I./tests/c-include" ./${VENV}/bin/scheme-compile run-test.scm; fi
 	LD_LIBRARY_PATH=. ./run-test
@@ -76,7 +78,7 @@ run-test-system: libtest.so libtest.o libtest.a snow build
 
 run-test-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} -f Dockerfile.test --tag=foreign-c-${SCHEME}-${RNRS} .
-	docker run -v "${PWD}/logs:/workdir/logs" -w /workdir foreign-c-${SCHEME}-${RNRS} sh -c "make SCHEME=${SCHEME} RNRS=${RNRS} TEST=${TEST} run-test-system ; mv *.json logs/ || true"
+	docker run -v "${PWD}/logs:/workdir/logs" -w /workdir foreign-c-${SCHEME}-${RNRS} sh -c "make SCHEME=${SCHEME} RNRS=${RNRS} TEST=${TEST} run-test-system; mv *.json logs/ || true"
 
 ## C libraries for testing
 
