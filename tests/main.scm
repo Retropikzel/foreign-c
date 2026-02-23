@@ -372,7 +372,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-#|
 ;; Pass pointer by address
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -393,6 +392,5 @@
 (test-equal 42 (c-bytevector-ref input-pointer 'i32 0))
 (test-end "call-with-address-of")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-|#
 
 (test-end "foreign-c")
