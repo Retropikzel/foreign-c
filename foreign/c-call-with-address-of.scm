@@ -9,5 +9,5 @@
          (error "call-with-address-of: thunk argument must be procedure" thunk))
        (let ((result (apply thunk (list address-cbv))))
          (set! cbv (c-bytevector-ref address-cbv 'pointer 0))
-         (c-free address-cbv)
+         (c-bytevector-free address-cbv)
          result)))))
