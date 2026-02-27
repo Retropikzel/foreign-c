@@ -291,8 +291,6 @@
       (begin
         (define-syntax define-c-library
           (syntax-rules ()
-            ((_ scheme-name headers object-name)
-             (define-c-library scheme-name headers object-name '()))
             ((_ scheme-name headers object-name options)
              (begin
                (define scheme-name #t)
@@ -302,7 +300,7 @@
   (cond-expand
     (chicken
       (begin
-        (define-c-library libc '("stdlib.h" "stdio.h" "string.h") #f)
+        (define-c-library libc '("stdlib.h" "stdio.h" "string.h") #f '())
         (define-c-procedure c-malloc libc 'malloc 'pointer '(int))
         (define-c-procedure c-free libc 'free 'void '(pointer))
         (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
@@ -312,7 +310,7 @@
         (define (c-memset-pointer->address pointer value offset) (pointer->address pointer))))
     (kawa
       (begin
-        (define-c-library libc '("stdlib.h" "stdio.h" "string.h") #f)
+        (define-c-library libc '("stdlib.h" "stdio.h" "string.h") #f '())
         (define-c-procedure c-malloc libc 'malloc 'pointer '(int))
         (define-c-procedure c-free libc 'free 'void '(pointer))
         (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
