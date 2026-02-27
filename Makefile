@@ -79,8 +79,8 @@ run-test-system: libtest.so libtest.o libtest.a snow testfiles build
 	LD_LIBRARY_PATH=. ./run-test
 
 run-test-docker:
-	docker build --build-arg IMAGE=${DOCKERIMG} -f Dockerfile.test --tag=foreign-c-${SCHEME}-${RNRS} .
-	docker run -v "${PWD}/logs:/workdir/logs" -w /workdir foreign-c-${SCHEME}-${RNRS} sh -c "make SCHEME=${SCHEME} RNRS=${RNRS} TEST=${TEST} run-test-system; mv *.json logs/ || true"
+	docker build --build-arg IMAGE=${DOCKERIMG} -f Dockerfile.test --tag=foreign-c-${SCHEME} .
+	docker run -v "${PWD}/logs:/workdir/logs" -w /workdir foreign-c-${SCHEME} sh -c "make SCHEME=${SCHEME} RNRS=${RNRS} TEST=${TEST} run-test-system; mv *.json logs/ || true"
 
 ## C libraries for testing
 
