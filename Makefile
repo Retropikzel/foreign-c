@@ -1,6 +1,7 @@
 VERSION=0.13.7
 SCHEME=chibi
 RNRS=r7rs
+TEST_SUFFIX=scm
 VENV=venv-${SCHEME}
 DOCKERIMG=${SCHEME}:head
 PKG=foreign-c-${VERSION}.tgz
@@ -9,6 +10,10 @@ TEST=main
 
 ifeq "${SCHEME}" "chicken"
 DOCKERIMG=${SCHEME}:latest
+endif
+
+ifeq "${RNRS}" "r6rs"
+TEST_SUFFIX=sps
 endif
 
 all: build
@@ -36,38 +41,35 @@ snow:
 	snow-chibi install --impls=generic --skip-tests?=1 --always-yes --install-source-dir=snow --install-library-dir=snow retropikzel.ctrf | true
 	snow-chibi install --impls=generic --skip-tests?=1 --always-yes --install-source-dir=snow --install-library-dir=snow srfi.64 | true
 
-${VENV}: snow
-	scheme-venv ${SCHEME} ${RNRS} ${VENV}
-	if [ "${RNRS}" = "r6rs" ]; then ./${VENV}/bin/akku install akku-r7rs; fi
-	cp -r snow ./${VENV}/lib/
-	if [ "${RNRS}" = "r6rs" ]; then ./${VENV}/bin/akku install; fi
-	if [ "${RNRS}" = "r7rs" ]; then ./${VENV}/bin/snow-chibi install --impls=${SCHEME} --always-yes srfi.64; fi
-	if [ "${RNRS}" = "r7rs" ]; then ./${VENV}/bin/snow-chibi install --impls=${SCHEME} --always-yes retropikzel.ctrf; fi
-
-run-test-venv: libtest.so libtest.o libtest.a build ${VENV}
-	rm -rf run-test.sps
-	rm -rf run-test.scm
-	rm -rf run-test
+testfiles:
 	echo "(import (except (rnrs) remove) (srfi :64) (retropikzel ctrf) (foreign c))" > run-test.sps
 	echo "(test-runner-current (ctrf-runner))" >> run-test.sps
 	cat tests/${TEST}.scm >> run-test.sps
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (retropikzel ctrf) (foreign c))" > run-test.scm
 	echo "(test-runner-current (ctrf-runner))" >> run-test.scm
 	cat tests/${TEST}.scm >> run-test.scm
-	if [ "${RNRS}" = "r7rs" ]; then ./${VENV}/bin/snow-chibi install --skip-tests?=1 ${PKG}; fi
-	if [ "${RNRS}" = "r6rs" ]; then cp -r foreign ./${VENV}/lib/; fi
-	if [ "${RNRS}" = "r6rs" ]; then ./${VENV}/bin/akku install; fi
-	if [ "${RNRS}" = "r6rs" ]; then COMPILE_R7RS=${SCHEME} ./${VENV}/bin/scheme-compile run-test.sps; fi
-	if [ "${RNRS}" = "r7rs" ]; then COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I./tests/c-include" ./${VENV}/bin/scheme-compile run-test.scm; fi
+
+${VENV}: snow
+	rm -rf ${VENV}
+	scheme-venv ${SCHEME} ${VENV}
+	./${VENV}/bin/akku install akku-r7rs
+	cp -r snow ./${VENV}/lib/
+	./${VENV}/bin/akku install
+	./${VENV}/bin/snow-chibi install --impls=${SCHEME} --always-yes srfi.64
+	./${VENV}/bin/snow-chibi install --impls=${SCHEME} --always-yes retropikzel.ctrf
+
+run-test-venv: libtest.so libtest.o libtest.a testfiles build ${VENV}
+	cp libtest.so ${VENV}/lib/
+	cp libtest.o ${VENV}/lib/
+	cp libtest.a ${VENV}/lib/
+	cp tests/c-include/*.h ${VENV}/include/
+	rm -rf run-test
+	./${VENV}/bin/snow-chibi install --always-yes --skip-tests?=1 ${PKG}
+	if [ "${RNRS}" = "r6rs" ]; then akku install akku-r7rs; fi
+	CSC_OPTIONS="-L -ltest" ./${VENV}/bin/scheme-compile run-test.${TEST_SUFFIX}
 	LD_LIBRARY_PATH=. ./run-test
 
-run-test-system: libtest.so libtest.o libtest.a snow build
-	echo "(import (except (rnrs) remove) (srfi :64) (retropikzel ctrf) (foreign c))" > run-test.sps
-	echo "(test-runner-current (ctrf-runner))" >> run-test.sps
-	cat tests/${TEST}.scm >> run-test.sps
-	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (retropikzel ctrf) (foreign c))" > run-test.scm
-	echo "(test-runner-current (ctrf-runner))" >> run-test.scm
-	cat tests/${TEST}.scm >> run-test.scm
+run-test-system: libtest.so libtest.o libtest.a snow testfiles build
 	if [ "${RNRS}" = "r6rs" ]; then akku install akku-r7rs; fi
 	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.64; fi
 	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes retropikzel.ctrf; fi
