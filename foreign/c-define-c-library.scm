@@ -1,7 +1,5 @@
 (define-syntax define-c-library
   (syntax-rules ()
-    ((_ scheme-name headers object-name)
-     (define-c-library scheme-name headers object-name '()))
     ((_ scheme-name headers object-name options)
      (define scheme-name
        (let* ((os (cond-expand (windows 'windows) (guile 'unix) (else 'unix)))

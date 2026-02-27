@@ -1,6 +1,6 @@
 (define modes '("r" "w" "a" "r+" "w+" "a+" "rb" "wb" "ab" "rb+" "wb+" "ab+"))
 
-(define-c-library libc '("stdio.h") #f '((additional-versions ("0" "6"))))
+(define-c-library libc '("stdio.h") #f '())
 (define-c-procedure internal-fopen libc 'fopen 'pointer '(pointer pointer))
 (define-c-procedure internal-fclose libc 'fclose 'int '(pointer))
 

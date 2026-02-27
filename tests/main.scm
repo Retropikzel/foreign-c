@@ -1,10 +1,8 @@
-
 (test-begin "foreign-c")
+
+
 ;; Types
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "c-type-size")
-
 (test-equal "c-type-size i8" (c-type-size 'i8) 1)
 (test-equal "c-type-size u8" (c-type-size 'u8) 1)
 (test-equal "c-type-size i16" (c-type-size 'i16) 2)
@@ -19,35 +17,27 @@
 (test-equal "c-type-size ushort" (c-type-size 'ushort) 2)
 (test-equal "c-type-size int" (c-type-size 'int) 4)
 (test-equal "c-type-size uint" (c-type-size 'uint) 4)
-
 #;(cond-expand
   (i386
     (test-equal (c-type-size 'long) 4))
   (else
     (test-equal (c-type-size 'long) 8)))
-
 #;(cond-expand
   (i386
     (test-equal (c-type-size 'unsigned-long) 4))
   (else
     (test-equal (c-type-size 'unsigned-long) 8)))
-
 (test-equal "c-type-size float" (c-type-size 'float) 4)
 (test-equal "c-type-size double" (c-type-size 'double) 8)
-
 #;(cond-expand
   (i386
     (test-equal (c-type-size 'pointer) 4))
   (else
     (test-equal (c-type-size 'pointer) 8)))
-
 (test-end "c-type-size")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "c-type-align")
-
 (test-equal "c-type-align i8" (c-type-align 'i8) 1)
 (test-equal "c-type-align u8" (c-type-align 'u8) 1)
 (test-equal "c-type-align i16" (c-type-align 'i16) 2)
@@ -62,37 +52,29 @@
 (test-equal "c-type-align ushort" (c-type-align 'ushort) 2)
 (test-equal "c-type-align int" (c-type-align 'int) 4)
 (test-equal "c-type-align uint" (c-type-align 'uint) 4)
-
 #;(cond-expand
   (i386
     (test-equal (c-type-align 'long) 4))
   (else
     (test-equal (c-type-align 'long) 8)))
-
 #;(cond-expand
   (i386
     (test-equal (c-type-align 'ulong) 4))
   (else
     (test-equal (c-type-align 'ulong) 8)))
-
 (test-equal "c-type-align float" (c-type-align 'float) 4)
 (test-equal "c-type-align double" (c-type-align 'double) 8)
-
 #;(cond-expand
   (i386
     (test-equal (c-type-align 'pointer) 4))
   (else
     (test-equal (c-type-align 'pointer) 8)))
-
 (test-end "c-type-align")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 ;; Libraries and procedures
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "define-c-library")
-(define-c-library libc '("stdlib.h" "stdio.h" "string.h" "stdio.h") #f)
+(define-c-library libc '("stdlib.h" "stdio.h" "string.h" "stdio.h") #f '())
 
 (test-assert "test-assert libc" (if libc #t #f))
 
@@ -103,7 +85,6 @@
                       '("libtest.h")
                       "test"
                       '((additional-paths ("." "./tests"))))
-
 (define-c-procedure c-takes-no-args c-testlib 'takes_no_args 'void '())
 (c-takes-no-args)
 
@@ -148,27 +129,22 @@
                                            (lambda () (rl ""))))
 (test-assert "7" (string=? file-content "Hello world 1"))
 (test-end "define-c-procedure")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 ;; c-bytevectors
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "make-c-bytevector")
 (define bytes (make-c-bytevector 100))
 (test-assert (c-bytevector? bytes))
 (test-assert (not (c-bytevector-null? bytes)))
 (test-end "make-c-bytevector")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (test-begin "c-bytevector")
 (define is-pointer (make-c-bytevector 100))
 (test-assert (c-bytevector? is-pointer))
 (test-end "c-bytevector")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (test-begin "c-bytevector?")
 (define is-pointer1 (make-c-bytevector 100))
 (test-assert (c-bytevector? is-pointer1))
@@ -177,34 +153,26 @@
 (test-equal #f (c-bytevector? "Hello"))
 (test-equal #f (c-bytevector? 'bar))
 (test-end "c-bytevector?")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (test-begin "c-bytevector-free")
 (define to-be-freed-pointer (make-c-bytevector 64))
-
 (c-bytevector-free to-be-freed-pointer)
 (test-end "c-bytevector-free")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (test-begin "c-bytevector-null")
 (define null-cbv (c-bytevector-null))
-
 (test-assert (c-bytevector? null-cbv))
-
-
 (define-c-procedure c-tempnam libc 'tempnam 'pointer '(pointer pointer))
-
 (let* ((c-tempnam-prefix (string->c-bytevector "npcmd"))
        (r1 (c-bytevector->string (c-tempnam (c-bytevector-null) c-tempnam-prefix)))
        (r2 (c-bytevector->string (c-tempnam (c-bytevector-null) c-tempnam-prefix))))
   (test-assert (string? r1))
   (test-assert (string? r2)))
 (test-end "c-bytevector-null")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (test-begin "c-bytevector-null?")
 (test-assert (c-bytevector-null? null-cbv))
 (test-assert (not (c-bytevector-null? "")))
@@ -212,11 +180,9 @@
 (test-assert (not (c-bytevector-null? 1)))
 (test-assert (not (c-bytevector-null? 0)))
 (test-end "c-bytevector-null?")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (test-begin "c-bytevector-set!")
-
 (define i8-cbv (make-c-bytevector (c-type-size 'i8)))
 (test-assert (c-bytevector? i8-cbv))
 (c-bytevector-set! i8-cbv 'i8 0 42)
@@ -292,12 +258,9 @@
 (define pointer-cbv (make-c-bytevector (c-type-size 'pointer)))
 (test-assert (c-bytevector? pointer-cbv))
 (c-bytevector-set! pointer-cbv 'pointer 0 (c-bytevector-null))
-
 (test-end "c-bytevector-set!")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "c-bytevector-ref")
 (test-equal "i8" 42 (c-bytevector-ref i8-cbv 'i8 0))
 (test-equal "u8" 42 (c-bytevector-ref u8-cbv 'u8 0))
@@ -319,69 +282,53 @@
 (test-equal "double" 42 (exact (c-bytevector-ref double-cbv 'double 0)))
 (test-assert "pointer" (c-bytevector-null? (c-bytevector-ref pointer-cbv 'pointer 0)))
 (test-end "c-bytevector-ref")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (test-begin "bytevector->c-bytevector")
 (define bt1 (make-bytevector 64 0))
 (define cbt1 (bytevector->c-bytevector bt1))
-
 (test-assert (c-bytevector? cbt1))
 (test-end "bytevector->c-bytevector")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (test-begin "c-bytevector->bytevector")
 (define bt2 (c-bytevector->bytevector cbt1 64))
-
 (test-assert (bytevector? bt2))
 (test-assert (equal? bt1 bt2))
 (test-end "c-bytevector->bytevector")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (test-begin "c-bytevector->integer")
 (define cbv-cbc-int (c-bytevector->integer (make-c-bytevector 128)))
 (test-assert (number? cbv-cbc-int))
 (test-assert (integer? cbv-cbc-int))
 (test-end "c-bytevector->integer")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (test-begin "integer->c-bytevector")
 (test-end "integer->c-bytevector")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 
 ;; Strings
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "string->c-bytevector")
 (define c-string (string->c-bytevector "foobar"))
 (test-assert (c-bytevector? c-string))
 (test-end "string->c-bytevector")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (test-begin "c-bytevector->string")
 (define scheme-string (c-bytevector->string c-string))
-
 (test-assert (string? scheme-string))
 (test-assert (string=? scheme-string "foobar"))
 (test-end "c-bytevector->string")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 ;; Pass pointer by address
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (test-begin "call-with-address-of")
 (define-c-procedure test-passing-pointer-address
                       c-testlib
                       'test_passing_pointer_address
                       'int
                       '(pointer pointer))
-
 (define input-pointer (make-c-bytevector (c-type-size 'int)))
 (c-bytevector-set! input-pointer 'i32 0 100)
 (test-equal 100 (c-bytevector-ref input-pointer 'i32 0))
@@ -391,6 +338,32 @@
     (test-passing-pointer-address input-pointer address)))
 (test-equal 42 (c-bytevector-ref input-pointer 'i32 0))
 (test-end "call-with-address-of")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;; stdio.h
+(test-begin "stdio")
+(define-c-procedure fopen libc 'fopen 'pointer '(pointer pointer))
+(define-c-procedure fclose libc 'fclose 'int '(pointer))
+(define-c-procedure feof libc 'feof 'int '(pointer))
+(define-c-procedure ferror libc 'ferror 'int '(pointer))
+(define-c-procedure fgetc libc 'fgetc 'int '(pointer))
+(define-c-procedure fgets libc 'fgets 'pointer '(pointer int pointer))
+(define-c-procedure fputc libc 'fputc 'int '(int pointer))
+(define-c-procedure fputs libc 'fputs 'int '(pointer pointer))
+(define-c-procedure fread libc 'fread 'int '(pointer int int pointer))
+(define-c-procedure fseek libc 'fseek 'int '(pointer long int))
+(define-c-procedure ftell libc 'ftell 'long '(pointer))
+(define-c-procedure fwrite libc 'fwrite 'int '(pointer int int pointer))
+(define-c-procedure getc libc 'getc 'int '(pointer))
+(define-c-procedure getchar libc 'getchar 'int '())
+(define-c-procedure putc libc 'putc 'int '(int pointer))
+(define-c-procedure putchar libc 'putchar 'int '(int))
+(define-c-procedure puts libc 'puts 'int '(pointer))
+(define-c-procedure remove libc 'remove 'int '(pointer))
+(define-c-procedure rename libc 'rename 'int '(pointer pointer))
+(define-c-procedure rewind libc 'rewind 'void '(pointer))
+(test-end "stdio")
+
 
 (test-end "foreign-c")
+

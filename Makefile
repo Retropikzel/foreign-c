@@ -27,7 +27,7 @@ build:
 	#foreign/c/stdio.sld
 
 install:
-	snow-chibi --impls=${SCHEME} --skip-tests?=1 install ${PKG}
+	snow-chibi --impls=${SCHEME} install --skip-tests?=1 ${PKG}
 
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
@@ -48,7 +48,7 @@ run-test-venv: libtest.so libtest.o libtest.a build ${VENV}
 	rm -rf run-test.sps
 	rm -rf run-test.scm
 	rm -rf run-test
-	echo "(import (rnrs) (srfi :64) (retropikzel ctrf) (foreign c))" > run-test.sps
+	echo "(import (except (rnrs) remove) (srfi :64) (retropikzel ctrf) (foreign c))" > run-test.sps
 	echo "(test-runner-current (ctrf-runner))" >> run-test.sps
 	cat tests/${TEST}.scm >> run-test.sps
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (retropikzel ctrf) (foreign c))" > run-test.scm
@@ -62,7 +62,7 @@ run-test-venv: libtest.so libtest.o libtest.a build ${VENV}
 	LD_LIBRARY_PATH=. ./run-test
 
 run-test-system: libtest.so libtest.o libtest.a snow build
-	echo "(import (rnrs) (srfi :64) (retropikzel ctrf) (foreign c))" > run-test.sps
+	echo "(import (except (rnrs) remove) (srfi :64) (retropikzel ctrf) (foreign c))" > run-test.sps
 	echo "(test-runner-current (ctrf-runner))" >> run-test.sps
 	cat tests/${TEST}.scm >> run-test.sps
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (retropikzel ctrf) (foreign c))" > run-test.scm

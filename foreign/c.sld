@@ -14,7 +14,8 @@
     ;(capyscheme (import (foreign c capyscheme-primitives)))
     (chezscheme (import (except (chezscheme)
                                 native-endianness
-                                endianness)
+                                endianness
+                                remove)
                         (srfi :0)
                         (srfi :98))
                 (begin
