@@ -251,12 +251,16 @@
   (export
     ;; Types
     make-c-integer-type
-    ;make-c-float-type ;; TODO
+    make-c-float-type
     make-c-pointer-type
-    make-c-struct-type
     ;make-c-array-type
+    make-c-struct-type
+    c-type-name
+    c-type-name=?
     c-type-size
+    c-type-size=?
     c-type-align
+    c-type-align=?
 
     ;; Libraries and procedures
     define-c-library
