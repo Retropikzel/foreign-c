@@ -253,7 +253,7 @@
     make-c-integer-type
     make-c-float-type
     make-c-pointer-type
-    ;make-c-array-type
+    ;make-c-array-type ; TODO
     make-c-struct-type
     c-type-name
     c-type-name=?
