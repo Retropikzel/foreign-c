@@ -187,7 +187,8 @@
                          (except (sagittarius ffi)
                                  c-pointer
                                  c-free
-                                 c-malloc))
+                                 c-malloc
+                                 define-c-struct))
                  (begin
                    (define-record-type <c-bytevector>
                      (internal-make-c-bytevector pointer)
@@ -249,6 +250,11 @@
                      bytevector-c-uint8-ref)))
   (export
     ;; Types
+    make-c-integer-type
+    ;make-c-float-type ;; TODO
+    make-c-pointer-type
+    make-c-struct-type
+    ;make-c-array-type
     c-type-size
     c-type-align
 
@@ -272,6 +278,7 @@
     c-bytevector->bytevector
     c-bytevector->integer
     integer->c-bytevector
+    c-bytevector->list
 
     ;; Strings
     string->c-bytevector
@@ -280,12 +287,16 @@
     ;; Pass pointer by address
     call-with-address-of
 
+    ;; Struct
+    ;define-c-struct
+
     value->native-value ;; TODO remove from exports
     )
-  (include "c-types.scm")
+  (include "c/types.scm")
   (include "c-bytevector.scm")
   (include "c-value-to-native-value.scm")
   (include "c-call-with-address-of.scm")
+  (include "c/struct2.scm")
   (cond-expand
     (chicken
       (begin

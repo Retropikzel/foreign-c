@@ -7,10 +7,8 @@ Table of content
     - c-bytevectors
     - Strings
     - Pass pointer by address
-    - Utilities
+    - Struct
     - Environment variables
-- (foreign c struct)
-- (foreign c stdio)
 
 ## Types
 
@@ -164,13 +162,13 @@ Frees c-bytevector from memory. Behaviour using the bytevector after it's freed
 is unspecified.
 
 
-(**make-c-null**)
+(**c-bytevector-null**)
 
 Returns a null C pointer. On some implementations #f is null pointer, this
 behaviour should not be used or counted on.
 
 
-(**c-null?** obj)
+(**c-bytevector-null?** obj)
 
 Returns #t if obj is a null C pointer, otherwise returns #f. On some
 implementations #f is null pointer, this behaviour should not be used or counted on.
@@ -210,13 +208,13 @@ Returns the bytevector in the integer address.
 
 ### Strings
 
-(**string->c-utf8** str)
+(**string->c-bytevector** str)
 
 Returns a newly allocated (unless empty) c-bytevector that contains the
 UTF-8 encoding of the given string.
 
 
-(**c-utf8->string** cbv)
+(**c-bytevector->string** cbv)
 
 Returns a newly allocated string whose character sequence is
 encoded by the given c-bytevector. If c-bytevector is null empty string is
@@ -251,22 +249,7 @@ Calling from Scheme:
 The passed c-bytevector, in example named cbv, should only be used **after**
 call to call-with-addres-of ends.
 
-### Environment variables
-
-Setting environment variables like this on Windows works for this library:
-
-    set "FOREIGN_C_LOAD_PATH=C:\Program Files (x86)/foo/bar"
-
-
-
-#### FOREIGN\_C_\_LOAD\_PATH
-
-To add more paths to where foreign c looks for libraries set
-FOREIGN\_C\_LOAD\_PATH to paths separated by ; on windows, and : on other
-operating systems.
-
-
-## (foreign c struct)
+## structs
 
 (**define-c-struct** name members struct-cbv (field-name field-type accessor modifier) ...)
 
@@ -279,9 +262,9 @@ a c-bytevector like returned form make-c-bytevector.
 Members is name for members variable of the struct, it's a needed for internal
 purposes and ignored later on.
 
-struct-pointer is the pointer used for the struct, if you already have a
+struct-cbv is the pointer used for the struct, if you already have a
 pointer for example returned from C function then pass that. If you do not have
-a pointer then pass #f.
+a pointer then pass #f and it will be allocated.
 
 (field-name field-type accessor modifier) is similar to how define-record-type
 works, except you also need to pass in type.
@@ -291,7 +274,7 @@ Example:
 
 (define-c-struct s
                  s-members
-                 (make-c-null)
+                 #f
                  (field1 'int struct-field1 struct-field1!)
                  (field2 'int struct-field2 struct-field2!)
                  (field3 'pointer struct-field3 struct-field3!)
@@ -316,4 +299,18 @@ Example:
 (newline)
 
 
-## (foreign c stdio)
+### Environment variables
+
+Setting environment variables like this on Windows works for this library:
+
+    set "FOREIGN_C_LOAD_PATH=C:\Program Files (x86)/foo/bar"
+
+
+
+#### FOREIGN\_C_\_LOAD\_PATH
+
+To add more paths to where foreign c looks for libraries set
+FOREIGN\_C\_LOAD\_PATH to paths separated by ; on windows, and : on other
+operating systems.
+
+

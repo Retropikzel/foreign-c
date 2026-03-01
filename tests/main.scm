@@ -364,6 +364,26 @@
 (define-c-procedure rewind libc 'rewind 'void '(pointer))
 (test-end "stdio")
 
+;; struct
+(test-begin "struct")
+#;(define-c-struct cs
+                 cs-members
+                 #f
+                 (field1 'int cs-field1 cs-field1!)
+                 (field2 'int cs-field2 cs-field2!)
+                 (field3 'pointer cs-field3 cs-field3!)
+                 (field4 'int cs-field4 cs-field4!))
+
+;(cs-field1! cs 1)
+;(cs-field2! cs 2)
+;(cs-field3! cs (make-c-bytevector 32))
+;(cs-field4! cs 4)
+;(test-equal (cs-field1 cs) 1)
+;(test-equal (cs-field2 cs) 2)
+;(test-asser (c-bytevector-null? (cs-field3 cs)))
+;(test-equal (cs-field4 cs) 4)
+(test-end "struct")
+
 
 (test-end "foreign-c")
 
