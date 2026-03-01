@@ -31,4 +31,8 @@
 (write (c-bytevector-ref md c-int 0))
 (newline)
 
+;(define c-int-array (make-c-array-type 'array c-int))
+;(define ar1 (make-c-bytevector (* (c-type-size c-int-array) 10)))
+;(c-bytevector-set! art1 c-int-array 5 25) ; Multiply the 5 by the size of arrays type
+
 ;(test-end "define-c-struct")
