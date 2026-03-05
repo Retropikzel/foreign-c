@@ -10,16 +10,15 @@
           ((eq? type 'u64) 8)
           ((eq? type 'char) 1)
           ((eq? type 'uchar) 1)
-          ((eq? type 'short) size-of-short)
-          ((eq? type 'ushort) size-of-unsigned-short)
-          ((eq? type 'int) size-of-int)
-          ((eq? type 'uint) size-of-unsigned-int)
-          ((eq? type 'long) size-of-long)
-          ((eq? type 'ulong) size-of-unsigned-long)
-          ((eq? type 'float) size-of-float)
-          ((eq? type 'double) size-of-double)
-          ((eq? type 'pointer) size-of-pointer)
-          ((eq? type 'callback) size-of-pointer)
+          ((eq? type 'short) mosh-size-of-short)
+          ((eq? type 'ushort) mosh-size-of-unsigned-short)
+          ((eq? type 'int) mosh-size-of-int)
+          ((eq? type 'uint) mosh-size-of-unsigned-int)
+          ((eq? type 'long) mosh-size-of-long)
+          ((eq? type 'ulong) mosh-size-of-unsigned-long)
+          ((eq? type 'float) mosh-size-of-float)
+          ((eq? type 'double) mosh-size-of-double)
+          ((eq? type 'pointer) mosh-size-of-pointer)
           ((eq? type 'void) 0)
           (else #f))))
 
@@ -35,35 +34,30 @@
           ((eq? type 'u64) 8)
           ((eq? type 'char) 1)
           ((eq? type 'uchar) 1)
-          ((eq? type 'short) align-of-short)
-          ((eq? type 'ushort) align-of-short)
-          ((eq? type 'int) align-of-int)
-          ((eq? type 'uint) align-of-int)
-          ((eq? type 'long) align-of-long)
-          ((eq? type 'ulong) align-of-unsigned-long)
-          ((eq? type 'float) align-of-float)
-          ((eq? type 'double) align-of-double)
-          ((eq? type 'pointer) align-of-void*)
-          ((eq? type 'callback) align-of-void*)
+          ((eq? type 'short) mosh-align-of-short)
+          ((eq? type 'ushort) mosh-align-of-short)
+          ((eq? type 'int) mosh-align-of-int)
+          ((eq? type 'uint) mosh-align-of-int)
+          ((eq? type 'long) mosh-align-of-long)
+          ((eq? type 'ulong) mosh-align-of-unsigned-long)
+          ((eq? type 'float) mosh-align-of-float)
+          ((eq? type 'double) mosh-align-of-double)
+          ((eq? type 'pointer) mosh-align-of-void*)
           ((eq? type 'void) 0)
           (else #f))))
 
 (define shared-object-load
   (lambda (path options)
-    (open-shared-library path)))
+    (mosh-open-shared-library path)))
 
-#;(define c-bytevector?
-  (lambda (object)
-    (pointer? object)))
-
-(define c-u8-set! pointer-set-c-uint8!)
-(define c-u8-ref pointer-ref-c-uint8)
+(define c-u8-set! mosh-pointer-set-c-uint8!)
+(define c-u8-ref mosh-pointer-ref-c-uint8)
 (define c-pointer-set!
   (lambda (pointer offset value)
-    (pointer-set-c-pointer! pointer offset value)))
+    (mosh-pointer-set-c-pointer! pointer offset value)))
 (define c-pointer-ref
   (lambda (pointer offset)
-    (pointer-ref-c-pointer pointer offset)))
+    (mosh-pointer-ref-c-pointer pointer offset)))
 
 (define type->native-type
   (lambda (type)
@@ -96,7 +90,7 @@
      (define scheme-name
        (lambda args
          (let ((internal
-                 (make-c-function shared-object
+                 (mosh-make-c-function shared-object
                                   (type->native-type return-type)
                                   c-name
                                   (map type->native-type argument-types))))
@@ -104,13 +98,5 @@
              (internal-make-c-bytevector (apply internal (map value->native-value args)))
              (apply internal (map value->native-value args)))))))))
 
-(define-syntax define-c-callback
-  (syntax-rules ()
-    ((_ scheme-name return-type argument-types procedure)
-     (define scheme-name
-       (make-c-callback (type->native-type return-type)
-                        (map type->native-type argument-types)
-                        procedure)))))
-
-(define (c-null) (integer->pointer 0))
-(define c-null? pointer-null?)
+(define (c-null) (mosh-integer->pointer 0))
+(define c-null? mosh-pointer-null?)

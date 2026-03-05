@@ -19,69 +19,55 @@
           ((equal? type 'float) _float)
           ((equal? type 'double) _double)
           ((equal? type 'pointer) _pointer)
-          ((equal? type 'void) _void)
-          ((equal? type 'callback) _pointer)
           (else #f))))
-
-#;(define c-bytevector?
-  (lambda (object)
-    (cpointer? object)))
 
 (define-syntax define-c-procedure
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
        (lambda args
-         (let ((internal (get-ffi-obj c-name
+         (let ((internal (racket-get-ffi-obj c-name
                                       shared-object
-                                      (_cprocedure (mlist->list (map type->native-type argument-types))
+                                      (racket-_cprocedure (mlist->list (map type->native-type argument-types))
                                                    (type->native-type return-type)))))
            (if (equal? return-type 'pointer)
              (internal-make-c-bytevector (apply internal (map value->native-value args)))
              (apply internal (map value->native-value args)))))))))
 
 
-(define-syntax define-c-callback
-  (syntax-rules ()
-    ((_ scheme-name return-type argument-types procedure)
-     (define scheme-name (function-ptr procedure
-                                       (_cprocedure
-                                         (mlist->list (map type->native-type argument-types))
-                                         (type->native-type return-type)))))))
-
 (define size-of-type
   (lambda (type)
-    (ctype-sizeof (type->native-type type))))
+    (racket-ctype-sizeof (type->native-type type))))
 
 ;; FIXME
 (define align-of-type
   (lambda (type)
-    (ctype-sizeof (type->native-type type))))
+    (racket-ctype-sizeof (type->native-type type))))
 
 (define shared-object-load
   (lambda (path options)
     (if (and (not (null? options))
              (assoc 'additional-versions options))
-      (ffi-lib path (mlist->list (append (cadr (assoc 'additional-versions
+      (racket-ffi-lib path (mlist->list (append (cadr (assoc 'additional-versions
                                                       options))
                                          (list #f))))
-      (ffi-lib path))))
+      (racket-ffi-lib path))))
 
 (define c-u8-set!
   (lambda (c-bytevector k byte)
-    (ptr-set! c-bytevector _uint8 'abs k byte)))
+    (racket-ptr-set! c-bytevector racket-_uint8 'abs k byte)))
 
 (define c-u8-ref
   (lambda (c-bytevector k)
-    (ptr-ref c-bytevector _uint8 'abs k)))
+    (racket-ptr-ref c-bytevector racket-_uint8 'abs k)))
 
 (define c-pointer-set!
   (lambda (c-bytevector k pointer)
-    (ptr-set! c-bytevector _pointer 'abs k pointer)))
+    (racket-ptr-set! c-bytevector racket-_pointer 'abs k pointer)))
 
 (define c-pointer-ref
   (lambda (c-bytevector k)
-    (ptr-ref c-bytevector _pointer 'abs k)))
+    (racket-ptr-ref c-bytevector racket-_pointer 'abs k)))
 
 (define (c-null) #f)
 (define (c-null? pointer) (equal? pointer #f))

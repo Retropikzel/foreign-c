@@ -54,10 +54,6 @@
         ((equal? type 'pointer) 'intptr)
         (error "Unsupported type: " type)))
 
-#;(define c-bytevector?
-  (lambda (object)
-    (pointer? object)))
-
 (define-syntax define-c-procedure
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)

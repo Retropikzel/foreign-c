@@ -1,5 +1,3 @@
-(define (primitives-init set-procedure get-procedure) #t)
-
 (define size-of-type
   (lambda (type)
     (cond ((eq? type 'i8) (c-sizeof int8_t))
@@ -20,8 +18,7 @@
           ((eq? type 'ulong) (c-sizeof unsigned-long))
           ((eq? type 'float) (c-sizeof float))
           ((eq? type 'double) (c-sizeof double))
-          ((eq? type 'pointer) (c-sizeof void*))
-          ((eq? type 'callback) (c-sizeof void*)))))
+          ((eq? type 'pointer) (c-sizeof void*)))))
 
 (define align-of-type
   (lambda (type)
@@ -43,47 +40,42 @@
           ((eq? type 'ulong) alignof:long)
           ((eq? type 'float) alignof:float)
           ((eq? type 'double) alignof:double)
-          ((eq? type 'pointer) alignof:void*)
-          ((eq? type 'callback) alignof:void*))))
-
-#;(define c-bytevector?
-  (lambda (object)
-    (number? object)))
+          ((eq? type 'pointer) alignof:void*))))
 
 (define c-u8-set!
   (lambda (c-bytevector k byte)
     ;; Ypsilon for some reason does not have bytevector-c-uint8-set!
     ;; or other bytevector-c-u*-set! procedures so we use
     ;; bytevector-c-int8-set!
-    (bytevector-c-int8-set! (make-bytevector-mapping (+ c-bytevector k)
-                                                     (size-of-type 'u8))
-                            0
-                            byte)))
+    (ypsilon-bytevector-c-int8-set! (make-bytevector-mapping (+ c-bytevector k)
+                                                             (size-of-type 'u8))
+                                    0
+                                    byte)))
 
 (define c-u8-ref
   (lambda (c-bytevector k)
-      (bytevector-c-uint8-ref (make-bytevector-mapping (+ c-bytevector k)
-                                                      (size-of-type 'u8))
-                             0)))
+    (ypsilon-bytevector-c-uint8-ref (make-bytevector-mapping (+ c-bytevector k)
+                                                             (size-of-type 'u8))
+                                    0)))
 
 (define c-pointer-set!
   (lambda (c-bytevector k pointer)
-    (bytevector-c-void*-set! (make-bytevector-mapping (+ c-bytevector k)
-                                                      (size-of-type 'pointer))
-                             0
-                             pointer)))
+    (ypsilon-bytevector-c-void*-set! (make-bytevector-mapping (+ c-bytevector k)
+                                                              (size-of-type 'pointer))
+                                     0
+                                     pointer)))
 
 (define c-pointer-ref
   (lambda (c-bytevector k)
-    (bytevector-c-void*-ref (make-bytevector-mapping (+ c-bytevector k)
-                                                     (size-of-type 'pointer))
-                            0)))
+    (ypsilon-bytevector-c-void*-ref (make-bytevector-mapping (+ c-bytevector k)
+                                                             (size-of-type 'pointer))
+                                    0)))
 
 (define shared-object-load
   (lambda (path options)
-    (load-shared-object path)))
+    (ypsilon-load-shared-object path)))
 
-(define-macro
+(ypsilon-define-macro
   (define-c-procedure scheme-name shared-object c-name return-type argument-types)
   (begin
     (let ((type->native-type
@@ -113,43 +105,12 @@
       `(define ,scheme-name
          (lambda args
            (let ((internal
-                   (c-function ,(type->native-type (cadr return-type))
-                               ,(cadr c-name)
-                               ,(map type->native-type (cadr argument-types)))))
+                   (ypsilon-c-function ,(type->native-type (cadr return-type))
+                                       ,(cadr c-name)
+                                       ,(map type->native-type (cadr argument-types)))))
              (if (equal? ,return-type 'pointer)
                (internal-make-c-bytevector (apply internal (map value->native-value args)))
                (apply internal (map value->native-value args)))))))))
-
-(define-macro
-  (define-c-callback scheme-name return-type argument-types procedure)
-  (let* ((type->native-type
-           (lambda (type)
-             (cond ((equal? type 'i8) 'int8_t)
-                   ((equal? type 'u8) 'uint8_t)
-                   ((equal? type 'i16) 'int16_t)
-                   ((equal? type 'u16) 'uint16_t)
-                   ((equal? type 'i32) 'int32_t)
-                   ((equal? type 'u32) 'uint32_t)
-                   ((equal? type 'i64) 'int64_t)
-                   ((equal? type 'u64) 'uint64_t)
-                   ((equal? type 'char) 'char)
-                   ((equal? type 'uchar) 'char)
-                   ((equal? type 'short) 'short)
-                   ((equal? type 'ushort) 'unsigned-short)
-                   ((equal? type 'int) 'int)
-                   ((equal? type 'uint) 'unsigned-int)
-                   ((equal? type 'long) 'long)
-                   ((equal? type 'ulong) 'unsigned-long)
-                   ((equal? type 'float) 'float)
-                   ((equal? type 'double) 'double)
-                   ((equal? type 'pointer) 'void*)
-                   ((equal? type 'void) 'void)
-                   ((equal? type 'callback) 'void*)
-                   (else (error "type->native-type -- No such type" type)))))
-         (native-return-type (type->native-type (cadr return-type)))
-         (native-argument-types (map type->native-type (cadr argument-types))))
-    `(define ,scheme-name
-       (c-callback ,native-return-type ,native-argument-types ,procedure))))
 
 (define (c-null) (c-memset-address->pointer 0 0 0))
 (define (c-null? pointer)
