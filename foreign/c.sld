@@ -184,11 +184,7 @@
                          (scheme file)
                          (scheme process-context)
                          (scheme inexact)
-                         (except (sagittarius ffi)
-                                 c-pointer
-                                 c-free
-                                 c-malloc
-                                 define-c-struct))
+                         (prefix (sagittarius ffi) sagittarius-))
                  (begin
                    (define-record-type <c-bytevector>
                      (internal-make-c-bytevector pointer)
@@ -250,10 +246,30 @@
                      bytevector-c-uint8-ref)))
   (export
     ;; Types
+    i8
+    u8
+    i16
+    u16
+    i32
+    u32
+    i64
+    u64
+    char
+    uchar
+    short
+    ushort
+    int
+    uint
+    long
+    ulong
+    float
+    double
+    void
+    pointer
     make-c-integer-type
     make-c-float-type
     make-c-pointer-type
-    ;make-c-array-type ; TODO
+    make-c-array-type
     make-c-struct-type
     c-type-name
     c-type-name=?

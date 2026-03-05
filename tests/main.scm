@@ -3,7 +3,7 @@
 
 ;; Types
 (test-begin "c-type-size")
-(test-equal "c-type-size i8" (c-type-size 'i8) 1)
+(test-equal "c-type-size i8" (c-type-size i8) 1)
 (test-equal "c-type-size u8" (c-type-size 'u8) 1)
 (test-equal "c-type-size i16" (c-type-size 'i16) 2)
 (test-equal "c-type-size u16" (c-type-size 'u16) 2)
