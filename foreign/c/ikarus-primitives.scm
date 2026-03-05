@@ -58,35 +58,35 @@
      (define scheme-name
        (lambda args
          (let ((internal
-                 ((make-c-callout (type->native-type return-type)
+                 ((ikarus-make-c-callout (type->native-type return-type)
                                   (map type->native-type argument-types))
-                  (dlsym shared-object (symbol->string c-name)))))
+                  (ikarus-dlsym shared-object (symbol->string c-name)))))
            (if (equal? return-type 'pointer)
              (internal-make-c-bytevector (apply internal (map value->native-value args)))
              (apply internal (map value->native-value args)))))))))
 
 (define shared-object-load
   (lambda (path options)
-    (dlopen path)))
+    (ikarus-dlopen path)))
 
 (define c-u8-set!
   (lambda (c-bytevector k byte)
-    (pointer-set-c-char! c-bytevector k byte)))
+    (ikarus-pointer-set-c-char! c-bytevector k byte)))
 
 (define c-u8-ref
   (lambda (c-bytevector k)
-    (pointer-ref-c-unsigned-char c-bytevector k)))
+    (ikarus-pointer-ref-c-unsigned-char c-bytevector k)))
 
 (define c-pointer-set!
   (lambda (c-bytevector k pointer)
-    (pointer-set-c-pointer! c-bytevector k pointer)))
+    (ikarus-pointer-set-c-pointer! c-bytevector k pointer)))
 
 (define c-pointer-ref
   (lambda (c-bytevector k)
-    (pointer-ref-c-pointer c-bytevector k)))
+    (ikarus-pointer-ref-c-pointer c-bytevector k)))
 
-(define (c-null) (integer->pointer 0))
+(define (c-null) (ikarus-integer->pointer 0))
 
 (define (c-null? pointer)
-  (and (pointer? pointer)
-       (= (pointer->integer pointer) 0)))
+  (and (ikarus-pointer? pointer)
+       (= (ikarus-pointer->integer pointer) 0)))

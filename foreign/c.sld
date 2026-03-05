@@ -12,18 +12,33 @@
   ;; c-null
   (cond-expand
     ;(capyscheme (import (foreign c capyscheme-primitives)))
-    (chezscheme (import (except (chezscheme)
+    (chezscheme #;(import (except (chezscheme)
                                 native-endianness
                                 endianness
                                 remove)
                         (srfi :0)
                         (srfi :98))
-                (begin
+              (import (scheme base)
+                   (scheme write)
+                   (scheme char)
+                   (scheme file)
+                   (scheme process-context)
+                   (scheme inexact)
+                   (scheme cxr)
+                   (prefix (chezscheme) chezscheme-)
+                   (only (chezscheme) syntax)
+                   )
+                #;(begin
                   (define-record-type (<c-bytevector> internal-make-c-bytevector c-bytevector?)
                     (fields
                       (immutable pointer c-bytevector-pointer))))
+            (begin
+             (define-record-type <c-bytevector>
+               (internal-make-c-bytevector pointer)
+               c-bytevector?
+               (pointer c-bytevector-pointer)))
                 (include "c/chezscheme-primitives.scm")
-                (export foreign-procedure
+                (export chezscheme-foreign-procedure
                         type->native-type
                         c-bytevector-null))
     (chibi (import (scheme base)
@@ -45,15 +60,15 @@
                      (scheme file)
                      (scheme process-context)
                      (scheme inexact)
-                     (chicken base)
-                     (chicken foreign)
-                     (chicken locative)
-                     (chicken syntax)
-                     (chicken memory)
-                     (chicken random))
-             (export foreign-declare
-                     foreign-safe-lambda
-                     foreign-value
+                     (prefix (chicken base) chicken-)
+                     (prefix (chicken foreign) chicken-)
+                     (prefix (chicken locative) chicken-)
+                     (prefix (chicken syntax) chicken-)
+                     (prefix (chicken memory) chicken-)
+                     (prefix (chicken random) chicken-))
+             (export chicken-foreign-declare
+                     chicken-foreign-safe-lambda
+                     chicken-foreign-value
                      unspecified
                      shared-object-load
                      define-c-procedure
@@ -104,7 +119,7 @@
                     (scheme file)
                     (scheme process-context)
                     (scheme inexact)
-                    (ikarus foreign))
+                    (prefix (ikarus foreign) ikarus-))
            (begin
                (define-record-type <c-bytevector>
                  (internal-make-c-bytevector pointer)
@@ -337,8 +352,8 @@
         (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
         (define-c-procedure c-calloc libc 'calloc 'pointer '(int int))
         (define-c-procedure c-perror libc 'perror 'void '(pointer))
-        (define (c-memset-address->pointer address value offset) (address->pointer address))
-        (define (c-memset-pointer->address pointer value offset) (pointer->address pointer))))
+        (define (c-memset-address->pointer address value offset) (chicken-address->pointer address))
+        (define (c-memset-pointer->address pointer value offset) (chicken-pointer->address pointer))))
     (kawa
       (begin
         (define-c-library libc '("stdlib.h" "stdio.h" "string.h") #f '())

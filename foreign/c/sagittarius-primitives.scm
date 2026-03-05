@@ -19,7 +19,6 @@
         ((eq? type 'double) sagittarius-size-of-double)
         ((eq? type 'pointer) sagittarius-size-of-void*)
         ((eq? type 'void) 0)
-        ((eq? type 'callback) sagittarius-size-of-void*)
         (else #f)))
 
 (define (align-of-type type)
@@ -43,7 +42,6 @@
         ((eq? type 'double) sagittarius-align-of-double)
         ((eq? type 'pointer) sagittarius-align-of-void*)
         ((eq? type 'void) 0)
-        ((eq? type 'callback) sagittarius-align-of-void*)
         (else #f)))
 
 (define (shared-object-load path options)
@@ -70,7 +68,6 @@
         ((equal? type 'double) 'double)
         ((equal? type 'pointer) 'void*)
         ((equal? type 'void) 'void)
-        ((equal? type 'callback) 'callback)
         (else #f)))
 
 (define-syntax define-c-procedure
@@ -85,14 +82,6 @@
            (if (equal? return-type 'pointer)
              (internal-make-c-bytevector (apply internal (map value->native-value args)))
              (apply internal (map value->native-value args)))))))))
-
-#;(define-syntax define-c-callback
-  (syntax-rules ()
-    ((_ scheme-name return-type argument-types procedure)
-     (define scheme-name
-       (make-c-callback (type->native-type return-type)
-                        (map type->native-type argument-types)
-                        procedure)))))
 
 (define c-u8-set! sagittarius-pointer-set-c-uint8_t!)
 (define c-u8-ref sagittarius-pointer-ref-c-uint8_t)

@@ -1,4 +1,4 @@
-VERSION=0.13.7
+VERSION=0.14.0
 SCHEME=chibi
 RNRS=r7rs
 TEST_SUFFIX=scm
@@ -38,8 +38,8 @@ uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
 snow:
-	snow-chibi install --impls=generic --skip-tests?=1 --always-yes --install-source-dir=snow --install-library-dir=snow retropikzel.ctrf | true
-	snow-chibi install --impls=generic --skip-tests?=1 --always-yes --install-source-dir=snow --install-library-dir=snow srfi.64 | true
+	snow-chibi install --impls=generic --skip-tests?=1 --always-yes --install-source-dir=snow --install-library-dir=snow retropikzel.ctrf || true
+	snow-chibi install --impls=generic --skip-tests?=1 --always-yes --install-source-dir=snow --install-library-dir=snow srfi.64 || true
 
 testfiles:
 	echo "(import (except (rnrs) remove) (srfi :64) (retropikzel ctrf) (foreign c))" > run-test.sps

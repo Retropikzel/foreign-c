@@ -87,7 +87,7 @@
 
 (define (make-c-struct-type name members)
   (when (not (symbol? name))
-    (error "make-c-struct-type: name must be symbol" size))
+    (error "make-c-struct-type: name must be symbol" name))
   (when (null? members)
     (error "make-c-struct-type: can not make struct type with no members" members))
   (for-each
@@ -139,7 +139,8 @@
 
 (define (c-type-size=? type-a type-b)
   (cond
-    ((c-void-type? type) (error "c-type-size=?: c-void-type has no size" type))
+    ((c-void-type? type-a) (error "c-type-size=?: type-a can not be c-void-type" type-a))
+    ((c-void-type? type-b) (error "c-type-size=?: type-b can not be c-void-type" type-b))
     ((not (c-type? type-a)) (error "c-type-size=?: type-a must be C type" type-a))
     ((not (c-type? type-b)) (error "c-type-size=?: type-b must be C type" type-b))
     (else (= (c-type-size type-a) (c-type-size type-b)))))

@@ -24,42 +24,42 @@
 
 (define size-of-type
   (lambda (type)
-    (foreign-sizeof (type->native-type type))))
+    (chezscheme-foreign-sizeof (type->native-type type))))
 
 (define align-of-type
   (lambda (type)
-    (foreign-alignof (type->native-type type))))
+    (chezscheme-foreign-alignof (type->native-type type))))
 
 (define shared-object-load
   (lambda (path options)
-    (load-shared-object path)))
+    (chezscheme-load-shared-object path)))
 
 (define c-u8-set!
   (lambda (c-bytevector k byte)
-    (foreign-set! 'unsigned-8 c-bytevector k byte)))
+    (chezscheme-foreign-set! 'unsigned-8 c-bytevector k byte)))
 
 (define c-u8-ref
   (lambda (c-bytevector k)
-    (foreign-ref 'unsigned-8 c-bytevector k)))
+    (chezscheme-foreign-ref 'unsigned-8 c-bytevector k)))
 
 (define c-pointer-set!
   (lambda (c-bytevector k pointer)
-    (foreign-set! 'void* c-bytevector k pointer)))
+    (chezscheme-foreign-set! 'void* c-bytevector k pointer)))
 
 (define c-pointer-ref
   (lambda (c-bytevector k)
-    (foreign-ref 'void* c-bytevector k)))
+    (chezscheme-foreign-ref 'void* c-bytevector k)))
 
 (define (c-null) (c-memset-address->pointer 0 0 0))
 (define (c-null? pointer)
   (or (and (number? pointer)
            (= pointer 0))
-      (and (ftype-pointer? pointer)
-           (ftype-pointer-null? pointer))))
+      (and (chezscheme-ftype-pointer? pointer)
+           (chezscheme-ftype-pointer-null? pointer))))
 
 (define-syntax define-macro!
   (lambda (x)
-    (syntax-case x ()
+    (chezscheme-syntax-case x ()
                  [(k (name arg1 ... . args)
                      form1
                      form2
@@ -77,7 +77,7 @@
                        form2
                        ...)]
                  [(k name args . forms)
-                  (identifier? #'name)
+                  (chezscheme-identifier? #'name)
                   (letrec ((add-car
                              (lambda (access)
                                (case (car access)
@@ -100,23 +100,23 @@
                                  ((null? l) '())
                                  ((symbol? l) `((,l ,access)))
                                  ((pair? l)
-                                  (append!
+                                  (chezscheme-append!
                                     (parse (car l) (add-car access))
                                     (parse (cdr l) (add-cdr access))))
                                  (else
-                                   (syntax-error #'args
-                                                 (format "invalid ~s parameter syntax" (datum k))))))))
-                    (with-syntax ((proc (datum->syntax-object #'k
-                                                              (let ((g (gensym)))
+                                   (chezscheme-syntax-error #'args
+                                                 (chezscheme-format "invalid ~s parameter syntax" (chezscheme-datum k))))))))
+                    (chezscheme-with-syntax ((proc (chezscheme-datum->syntax-object #'k
+                                                              (let ((g (chezscheme-gensym)))
                                                                 `(lambda (,g)
-                                                                   (let ,(parse (datum args) `(cdr ,g))
-                                                                     ,@(datum forms)))))))
+                                                                   (let ,(parse (chezscheme-datum args) `(cdr ,g))
+                                                                     ,@(chezscheme-datum forms)))))))
                                  #'(define-syntax name
                                      (lambda (x)
-                                       (syntax-case x ()
+                                       (chezscheme-syntax-case x ()
                                                     ((k1 . r)
-                                                     (datum->syntax-object #'k1
-                                                                           (proc (syntax-object->datum x)))))))))])))
+                                                     (chezscheme-datum->syntax-object #'k1
+                                                                           (proc (chezscheme-syntax-object->datum x)))))))))])))
 
 (define-macro!
   define-c-procedure
@@ -174,7 +174,7 @@
     (if (null? argument-types)
       `(define ,scheme-name
          (lambda args
-           (let ((internal (foreign-procedure #f
+           (let ((internal (chezscheme-foreign-procedure #f
                                               ,(symbol->string (cadr c-name))
                                               ()
                                               ,native-return-type)))
@@ -183,7 +183,7 @@
                (apply internal (map value->native-value args))))))
       `(define ,scheme-name
          (lambda args
-           (let ((internal (foreign-procedure #f
+           (let ((internal (chezscheme-foreign-procedure #f
                                               ,(symbol->string (cadr c-name))
                                               ,native-argument-types
                                               ,native-return-type)))
