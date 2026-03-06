@@ -49,5 +49,6 @@ RUN snow-chibi install --impls=${SCHEME} --always-yes --skip-tests?=1 retropikze
 ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
 COPY Makefile .
+COPY README.md .
 COPY tests tests/
 COPY foreign foreign/

@@ -27,9 +27,7 @@ build:
 		--doc=README.html \
 		--foreign-depends=ffi \
 		--description="Portable foreign function interface for R7RS Schemes" \
-	foreign/c.sld #\
-	#foreign/c/struct.sld \
-	#foreign/c/stdio.sld
+	foreign/c.sld
 
 install:
 	snow-chibi --impls=${SCHEME} install --skip-tests?=1 ${PKG}

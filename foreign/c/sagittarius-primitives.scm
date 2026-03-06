@@ -1,52 +1,3 @@
-(define (size-of-type type)
-  (cond ((eq? type 'i8) sagittarius-size-of-int8_t)
-        ((eq? type 'u8) sagittarius-size-of-uint8_t)
-        ((eq? type 'i16) sagittarius-size-of-int16_t)
-        ((eq? type 'u16) sagittarius-size-of-uint16_t)
-        ((eq? type 'i32) sagittarius-size-of-int32_t)
-        ((eq? type 'u32) sagittarius-size-of-uint32_t)
-        ((eq? type 'i64) sagittarius-size-of-int64_t)
-        ((eq? type 'u64) sagittarius-size-of-uint64_t)
-        ((eq? type 'char) sagittarius-size-of-char)
-        ((eq? type 'uchar) sagittarius-size-of-char)
-        ((eq? type 'short) sagittarius-size-of-short)
-        ((eq? type 'ushort) sagittarius-size-of-unsigned-short)
-        ((eq? type 'int) sagittarius-size-of-int)
-        ((eq? type 'uint) sagittarius-size-of-unsigned-int)
-        ((eq? type 'long) sagittarius-size-of-long)
-        ((eq? type 'ulong) sagittarius-size-of-unsigned-long)
-        ((eq? type 'float) sagittarius-size-of-float)
-        ((eq? type 'double) sagittarius-size-of-double)
-        ((eq? type 'pointer) sagittarius-size-of-void*)
-        ((eq? type 'void) 0)
-        (else #f)))
-
-(define (align-of-type type)
-  (cond ((eq? type 'i8) sagittarius-align-of-int8_t)
-        ((eq? type 'u8) sagittarius-align-of-uint8_t)
-        ((eq? type 'i16) sagittarius-align-of-int16_t)
-        ((eq? type 'u16) sagittarius-align-of-uint16_t)
-        ((eq? type 'i32) sagittarius-align-of-int32_t)
-        ((eq? type 'u32) sagittarius-align-of-uint32_t)
-        ((eq? type 'i64) sagittarius-align-of-int64_t)
-        ((eq? type 'u64) sagittarius-align-of-uint64_t)
-        ((eq? type 'char) sagittarius-align-of-char)
-        ((eq? type 'uchar) sagittarius-align-of-char)
-        ((eq? type 'short) sagittarius-align-of-short)
-        ((eq? type 'ushort) sagittarius-align-of-unsigned-short)
-        ((eq? type 'int) sagittarius-align-of-int)
-        ((eq? type 'uint) sagittarius-align-of-unsigned-int)
-        ((eq? type 'long) sagittarius-align-of-long)
-        ((eq? type 'ulong) sagittarius-align-of-unsigned-long)
-        ((eq? type 'float) sagittarius-align-of-float)
-        ((eq? type 'double) sagittarius-align-of-double)
-        ((eq? type 'pointer) sagittarius-align-of-void*)
-        ((eq? type 'void) 0)
-        (else #f)))
-
-(define (shared-object-load path options)
-  (sagittarius-open-shared-library path))
-
 (define (type->native-type type)
   (cond ((equal? type 'i8) 'int8_t)
         ((equal? type 'u8) 'uint8_t)
@@ -66,20 +17,26 @@
         ((equal? type 'ulong) 'unsigned-long)
         ((equal? type 'float) 'float)
         ((equal? type 'double) 'double)
-        ((equal? type 'pointer) 'void*)
         ((equal? type 'void) 'void)
-        (else #f)))
+        (else 'void*)))
+
+(define (shared-object-load path options)
+  (sagittarius-open-shared-library path))
 
 (define-syntax define-c-procedure
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
        (lambda args
-         (let ((internal (sagittarius-make-c-function shared-object
-                                          (type->native-type return-type)
-                                          c-name
-                                          (map type->native-type argument-types))))
-           (if (equal? return-type 'pointer)
+         (let
+           ((internal
+              (sagittarius-make-c-function shared-object
+                                           (type->native-type return-type)
+                                           c-name
+                                           (map (lambda (type)
+                                                  (type->native-type type))
+                                                argument-types))))
+           (if (c-pointer-type? return-type)
              (internal-make-c-bytevector (apply internal (map value->native-value args)))
              (apply internal (map value->native-value args)))))))))
 

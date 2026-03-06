@@ -1,8 +1,6 @@
 (define-library
   (foreign c)
   ;; SCHEME-primitives.scm must implement:
-  ;; size-of-type
-  ;; align-of-type
   ;; shared-object-load
   ;; define-c-procedure
   ;; c-u8-ref
@@ -69,30 +67,21 @@
                  c-bytevector?
                  (pointer c-bytevector-pointer)))
              (include "c/chicken-primitives.scm"))
+    ;; TODO
     ;(cyclone (import (foreign c cyclone-primitives)))
+    ;; TODO
     ;(gambit (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact)) (include "c/gambit-primitives.scm"))
-    (gauche (import (scheme base)
-                    (scheme write)
-                    (scheme char)
-                    (scheme file)
-                    (scheme process-context)
-                    (scheme inexact))
-            (rename (gauche ffi)
-                    (size-of-type gauche:size-of-type)
-                    (align-of-type gauche:align-of-type))
-            (include "c/gauche-primitives.scm"))
+    ;; TODO
+    ;(gauche (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact)) (rename (gauche ffi) (size-of-type gauche:size-of-type) (align-of-type gauche:align-of-type)) (include "c/gauche-primitives.scm"))
     (guile (import (scheme base)
                    (scheme write)
                    (scheme char)
                    (scheme file)
                    (scheme process-context)
                    (scheme inexact)
-                   (system foreign)
-                   (system foreign-library)
-                   (only (rnrs bytevectors)
-                         bytevector-u64-native-set!
-                         bytevector-u64-native-ref
-                         native-endianness))
+                   (prefix (system foreign) guile-)
+                   (prefix (system foreign-library) guile-)
+                   (prefix (rnrs bytevectors) guile-))
            (begin
                (define-record-type <c-bytevector>
                  (internal-make-c-bytevector pointer)
@@ -140,7 +129,9 @@
               c-bytevector?
               (pointer c-bytevector-pointer)))
           (include "c/kawa-primitives.scm"))
+    ;; TODO
     ;(mit-scheme (import (foreign c mit-scheme-primitives)))
+    ;; TODO
     ;(larceny (import (foreign c larceny-primitives)))
     (mosh (import (scheme base)
                   (scheme write)
@@ -233,35 +224,20 @@
                      ypsilon-bytevector-c-int8-set!
                      ypsilon-bytevector-c-uint8-ref)))
   (export
-    ;; Types
-    i8
-    u8
-    i16
-    u16
-    i32
-    u32
-    i64
-    u64
-    char
-    uchar
-    short
-    ushort
-    int
-    uint
-    long
-    ulong
-    float
-    double
-    void
-    pointer
-    make-c-array-type
-    make-c-struct-type
-    c-type-name
-    c-type-name=?
+    c-integer-type?
+    c-char-type?
+    c-float-type?
+    c-double-type?
+    c-signed-type?
+    c-pointer-type?
+    c-array-type?
+    c-struct-type?
+
     c-type-size
-    c-type-size=?
     c-type-align
-    c-type-align=?
+
+    make-c-array-type
+    define-c-struct-type
 
     ;; Libraries and procedures
     define-c-library
@@ -327,12 +303,13 @@
       (begin
         (define-c-library libc '("stdlib.h" "stdio.h" "string.h") #f '())
         (define-c-procedure c-malloc libc 'malloc 'pointer '(int))
-        (define-c-procedure c-free libc 'free 'void '(pointer))
+        (define-c-procedure c-free libc 'free void '(pointer))
         (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
         (define-c-procedure c-calloc libc 'calloc 'pointer '(int int))
         (define-c-procedure c-perror libc 'perror 'void '(pointer))
         (define (c-memset-address->pointer address value offset)
-          (invoke-static java.lang.foreign.MemorySegment 'ofAddress address))
-        (define (c-memset-pointer->address pointer value offset) (invoke pointer 'address))))
+          (kawa-invoke-static java.lang.foreign.MemorySegment 'ofAddress address))
+        (define (c-memset-pointer->address pointer value offset)
+          (kawa-invoke pointer 'address))))
     (else (include "c-libc.scm"))))
 

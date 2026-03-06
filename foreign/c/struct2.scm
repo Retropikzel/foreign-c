@@ -9,7 +9,7 @@
      (largest-member-size 0)
      (data (map (lambda (memb)
                   (let* ((name (car memb))
-                         (type (cdr memb))
+                         (type (cadr memb))
                          (type-size (c-type-size type))
                          (type-alignment (c-type-align type)))
                     (when (> type-size largest-member-size)

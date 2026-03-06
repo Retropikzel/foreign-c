@@ -120,12 +120,14 @@
       (lambda arguments
         (let* ((return-pointer
                  (internal-ffi-call (length argument-types)
-                                    (type->libffi-type-number return-type)
-                                    (map type->libffi-type-number argument-types)
+                                    (type->libffi-type-number (c-type-name return-type))
+                                    (map (lambda (type)
+                                           (type->libffi-type-number (c-type-name type)))
+                                           argument-types)
                                     c-function
-                                    (size-of-type return-type)
+                                    (size-of-type (c-type-name return-type))
                                     (map value->native-value arguments))))
-          (when (not (symbol=? return-type 'void))
+          (when (not (c-void-type? return-type))
               (c-bytevector-ref (internal-make-c-bytevector return-pointer) return-type 0)))))))
 
 (define-syntax define-c-procedure
@@ -136,18 +138,6 @@
                         (symbol->string c-name)
                         return-type
                         argument-types)))))
-
-(define make-c-callback
-  (lambda (return-type argument-types procedure)
-    (scheme-procedure-to-pointer procedure)))
-
-#;(define-syntax define-c-callback
-  (syntax-rules ()
-    ((_ scheme-name return-type argument-types procedure)
-     (error "define-c-callback is not yet supported on Chibi")
-     #;(define scheme-name
-       (make-c-callback return-type 'argument-types procedure))
-     )))
 
 (define (c-null) (internal-c-null))
 

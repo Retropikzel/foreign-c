@@ -48,20 +48,18 @@
         ((equal? type 'void) 'void)
         (error "Unsupported type: " type)))
 
-#;(define c-bytevector?
-  (lambda (object)
-    (pointer? object)))
-
 (define-syntax define-c-procedure
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
        (lambda args
          (let ((internal
-                 ((ikarus-make-c-callout (type->native-type return-type)
-                                  (map type->native-type argument-types))
+                 ((ikarus-make-c-callout (type->native-type (c-type-name return-type))
+                                  (map (lambda (type)
+                                         (type->native-type (c-type-name type)))
+                                       argument-types))
                   (ikarus-dlsym shared-object (symbol->string c-name)))))
-           (if (equal? return-type 'pointer)
+           (if (c-pointer-type? return-type)
              (internal-make-c-bytevector (apply internal (map value->native-value args)))
              (apply internal (map value->native-value args)))))))))
 

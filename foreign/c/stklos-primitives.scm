@@ -64,18 +64,6 @@
                (internal-make-c-bytevector (apply internal (map value->native-value args)))
                (apply internal (map value->native-value args))))))))))
 
-#;(define-syntax define-c-callback
-  (syntax-rules ()
-    ((_ scheme-name return-type argument-types procedure)
-     (define scheme-name
-       (lambda args
-         (let ((internal (%make-callback procedure
-                                         (map type->native-type argument-types)
-                                         (type->native-type return-type))))
-           (if (equal? return-type 'pointer)
-             (internal-make-c-bytevector (apply internal (map value->native-value args)))
-             (apply internal (map value->native-value args)))))))))
-
 (define size-of-type
   (lambda (type)
     (cond ((equal? type 'i8) (c-size-of :int8))

@@ -3,34 +3,6 @@
 (define native-linker (kawa-invoke-static java.lang.foreign.Linker 'nativeLinker))
 (define INTEGER-MAX-VALUE (static-field java.lang.Integer 'MAX_VALUE))
 
-(define value->object
-  (lambda (value type)
-    (cond ((equal? type 'byte)
-           (java.lang.Byte value))
-          ((equal? type 'i8)
-           (java.lang.Integer value))
-          ((equal? type 'u8)
-           (java.lang.Integer value))
-          ((equal? type 'short)
-           (java.lang.Short value))
-          ((equal? type 'unsigned-short)
-           (java.lang.Short value))
-          ((equal? type 'int)
-           (java.lang.Integer value))
-          ((equal? type 'unsigned-int)
-           (java.lang.Integer value))
-          ((equal? type 'long)
-           (java.lang.Long value))
-          ((equal? type 'unsigned-long)
-           (java.lang.Long value))
-          ((equal? type 'float)
-           (java.lang.Float value))
-          ((equal? type 'double)
-           (java.lang.Double value))
-          ((equal? type 'char)
-           (java.lang.Char value))
-          (else value))))
-
 (define type->native-type
   (lambda (type)
     (cond
@@ -54,7 +26,6 @@
       ((equal? type 'double) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_DOUBLE) 'withByteAlignment 8))
       ((equal? type 'pointer) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
       ((equal? type 'void) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 1))
-      ((equal? type 'struct) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
       (else #f))))
 
 (define-syntax define-c-procedure
@@ -68,15 +39,19 @@
                                                        'find
                                                        (symbol->string c-name))
                                                'orElseThrow)
-                                       (if (equal? return-type 'void)
+                                       (if (c-void-type? return-type)
                                          (apply (class-methods java.lang.foreign.FunctionDescriptor 'ofVoid)
-                                                (map type->native-type argument-types))
+                                                (map (lambda (type)
+                                                       (type->native-type (c-type-name type)))
+                                                     argument-types))
                                          (apply (class-methods java.lang.foreign.FunctionDescriptor 'of)
-                                                (type->native-type return-type)
-                                                (map type->native-type argument-types))))
+                                                (type->native-type (c-type-name return-type))
+                                                (map (lambda (type)
+                                                       (type->native-type (c-type-name type)))
+                                                     argument-types))))
                                'invokeWithArguments
                                (map value->native-value args argument-types))))
-           (if (equal? return-type 'pointer)
+           (if (c-pointer-type? return-type)
              (internal-make-c-bytevector result)
              result)))))))
 
