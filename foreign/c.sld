@@ -236,7 +236,7 @@
     c-type-size
     c-type-align
 
-    make-c-array-type
+    define-c-array-type
     define-c-struct-type
 
     ;; Libraries and procedures

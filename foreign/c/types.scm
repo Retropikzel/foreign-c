@@ -19,9 +19,13 @@
   (name c-array-type-name)
   (type c-array-type-type))
 
+(define-syntax define-c-array-type
+  (syntax-rules ()
+    ((_ name type)
+     (define name (internal-make-c-array-type 'name type)))))
+
 (define (internal-array-type-size type)
   (c-type-size (c-array-type-type type)))
-
 
 (define (c-integer-type? type)
   (or (equal? type 'i8)
@@ -108,22 +112,4 @@
         ((c-array-type? type) (internal-array-type-size type))
         ((c-struct-type? type) (c-struct-type-size type))
         (else (error "c-type-align: Unknown type" type))))
-
-
-(define-syntax make-c-array-type
-  (syntax-rules ()
-    ((_ name type)
-     (internal-make-c-array-type name type))))
-
-(define (make-c-struct-type name members)
-  (for-each
-    (lambda (memb)
-      (when (not (pair? memb))
-        (error "meake-c-struct-type: struct members must be pairs" memb))
-      (when (not (symbol? (car memb)))
-        (error "meake-c-struct-type: struct member car must be symbol" memb)))
-    members)
-  (internal-make-c-struct-type name
-                               (calculate-struct-size members)
-                               (calculate-struct-members members)))
 

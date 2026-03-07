@@ -371,8 +371,34 @@
 (test-end "stdio")
 
 ;; struct
-(test-begin "struct")
-(test-end "struct")
+(test-begin "define-c-struct-type")
+(define-c-struct-type color '((r i8) (g i8) (b i8) (a i8)))
+(test-assert (c-struct-type? color))
+
+(define green (make-c-bytevector (c-type-size color)))
+(c-bytevector-set! green color 'r 1)
+(c-bytevector-set! green color 'g 2)
+(c-bytevector-set! green color 'b 3)
+(c-bytevector-set! green color 'a 4)
+
+(test-equal 1 (c-bytevector-ref green color 'r))
+(test-equal 2 (c-bytevector-ref green color 'g))
+(test-equal 3 (c-bytevector-ref green color 'b))
+(test-equal 4 (c-bytevector-ref green color 'a))
+
+(test-equal (c-bytevector->list green color) '((r . 1) (g . 2) (b . 3) (a . 4)))
+(test-end "define-c-struct-type")
+
+;; array
+(test-begin "define-c-array-type")
+(define-c-array-type i8-array 'i8)
+(define ar1 (make-c-bytevector (* (c-type-size i8-array) 10)))
+(write ar1)
+(newline)
+(c-bytevector-set! ar1 i8-array 5 25)
+(write (c-bytevector-ref ar1 i8-array 5))
+(newline)
+(test-end"define-c-array-type")
 
 
 (test-end "foreign-c")

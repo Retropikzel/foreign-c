@@ -1,5 +1,4 @@
-;(test-begin "define-c-struct")
-
+(test-begin "define-c-struct-type")
 (define-c-struct-type color '((r i8) (g i8) (b i8) (a float) (metadata pointer)))
 (write color)
 (newline)
@@ -16,21 +15,22 @@
 (write (c-bytevector->list green color))
 (newline)
 
-#|
+
 (define md (c-bytevector-ref green color 'metadata))
 (write md)
 (newline)
 
-(write (c-bytevector-ref md i8 0))
+(write (c-bytevector-ref md 'i8 0))
 (newline)
+(test-end "define-c-struct")
 
-(define i8-array (make-c-array-type 'int-array i8))
+
+(test-begin "define-c-array-type")
+(define-c-array-type i8-array 'i8)
 (define ar1 (make-c-bytevector (* (c-type-size i8-array) 10)))
 (write ar1)
 (newline)
 (c-bytevector-set! ar1 i8-array 5 25)
 (write (c-bytevector-ref ar1 i8-array 5))
 (newline)
-
-|#
-;(test-end "define-c-struct")
+(test-end"define-c-array-type")
