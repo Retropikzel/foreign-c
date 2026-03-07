@@ -56,10 +56,10 @@ ${VENV}: snow
 	./${VENV}/bin/snow-chibi install --impls=${SCHEME} --always-yes srfi.64
 	./${VENV}/bin/snow-chibi install --impls=${SCHEME} --always-yes retropikzel.ctrf
 
-logs:
-	mkdir -p logs
+logs/${RNRS}:
+	mkdir -p logs/${RNRS}
 
-run-test-venv: libtest.so libtest.o libtest.a testfiles build ${VENV} logs
+run-test-venv: libtest.so libtest.o libtest.a testfiles build ${VENV} logs/${RNRS}
 	cp libtest.so ${VENV}/lib/
 	cp libtest.o ${VENV}/lib/
 	cp libtest.a ${VENV}/lib/
@@ -69,9 +69,9 @@ run-test-venv: libtest.so libtest.o libtest.a testfiles build ${VENV} logs
 	if [ "${RNRS}" = "r6rs" ]; then akku install akku-r7rs; fi
 	CSC_OPTIONS="-L -ltest" ./${VENV}/bin/scheme-compile run-test.${TEST_SUFFIX}
 	LD_LIBRARY_PATH=. ./run-test
-	mv *.json logs/ || true
+	mv *.json logs/${RNRS}/
 
-run-test-system: libtest.so libtest.o libtest.a snow testfiles build logs
+run-test-system: libtest.so libtest.o libtest.a snow testfiles build logs/${RNRS}
 	if [ "${RNRS}" = "r6rs" ]; then akku install akku-r7rs; fi
 	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.64; fi
 	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes retropikzel.ctrf; fi
@@ -79,7 +79,7 @@ run-test-system: libtest.so libtest.o libtest.a snow testfiles build logs
 	if [ "${RNRS}" = "r6rs" ]; then COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib run-test.sps; fi
 	if [ "${RNRS}" = "r7rs" ]; then COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I./tests/c-include" compile-scheme run-test.scm; fi
 	LD_LIBRARY_PATH=. ./run-test
-	mv *.json logs/ || true
+	mv *.json logs/${RNRS}/
 
 run-test-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} -f Dockerfile.test --tag=foreign-c-${SCHEME} .
