@@ -1,6 +1,6 @@
 (cond-expand
   (kawa
-    (define (value->native-value value type)
+    (define (argument->native-value value type)
       (cond ((c-bytevector? value)
              (c-bytevector-pointer value))
             ((equal? type 'i8)
@@ -27,7 +27,7 @@
              (java.lang.Char value))
             (else value))))
   (else
-    (define (value->native-value value)
+    (define (argument->native-value value)
       (if (c-bytevector? value)
         (c-bytevector-pointer value)
         value))))

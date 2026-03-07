@@ -115,7 +115,7 @@ implementations.
     - As '(...) and not (list...)
 
 
-(**define-c-procedure** scheme-name shared-object c-name return-type argument-type)
+(**define-c-procedure** scheme-name shared-object c-name return-type argument-types)
 
 Takes a scheme-name to bind the C procedure to, shared-object where the function
 is looked from, c-name of the function as symbol, return-type and argument-types.
@@ -125,16 +125,15 @@ Defines a new foreign function to be used from Scheme code.
 
 Example:
 
-    (define-c-library libc '("stdlib.h") #f '("6"))
+    (define-c-library libc '("stdlib.h") #f '())
     (define-c-procedure c-puts libc 'puts 'int '(pointer))
     (c-puts "Message brought to you by foreign-c!")
 
 
 #### Notes
 
-- Pass the return-types using quote
+- Pass the argument-types using quote
     - As '(...) and not (list...)
-
 
 ### c-bytevectors
 

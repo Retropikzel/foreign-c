@@ -28,8 +28,7 @@
           (else
             (if argument?
             (error "define-c-procedure: Invalid argument type" scheme-name type)
-            (error "define-c-procedure: Invalid return type" scheme-name type)))
-          )))
+            (error "define-c-procedure: Invalid return type" scheme-name type))))))
 
 (define-syntax define-c-procedure
   (er-macro-transformer

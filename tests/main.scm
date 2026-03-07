@@ -94,7 +94,7 @@
 (write (c-bytevector-ref intpointer 'int))
 (newline)
 
-(define-c-procedure c-takes-no-args-returns-int c-testlib 'takes_no_args_returns_int 'int ())
+(define-c-procedure c-takes-no-args-returns-int c-testlib 'takes_no_args_returns_int 'int '())
 (define takes-no-args-returns-int-result (c-takes-no-args-returns-int))
 (test-equal takes-no-args-returns-int-result 0)
 (test-end "define-c-library")

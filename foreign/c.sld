@@ -273,13 +273,12 @@
     ;; Struct
     ;define-c-struct
 
-    value->native-value ;; TODO remove from exports
+    argument->native-value ;; TODO remove from exports
     )
   (include "c/types.scm")
   (include "c-bytevector.scm")
   (include "c-value-to-native-value.scm")
   (include "c-call-with-address-of.scm")
-  ;(include "c/struct2.scm")
   (cond-expand
     (chicken
       (begin
