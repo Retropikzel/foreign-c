@@ -26,7 +26,7 @@ pipeline {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                 sh "rm -rf logs/*.json"
                                 sh "make RNRS=r6rs SCHEME=${SCHEME} run-test-docker"
-                                archiveArtifacts(artifacts: "logs/${SCHEME}-foreign-c.ctrf.json", allowEmptyArchive: false, fingerprint: true)
+                                archiveArtifacts(artifacts: "logs/*.json", allowEmptyArchive: false, fingerprint: true)
                             }
                         }
                     }
@@ -41,7 +41,7 @@ pipeline {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                 sh "rm -rf logs/*.json"
                                 sh "make RNRS=r7rs SCHEME=${SCHEME} run-test-docker"
-                                archiveArtifacts(artifacts: "logs/${SCHEME}-foreign-c.ctrf.json", allowEmptyArchive: false, fingerprint: true)
+                                archiveArtifacts(artifacts: "logs/*.json", allowEmptyArchive: false, fingerprint: true)
                             }
                         }
                     }
