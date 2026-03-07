@@ -1,12 +1,12 @@
-(define (round-to-next-modulo-of to-round roundee)
-  (if (= (modulo to-round roundee) 0)
-    to-round
-    (round-to-next-modulo-of (+ to-round 1) roundee)))
-
 (define (calculate-struct-members members . return-just-size)
   (let*
     ((size 0)
      (largest-member-size 0)
+     (round-to-next-modulo-of
+       (lambda (to-round roundee)
+         (if (= (modulo to-round roundee) 0)
+           to-round
+           (round-to-next-modulo-of (+ to-round 1) roundee))))
      (data (map (lambda (memb)
                   (let* ((name (car memb))
                          (type (cadr memb))

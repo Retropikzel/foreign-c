@@ -1,4 +1,4 @@
-(define (type->native-type type)
+(define (type->native-type scheme-name type argument?)
   (cond ((equal? type 'i8) 'int8_t)
         ((equal? type 'u8) 'uint8_t)
         ((equal? type 'i16) 'int16_t)
@@ -17,8 +17,17 @@
         ((equal? type 'ulong) 'unsigned-long)
         ((equal? type 'float) 'float)
         ((equal? type 'double) 'double)
-        ((equal? type 'void) 'void)
-        (else 'void*)))
+        ((equal? type 'pointer) 'void*)
+        ((equal? type 'array) 'void*)
+        ((equal? type 'struct) 'void*)
+        ((equal? type 'void)
+         (if argument?
+           (error "define-c-procedure: Argument type can not be void" scheme-name type)
+           'void))
+        (else
+          (if argument?
+            (error "define-c-procedure: Invalid argument type" scheme-name type)
+            (error "define-c-procedure: Invalid return type" scheme-name type)))))
 
 (define (shared-object-load path options)
   (sagittarius-open-shared-library path))
@@ -31,10 +40,10 @@
          (let
            ((internal
               (sagittarius-make-c-function shared-object
-                                           (type->native-type return-type)
+                                           (type->native-type scheme-name return-type #f)
                                            c-name
                                            (map (lambda (type)
-                                                  (type->native-type type))
+                                                  (type->native-type scheme-name type #t))
                                                 argument-types))))
            (if (c-pointer-type? return-type)
              (internal-make-c-bytevector (apply internal (map value->native-value args)))

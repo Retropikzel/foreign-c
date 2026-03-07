@@ -26,7 +26,6 @@
                     (pointer c-bytevector-pointer)))
                 (include "c/chezscheme-primitives.scm")
                 (export chezscheme-foreign-procedure
-                        type->native-type
                         c-bytevector-null))
     (chibi (import (scheme base)
                    (scheme write)
@@ -204,7 +203,11 @@
                     free-bytes
                     file-exists?
                     c-pointer-set!
-                    c-pointer-ref))
+                    c-pointer-ref
+                    internal-make-c-array-type
+                    internal-make-c-struct-type
+                    internal-c-struct-type-member
+                    calculate-struct-members))
     (ypsilon (import (scheme base)
                      (scheme write)
                      (scheme char)
@@ -276,7 +279,7 @@
   (include "c-bytevector.scm")
   (include "c-value-to-native-value.scm")
   (include "c-call-with-address-of.scm")
-  (include "c/struct2.scm")
+  ;(include "c/struct2.scm")
   (cond-expand
     (chicken
       (begin
@@ -303,7 +306,7 @@
       (begin
         (define-c-library libc '("stdlib.h" "stdio.h" "string.h") #f '())
         (define-c-procedure c-malloc libc 'malloc 'pointer '(int))
-        (define-c-procedure c-free libc 'free void '(pointer))
+        (define-c-procedure c-free libc 'free 'void '(pointer))
         (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
         (define-c-procedure c-calloc libc 'calloc 'pointer '(int int))
         (define-c-procedure c-perror libc 'perror 'void '(pointer))

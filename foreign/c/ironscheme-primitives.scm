@@ -2,36 +2,7 @@
 
 (clr-using System.Runtime.InteropServices)
 
-;; FIXME
-(define size-of-type
-  (lambda (type)
-    (cond ((eq? type 'i8) 1)
-          ((eq? type 'u8) 1)
-          ((eq? type 'i16) 2)
-          ((eq? type 'u16) 2)
-          ((eq? type 'i32) 4)
-          ((eq? type 'u32) 4)
-          ((eq? type 'i64) 8)
-          ((eq? type 'u64) 8)
-          ((eq? type 'char) 1)
-          ((eq? type 'uchar) 1)
-          ((eq? type 'short) 2)
-          ((eq? type 'ushort) 2)
-          ((eq? type 'int) 4)
-          ((eq? type 'uint) 4)
-          ((eq? type 'long) 8)
-          ((eq? type 'ulong) 8)
-          ((eq? type 'float) 4)
-          ((eq? type 'double) 8)
-          ((eq? type 'pointer) 8)
-          ((eq? type 'void) 0)
-          (else #f))))
-
-;; FIXME
-(define align-of-type size-of-type)
-
-;; FIXME
-(define (type->native-type type)
+(define (type->native-type scheme-name type argument?)
   (cond ((equal? type 'i8) 'int8)
         ((equal? type 'u8) 'uint8)
         ((equal? type 'i16) 'int16)
@@ -52,7 +23,17 @@
         ((equal? type 'double) 'double)
         ((equal? type 'void) 'void)
         ((equal? type 'pointer) 'intptr)
-        (error "Unsupported type: " type)))
+        ((equal? type 'array) 'intptr)
+        ((equal? type 'struct) 'intptr)
+        ((equal? type 'void)
+         (if argument?
+           (error "define-c-procedure: Argument type can not be void" scheme-name type)
+           'void))
+        (else
+          (if argument?
+            (error "define-c-procedure: Invalid argument type" scheme-name type)
+            (error "define-c-procedure: Invalid return type" scheme-name type)))
+        ))
 
 (define-syntax define-c-procedure
   (syntax-rules ()
@@ -60,8 +41,10 @@
      (define scheme-name
        (lambda args
          (let ((internal
-                 ((make-ffi-callout (type->native-type return-type)
-                                    (map type->native-type argument-types))
+                 ((make-ffi-callout (type->native-type scheme-name return-type #f)
+                                    (map (lambda (type)
+                                           (type->native-type scheme-name type #t))
+                                         argument-types))
                   (cond-expand
                     (windows (dlsym shared-object (symbol->string c-name)))
                     (else (apply (pinvoke-call libc dlsym intptr (intptr string))

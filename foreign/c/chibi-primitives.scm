@@ -1,5 +1,5 @@
 (define type->libffi-type-number
-  (lambda (type)
+  (lambda (type argument?)
     (cond ((equal? type 'i8) 1)
           ((equal? type 'u8) 2)
           ((equal? type 'i16) 3)
@@ -18,76 +18,23 @@
           ((equal? type 'ulong) 16)
           ((equal? type 'float) 17)
           ((equal? type 'double) 18)
-          ((equal? type 'void) 19)
+          ((equal? type 'void)
+           (if argument?
+             (error "define-c-procedure: Argument type can not be void" type)
+             '19))
           ((equal? type 'pointer) 20)
+          ((equal? type 'array) 20)
+          ((equal? type 'struct) 20)
           ((equal? type 'pointer-address) 21)
-          ((equal? type 'callback) 22)
-          (else (error "Undefined type" type)))))
-
-(define size-of-type
-  (lambda (type)
-    (cond ((eq? type 'i8) (size-of-int8_t))
-          ((eq? type 'u8) (size-of-uint8_t))
-          ((eq? type 'i16) (size-of-int16_t))
-          ((eq? type 'u16) (size-of-uint16_t))
-          ((eq? type 'i32) (size-of-int32_t))
-          ((eq? type 'u32) (size-of-uint32_t))
-          ((eq? type 'i64) (size-of-int64_t))
-          ((eq? type 'u64) (size-of-uint64_t))
-          ((eq? type 'char) (size-of-char))
-          ((eq? type 'uchar) (size-of-char))
-          ((eq? type 'short) (size-of-short))
-          ((eq? type 'ushort) (size-of-unsigned-short))
-          ((eq? type 'int) (size-of-int))
-          ((eq? type 'uint) (size-of-unsigned-int))
-          ((eq? type 'long) (size-of-long))
-          ((eq? type 'ulong) (size-of-unsigned-long))
-          ((eq? type 'float) (size-of-float))
-          ((eq? type 'double) (size-of-double))
-          ((eq? type 'pointer) (size-of-pointer))
-          ((eq? type 'pointer-address) (size-of-pointer))
-          ((eq? type 'callback) (size-of-pointer))
-          ((eq? type 'void) 0)
-          (else #f))))
-
-(define align-of-type
-  (lambda (type)
-    (cond ((eq? type 'i8) (align-of-int8_t))
-          ((eq? type 'u8) (align-of-uint8_t))
-          ((eq? type 'i16) (align-of-int16_t))
-          ((eq? type 'u16) (align-of-uint16_t))
-          ((eq? type 'i32) (align-of-int32_t))
-          ((eq? type 'u32) (align-of-uint32_t))
-          ((eq? type 'i64) (align-of-int64_t))
-          ((eq? type 'u64) (align-of-uint64_t))
-          ((eq? type 'char) (align-of-char))
-          ((eq? type 'uchar) (align-of-char))
-          ((eq? type 'short) (align-of-short))
-          ((eq? type 'ushort) (align-of-unsigned-short))
-          ((eq? type 'int) (align-of-int))
-          ((eq? type 'uint) (align-of-unsigned-int))
-          ((eq? type 'long) (align-of-long))
-          ((eq? type 'ulong) (align-of-unsigned-long))
-          ((eq? type 'float) (align-of-float))
-          ((eq? type 'double) (align-of-double))
-          ((eq? type 'pointer) (align-of-pointer))
-          ((eq? type 'pointer-address) (align-of-pointer))
-          ((eq? type 'callback) (align-of-pointer))
-          ((eq? type 'void) 0)
-          (else #f))))
+          (else (error "define-c-procedure: Invalid argument type" type)))))
 
 (define shared-object-load
   (lambda (path options)
     (let ((shared-object (dlopen path RTLD-NOW)))
       shared-object)))
 
-(define c-bytevector?
-  (lambda (object)
-    (or (equal? object #f) ; #f counts as null pointer
-        (pointer? object))))
-
-(define type->native-type
-  (lambda (type)
+#;(define type->native-type
+  (lambda (type argument?)
     (cond ((equal? type 'i8) 'int8_t)
           ((equal? type 'u8) 'uint8_t)
           ((equal? type 'i16) 'int16_t)
@@ -107,12 +54,14 @@
           ((equal? type 'float) 'float)
           ((equal? type 'double) 'double)
           ((equal? type 'pointer) '(maybe-null pointer void*))
+          ((equal? type 'array) '(maybe-null pointer void*))
+          ((equal? type 'struct) '(maybe-null pointer void*))
           ((equal? type 'pointer-address) '(maybe-null pointer void*))
-          ((equal? type 'void) 'void)
-          ((equal? type 'callback) '(maybe-null pointer void*))
-          (else (error "type->native-type -- No such pffi type" type)))))
-
-;; define-c-procedure
+          ((equal? type 'void)
+           (if argument?
+             (error "define-c-procedure: Argument type can not be void" type)
+             'void))
+          (else (error "define-c-procedure: Invalid argument type" type)))))
 
 (define make-c-function
   (lambda (shared-object c-name return-type argument-types)
@@ -120,15 +69,15 @@
       (lambda arguments
         (let* ((return-pointer
                  (internal-ffi-call (length argument-types)
-                                    (type->libffi-type-number (c-type-name return-type))
+                                    (type->libffi-type-number return-type #f)
                                     (map (lambda (type)
-                                           (type->libffi-type-number (c-type-name type)))
-                                           argument-types)
+                                           (type->libffi-type-number type #t))
+                                         argument-types)
                                     c-function
-                                    (size-of-type (c-type-name return-type))
+                                    (c-type-size return-type)
                                     (map value->native-value arguments))))
-          (when (not (c-void-type? return-type))
-              (c-bytevector-ref (internal-make-c-bytevector return-pointer) return-type 0)))))))
+          (when (not (equal? return-type 'void))
+            (c-bytevector-ref (internal-make-c-bytevector return-pointer) return-type 0)))))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()

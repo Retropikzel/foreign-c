@@ -1,5 +1,5 @@
 (chicken-define-for-syntax type->native-type
-  (lambda (type argument?)
+  (lambda (scheme-name type argument?)
     (cond ((equal? type 'i8) 'byte)
           ((equal? type 'u8) 'unsigned-byte)
           ((equal? type 'i16) 'short)
@@ -18,14 +18,18 @@
           ((equal? type 'ulong) 'unsigned-long)
           ((equal? type 'float) 'float)
           ((equal? type 'double) 'double)
-          ((equal? type 'void)
-           (if argument?
-             (error "define-c-procedure: Argument type can not be void" type)
-             'void))
           ((equal? type 'pointer) 'c-pointer)
           ((equal? type 'array) 'c-pointer)
           ((equal? type 'struct) 'c-pointer)
-          (else (error "define-c-procedure: Invalid argument type" type)))))
+          ((equal? type 'void)
+           (if argument?
+             (error "define-c-procedure: Argument type can not be void" scheme-name type)
+             'void))
+          (else
+            (if argument?
+            (error "define-c-procedure: Invalid argument type" scheme-name type)
+            (error "define-c-procedure: Invalid return type" scheme-name type)))
+          )))
 
 (define-syntax define-c-procedure
   (er-macro-transformer
@@ -33,12 +37,12 @@
       (let* ((scheme-name (list-ref expr 1))
              (c-name (symbol->string (cadr (list-ref expr 3))))
              (return-type (cadr (list-ref expr 4)))
-             (native-return-type (type->native-type return-type #f))
+             (native-return-type (type->native-type 'scheme-name return-type #f))
              (argument-types (if (null? (list-ref expr 5))
                                (list)
                                (cadr (list-ref expr 5))))
              (native-argument-types (map (lambda (type)
-                                           (type->native-type type #t))
+                                           (type->native-type 'scheme-name type #t))
                                          argument-types)))
         `(define ,scheme-name
            (lambda args

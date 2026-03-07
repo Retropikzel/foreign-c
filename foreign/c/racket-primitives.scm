@@ -1,5 +1,5 @@
 (define type->native-type
-  (lambda (type)
+  (lambda (scheme-name type argument?)
     (cond ((equal? type 'i8) _byte)
           ((equal? type 'u8) _ubyte)
           ((equal? type 'i16) _int16)
@@ -19,7 +19,16 @@
           ((equal? type 'float) _float)
           ((equal? type 'double) _double)
           ((equal? type 'pointer) _pointer)
-          (else #f))))
+          ((equal? type 'array) _pointer)
+          ((equal? type 'struct) _pointer)
+          ((equal? type 'void)
+           (if argument?
+             (error "define-c-procedure: Argument type can not be void" scheme-name type)
+             'void))
+          (else
+            (if argument?
+              (error "define-c-procedure: Invalid argument type" scheme-name type)
+              (error "define-c-procedure: Invalid return type" scheme-name type))))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()
@@ -28,21 +37,15 @@
        (lambda args
          (let ((internal (racket-get-ffi-obj c-name
                                       shared-object
-                                      (racket-_cprocedure (mlist->list (map type->native-type argument-types))
-                                                   (type->native-type return-type)))))
+                                      (racket-_cprocedure
+                                        (mlist->list (map (lambda (type)
+                                                            (type->native-type scheme-name type #t))
+                                                          argument-types))
+                                        (type->native-type scheme-name return-type #f)))))
            (if (equal? return-type 'pointer)
              (internal-make-c-bytevector (apply internal (map value->native-value args)))
              (apply internal (map value->native-value args)))))))))
 
-
-(define size-of-type
-  (lambda (type)
-    (racket-ctype-sizeof (type->native-type type))))
-
-;; FIXME
-(define align-of-type
-  (lambda (type)
-    (racket-ctype-sizeof (type->native-type type))))
 
 (define shared-object-load
   (lambda (path options)

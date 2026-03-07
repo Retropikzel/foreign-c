@@ -4,7 +4,7 @@
 (define INTEGER-MAX-VALUE (static-field java.lang.Integer 'MAX_VALUE))
 
 (define type->native-type
-  (lambda (type)
+  (lambda (scheme-name type argument?)
     (cond
       ((equal? type 'i8) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 1))
       ((equal? type 'u8) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 1))
@@ -25,8 +25,16 @@
       ((equal? type 'float) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_FLOAT) 'withByteAlignment 4))
       ((equal? type 'double) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_DOUBLE) 'withByteAlignment 8))
       ((equal? type 'pointer) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
-      ((equal? type 'void) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 1))
-      (else #f))))
+      ((equal? type 'array) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
+      ((equal? type 'struct) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
+      ((equal? type 'void)
+       (if argument?
+         (error "define-c-procedure: Argument type can not be void" scheme-name type)
+         (kawa-invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 1)))
+      (else
+        (if argument?
+          (error "define-c-procedure: Invalid argument type" scheme-name type)
+          (error "define-c-procedure: Invalid return type" scheme-name type))))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()
@@ -39,35 +47,21 @@
                                                        'find
                                                        (symbol->string c-name))
                                                'orElseThrow)
-                                       (if (c-void-type? return-type)
+                                       (if (equal? return-type 'void)
                                          (apply (class-methods java.lang.foreign.FunctionDescriptor 'ofVoid)
                                                 (map (lambda (type)
-                                                       (type->native-type (c-type-name type)))
+                                                       (type->native-type 'scheme-name type #t))
                                                      argument-types))
                                          (apply (class-methods java.lang.foreign.FunctionDescriptor 'of)
-                                                (type->native-type (c-type-name return-type))
+                                                (type->native-type 'scheme-name return-type #f)
                                                 (map (lambda (type)
-                                                       (type->native-type (c-type-name type)))
+                                                       (type->native-type 'scheme-name type #t))
                                                      argument-types))))
                                'invokeWithArguments
                                (map value->native-value args argument-types))))
            (if (c-pointer-type? return-type)
              (internal-make-c-bytevector result)
              result)))))))
-
-(define size-of-type
-  (lambda (type)
-    (let ((native-type (type->native-type type)))
-      (if native-type
-        (kawa-invoke native-type 'byteAlignment)
-        #f))))
-
-(define align-of-type
-  (lambda (type)
-    (let ((native-type (type->native-type type)))
-      (if native-type
-        (kawa-invoke native-type 'byteAlignment)
-        #f))))
 
 (define shared-object-load
   (lambda (path options)

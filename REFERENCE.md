@@ -53,6 +53,10 @@ is after the foreign c name.
     - double
 - pointer
     - void\*
+- array
+    - void\*
+- struct
+    - void\*
 - void
     - void
     - Can not be argument type, only return type
