@@ -1,5 +1,3 @@
-(define (shared-object-load path options) path)
-
 (define-syntax define-c-procedure
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
@@ -45,35 +43,10 @@
                                           (type->native-type return-type #f)
                                           shared-object)))
            (if (equal? return-type 'pointer)
-             (internal-make-c-bytevector (apply internal (map value->native-value args)))
-             (apply internal (map value->native-value args)))))))))
+             (internal-make-c-bytevector (apply internal (map argument->native-value args)))
+             (apply internal (map argument->native-value args)))))))))
 
-(define size-of-type
-  (lambda (type)
-    (cond ((equal? type 'i8) (c-size-of :int8))
-          ((equal? type 'u8) (c-size-of :uint8))
-          ((equal? type 'i16) (c-size-of :int16))
-          ((equal? type 'u16) (c-size-of :uint16))
-          ((equal? type 'i32) (c-size-of :int32))
-          ((equal? type 'u32) (c-size-of :uint32))
-          ((equal? type 'i64) (c-size-of :int64))
-          ((equal? type 'u64) (c-size-of :uint64))
-          ((equal? type 'char) (c-size-of :char))
-          ((equal? type 'uchar) (c-size-of :uchar))
-          ((equal? type 'short) (c-size-of :short))
-          ((equal? type 'ushort) (c-size-of :ushort))
-          ((equal? type 'int) (c-size-of :int))
-          ((equal? type 'uint) (c-size-of :uint))
-          ((equal? type 'long) (c-size-of :long))
-          ((equal? type 'ulong) (c-size-of :ulong))
-          ((equal? type 'float) (c-size-of :float))
-          ((equal? type 'double) (c-size-of :double))
-          ((equal? type 'pointer) (c-size-of :pointer)))))
-
-;; FIXME
-(define align-of-type
-  (lambda (type)
-    (size-of-type type)))
+(define (shared-object-load path options) path)
 
 (define c-u8-set!
   (lambda (pointer offset value)
