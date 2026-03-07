@@ -19,7 +19,16 @@
           ((equal? type 'float) guile-float)
           ((equal? type 'double) guile-double)
           ((equal? type 'pointer) '*)
-          (else #f))))
+          ((equal? type 'array) '*)
+          ((equal? type 'struct) '*)
+          ((equal? type 'void)
+           (if argument?
+             (error "define-c-procedure: Argument type can not be void" scheme-name type)
+             'void))
+          (else
+            (if argument?
+              (error "define-c-procedure: Invalid argument type" scheme-name type)
+              (error "define-c-procedure: Invalid return type" scheme-name type))))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()
@@ -31,20 +40,8 @@
                                                                                   (symbol->string c-name))
                                                    (map type->native-type argument-types))))
            (if (equal? return-type 'pointer)
-             (internal-make-c-bytevector (apply internal (map value->native-value args)))
-             (apply internal (map value->native-value args)))))))))
-
-(define size-of-type
-  (lambda (type)
-    (let ((native-type (type->native-type type)))
-      (cond (native-type (guile-sizeof native-type))
-            (else #f)))))
-
-(define align-of-type
-  (lambda (type)
-    (let ((native-type (type->native-type type)))
-      (cond (native-type (guile-alignof native-type))
-            (else #f)))))
+             (internal-make-c-bytevector (apply internal (map argument->native-value args)))
+             (apply internal (map argument->native-value args)))))))))
 
 (define shared-object-load
   (lambda (path options)
