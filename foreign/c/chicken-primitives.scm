@@ -47,8 +47,8 @@
            (lambda args
              (let ((,scheme-name (chicken-foreign-safe-lambda ,native-return-type ,c-name ,@ native-argument-types)))
                (if (equal? (quote ,native-return-type) 'c-pointer)
-                 (internal-make-c-bytevector (apply ,scheme-name (map value->native-value args)))
-                 (apply ,scheme-name (map value->native-value args))))))))))
+                 (internal-make-c-bytevector (apply ,scheme-name (map argument->native-value args)))
+                 (apply ,scheme-name (map argument->native-value args))))))))))
 
 (define-syntax shared-object-load
   (er-macro-transformer

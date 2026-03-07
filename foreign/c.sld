@@ -277,7 +277,7 @@
     )
   (include "c/types.scm")
   (include "c-bytevector.scm")
-  (include "c-value-to-native-value.scm")
+  (include "c-argument-to-native-value.scm")
   (include "c-call-with-address-of.scm")
   (cond-expand
     (chicken

@@ -152,8 +152,8 @@
                                               ()
                                               ,native-return-type)))
              (if (c-pointer-type? ,return-type)
-               (internal-make-c-bytevector (apply internal (map value->native-value args)))
-               (apply internal (map value->native-value args))))))
+               (internal-make-c-bytevector (apply internal (map argument->native-value args)))
+               (apply internal (map argument->native-value args))))))
       `(define ,scheme-name
          (lambda args
            (let ((internal (chezscheme-foreign-procedure #f
@@ -161,5 +161,5 @@
                                               ,native-argument-types
                                               ,native-return-type)))
              (if (c-pointer-type? ,return-type)
-               (internal-make-c-bytevector (apply internal (map value->native-value args)))
-               (apply internal (map value->native-value args)))))))))
+               (internal-make-c-bytevector (apply internal (map argument->native-value args)))
+               (apply internal (map argument->native-value args)))))))))
