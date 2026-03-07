@@ -46,8 +46,8 @@
                                                   (type->native-type scheme-name type #t))
                                                 argument-types))))
            (if (c-pointer-type? return-type)
-             (internal-make-c-bytevector (apply internal (map value->native-value args)))
-             (apply internal (map value->native-value args)))))))))
+             (internal-make-c-bytevector (apply internal (map argument->native-value args)))
+             (apply internal (map argument->native-value args)))))))))
 
 (define c-u8-set! sagittarius-pointer-set-c-uint8_t!)
 (define c-u8-ref sagittarius-pointer-ref-c-uint8_t)

@@ -48,9 +48,6 @@
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
        (lambda args
-         (display "HERE: ")
-         (write scheme-name)
-         (newline)
          (let ((internal
                  (mosh-make-c-function shared-object
                                        (type->native-type scheme-name return-type #f)
@@ -59,8 +56,8 @@
                                               (type->native-type scheme-name type #t))
                                             argument-types))))
            (if (equal? return-type 'pointer)
-             (internal-make-c-bytevector (apply internal (map value->native-value args)))
-             (apply internal (map value->native-value args)))))))))
+             (internal-make-c-bytevector (apply internal (map argument->native-value args)))
+             (apply internal (map argument->native-value args)))))))))
 
 (define (c-null) (mosh-integer->pointer 0))
 (define c-null? mosh-pointer-null?)

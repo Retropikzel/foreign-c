@@ -58,7 +58,7 @@
                                                        (type->native-type 'scheme-name type #t))
                                                      argument-types))))
                                'invokeWithArguments
-                               (map value->native-value args argument-types))))
+                               (map argument->native-value args argument-types))))
            (if (c-pointer-type? return-type)
              (internal-make-c-bytevector result)
              result)))))))

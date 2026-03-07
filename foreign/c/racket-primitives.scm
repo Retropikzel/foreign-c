@@ -43,8 +43,8 @@
                                                           argument-types))
                                         (type->native-type scheme-name return-type #f)))))
            (if (equal? return-type 'pointer)
-             (internal-make-c-bytevector (apply internal (map value->native-value args)))
-             (apply internal (map value->native-value args)))))))))
+             (internal-make-c-bytevector (apply internal (map argument->native-value args)))
+             (apply internal (map argument->native-value args)))))))))
 
 
 (define shared-object-load
