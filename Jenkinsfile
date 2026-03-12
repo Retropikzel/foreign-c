@@ -25,7 +25,7 @@ pipeline {
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                 sh "rm -rf logs/r6rs/*.json"
-                                sh "timeout 6000 make RNRS=r6rs SCHEME=${SCHEME} run-test-docker"
+                                sh "timeout 6000 make RNRS=r6rs SCHEME=${SCHEME} test-docker"
                                 archiveArtifacts(artifacts: "logs/r6rs/*.json", allowEmptyArchive: false, fingerprint: true)
                             }
                         }
@@ -40,7 +40,7 @@ pipeline {
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                 sh "rm -rf logs/r7rs/*.json"
-                                sh "timeout 6000 make RNRS=r7rs SCHEME=${SCHEME} run-test-docker"
+                                sh "timeout 6000 make RNRS=r7rs SCHEME=${SCHEME} test-docker"
                                 archiveArtifacts(artifacts: "logs/r7rs/*.json", allowEmptyArchive: false, fingerprint: true)
                             }
                         }
