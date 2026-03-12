@@ -1,20 +1,9 @@
 VERSION=0.14.0
 SCHEME=chibi
 RNRS=r7rs
-VENV=venv-${SCHEME}
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
 TEST=main
-
-TEST_SUFFIX=scm
-ifeq "${RNRS}" "r6rs"
-TEST_SUFFIX=sps
-endif
-
-DOCKERIMG=${SCHEME}:head
-ifeq "${SCHEME}" "chicken"
-DOCKERIMG=${SCHEME}:latest
-endif
 
 all: build
 
@@ -35,69 +24,40 @@ install:
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
-snow:
-	snow-chibi install --impls=generic --skip-tests?=1 --always-yes --install-source-dir=snow --install-library-dir=snow retropikzel.ctrf || true
-	snow-chibi install --impls=generic --skip-tests?=1 --always-yes --install-source-dir=snow --install-library-dir=snow srfi.64 || true
-
-testfiles:
-	echo "(import (except (rnrs) remove) (srfi :64) (retropikzel ctrf) (foreign c))" > run-test.sps
-	echo "(test-runner-current (ctrf-runner))" >> run-test.sps
-	cat tests/${TEST}.scm >> run-test.sps
-	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (retropikzel ctrf) (foreign c))" > run-test.scm
-	echo "(test-runner-current (ctrf-runner))" >> run-test.scm
-	cat tests/${TEST}.scm >> run-test.scm
-
-${VENV}: snow
-	rm -rf ${VENV}
-	scheme-venv ${SCHEME} ${VENV}
-	./${VENV}/bin/akku install akku-r7rs
-	cp -r snow ./${VENV}/lib/
-	./${VENV}/bin/akku install
-	./${VENV}/bin/snow-chibi install --impls=${SCHEME} --always-yes srfi.64
-	./${VENV}/bin/snow-chibi install --impls=${SCHEME} --always-yes retropikzel.ctrf
-
-logs/${RNRS}:
+test: libtest.so libtest.o libtest.a build
+	rm -rf .tmp
+	mkdir -p .tmp
+	cp libtest.so .tmp/
+	cp libtest.o .tmp/
+	cp libtest.a .tmp/
 	mkdir -p logs/${RNRS}
-
-run-test-venv: libtest.so libtest.o libtest.a testfiles build ${VENV} logs/${RNRS}
-	cp libtest.so ${VENV}/lib/
-	cp libtest.o ${VENV}/lib/
-	cp libtest.a ${VENV}/lib/
-	cp tests/c-include/*.h ${VENV}/include/
-	rm -rf run-test
-	./${VENV}/bin/snow-chibi install --always-yes --skip-tests?=1 ${PKG}
-	if [ "${RNRS}" = "r6rs" ]; then akku install akku-r7rs; fi
-	CSC_OPTIONS="-L -ltest" ./${VENV}/bin/scheme-compile run-test.${TEST_SUFFIX}
-	LD_LIBRARY_PATH=. ./run-test
-	mv *.json logs/${RNRS}/
-
-run-test-system: libtest.so libtest.o libtest.a snow testfiles build logs/${RNRS}
-	snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.64
-	snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.60
-	snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.145
-	snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.180
-	snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes retropikzel.ctrf
+	echo "(import (except (rnrs) remove) (srfi :64) (retropikzel ctrf) (foreign c))" > .tmp/test.sps
+	echo "(test-runner-current (ctrf-runner))" >> .tmp/test.sps
+	cat tests/${TEST}.scm >> .tmp/test.sps
+	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (retropikzel ctrf) (foreign c))" > .tmp/test.scm
+	echo "(test-runner-current (ctrf-runner))" >> .tmp/test.scm
+	cat tests/${TEST}.scm >> .tmp/test.scm
 	snow-chibi install --impls=${SCHEME} --always-yes ${PKG}
-	akku install akku-r7rs chez-srfi
-	if [ "${RNRS}" = "r6rs" ]; then COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib run-test.sps; fi
-	if [ "${RNRS}" = "r7rs" ]; then COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I./tests/c-include" compile-scheme run-test.scm; fi
-	LD_LIBRARY_PATH=. ./run-test
-	mv *.json logs/${RNRS}/
+	if [ "${RNRS}" = "r6rs" ]; then cd .tmp && akku install akku-r7rs chez-srfi; fi
+	if [ "${RNRS}" = "r6rs" ]; then cd .tmp && COMPILE_R7RS=${SCHEME} compile-r7rs test.sps; fi
+	if [ "${RNRS}" = "r7rs" ]; then cd .tmp && COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I./tests/c-include" compile-r7rs test.scm; fi
+	cd .tmp && LD_LIBRARY_PATH=. ./test
+	mv .tmp/*.json logs/${RNRS}/
 
-run-test-docker:
-	docker build --build-arg IMAGE=${DOCKERIMG} -f Dockerfile.test --tag=foreign-c-${SCHEME} .
-	docker run -v "${PWD}/logs:/workdir/logs" -w /workdir foreign-c-${SCHEME} sh -c "make SCHEME=${SCHEME} RNRS=${RNRS} TEST=${TEST} run-test-system"
+test-docker:
+	docker build --build-arg SCHEME=${SCHEME} -f Dockerfile.test --tag=${SCHEME}-testing .
+	docker run -v "${PWD}/logs:/workdir/logs" -w /workdir ${SCHEME}-testing sh -c "make SCHEME=${SCHEME} RNRS=${RNRS} TEST=${TEST} test"
 
 ## C libraries for testing
 
 libtest.o: tests/c-src/libtest.c
-	@${CC} ${CFLAGS} -o libtest.o -fPIC -c tests/c-src/libtest.c -I./tests/c-include ${LDFLAGS}
+	${CC} ${CFLAGS} -o libtest.o -fPIC -c tests/c-src/libtest.c -I./tests/c-include ${LDFLAGS}
 
 libtest.so: tests/c-src/libtest.c
-	@${CC} ${CFLAGS} -o libtest.so -shared -fPIC tests/c-src/libtest.c -I./tests/c-include ${LDFLAGS}
+	${CC} ${CFLAGS} -o libtest.so -shared -fPIC tests/c-src/libtest.c -I./tests/c-include ${LDFLAGS}
 
 libtest.a: libtest.o tests/c-src/libtest.c
-	@ar rcs libtest.a libtest.o ${LDFLAGS}
+	ar rcs libtest.a libtest.o ${LDFLAGS}
 
 clean:
 	git clean -X -f
