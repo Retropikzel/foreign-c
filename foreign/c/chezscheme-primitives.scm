@@ -1,65 +1,33 @@
-(define-syntax type->native-type
-  (syntax-rules ()
-    ((_ type)
-     (cond ((equal? type 'i8) 'integer-8)
-           ((equal? type 'u8) 'unsigned-8)
-           ((equal? type 'i16) 'integer-16)
-           ((equal? type 'u16) 'unsigned-16)
-           ((equal? type 'i32) 'integer-32)
-           ((equal? type 'u32) 'unsigned-32)
-           ((equal? type 'i64) 'integer-64)
-           ((equal? type 'u64) 'unsigned-64)
-           ((equal? type 'char) 'char)
-           ((equal? type 'uchar) 'unsigned-8)
-           ((equal? type 'short) 'short)
-           ((equal? type 'ushort) 'unsigned-short)
-           ((equal? type 'int) 'int)
-           ((equal? type 'uint) 'unsigned-int)
-           ((equal? type 'long) 'long)
-           ((equal? type 'ulong) 'unsigned-long)
-           ((equal? type 'float) 'float)
-           ((equal? type 'double) 'double)
-           ((equal? type 'pointer) 'void*)
-           ((equal? type 'void) 'void)))))
-
-(define size-of-type
-  (lambda (type)
-    (foreign-sizeof (type->native-type type))))
-
-(define align-of-type
-  (lambda (type)
-    (foreign-alignof (type->native-type type))))
-
 (define shared-object-load
   (lambda (path options)
-    (load-shared-object path)))
+    (chezscheme-load-shared-object path)))
 
 (define c-u8-set!
   (lambda (c-bytevector k byte)
-    (foreign-set! 'unsigned-8 c-bytevector k byte)))
+    (chezscheme-foreign-set! 'unsigned-8 c-bytevector k byte)))
 
 (define c-u8-ref
   (lambda (c-bytevector k)
-    (foreign-ref 'unsigned-8 c-bytevector k)))
+    (chezscheme-foreign-ref 'unsigned-8 c-bytevector k)))
 
 (define c-pointer-set!
   (lambda (c-bytevector k pointer)
-    (foreign-set! 'void* c-bytevector k pointer)))
+    (chezscheme-foreign-set! 'void* c-bytevector k pointer)))
 
 (define c-pointer-ref
   (lambda (c-bytevector k)
-    (foreign-ref 'void* c-bytevector k)))
+    (chezscheme-foreign-ref 'void* c-bytevector k)))
 
 (define (c-null) (c-memset-address->pointer 0 0 0))
 (define (c-null? pointer)
   (or (and (number? pointer)
            (= pointer 0))
-      (and (ftype-pointer? pointer)
-           (ftype-pointer-null? pointer))))
+      (and (chezscheme-ftype-pointer? pointer)
+           (chezscheme-ftype-pointer-null? pointer))))
 
 (define-syntax define-macro!
   (lambda (x)
-    (syntax-case x ()
+    (chezscheme-syntax-case x ()
                  [(k (name arg1 ... . args)
                      form1
                      form2
@@ -77,7 +45,7 @@
                        form2
                        ...)]
                  [(k name args . forms)
-                  (identifier? #'name)
+                  (chezscheme-identifier? #'name)
                   (letrec ((add-car
                              (lambda (access)
                                (case (car access)
@@ -100,23 +68,23 @@
                                  ((null? l) '())
                                  ((symbol? l) `((,l ,access)))
                                  ((pair? l)
-                                  (append!
+                                  (chezscheme-append!
                                     (parse (car l) (add-car access))
                                     (parse (cdr l) (add-cdr access))))
                                  (else
-                                   (syntax-error #'args
-                                                 (format "invalid ~s parameter syntax" (datum k))))))))
-                    (with-syntax ((proc (datum->syntax-object #'k
-                                                              (let ((g (gensym)))
+                                   (chezscheme-syntax-error #'args
+                                                 (chezscheme-format "invalid ~s parameter syntax" (chezscheme-datum k))))))))
+                    (chezscheme-with-syntax ((proc (chezscheme-datum->syntax-object #'k
+                                                              (let ((g (chezscheme-gensym)))
                                                                 `(lambda (,g)
-                                                                   (let ,(parse (datum args) `(cdr ,g))
-                                                                     ,@(datum forms)))))))
+                                                                   (let ,(parse (chezscheme-datum args) `(cdr ,g))
+                                                                     ,@(chezscheme-datum forms)))))))
                                  #'(define-syntax name
                                      (lambda (x)
-                                       (syntax-case x ()
+                                       (chezscheme-syntax-case x ()
                                                     ((k1 . r)
-                                                     (datum->syntax-object #'k1
-                                                                           (proc (syntax-object->datum x)))))))))])))
+                                                     (chezscheme-datum->syntax-object #'k1
+                                                                           (proc (chezscheme-syntax-object->datum x)))))))))])))
 
 (define-macro!
   define-c-procedure
@@ -143,8 +111,11 @@
                        ((equal? type 'float) 'float)
                        ((equal? type 'double) 'double)
                        ((equal? type 'pointer) 'void*)
-                       ((equal? type 'void) 'void)
-                       (else type)))
+                       ((equal? type 'array) 'void*)
+                       ((equal? type 'struct) 'void*)
+                       ((equal? type 'void)
+                          (error "define-c-procedure: Argument type can not be void" type))
+                       (else (error "define-c-procedure: Invalid argument type" type))))
                (if (null? argument-types)
                  '()
                  (cadr argument-types))))
@@ -169,24 +140,26 @@
                 ((equal? return-type ''float) 'float)
                 ((equal? return-type ''double) 'double)
                 ((equal? return-type ''pointer) 'void*)
+                ((equal? return-type ''array) 'void*)
+                ((equal? return-type ''struct) 'void*)
                 ((equal? return-type ''void) 'void)
-                (else return-type))))
+                (else (error "define-c-procedure: Invalid return type" return-type)))))
     (if (null? argument-types)
       `(define ,scheme-name
          (lambda args
-           (let ((internal (foreign-procedure #f
+           (let ((internal (chezscheme-foreign-procedure #f
                                               ,(symbol->string (cadr c-name))
                                               ()
                                               ,native-return-type)))
-             (if (symbol=? ,return-type 'pointer)
-               (internal-make-c-bytevector (apply internal (map value->native-value args)))
-               (apply internal (map value->native-value args))))))
+             (if (c-pointer-type? ,return-type)
+               (internal-make-c-bytevector (apply internal (map argument->native-value args)))
+               (apply internal (map argument->native-value args))))))
       `(define ,scheme-name
          (lambda args
-           (let ((internal (foreign-procedure #f
+           (let ((internal (chezscheme-foreign-procedure #f
                                               ,(symbol->string (cadr c-name))
                                               ,native-argument-types
                                               ,native-return-type)))
-             (if (symbol=? ,return-type 'pointer)
-               (internal-make-c-bytevector (apply internal (map value->native-value args)))
-               (apply internal (map value->native-value args)))))))))
+             (if (c-pointer-type? ,return-type)
+               (internal-make-c-bytevector (apply internal (map argument->native-value args)))
+               (apply internal (map argument->native-value args)))))))))

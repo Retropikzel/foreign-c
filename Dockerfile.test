@@ -41,8 +41,14 @@ RUN make install
 
 RUN mkdir -p /root/.snow && echo "()" > /root/.snow/config.scm
 WORKDIR /workdir
+RUN snow-chibi install --impls=${SCHEME} --always-yes --skip-tests?=1 srfi.60 || true
+RUN snow-chibi install --impls=${SCHEME} --always-yes --skip-tests?=1 srfi.64 || true
+RUN snow-chibi install --impls=${SCHEME} --always-yes --skip-tests?=1 srfi.145 || true
+RUN snow-chibi install --impls=${SCHEME} --always-yes --skip-tests?=1 srfi.180 || true
+RUN snow-chibi install --impls=${SCHEME} --always-yes --skip-tests?=1 retropikzel.ctrf || true
 ARG SCHEME=chibi
 ENV COMPILE_R7RS=${SCHEME}
 COPY Makefile .
+COPY README.md .
 COPY tests tests/
 COPY foreign foreign/

@@ -24,9 +24,9 @@
     (test-equal (c-type-size 'long) 8)))
 #;(cond-expand
   (i386
-    (test-equal (c-type-size 'unsigned-long) 4))
+    (test-equal (c-type-size 'ulong) 4))
   (else
-    (test-equal (c-type-size 'unsigned-long) 8)))
+    (test-equal (c-type-size 'ulong) 8)))
 (test-equal "c-type-size float" (c-type-size 'float) 4)
 (test-equal "c-type-size double" (c-type-size 'double) 8)
 #;(cond-expand
@@ -74,7 +74,7 @@
 
 ;; Libraries and procedures
 (test-begin "define-c-library")
-(define-c-library libc '("stdlib.h" "stdio.h" "string.h" "stdio.h") #f '())
+(define-c-library libc '("stdlib.h" "stdio.h" "string.h" "stdio.h") #f ())
 
 (test-assert "test-assert libc" (if libc #t #f))
 
@@ -87,6 +87,12 @@
                       '((additional-paths ("." "./tests"))))
 (define-c-procedure c-takes-no-args c-testlib 'takes_no_args 'void '())
 (c-takes-no-args)
+
+(define intpointer (make-c-bytevector (c-type-size 'int)))
+(define-c-procedure c-passing-int-pointer c-testlib 'test_passing_int_pointer 'int '(pointer))
+(c-passing-int-pointer intpointer)
+(write (c-bytevector-ref intpointer 'int))
+(newline)
 
 (define-c-procedure c-takes-no-args-returns-int c-testlib 'takes_no_args_returns_int 'int '())
 (define takes-no-args-returns-int-result (c-takes-no-args-returns-int))
@@ -185,35 +191,35 @@
 (test-begin "c-bytevector-set!")
 (define i8-cbv (make-c-bytevector (c-type-size 'i8)))
 (test-assert (c-bytevector? i8-cbv))
-(c-bytevector-set! i8-cbv 'i8 0 42)
+(c-bytevector-set! i8-cbv 'i8 0 1)
 
 (define u8-cbv (make-c-bytevector (c-type-size 'u8)))
 (test-assert (c-bytevector? u8-cbv))
-(c-bytevector-set! u8-cbv 'i8 0 42)
+(c-bytevector-set! u8-cbv 'u8 0 2)
 
 (define i16-cbv (make-c-bytevector (c-type-size 'i16)))
 (test-assert (c-bytevector? i16-cbv))
-(c-bytevector-set! i16-cbv 'i16 0 42)
+(c-bytevector-set! i16-cbv 'i16 0 3)
 
 (define u16-cbv (make-c-bytevector (c-type-size 'u16)))
 (test-assert (c-bytevector? u16-cbv))
-(c-bytevector-set! u16-cbv 'u16 0 42)
+(c-bytevector-set! u16-cbv 'u16 0 4)
 
 (define i32-cbv (make-c-bytevector (c-type-size 'i32)))
 (test-assert (c-bytevector? i32-cbv))
-(c-bytevector-set! i32-cbv 'i32 0 42)
+(c-bytevector-set! i32-cbv 'i32 0 5)
 
 (define u32-cbv (make-c-bytevector (c-type-size 'u32)))
 (test-assert (c-bytevector? u32-cbv))
-(c-bytevector-set! u32-cbv 'u32 0 42)
+(c-bytevector-set! u32-cbv 'u32 0 6)
 
 (define i64-cbv (make-c-bytevector (c-type-size 'i64)))
 (test-assert (c-bytevector? i64-cbv))
-(c-bytevector-set! i64-cbv 'i64 0 42)
+(c-bytevector-set! i64-cbv 'i64 0 7)
 
 (define u64-cbv (make-c-bytevector (c-type-size 'u64)))
 (test-assert (c-bytevector? u64-cbv))
-(c-bytevector-set! u64-cbv 'u64 0 42)
+(c-bytevector-set! u64-cbv 'u64 0 8)
 
 (define char-cbv (make-c-bytevector (c-type-size 'char)))
 (test-assert (c-bytevector? char-cbv))
@@ -221,39 +227,39 @@
 
 (define uchar-cbv (make-c-bytevector (c-type-size 'uchar)))
 (test-assert (c-bytevector? uchar-cbv))
-(c-bytevector-set! uchar-cbv 'uchar 0 #\a)
+(c-bytevector-set! uchar-cbv 'uchar 0 #\b)
 
 (define short-cbv (make-c-bytevector (c-type-size 'short)))
 (test-assert (c-bytevector? short-cbv))
-(c-bytevector-set! short-cbv 'short 0 42)
+(c-bytevector-set! short-cbv 'short 0 9)
 
 (define ushort-cbv (make-c-bytevector (c-type-size 'ushort)))
 (test-assert (c-bytevector? ushort-cbv))
-(c-bytevector-set! ushort-cbv 'ushort 0 42)
+(c-bytevector-set! ushort-cbv 'ushort 0 10)
 
 (define int-cbv (make-c-bytevector (c-type-size 'int)))
 (test-assert (c-bytevector? int-cbv))
-(c-bytevector-set! int-cbv 'int 0 42)
+(c-bytevector-set! int-cbv 'int 0 11)
 
 (define uint-cbv (make-c-bytevector (c-type-size 'uint)))
 (test-assert (c-bytevector? uint-cbv))
-(c-bytevector-set! uint-cbv 'uint 0 42)
+(c-bytevector-set! uint-cbv 'uint 0 12)
 
 (define long-cbv (make-c-bytevector (c-type-size 'long)))
 (test-assert (c-bytevector? long-cbv))
-(c-bytevector-set! long-cbv 'long 0 42)
+(c-bytevector-set! long-cbv 'long 0 13)
 
 (define ulong-cbv (make-c-bytevector (c-type-size 'ulong)))
 (test-assert (c-bytevector? ulong-cbv))
-(c-bytevector-set! ulong-cbv 'ulong 0 42)
+(c-bytevector-set! ulong-cbv 'ulong 0 14)
 
 (define float-cbv (make-c-bytevector (c-type-size 'float)))
 (test-assert (c-bytevector? float-cbv))
-(c-bytevector-set! float-cbv 'float 0 42)
+(c-bytevector-set! float-cbv 'float 0 15.5)
 
 (define double-cbv (make-c-bytevector (c-type-size 'double)))
 (test-assert (c-bytevector? double-cbv))
-(c-bytevector-set! double-cbv 'double 0 42)
+(c-bytevector-set! double-cbv 'double 0 16.5)
 
 (define pointer-cbv (make-c-bytevector (c-type-size 'pointer)))
 (test-assert (c-bytevector? pointer-cbv))
@@ -262,24 +268,24 @@
 
 
 (test-begin "c-bytevector-ref")
-(test-equal "i8" 42 (c-bytevector-ref i8-cbv 'i8 0))
-(test-equal "u8" 42 (c-bytevector-ref u8-cbv 'u8 0))
-(test-equal "i16" 42 (c-bytevector-ref i16-cbv 'i16 0))
-(test-equal "u16" 42 (c-bytevector-ref u16-cbv 'u16 0))
-(test-equal "i32" 42 (c-bytevector-ref i32-cbv 'i32 0))
-(test-equal "u32" 42 (c-bytevector-ref u32-cbv 'u32 0))
-(test-equal "i64" 42 (c-bytevector-ref i64-cbv 'i64 0))
-(test-equal "u64" 42 (c-bytevector-ref u64-cbv 'u64 0))
+(test-equal "i8" 1 (c-bytevector-ref i8-cbv 'i8 0))
+(test-equal "u8" 2 (c-bytevector-ref u8-cbv 'u8 0))
+(test-equal "i16" 3 (c-bytevector-ref i16-cbv 'i16 0))
+(test-equal "u16" 4 (c-bytevector-ref u16-cbv 'u16 0))
+(test-equal "i32" 5 (c-bytevector-ref i32-cbv 'i32 0))
+(test-equal "u32" 6 (c-bytevector-ref u32-cbv 'u32 0))
+(test-equal "i64" 7 (c-bytevector-ref i64-cbv 'i64 0))
+(test-equal "u64" 8 (c-bytevector-ref u64-cbv 'u64 0))
 (test-equal "char" #\a (c-bytevector-ref char-cbv 'char 0))
-(test-equal "uchar" #\a (c-bytevector-ref uchar-cbv 'uchar 0))
-(test-equal "short" 42 (c-bytevector-ref short-cbv 'short 0))
-(test-equal "ushort" 42 (c-bytevector-ref ushort-cbv 'ushort 0))
-(test-equal "int" 42 (c-bytevector-ref int-cbv 'int 0))
-(test-equal "uint" 42 (c-bytevector-ref uint-cbv 'uint 0))
-(test-equal "long" 42 (c-bytevector-ref long-cbv 'long 0))
-(test-equal "ulong" 42 (c-bytevector-ref ulong-cbv 'ulong 0))
-(test-equal "float" 42 (exact (c-bytevector-ref float-cbv 'float 0)))
-(test-equal "double" 42 (exact (c-bytevector-ref double-cbv 'double 0)))
+(test-equal "uchar" #\b (c-bytevector-ref uchar-cbv 'uchar 0))
+(test-equal "short" 9 (c-bytevector-ref short-cbv 'short 0))
+(test-equal "ushort" 10 (c-bytevector-ref ushort-cbv 'ushort 0))
+(test-equal "int" 11 (c-bytevector-ref int-cbv 'int 0))
+(test-equal "uint" 12 (c-bytevector-ref uint-cbv 'uint 0))
+(test-equal "long" 13 (c-bytevector-ref long-cbv 'long 0))
+(test-equal "ulong" 14 (c-bytevector-ref ulong-cbv 'ulong 0))
+(test-equal "float" 15.5 (c-bytevector-ref float-cbv 'float 0))
+(test-equal "double" 16.5 (c-bytevector-ref double-cbv 'double 0))
 (test-assert "pointer" (c-bytevector-null? (c-bytevector-ref pointer-cbv 'pointer 0)))
 (test-end "c-bytevector-ref")
 
@@ -339,30 +345,36 @@
 (test-equal 42 (c-bytevector-ref input-pointer 'i32 0))
 (test-end "call-with-address-of")
 
+;; C Array
+(test-begin "define-c-array-type")
+(define-c-array-type i8-array 'i8)
+(define ar1 (make-c-bytevector (* (c-type-size i8-array) 10)))
+(write ar1)
+(newline)
+(c-bytevector-set! ar1 i8-array 5 25)
+(write (c-bytevector-ref ar1 i8-array 5))
+(newline)
+(test-end"define-c-array-type")
 
-;; stdio.h
-(test-begin "stdio")
-(define-c-procedure fopen libc 'fopen 'pointer '(pointer pointer))
-(define-c-procedure fclose libc 'fclose 'int '(pointer))
-(define-c-procedure feof libc 'feof 'int '(pointer))
-(define-c-procedure ferror libc 'ferror 'int '(pointer))
-(define-c-procedure fgetc libc 'fgetc 'int '(pointer))
-(define-c-procedure fgets libc 'fgets 'pointer '(pointer int pointer))
-(define-c-procedure fputc libc 'fputc 'int '(int pointer))
-(define-c-procedure fputs libc 'fputs 'int '(pointer pointer))
-(define-c-procedure fread libc 'fread 'int '(pointer int int pointer))
-(define-c-procedure fseek libc 'fseek 'int '(pointer long int))
-(define-c-procedure ftell libc 'ftell 'long '(pointer))
-(define-c-procedure fwrite libc 'fwrite 'int '(pointer int int pointer))
-(define-c-procedure getc libc 'getc 'int '(pointer))
-(define-c-procedure getchar libc 'getchar 'int '())
-(define-c-procedure putc libc 'putc 'int '(int pointer))
-(define-c-procedure putchar libc 'putchar 'int '(int))
-(define-c-procedure puts libc 'puts 'int '(pointer))
-(define-c-procedure remove libc 'remove 'int '(pointer))
-(define-c-procedure rename libc 'rename 'int '(pointer pointer))
-(define-c-procedure rewind libc 'rewind 'void '(pointer))
-(test-end "stdio")
+
+;; C Struct
+(test-begin "define-c-struct-type")
+(define-c-struct-type color '((r i8) (g i8) (b i8) (a i8)))
+(test-assert (c-struct-type? color))
+
+(define green (make-c-bytevector (c-type-size color)))
+(c-bytevector-set! green color 'r 1)
+(c-bytevector-set! green color 'g 2)
+(c-bytevector-set! green color 'b 3)
+(c-bytevector-set! green color 'a 4)
+
+(test-equal 1 (c-bytevector-ref green color 'r))
+(test-equal 2 (c-bytevector-ref green color 'g))
+(test-equal 3 (c-bytevector-ref green color 'b))
+(test-equal 4 (c-bytevector-ref green color 'a))
+
+(test-equal (c-bytevector->list green color) '((r . 1) (g . 2) (b . 3) (a . 4)))
+(test-end "define-c-struct-type")
 
 
 (test-end "foreign-c")

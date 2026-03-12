@@ -3,71 +3,76 @@
 Table of content
 
 - Types
-- (foreign c)
-    - c-bytevectors
-    - Strings
-    - Pass pointer by address
-    - Utilities
-    - Environment variables
-- (foreign c struct)
-- (foreign c stdio)
+- c-bytevectors
+- C libraries
+- C procedures
+- Strings
+- Pass pointer by address
+- C Arrays
+- C Structs
+- Environment variables
 
 ## Types
 
 Types are given as symbols, for example 'i8 or 'pointer. Corresponding C type
 is after the foreign c name.
 
-- i8
+- 'i8
     - int8\_t
-- u8
+- 'u8
     - uint8\_t
-- i16
+- 'i16
     - int16\_t
-- u16
+- 'u16
     - uint16\_t
-- i32
+- 'i32
     - int32\_t
-- u32
+- 'u32
     - uint32\_t
-- i64
+- 'i64
     - int64\_t
-- u64
+- 'u64
     - uint64\_t
-- char
+- 'char
     - char
-- uchar
+- 'uchar
     - unsigned char
-- short
+- 'short
     - short
-- ushort
+- 'ushort
     - unsigned short
-- int
+- 'int
     - int
-- uint
+- 'uint
     - unsigned int
-- long
+- 'long
     - long
-- ulong
+- 'ulong
     - unsigned long
-- float
+- 'float
     - float
-- double
+- 'double
     - double
-- pointer
+- 'pointer
     - void\*
-- void
+- 'array
+    - void\*
+- 'struct
+    - void\*
+- 'void
     - void
     - Can not be argument type, only return type
 
-## (foreign c)
-
 (**c-type-size** type)
 
-Returns the size of given type.
+Returns the size of given type. If type is array then returns size of the
+arrays type.
 
 (**c-type-align** type)
 
 Returns the align of given type.
+
+## C Libraries
 
 (**define-c-library** scheme-name headers object-name options)
 
@@ -108,12 +113,14 @@ implementations.
 - Do not store options in variables, that might lead to problems on some
 implementations.
 - Pass the headers using quote
-    - As '(...) and not (list...)
+    - As '(...) and not (list ...)
 - Pass the options using quote
-    - As '(...) and not (list...)
+    - As '(...) and not (list ...)
 
 
-(**define-c-procedure** scheme-name shared-object c-name return-type argument-type)
+### C Procedures
+
+(**define-c-procedure** scheme-name shared-object c-name return-type argument-types)
 
 Takes a scheme-name to bind the C procedure to, shared-object where the function
 is looked from, c-name of the function as symbol, return-type and argument-types.
@@ -123,16 +130,15 @@ Defines a new foreign function to be used from Scheme code.
 
 Example:
 
-    (define-c-library libc '("stdlib.h") #f '("6"))
+    (define-c-library libc '("stdlib.h") #f '())
     (define-c-procedure c-puts libc 'puts 'int '(pointer))
     (c-puts "Message brought to you by foreign-c!")
 
 
 #### Notes
 
-- Pass the return-types using quote
-    - As '(...) and not (list...)
-
+- Pass the argument-types using quote
+    - As '(...) and not (list ...)
 
 ### c-bytevectors
 
@@ -164,25 +170,26 @@ Frees c-bytevector from memory. Behaviour using the bytevector after it's freed
 is unspecified.
 
 
-(**make-c-null**)
+(**c-bytevector-null**)
 
 Returns a null C pointer. On some implementations #f is null pointer, this
 behaviour should not be used or counted on.
 
 
-(**c-null?** obj)
+(**c-bytevector-null?** obj)
 
 Returns #t if obj is a null C pointer, otherwise returns #f. On some
 implementations #f is null pointer, this behaviour should not be used or counted on.
 
 
-(**c-bytevector-set! cbv type offset value**)
+(**c-bytevector-set!** cbv type offset/member value)
 
 Set value of given type on offset on bytevector bv. Offset is counted as bytes,
-no matter the given type.
+no matter the given type except when type is array or struct. If type is array,
+then offset is 
 
 
-(**c-bytevector-ref! cbv type offset**)
+(**c-bytevector-ref!** cbv type offset/member)
 
 Get value of given type from offset of bytevector bv. Offset is counted as bytes,
 
@@ -210,13 +217,13 @@ Returns the bytevector in the integer address.
 
 ### Strings
 
-(**string->c-utf8** str)
+(**string->c-bytevector** str)
 
 Returns a newly allocated (unless empty) c-bytevector that contains the
 UTF-8 encoding of the given string.
 
 
-(**c-utf8->string** cbv)
+(**c-bytevector->string** cbv)
 
 Returns a newly allocated string whose character sequence is
 encoded by the given c-bytevector. If c-bytevector is null empty string is
@@ -251,6 +258,49 @@ Calling from Scheme:
 The passed c-bytevector, in example named cbv, should only be used **after**
 call to call-with-addres-of ends.
 
+## C Arrays
+(**define-c-array-type** name type)
+
+Creates a new C array type that can be used when accessing c-bytevectors.
+*name* is the name of the type and *type* is the type of arrays items.
+
+
+Example:
+
+    (define-c-array-type i8-array 'i8)
+    (define ar1 (make-c-bytevector (* (c-type-size i8-array) 10)))
+    (c-bytevector-set! ar1 i8-array 5 25) ; Set the 5th item of array to 25
+    (write (c-bytevector-ref ar1 i8-array 5))
+    > 25
+
+## C Structs
+
+(**define-c-struct-type** name members)
+
+Creates a new C struct type that can be used when accessing c-bytevectors.
+*name* is the name of the type and *members* is a list of member names and types.
+
+Example:
+
+    (define-c-struct-type color '((r i8) (g i8) (b i8) (a i8)))
+
+    (define green (make-c-bytevector (c-type-size color)))
+    (c-bytevector-set! green color 'r 1)
+    (c-bytevector-set! green color 'g 2)
+    (c-bytevector-set! green color 'b 3)
+    (c-bytevector-set! green color 'a 4)
+
+    (display (c-bytevector-ref green color 'g))
+    > 2
+
+#### Notes
+- Do not cond-expand inside the arguments, that might lead to problems on some
+implementations.
+- Do not store member names or types in variables, that might lead to problems
+on some implementations.
+- Pass the members using quote
+    - As '(...) and not (list ...)
+
 ### Environment variables
 
 Setting environment variables like this on Windows works for this library:
@@ -266,54 +316,3 @@ FOREIGN\_C\_LOAD\_PATH to paths separated by ; on windows, and : on other
 operating systems.
 
 
-## (foreign c struct)
-
-(**define-c-struct** name members struct-cbv (field-name field-type accessor modifier) ...)
-
-This procedure is used to create new or access existing c structs that you
-have a pointer of.
-
-Name is the variable name that the struct c-bytevector will have. It is just
-a c-bytevector like returned form make-c-bytevector.
-
-Members is name for members variable of the struct, it's a needed for internal
-purposes and ignored later on.
-
-struct-pointer is the pointer used for the struct, if you already have a
-pointer for example returned from C function then pass that. If you do not have
-a pointer then pass #f.
-
-(field-name field-type accessor modifier) is similar to how define-record-type
-works, except you also need to pass in type.
-
-
-Example:
-
-(define-c-struct s
-                 s-members
-                 (make-c-null)
-                 (field1 'int struct-field1 struct-field1!)
-                 (field2 'int struct-field2 struct-field2!)
-                 (field3 'pointer struct-field3 struct-field3!)
-                 (field4 'int struct-field4 struct-field4!))
-
-(struct-field1! s 1)
-(struct-field2! s 2)
-(struct-field3! s (make-c-bytevector 32))
-(struct-field4! s 4)
-
-(write s)
-(newline)
-(write s-members)
-(newline)
-(write (struct-field1 s))
-(newline)
-(write (struct-field2 s))
-(newline)
-(write (struct-field3 s))
-(newline)
-(write (struct-field4 s))
-(newline)
-
-
-## (foreign c stdio)

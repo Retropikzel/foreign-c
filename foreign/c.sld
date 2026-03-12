@@ -1,8 +1,6 @@
 (define-library
   (foreign c)
   ;; SCHEME-primitives.scm must implement:
-  ;; size-of-type
-  ;; align-of-type
   ;; shared-object-load
   ;; define-c-procedure
   ;; c-u8-ref
@@ -12,19 +10,22 @@
   ;; c-null
   (cond-expand
     ;(capyscheme (import (foreign c capyscheme-primitives)))
-    (chezscheme (import (except (chezscheme)
-                                native-endianness
-                                endianness
-                                remove)
-                        (srfi :0)
-                        (srfi :98))
+    (chezscheme (import (scheme base)
+                        (scheme write)
+                        (scheme char)
+                        (scheme file)
+                        (scheme process-context)
+                        (scheme inexact)
+                        (scheme cxr)
+                        (prefix (chezscheme) chezscheme-)
+                        (only (chezscheme) syntax))
                 (begin
-                  (define-record-type (<c-bytevector> internal-make-c-bytevector c-bytevector?)
-                    (fields
-                      (immutable pointer c-bytevector-pointer))))
+                  (define-record-type <c-bytevector>
+                    (internal-make-c-bytevector pointer)
+                    c-bytevector?
+                    (pointer c-bytevector-pointer)))
                 (include "c/chezscheme-primitives.scm")
-                (export foreign-procedure
-                        type->native-type
+                (export chezscheme-foreign-procedure
                         c-bytevector-null))
     (chibi (import (scheme base)
                    (scheme write)
@@ -45,15 +46,15 @@
                      (scheme file)
                      (scheme process-context)
                      (scheme inexact)
-                     (chicken base)
-                     (chicken foreign)
-                     (chicken locative)
-                     (chicken syntax)
-                     (chicken memory)
-                     (chicken random))
-             (export foreign-declare
-                     foreign-safe-lambda
-                     foreign-value
+                     (prefix (chicken base) chicken-)
+                     (prefix (chicken foreign) chicken-)
+                     (prefix (chicken locative) chicken-)
+                     (prefix (chicken syntax) chicken-)
+                     (prefix (chicken memory) chicken-)
+                     (prefix (chicken random) chicken-))
+             (export chicken-foreign-declare
+                     chicken-foreign-safe-lambda
+                     chicken-foreign-value
                      unspecified
                      shared-object-load
                      define-c-procedure
@@ -65,33 +66,21 @@
                  c-bytevector?
                  (pointer c-bytevector-pointer)))
              (include "c/chicken-primitives.scm"))
+    ;; TODO
     ;(cyclone (import (foreign c cyclone-primitives)))
+    ;; TODO
     ;(gambit (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact)) (include "c/gambit-primitives.scm"))
     ;; TODO
-    (gauche (import (scheme base)
-                    (scheme write)
-                    (scheme char)
-                    (scheme file)
-                    (scheme process-context)
-                    (scheme inexact))
-            (rename (gauche ffi)
-                    (size-of-type gauche:size-of-type)
-                    (align-of-type gauche:align-of-type))
-            (include "c/gauche-primitives.scm"))
-    ;; TODO r6rs tests
-    ;; TODO r7rs tests
+    ;(gauche (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact)) (rename (gauche ffi) (size-of-type gauche:size-of-type) (align-of-type gauche:align-of-type)) (include "c/gauche-primitives.scm"))
     (guile (import (scheme base)
                    (scheme write)
                    (scheme char)
                    (scheme file)
                    (scheme process-context)
                    (scheme inexact)
-                   (system foreign)
-                   (system foreign-library)
-                   (only (rnrs bytevectors)
-                         bytevector-u64-native-set!
-                         bytevector-u64-native-ref
-                         native-endianness))
+                   (prefix (system foreign) guile-)
+                   (prefix (system foreign-library) guile-)
+                   (prefix (rnrs bytevectors) guile-))
            (begin
                (define-record-type <c-bytevector>
                  (internal-make-c-bytevector pointer)
@@ -104,7 +93,7 @@
                     (scheme file)
                     (scheme process-context)
                     (scheme inexact)
-                    (ikarus foreign))
+                    (prefix (ikarus foreign) ikarus-))
            (begin
                (define-record-type <c-bytevector>
                  (internal-make-c-bytevector pointer)
@@ -120,11 +109,11 @@
                         (ironscheme clr)
                         (ironscheme clr internal)
                         (ironscheme ffi))
-           (begin
-               (define-record-type <c-bytevector>
-                 (internal-make-c-bytevector pointer)
-                 c-bytevector?
-                 (pointer c-bytevector-pointer)))
+                (begin
+                  (define-record-type <c-bytevector>
+                    (internal-make-c-bytevector pointer)
+                    c-bytevector?
+                    (pointer c-bytevector-pointer)))
                 (include "c/ironscheme-primitives.scm"))
     (kawa (import (scheme base)
                   (scheme write)
@@ -132,62 +121,53 @@
                   (scheme file)
                   (scheme process-context)
                   (scheme inexact)
-                  (only (kawa reflect)
-                        invoke
-                        invoke-static
-                        static-field
-                        make))
+                  (prefix (kawa reflect) kawa-))
           (begin
             (define-record-type <c-bytevector>
               (internal-make-c-bytevector pointer)
               c-bytevector?
               (pointer c-bytevector-pointer)))
           (include "c/kawa-primitives.scm"))
+    ;; TODO
     ;(mit-scheme (import (foreign c mit-scheme-primitives)))
+    ;; TODO
     ;(larceny (import (foreign c larceny-primitives)))
-    ;; TODO r6rs tests
     (mosh (import (scheme base)
                   (scheme write)
                   (scheme char)
                   (scheme file)
                   (scheme process-context)
                   (scheme inexact)
-                  (mosh ffi))
+                  (prefix (mosh ffi) mosh-))
           (begin
             (define-record-type <c-bytevector>
               (internal-make-c-bytevector pointer)
               c-bytevector?
               (pointer c-bytevector-pointer)))
           (include "c/mosh-primitives.scm"))
-    ; TODO r6rs tests
-    ; TODO r7rs tests
     (racket (import (scheme base)
                     (scheme write)
                     (scheme char)
                     (scheme file)
                     (scheme process-context)
                     (scheme inexact)
-                    (ffi winapi)
-                    (compatibility mlist)
-                    (ffi unsafe)
-                    (ffi vector))
+                    (prefix (ffi winapi) racket-)
+                    (prefix (compatibility mlist) racket-)
+                    (prefix (ffi unsafe) racket-)
+                    (prefix (ffi vector) racket-))
             (begin
               (define-record-type <c-bytevector>
                 (internal-make-c-bytevector pointer)
                 c-bytevector?
                 (pointer c-bytevector-pointer)))
             (include "c/racket-primitives.scm"))
-    ;; TODO r6rs tests
     (sagittarius (import (scheme base)
                          (scheme write)
                          (scheme char)
                          (scheme file)
                          (scheme process-context)
                          (scheme inexact)
-                         (except (sagittarius ffi)
-                                 c-pointer
-                                 c-free
-                                 c-malloc))
+                         (prefix (sagittarius ffi) sagittarius-))
                  (begin
                    (define-record-type <c-bytevector>
                      (internal-make-c-bytevector pointer)
@@ -223,39 +203,48 @@
                     free-bytes
                     file-exists?
                     c-pointer-set!
-                    c-pointer-ref))
-    ;; TODO r6rs tests
+                    c-pointer-ref
+                    internal-make-c-array-type
+                    internal-make-c-struct-type
+                    internal-c-struct-type-member
+                    calculate-struct-members))
     (ypsilon (import (scheme base)
                      (scheme write)
                      (scheme char)
                      (scheme file)
                      (scheme process-context)
                      (scheme inexact)
-                     (ypsilon c-ffi)
-                     (ypsilon c-types)
-                     (only (core)
-                           define-macro
-                           syntax-case
-                           bytevector-c-int8-set!
-                           bytevector-c-uint8-ref))
+                     (prefix (ypsilon c-ffi) ypsilon-)
+                     (prefix (ypsilon c-types) ypsilon-)
+                     (prefix (core) ypsilon-))
             (begin
               (define-record-type <c-bytevector>
                 (internal-make-c-bytevector pointer)
                 c-bytevector?
                 (pointer c-bytevector-pointer)))
              (include "c/ypsilon-primitives.scm")
-             (export c-function
-                     bytevector-c-int8-set!
-                     bytevector-c-uint8-ref)))
+             (export ypsilon-c-function
+                     ypsilon-bytevector-c-int8-set!
+                     ypsilon-bytevector-c-uint8-ref)))
   (export
-    ;; Types
+    c-integer-type?
+    c-char-type?
+    c-float-type?
+    c-double-type?
+    c-signed-type?
+    c-pointer-type?
+    c-array-type?
+    c-struct-type?
+
     c-type-size
     c-type-align
+
+    define-c-array-type
+    define-c-struct-type
 
     ;; Libraries and procedures
     define-c-library
     define-c-procedure
-    ;define-c-callback ;; TODO
 
     ;; c-bytevectors
     make-c-bytevector
@@ -272,6 +261,7 @@
     c-bytevector->bytevector
     c-bytevector->integer
     integer->c-bytevector
+    c-bytevector->list
 
     ;; Strings
     string->c-bytevector
@@ -280,11 +270,14 @@
     ;; Pass pointer by address
     call-with-address-of
 
-    value->native-value ;; TODO remove from exports
+    ;; Struct
+    ;define-c-struct
+
+    argument->native-value ;; TODO remove from exports
     )
-  (include "c-types.scm")
+  (include "c/types.scm")
   (include "c-bytevector.scm")
-  (include "c-value-to-native-value.scm")
+  (include "c-argument-to-native-value.scm")
   (include "c-call-with-address-of.scm")
   (cond-expand
     (chicken
@@ -306,8 +299,8 @@
         (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
         (define-c-procedure c-calloc libc 'calloc 'pointer '(int int))
         (define-c-procedure c-perror libc 'perror 'void '(pointer))
-        (define (c-memset-address->pointer address value offset) (address->pointer address))
-        (define (c-memset-pointer->address pointer value offset) (pointer->address pointer))))
+        (define (c-memset-address->pointer address value offset) (chicken-address->pointer address))
+        (define (c-memset-pointer->address pointer value offset) (chicken-pointer->address pointer))))
     (kawa
       (begin
         (define-c-library libc '("stdlib.h" "stdio.h" "string.h") #f '())
@@ -317,7 +310,8 @@
         (define-c-procedure c-calloc libc 'calloc 'pointer '(int int))
         (define-c-procedure c-perror libc 'perror 'void '(pointer))
         (define (c-memset-address->pointer address value offset)
-          (invoke-static java.lang.foreign.MemorySegment 'ofAddress address))
-        (define (c-memset-pointer->address pointer value offset) (invoke pointer 'address))))
+          (kawa-invoke-static java.lang.foreign.MemorySegment 'ofAddress address))
+        (define (c-memset-pointer->address pointer value offset)
+          (kawa-invoke pointer 'address))))
     (else (include "c-libc.scm"))))
 

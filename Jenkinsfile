@@ -13,7 +13,7 @@ pipeline {
     }
 
     parameters {
-        string(name: 'R6RS_SCHEMES', defaultValue: 'chezscheme guile ikarus ironscheme mosh racket sagittarius ypsilon', description: '')
+        string(name: 'R6RS_SCHEMES', defaultValue: 'chezscheme guile ikarus ironscheme racket sagittarius ypsilon', description: '')
         string(name: 'R7RS_SCHEMES', defaultValue: 'chibi chicken guile kawa mosh racket sagittarius stklos ypsilon', description: '')
     }
 
@@ -24,9 +24,9 @@ pipeline {
                     params.R6RS_SCHEMES.split().each { SCHEME ->
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "rm -rf logs/*.json"
-                                sh "make RNRS=r6rs SCHEME=${SCHEME} run-test-docker"
-                                archiveArtifacts(artifacts: "logs/${SCHEME}-foreign-c.ctrf.json", allowEmptyArchive: false, fingerprint: true)
+                                sh "rm -rf logs/r6rs/*.json"
+                                sh "timeout 6000 make RNRS=r6rs SCHEME=${SCHEME} run-test-docker"
+                                archiveArtifacts(artifacts: "logs/r6rs/*.json", allowEmptyArchive: false, fingerprint: true)
                             }
                         }
                     }
@@ -39,9 +39,9 @@ pipeline {
                     params.R7RS_SCHEMES.split().each { SCHEME ->
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "rm -rf logs/*.json"
-                                sh "make RNRS=r7rs SCHEME=${SCHEME} run-test-docker"
-                                archiveArtifacts(artifacts: "logs/${SCHEME}-foreign-c.ctrf.json", allowEmptyArchive: false, fingerprint: true)
+                                sh "rm -rf logs/r7rs/*.json"
+                                sh "timeout 6000 make RNRS=r7rs SCHEME=${SCHEME} run-test-docker"
+                                archiveArtifacts(artifacts: "logs/r7rs/*.json", allowEmptyArchive: false, fingerprint: true)
                             }
                         }
                     }

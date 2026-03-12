@@ -16,3 +16,4 @@ struct test* test_new();
 void takes_no_args();
 int takes_no_args_returns_int();
 int test_passing_pointer_address(int* p1, int** p2);
+int test_passing_int_pointer(int* p1);

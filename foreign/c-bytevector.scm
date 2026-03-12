@@ -337,7 +337,7 @@
 (define make-c-bytevector
   (lambda (size . byte)
     (when (not (integer? size))
-      (error "make-c-bytevector: Size must be integer" size))
+      (error "make-c-bytevector: size must be integer" size))
     (let ((cbv (cond ((null? byte) (c-malloc size))
                      ((= (car byte) 0) (c-calloc 1 size))
                      (else (bytevector->c-bytevector (make-bytevector size (car byte)))))))
@@ -367,159 +367,142 @@
     (bytevector->c-bytevector
       (apply (lambda (b) (make-bytevector 1 b)) bytes))))
 
-(define (c-bytevector-set! cbv type offset value)
-  (when (not (c-bytevector? cbv))
-    (error "c-bytevector-set!: cbv argument must be c-bytevector" cbv))
-  (when (not (symbol? type))
-    (error "c-bytevector-set!: type must be symbol" type))
-  (when (not (integer? offset))
-    (error "c-bytevector-set!: offset argument must be integer" offset))
-  (cond ((not (symbol? type)) (error "c-bytevector-set!: type must be symbol" type))
-        ((symbol=? type 'i8)
-         (when (not (number? value))
-           (error "c-bytevector-set!: value for given type must be number"
-                  `((type ,type)
-                    (value ,value))))
-         (c-bytevector-sint-set! cbv offset value (c-type-size 'i8)))
-        ((symbol=? type 'u8)
-         (when (not (number? value))
-           (error "c-bytevector-set!: value for given type must be number"
-                  `((type ,type)
-                    (value ,value))))
-         (c-u8-set! (c-bytevector-pointer cbv) offset value))
-        ((symbol=? type 'i16)
-         (when (not (number? value))
-           (error "c-bytevector-set!: value for given type must be number"
-                  `((type ,type)
-                    (value ,value))))
-         (c-bytevector-sint-set! cbv offset value (c-type-size 'i16)))
-        ((symbol=? type 'u16)
-         (when (not (number? value))
-           (error "c-bytevector-set!: value for given type must be number"
-                  `((type ,type)
-                    (value ,value))))
-         (c-bytevector-sint-set! cbv offset value (c-type-size 'u16)))
-        ((symbol=? type 'i32)
-         (when (not (number? value))
-           (error "c-bytevector-set!: value for given type must be number"
-                  `((type ,type)
-                    (value ,value))))
-         (c-bytevector-sint-set! cbv offset value 4))
-        ((symbol=? type 'u32)
-         (when (not (number? value))
-           (error "c-bytevector-set!: value for given type must be number"
-                  `((type ,type)
-                    (value ,value))))
-         (c-bytevector-uint-set! cbv offset value 4))
-        ((symbol=? type 'i64)
-         (when (not (number? value))
-           (error "c-bytevector-set!: value for given type must be number"
-                  `((type ,type)
-                    (value ,value))))
-         (c-bytevector-sint-set! cbv offset value 8))
-        ((symbol=? type 'u64)
-         (when (not (number? value))
-           (error "c-bytevector-set!: value for given type must be number"
-                  `((type ,type)
-                    (value ,value))))
-         (c-bytevector-uint-set! cbv offset value 8))
-        ((symbol=? type 'char)
-         (when (not (char? value))
-           (error "c-bytevector-set!: value for given type must be char"
-                  `((type ,type)
-                    (value ,value))))
-         (c-bytevector-sint-set! cbv offset (char->integer value) (c-type-size 'i8)))
-        ((symbol=? type 'uchar)
-         (when (not (char? value))
-           (error "c-bytevector-set!: value for given type must be char"
-                  `((type ,type)
-                    (value ,value))))
-         (c-bytevector-uint-set! cbv offset (char->integer value) (c-type-size 'u8)))
-        ((symbol=? type 'short)
-         (when (not (number? value))
-           (error "c-bytevector-set!: value for given type must be number"
-                  `((type ,type)
-                    (value ,value))))
-         (c-bytevector-sint-set! cbv offset value (c-type-size 'short)))
-        ((symbol=? type 'ushort)
-         (when (not (number? value))
-           (error "c-bytevector-set!: value for given type must be number"
-                  `((type ,type)
-                    (value ,value))))
-         (c-bytevector-sint-set! cbv offset value (c-type-size 'ushort)))
-        ((symbol=? type 'int)
-         (when (not (number? value))
-           (error "c-bytevector-set!: value for given type must be number"
-                  `((type ,type)
-                    (value ,value))))
-         (c-bytevector-sint-set! cbv offset value (c-type-size 'int)))
-        ((symbol=? type 'uint)
-         (when (not (number? value))
-           (error "c-bytevector-set!: value for given type must be number"
-                  `((type ,type)
-                    (value ,value))))
-         (c-bytevector-sint-set! cbv offset value (c-type-size 'uint)))
-        ((symbol=? type 'long)
-         (when (not (number? value))
-           (error "c-bytevector-set!: value for given type must be number"
-                  `((type ,type)
-                    (value ,value))))
-         (c-bytevector-sint-set! cbv offset value (c-type-size 'long)))
-        ((symbol=? type 'ulong)
-         (when (not (number? value))
-           (error "c-bytevector-set!: value for given type must be number"
-                  `((type ,type)
-                    (value ,value))))
-         (c-bytevector-sint-set! cbv offset value (c-type-size 'ulong)))
-        ((symbol=? type 'float)
-         (when (not (number? value))
-           (error "c-bytevector-set!: value for given type must be number"
-                  `((type ,type)
-                    (value ,value))))
-         (c-bytevector-ieee-single-set! cbv offset value))
-        ((symbol=? type 'double)
-         (when (not (number? value))
-           (error "c-bytevector-set!: value for given type must be number"
-                  `((type ,type)
-                    (value ,value))))
-         (c-bytevector-ieee-double-set! cbv offset value))
-        ((symbol=? type 'pointer)
-         (when (not (c-bytevector? value))
-           (error "c-bytevector-set!: value for given type must be c-bytevector"
-                  `((type ,type)
-                    (value ,value))))
-         (c-pointer-set! (c-bytevector-pointer cbv)
-                         offset
-                         (c-bytevector-pointer value)))
-        (else (error "c-bytevector-set!: Unknown type" type))))
+(define (c-bytevector-set! cbv type offset/member value)
+  (cond
+    ((not (c-bytevector? cbv))
+     (error "c-bytevector-set!: cbv argument must be c-bytevector" cbv))
 
-(define (c-bytevector-ref cbv type offset)
-  (when (not (c-bytevector? cbv))
-    (error "c-bytevector-ref: cbv argument must be c-bytevector" cbv))
-  (when (not (symbol? type))
-    (error "c-bytevector-ref: type must be symbol" type))
-  (when (not (integer? offset))
-    (error "c-bytevector-ref: offset argument must be integer" offset))
-  (cond ((symbol=? type 'i8) (c-bytevector-sint-ref cbv offset 1))
-        ((symbol=? type 'u8) (c-bytevector-uint-ref cbv offset 1))
-        ((symbol=? type 'i16) (c-bytevector-sint-ref cbv offset 2))
-        ((symbol=? type 'u16) (c-bytevector-uint-ref cbv offset 2))
-        ((symbol=? type 'i32) (c-bytevector-sint-ref cbv offset 4))
-        ((symbol=? type 'u32) (c-bytevector-uint-ref cbv offset 4))
-        ((symbol=? type 'i64) (c-bytevector-sint-ref cbv offset 8))
-        ((symbol=? type 'u64) (c-bytevector-uint-ref cbv offset 8))
-        ((symbol=? type 'char) (integer->char (c-bytevector-sint-ref cbv offset 1)))
-        ((symbol=? type 'uchar) (integer->char (c-bytevector-uint-ref cbv offset 1)))
-        ((symbol=? type 'short) (c-bytevector-sint-ref cbv offset (c-type-size 'short)))
-        ((symbol=? type 'ushort) (c-bytevector-uint-ref cbv offset (c-type-size 'ushort)))
-        ((symbol=? type 'int) (c-bytevector-sint-ref cbv offset (c-type-size 'int)))
-        ((symbol=? type 'uint) (c-bytevector-uint-ref cbv offset (c-type-size 'uint)))
-        ((symbol=? type 'long) (c-bytevector-sint-ref cbv offset (c-type-size 'long)))
-        ((symbol=? type 'ulong) (c-bytevector-uint-ref cbv offset (c-type-size 'ulong)))
-        ((symbol=? type 'float) (c-bytevector-ieee-single-ref cbv offset))
-        ((symbol=? type 'double) (c-bytevector-ieee-double-ref cbv offset))
-        ((equal? type 'pointer) (internal-make-c-bytevector (c-pointer-ref (c-bytevector-pointer cbv) offset)))
-        (else (error "c-bytevector-ref: Unknown type" type))))
+    ((and (not (c-struct-type? type)) (not (exact-integer? offset/member)))
+     (error "c-bytevector-set!: offset/member argument must be exact integer" offset/member))
+
+    ((and (c-struct-type? type) (not (symbol? offset/member)))
+     (error "c-bytevector-set!: offset/member argument must be symbol" offset/member))
+
+    ((and (c-integer-type? type) (c-signed-type? type))
+     (when (not (exact-integer? value))
+       (error "c-bytevector-set!: for c-integer-type value must be exact integer" value))
+     (c-bytevector-uint-set! cbv
+                             offset/member
+                             value
+                             (c-type-size type)))
+
+    ((and (c-integer-type? type) (not (c-signed-type? type)))
+     (when (not (exact-integer? value))
+       (error "c-bytevector-set!: for c-integer-type value must be exact integer" value))
+     (when (not (or (positive? value) (zero? value)))
+       (error "c-bytevector-set!: for unsigned c-integer-type value must be positive exact integer or 0" value))
+     (c-bytevector-sint-set! cbv
+                             offset/member value
+                             (c-type-size type)))
+
+    ((and (c-char-type? type) (c-signed-type? type))
+     (when (not (char? value))
+       (error "c-bytevector-set!: for c-char-type value must be char" value))
+     (c-bytevector-uint-set! cbv
+                             offset/member
+                             (char->integer value)
+                             (c-type-size type)))
+
+    ((and (c-char-type? type) (not (c-signed-type? type)))
+     (when (not (char? value))
+       (error "c-bytevector-set!: for unsigned c-char-type value must be char" value))
+     (when (not (or (positive? (char->integer value))
+                    (zero? (char->integer value))))
+       (error "c-bytevector-set!: for unsigned c-char-type value must be positive exact integer or 0" value))
+     (c-bytevector-sint-set! cbv
+                             offset/member
+                             (char->integer value)
+                             (c-type-size type)))
+
+    ((c-float-type? type)
+     (c-bytevector-ieee-single-set! cbv offset/member value))
+
+    ((c-double-type? type)
+     (c-bytevector-ieee-double-set! cbv offset/member value))
+
+    ((c-pointer-type? type)
+     (c-pointer-set! (c-bytevector-pointer cbv)
+                     offset/member
+                     (c-bytevector-pointer value)))
+
+    ((c-array-type? type)
+     (c-bytevector-set! cbv
+                        (c-array-type-type type)
+                        (* (c-type-size (c-array-type-type type)) offset/member)
+                        value))
+
+    ((c-struct-type? type)
+     (let* ((memb (internal-c-struct-type-member type offset/member))
+            (type (list-ref memb 1))
+            (offset (list-ref memb 2)))
+       (c-bytevector-set! cbv type offset value)))
+
+    (else (error "c-bytevector-set!: type must be any C type" type))))
+
+(define (c-bytevector-ref cbv type . offset/member)
+  (cond
+    ((not (c-bytevector? cbv))
+     (error "c-bytevector-ref: cbv argument must be c-bytevector" cbv))
+
+    ((and (not (c-struct-type? type))
+          (and (not (null? offset/member))
+               (not (exact-integer? (car offset/member)))))
+     (error "c-bytevector-ref: offset/member argument must be exact integer" (car offset/member)))
+
+    ((and (c-struct-type? type)
+          (or (null? offset/member)
+              (not (symbol? (car offset/member)))))
+     (error "c-bytevector-set!: offset/member argument must be given and be symbol" (car offset/member)))
+
+    ((and (c-integer-type? type)
+          (c-signed-type? type))
+     (c-bytevector-sint-ref cbv
+                            (if (null? offset/member) 0 (car offset/member))
+                            (c-type-size type)))
+
+    ((and (c-integer-type? type) (not (c-signed-type? type)))
+     (c-bytevector-uint-ref cbv
+                            (if (null? offset/member) 0 (car offset/member))
+                            (c-type-size type)))
+
+    ((and (c-char-type? type) (c-signed-type? type))
+     (integer->char
+       (c-bytevector-sint-ref cbv
+                              (if (null? offset/member) 0 (car offset/member))
+                              (c-type-size type))))
+
+    ((and (c-char-type? type) (not (c-signed-type? type)))
+     (integer->char
+       (c-bytevector-uint-ref cbv
+                              (if (null? offset/member) 0 (car offset/member))
+                              (c-type-size type))))
+
+    ((c-float-type? type)
+     (c-bytevector-ieee-single-ref cbv
+                                   (if (null? offset/member) 0 (car offset/member))))
+
+    ((c-double-type? type)
+     (c-bytevector-ieee-double-ref cbv
+                                   (if (null? offset/member) 0 (car offset/member))))
+
+    ((c-array-type? type)
+     (c-bytevector-ref cbv
+                       (c-array-type-type type)
+                       (* (c-type-size (c-array-type-type type))
+                          (if (null? offset/member) 0 (car offset/member)))))
+
+    ((c-pointer-type? type)
+     (internal-make-c-bytevector
+       (c-pointer-ref (c-bytevector-pointer cbv)
+                      (if (null? offset/member) 0 (car offset/member)))))
+
+    ((c-struct-type? type)
+     (let* ((memb (internal-c-struct-type-member type (car offset/member)))
+            (type (list-ref memb 1))
+            (offset (list-ref memb 2)))
+       (c-bytevector-ref cbv type offset)))
+
+    (else (error "c-bytevector-ref: type must be any C type" type))))
 
 (define (bytevector->c-bytevector bv)
   (when (not (bytevector? bv))
@@ -529,7 +512,9 @@
             (cbv (c-malloc bytes-length))
             (looper (lambda (index)
                       (when (< index bytes-length)
-                        (c-u8-set! (c-bytevector-pointer cbv) index (bytevector-u8-ref bv index))
+                        (c-u8-set! (c-bytevector-pointer cbv)
+                                   index
+                                   (bytevector-u8-ref bv index))
                         (looper (+ index 1))))))
     (looper 0)
     cbv))
@@ -572,3 +557,15 @@
   (when (not (integer? address))
     (error "c-bytevector->string: address argument must be integer" address))
   (c-memset-address->pointer address 0 0))
+
+(define (c-bytevector->list cbv type)
+  (cond
+    ((not (c-bytevector? cbv))
+     (error "c-struct->alist: cbv must be c-bytevector" cbv))
+    ((c-struct-type? type)
+     (map
+       (lambda (memb)
+         (cons (car memb) (c-bytevector-ref cbv type (car memb))))
+       (c-struct-type-members type)))
+    (else
+      (error "c-bytevector->list: dont know how to make list of type yet" type))))

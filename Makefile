@@ -1,19 +1,19 @@
-VERSION=0.13.7
+VERSION=0.14.0
 SCHEME=chibi
 RNRS=r7rs
-TEST_SUFFIX=scm
 VENV=venv-${SCHEME}
-DOCKERIMG=${SCHEME}:head
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
 TEST=main
 
-ifeq "${SCHEME}" "chicken"
-DOCKERIMG=${SCHEME}:latest
-endif
-
+TEST_SUFFIX=scm
 ifeq "${RNRS}" "r6rs"
 TEST_SUFFIX=sps
+endif
+
+DOCKERIMG=${SCHEME}:head
+ifeq "${SCHEME}" "chicken"
+DOCKERIMG=${SCHEME}:latest
 endif
 
 all: build
@@ -27,9 +27,7 @@ build:
 		--doc=README.html \
 		--foreign-depends=ffi \
 		--description="Portable foreign function interface for R7RS Schemes" \
-	foreign/c.sld #\
-	#foreign/c/struct.sld \
-	#foreign/c/stdio.sld
+	foreign/c.sld
 
 install:
 	snow-chibi --impls=${SCHEME} install --skip-tests?=1 ${PKG}
@@ -38,8 +36,8 @@ uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
 snow:
-	snow-chibi install --impls=generic --skip-tests?=1 --always-yes --install-source-dir=snow --install-library-dir=snow retropikzel.ctrf | true
-	snow-chibi install --impls=generic --skip-tests?=1 --always-yes --install-source-dir=snow --install-library-dir=snow srfi.64 | true
+	snow-chibi install --impls=generic --skip-tests?=1 --always-yes --install-source-dir=snow --install-library-dir=snow retropikzel.ctrf || true
+	snow-chibi install --impls=generic --skip-tests?=1 --always-yes --install-source-dir=snow --install-library-dir=snow srfi.64 || true
 
 testfiles:
 	echo "(import (except (rnrs) remove) (srfi :64) (retropikzel ctrf) (foreign c))" > run-test.sps
@@ -58,7 +56,10 @@ ${VENV}: snow
 	./${VENV}/bin/snow-chibi install --impls=${SCHEME} --always-yes srfi.64
 	./${VENV}/bin/snow-chibi install --impls=${SCHEME} --always-yes retropikzel.ctrf
 
-run-test-venv: libtest.so libtest.o libtest.a testfiles build ${VENV}
+logs/${RNRS}:
+	mkdir -p logs/${RNRS}
+
+run-test-venv: libtest.so libtest.o libtest.a testfiles build ${VENV} logs/${RNRS}
 	cp libtest.so ${VENV}/lib/
 	cp libtest.o ${VENV}/lib/
 	cp libtest.a ${VENV}/lib/
@@ -68,19 +69,24 @@ run-test-venv: libtest.so libtest.o libtest.a testfiles build ${VENV}
 	if [ "${RNRS}" = "r6rs" ]; then akku install akku-r7rs; fi
 	CSC_OPTIONS="-L -ltest" ./${VENV}/bin/scheme-compile run-test.${TEST_SUFFIX}
 	LD_LIBRARY_PATH=. ./run-test
+	mv *.json logs/${RNRS}/
 
-run-test-system: libtest.so libtest.o libtest.a snow testfiles build
-	if [ "${RNRS}" = "r6rs" ]; then akku install akku-r7rs; fi
-	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.64; fi
-	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes retropikzel.ctrf; fi
-	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --always-yes ${PKG}; fi
+run-test-system: libtest.so libtest.o libtest.a snow testfiles build logs/${RNRS}
+	snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.64
+	snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.60
+	snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.145
+	snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.180
+	snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes retropikzel.ctrf
+	snow-chibi install --impls=${SCHEME} --always-yes ${PKG}
+	akku install akku-r7rs chez-srfi
 	if [ "${RNRS}" = "r6rs" ]; then COMPILE_R7RS=${SCHEME} compile-scheme -I .akku/lib run-test.sps; fi
 	if [ "${RNRS}" = "r7rs" ]; then COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I./tests/c-include" compile-scheme run-test.scm; fi
 	LD_LIBRARY_PATH=. ./run-test
+	mv *.json logs/${RNRS}/
 
 run-test-docker:
 	docker build --build-arg IMAGE=${DOCKERIMG} -f Dockerfile.test --tag=foreign-c-${SCHEME} .
-	docker run -v "${PWD}/logs:/workdir/logs" -w /workdir foreign-c-${SCHEME} sh -c "make SCHEME=${SCHEME} RNRS=${RNRS} TEST=${TEST} run-test-system; mv *.json logs/ || true"
+	docker run -v "${PWD}/logs:/workdir/logs" -w /workdir foreign-c-${SCHEME} sh -c "make SCHEME=${SCHEME} RNRS=${RNRS} TEST=${TEST} run-test-system"
 
 ## C libraries for testing
 

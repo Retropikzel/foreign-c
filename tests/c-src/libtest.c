@@ -297,3 +297,8 @@ EXPORT int test_passing_pointer_address(int* p1, int** p2) {
     *p2 = p3;
     return 0;
 }
+
+EXPORT int test_passing_int_pointer(int* p1) {
+    *p1 = 100;
+    return 0;
+}

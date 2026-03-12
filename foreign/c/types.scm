@@ -1,0 +1,148 @@
+(define-record-type <c-struct-type>
+  (internal-make-c-struct-type name size members)
+  c-struct-type?
+  (name c-struct-type-name)
+  (size c-struct-type-size)
+  (members c-struct-type-members))
+
+(define (calculate-struct-members members . return-just-size)
+  (letrec* ((size 0)
+            (largest-member-size 0)
+            (round-to-next-modulo-of
+              (lambda (to-round roundee)
+                (if (= (modulo to-round roundee) 0)
+                  to-round
+                  (round-to-next-modulo-of (+ to-round 1) roundee))))
+            (data (map (lambda (memb)
+                         (let* ((name (car memb))
+                                (type (cadr memb))
+                                (type-size (c-type-size type))
+                                (type-alignment (c-type-align type)))
+                           (when (> type-size largest-member-size)
+                             (set! largest-member-size type-size))
+                           (if (or (= size 0)
+                                   (= (modulo size type-alignment) 0))
+                             (begin
+                               (set! size (+ size type-alignment))
+                               (list name type (- size type-alignment)))
+                             (let ((next-alignment
+                                     (round-to-next-modulo-of size type-alignment)))
+                               (set! size (+ next-alignment type-alignment))
+                               (list name type next-alignment)))))
+                       members)))
+    (if (null? return-just-size)
+      data
+      size)))
+
+(define (internal-c-struct-type-member type name)
+  (assq name (c-struct-type-members type)))
+
+(define-syntax define-c-struct-type
+  (syntax-rules ()
+    ((_ name members)
+     (define name
+       (internal-make-c-struct-type 'name
+                                    (calculate-struct-members members #t)
+                                    (calculate-struct-members members))))))
+
+(define-record-type <c-array-type>
+  (internal-make-c-array-type name type)
+  c-array-type?
+  (name c-array-type-name)
+  (type c-array-type-type))
+
+(define-syntax define-c-array-type
+  (syntax-rules ()
+    ((_ name type)
+     (define name (internal-make-c-array-type 'name type)))))
+
+(define (internal-array-type-size type)
+  (c-type-size (c-array-type-type type)))
+
+(define (c-integer-type? type)
+  (or (equal? type 'i8)
+      (equal? type 'u8)
+      (equal? type 'i16)
+      (equal? type 'u16)
+      (equal? type 'i32)
+      (equal? type 'u32)
+      (equal? type 'i64)
+      (equal? type 'u64)
+      (equal? type 'short)
+      (equal? type 'ushort)
+      (equal? type 'int)
+      (equal? type 'uint)
+      (equal? type 'long)
+      (equal? type 'ulong)))
+
+(define (c-char-type? type)
+  (or (equal? type 'char)
+      (equal? type 'uchar)))
+
+(define (c-signed-type? type)
+  (or (equal? type 'i8)
+      (equal? type 'i16)
+      (equal? type 'i32)
+      (equal? type 'i64)
+      (equal? type 'char)
+      (equal? type 'short)
+      (equal? type 'int)
+      (equal? type 'long)
+      (equal? type 'float)
+      (equal? type 'double)))
+
+(define (c-float-type? type) (equal? type 'float))
+
+(define (c-double-type? type) (equal? type 'double))
+
+(define (c-pointer-type? type) (equal? type 'pointer))
+
+(define (c-type-size type)
+  (cond ((equal? type 'void) 0)
+        ((equal? type 'i8) 1)
+        ((equal? type 'u8) 1)
+        ((equal? type 'i16) 2)
+        ((equal? type 'u16) 2)
+        ((equal? type 'i32) 4)
+        ((equal? type 'u32) 4)
+        ((equal? type 'i64) 8)
+        ((equal? type 'u64) 8)
+        ((equal? type 'char) 1)
+        ((equal? type 'uchar) 1)
+        ((equal? type 'short) 2)
+        ((equal? type 'ushort) 2)
+        ((equal? type 'int) 4)
+        ((equal? type 'uint) 4)
+        ((equal? type 'long) 8)
+        ((equal? type 'ulong) 8)
+        ((equal? type 'float) 4)
+        ((equal? type 'double) 8)
+        ((equal? type 'pointer) 8)
+        ((c-array-type? type) (internal-array-type-size type))
+        ((c-struct-type? type) (c-struct-type-size type))
+        (else (error "c-type-size: Unknown type" type))))
+
+(define (c-type-align type)
+  (cond ((equal? type 'i8) 1)
+        ((equal? type 'u8) 1)
+        ((equal? type 'i16) 2)
+        ((equal? type 'u16) 2)
+        ((equal? type 'i32) 4)
+        ((equal? type 'u32) 4)
+        ((equal? type 'i64) 8)
+        ((equal? type 'u64) 8)
+        ((equal? type 'char) 1)
+        ((equal? type 'uchar) 1)
+        ((equal? type 'short) 2)
+        ((equal? type 'ushort) 2)
+        ((equal? type 'int) 4)
+        ((equal? type 'uint) 4)
+        ((equal? type 'long) 8)
+        ((equal? type 'ulong) 8)
+        ((equal? type 'float) 4)
+        ((equal? type 'double) 8)
+        ((equal? type 'pointer) 8)
+        ((c-array-type? type) (internal-array-type-size type))
+        ((c-struct-type? type) (c-struct-type-size type))
+        (else (error "c-type-align: Unknown type" type))))
+

@@ -1,0 +1,11 @@
+;(test-begin "define-c-struct")
+(define-c-struct-type rgb '((int r) (int g) (int b) (int a)))
+(define color (make-c-struct rgb))
+
+(write rgb)
+(newline)
+(write color)
+(newline)
+;(write (c-bytevector-ref (struct rgb) color r))
+;(newline)
+;(test-end "define-c-struct")
