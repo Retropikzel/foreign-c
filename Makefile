@@ -24,6 +24,7 @@ install:
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
+SNOW_CMD=snow-chibi install --impls=${SCHEME} --skip-tests?=1 --install-source-dir=snow --install-library-dir=snow --always-yes
 test: libtest.so libtest.o libtest.a build
 	rm -rf .tmp
 	mkdir -p .tmp
@@ -37,10 +38,15 @@ test: libtest.so libtest.o libtest.a build
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (retropikzel ctrf) (foreign c))" > .tmp/test.scm
 	echo "(test-runner-current (ctrf-runner))" >> .tmp/test.scm
 	cat tests/${TEST}.scm >> .tmp/test.scm
-	snow-chibi install --impls=${SCHEME} --always-yes ${PKG}
-	if [ "${RNRS}" = "r6rs" ]; then cd .tmp && akku install akku-r7rs chez-srfi; fi
-	if [ "${RNRS}" = "r6rs" ]; then cd .tmp && COMPILE_R7RS=${SCHEME} compile-r7rs test.sps; fi
-	if [ "${RNRS}" = "r7rs" ]; then cd .tmp && COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I./tests/c-include" compile-r7rs test.scm; fi
+	cd .tmp && ${SNOW_CMD} srfi.64
+	cd .tmp && ${SNOW_CMD} srfi.60
+	cd .tmp && ${SNOW_CMD} srfi.145
+	cd .tmp && ${SNOW_CMD} srfi.180
+	cd .tmp && ${SNOW_CMD} retropikzel.ctrf
+	cd .tmp && ${SNOW_CMD} ../${PKG}
+	if [ "${RNRS}" = "r6rs" ]; then cd .tmp && akku install akku-r7rs; fi
+	if [ "${RNRS}" = "r6rs" ]; then cd .tmp && COMPILE_R7RS=${SCHEME} compile-r7rs -I .akku/lib test.sps; fi
+	if [ "${RNRS}" = "r7rs" ]; then cd .tmp && COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I./tests/c-include" compile-r7rs -I snow test.scm; fi
 	cd .tmp && LD_LIBRARY_PATH=. ./test
 	mv .tmp/*.json logs/${RNRS}/
 
@@ -61,4 +67,3 @@ libtest.a: libtest.o tests/c-src/libtest.c
 
 clean:
 	git clean -X -f
-	rm -rf .akku
