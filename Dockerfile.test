@@ -7,10 +7,10 @@ RUN apt-get update && apt-get install -y \
     build-essential libffi-dev libcurl4-openssl-dev curl guile-3.0 \
     git ca-certificates
 
-COPY --from=schemers/chibi:head /usr/local /usr/chibi
-RUN cp -r /usr/chibi/* /usr/local/
 COPY --from=schemers/loko:head /usr/local /usr/loko
 RUN cp -r /usr/loko/* /usr/local/
+COPY --from=schemers/chibi:head /usr/local /usr/chibi
+RUN cp -r /usr/chibi/* /usr/local/
 RUN ldconfig
 
 ADD https://codeberg.org/retropikzel/compile-r7rs/raw/branch/main/compile-r7rs .
@@ -18,6 +18,10 @@ RUN install compile-r7rs /usr/local/bin/compile-r7rs
 
 RUN mkdir -p /root/.snow && echo "()" > /root/.snow/config.scm
 
+RUN snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.64
+RUN snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.60
+RUN snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.145
+RUN snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.180
 WORKDIR /workdir
 COPY Makefile .
 COPY README.md .
