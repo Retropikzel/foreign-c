@@ -4,6 +4,8 @@ RNRS=r7rs
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
 TEST=main
+SNOW=snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes \
+	--install-source-dir=.tmp/snow --install-library-dir=.tmp/snow
 
 all: build
 
@@ -23,16 +25,9 @@ install:
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
-SNOW=snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes --install-source-dir=.tmp/snow --install-library-dir=.tmp/snow
-.tmp/snow:
+test: libtest.so libtest.o libtest.a build
+	rm -rf .tmp
 	mkdir -p .tmp
-	${SNOW} srfi.39
-	${SNOW} srfi.64
-	${SNOW} srfi.145
-	${SNOW} srfi.180
-	${SNOW} retropikzel.ctrf
-
-test: libtest.so libtest.o libtest.a build .tmp/snow
 	cp libtest.so .tmp/
 	cp libtest.o .tmp/
 	cp libtest.a .tmp/
@@ -44,8 +39,12 @@ test: libtest.so libtest.o libtest.a build .tmp/snow
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (retropikzel ctrf) (foreign c))" > .tmp/test.scm
 	echo "(test-runner-current (ctrf-runner))" >> .tmp/test.scm
 	cat tests/${TEST}.scm >> .tmp/test.scm
+	${SNOW} srfi.64
+	${SNOW} srfi.145
+	${SNOW} srfi.180
+	${SNOW} retropikzel.ctrf
 	${SNOW} ${PKG}
-	if [ "${RNRS}" = "r6rs" ]; then cd .tmp && akku install akku-r7rs; fi
+	cd .tmp && akku install akku-r7rs
 	if [ "${RNRS}" = "r6rs" ]; then cd .tmp && COMPILE_R7RS=${SCHEME} compile-r7rs -I .akku/lib test.sps; fi
 	rm -rf .tmp/test
 	if [ "${RNRS}" = "r6rs" ]; then cd .tmp && COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I." compile-r7rs -I .akku/lib test.sps; fi
