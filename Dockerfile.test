@@ -22,6 +22,7 @@ RUN snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.64
 RUN snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.60
 RUN snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.145
 RUN snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes srfi.180
+
 WORKDIR /workdir
 COPY Makefile .
 COPY README.md .
