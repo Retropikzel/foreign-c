@@ -8,7 +8,6 @@ TEST=main
 all: build
 
 build:
-	rm -rf *.tgz
 	echo "<pre>$$(cat README.md)</pre>" > README.html
 	snow-chibi package \
 		--version=${VERSION} \
@@ -24,13 +23,13 @@ install:
 uninstall:
 	snow-chibi --impls=${SCHEME} remove "(foreign c)"
 
-SNOW_CMD=snow-chibi install --impls=${SCHEME} --skip-tests?=1 --install-source-dir=snow --install-library-dir=snow --always-yes
 test: libtest.so libtest.o libtest.a build
 	rm -rf .tmp
 	mkdir -p .tmp
 	cp libtest.so .tmp/
 	cp libtest.o .tmp/
 	cp libtest.a .tmp/
+	cp tests/c-include/libtest.h .tmp/
 	mkdir -p logs/${RNRS}
 	echo "(import (except (rnrs) remove) (srfi :64) (retropikzel ctrf) (foreign c))" > .tmp/test.sps
 	echo "(test-runner-current (ctrf-runner))" >> .tmp/test.sps
@@ -38,17 +37,15 @@ test: libtest.so libtest.o libtest.a build
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (retropikzel ctrf) (foreign c))" > .tmp/test.scm
 	echo "(test-runner-current (ctrf-runner))" >> .tmp/test.scm
 	cat tests/${TEST}.scm >> .tmp/test.scm
-	cd .tmp && ${SNOW_CMD} srfi.64
-	cd .tmp && ${SNOW_CMD} srfi.60
-	cd .tmp && ${SNOW_CMD} srfi.145
-	cd .tmp && ${SNOW_CMD} srfi.180
-	cd .tmp && ${SNOW_CMD} retropikzel.ctrf
-	cd .tmp && ${SNOW_CMD} ../${PKG}
+	cp -r foreign .tmp/
+	cd .tmp && snow-chibi install --impls=${SCHEME} --skip-tests?=1 --install-source-dir=snow --install-library-dir=snow --always-yes \
+		srfi.64 srfi.60 srfi.145 srfi.180 retropikzel.ctrf ../${PKG}
 	if [ "${RNRS}" = "r6rs" ]; then cd .tmp && akku install akku-r7rs; fi
 	if [ "${RNRS}" = "r6rs" ]; then cd .tmp && COMPILE_R7RS=${SCHEME} compile-r7rs -I .akku/lib test.sps; fi
-	if [ "${RNRS}" = "r7rs" ]; then cd .tmp && COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I./tests/c-include" compile-r7rs -I snow test.scm; fi
+	if [ "${RNRS}" = "r7rs" ]; then cd .tmp && COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I." compile-r7rs -I snow test.scm; fi
+	if [ "${RNRS}" = "r7rs" ]; then cd .tmp && COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I." compile-r7rs -I snow test.scm; fi
 	cd .tmp && LD_LIBRARY_PATH=. ./test
-	mv .tmp/*.json logs/${RNRS}/
+	mv -f .tmp/*.json logs/${RNRS}/
 
 test-docker:
 	docker build --build-arg SCHEME=${SCHEME} -f Dockerfile.test --tag=${SCHEME}-testing .
