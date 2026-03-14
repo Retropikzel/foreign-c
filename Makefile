@@ -34,12 +34,12 @@ test: libtest.so libtest.o libtest.a build index
 	cp -r libtest.so libtest.o libtest.a tests/c-include/libtest.h foreign .tmp/
 	mkdir -p logs/${RNRS}
 	# R6RS files
-	echo "(import (except (rnrs) remove) (srfi :64) (retropikzel ctrf) (foreign c))" > .tmp/test.sps
+	printf "#!r6rs\n(import (rnrs) (srfi :64) (retropikzel ctrf) (foreign c))\n" > .tmp/test.sps
 	echo "(test-runner-current (ctrf-runner))" >> .tmp/test.sps
 	cat tests/${TEST}.scm >> .tmp/test.sps
 	if [ "${RNRS}" = "r6rs" ]; then snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes --install-source-dir=.tmp --install-library-dir=.tmp srfi.64; fi
 	if [ "${RNRS}" = "r6rs" ]; then snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes --install-source-dir=.tmp --install-library-dir=.tmp retropikzel.ctrf; fi
-	cd .tmp && akku install akku-r7rs
+	if [ "${RNRS}" = "r6rs" ]; then cd .tmp && akku install akku-r7rs chez-srfi; fi
 	# R7RS testfiles
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (retropikzel ctrf) (foreign c))" > .tmp/test.scm
 	echo "(test-runner-current (ctrf-runner))" >> .tmp/test.scm
@@ -48,10 +48,10 @@ test: libtest.so libtest.o libtest.a build index
 	# Tests
 	rm -rf .tmp/test
 	# R6RS
-	if [ "${RNRS}" = "r6rs" ]; then cd .tmp && . .akku/bin/activate && COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I." compile-r7rs -I .akku/lib test.sps; fi
+	if [ "${RNRS}" = "r6rs" ]; then cd .tmp && COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I." compile-r7rs -I .akku/lib test.sps; fi
 	# R7RS
 	if [ "${RNRS}" = "r7rs" ]; then cd .tmp && COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I." compile-r7rs -I . test.scm; fi
-	cd .tmp && . .akku/bin/activate && LD_LIBRARY_PATH=. ./test
+	cd .tmp && LD_LIBRARY_PATH=. ./test
 	mv -f .tmp/*.json logs/${RNRS}/
 
 test-docker:
