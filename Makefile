@@ -4,7 +4,7 @@ RNRS=r7rs
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
 TEST=main
-TEST_DEPENDS=srfi.64 retropikzel.ctrf
+TEST_DEPENDS=srfi.64
 
 all: build
 
@@ -34,15 +34,12 @@ test: libtest.so libtest.o libtest.a build index
 	cp -r libtest.so libtest.o libtest.a tests/c-include/libtest.h foreign .tmp/
 	mkdir -p logs/${RNRS}
 	# R6RS files
-	printf "#!r6rs\n(import (rnrs) (srfi :64) (retropikzel ctrf) (foreign c))\n" > .tmp/test.sps
-	echo "(test-runner-current (ctrf-runner))" >> .tmp/test.sps
+	printf "#!r6rs\n(import (rnrs) (srfi :64) (foreign c))\n" > .tmp/test.sps
 	cat tests/${TEST}.scm >> .tmp/test.sps
 	if [ "${RNRS}" = "r6rs" ]; then snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes --install-source-dir=.tmp --install-library-dir=.tmp srfi.64; fi
-	if [ "${RNRS}" = "r6rs" ]; then snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes --install-source-dir=.tmp --install-library-dir=.tmp retropikzel.ctrf; fi
 	if [ "${RNRS}" = "r6rs" ]; then cd .tmp && akku install akku-r7rs chez-srfi; fi
 	# R7RS testfiles
-	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (retropikzel ctrf) (foreign c))" > .tmp/test.scm
-	echo "(test-runner-current (ctrf-runner))" >> .tmp/test.scm
+	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > .tmp/test.scm
 	cat tests/${TEST}.scm >> .tmp/test.scm
 	if [ "${RNRS}" = "r7rs" ]; then snow-chibi install --impls=${SCHEME} --skip-tests?=1 --always-yes ${TEST_DEPENDS} foreign.c; fi
 	# Tests
