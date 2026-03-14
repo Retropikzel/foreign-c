@@ -49,7 +49,6 @@ test: libtest.so libtest.o libtest.a build index
 	# R7RS
 	if [ "${RNRS}" = "r7rs" ]; then cd .tmp && COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I." compile-r7rs -I . test.scm; fi
 	cd .tmp && LD_LIBRARY_PATH=. ./test
-	mv -f .tmp/*.json logs/${RNRS}/
 
 test-docker:
 	docker build --build-arg SCHEME=${SCHEME} -f Dockerfile.test --tag=${SCHEME}-testing .
