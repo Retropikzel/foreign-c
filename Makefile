@@ -29,32 +29,23 @@ build:
 		--description="Portable foreign function interface for R7RS Schemes" \
 	foreign/c.sld
 
-index:
-	snow-chibi index ${PKG}
-
-install: index
+install:
 	snow-chibi --impls=${SCHEME} install --always-yes foreign.c
 
-uninstall:
-	snow-chibi --impls=${SCHEME} remove "(foreign c)"
-
-test: libtest.so libtest.o libtest.a build index
+test: libtest.so libtest.o libtest.a build
 	# tmpdir
 	mkdir -p .tmp
 	cp -r libtest.so libtest.o libtest.a tests/c-include/libtest.h foreign .tmp/
 	mkdir -p logs/${RNRS}
 	# R6RS files
-	printf "#!r6rs\n(import (rnrs) (srfi :64) (retropikzel ctrf) (foreign c))\n" > .tmp/test.sps
-	echo "(test-runner-current (ctrf-runner))" >> .tmp/test.sps
+	printf "#!r6rs\n(import (rnrs) (srfi :64) (foreign c))\n" > .tmp/test.sps
 	cat tests/${TEST}.scm >> .tmp/test.sps
 	# R7RS testfiles
-	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (retropikzel ctrf) (foreign c))" > .tmp/test.scm
-	echo "(test-runner-current (ctrf-runner))" >> .tmp/test.scm
+	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > .tmp/test.scm
 	cat tests/${TEST}.scm >> .tmp/test.scm
 	# Tests
 	cd .tmp && ${SNOW} srfi.64
-	cd .tmp && ${SNOW} retropikzel.ctrf
-	cd .tmp && ${SNOW} foreign.c
+	cd .tmp && ${SNOW} ../${PKG}
 	cd .tmp && akku install akku-r7rs 2> /dev/null
 	rm -rf .tmp/test
 	cd .tmp && COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I." compile-r7rs ${LIB_PATHS} test.${SFX}
