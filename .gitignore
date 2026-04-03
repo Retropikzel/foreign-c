@@ -76,3 +76,4 @@ venv*
 OLD*
 a.out
 run-test*
+logs

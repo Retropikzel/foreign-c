@@ -14,31 +14,57 @@ pipeline {
     }
 
     parameters {
-        string(name: 'R6RS_SCHEMES', defaultValue: 'chezscheme guile ikarus ironscheme racket sagittarius ypsilon', description: '')
-        string(name: 'R7RS_SCHEMES', defaultValue: 'chibi chicken guile kawa mosh racket sagittarius stklos ypsilon', description: '')
+        string(name: 'R6RS_SCHEMES', defaultValue: 'chezscheme ikarus ironscheme racket sagittarius ypsilon', description: '')
+        string(name: 'R7RS_SCHEMES', defaultValue: 'chibi chicken kawa mosh racket sagittarius stklos ypsilon', description: '')
     }
 
     stages {
-        stage('Test R6RS') {
+        stage('Test R6RS Debian') {
             steps {
                 script {
                     params.R6RS_SCHEMES.split().each { SCHEME ->
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "timeout 6000 make RNRS=r6rs SCHEME=${SCHEME} test-docker"
+                                sh "make RNRS=r6rs SCHEME=${SCHEME} test-docker"
                             }
                         }
                     }
                 }
             }
         }
-        stage('Test R7RS') {
+        stage('Test R6RS Alpine') {
+            steps {
+                script {
+                    params.R6RS_SCHEMES.split().each { SCHEME ->
+                        stage("${SCHEME}") {
+                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                sh "make LINUX=alpine RNRS=r6rs SCHEME=${SCHEME} test-docker"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage('Test R7RS Debian') {
             steps {
                 script {
                     params.R7RS_SCHEMES.split().each { SCHEME ->
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "timeout 6000 make RNRS=r7rs SCHEME=${SCHEME} test-docker"
+                                sh "make RNRS=r7rs SCHEME=${SCHEME} test-docker"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage('Test R7RS Alpine') {
+            steps {
+                script {
+                    params.R7RS_SCHEMES.split().each { SCHEME ->
+                        stage("${SCHEME}") {
+                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                sh "make LINUX=alpine RNRS=r7rs SCHEME=${SCHEME} test-docker"
                             }
                         }
                     }

@@ -24,7 +24,7 @@
                     (internal-make-c-bytevector pointer)
                     c-bytevector?
                     (pointer c-bytevector-pointer)))
-                (include "c/chezscheme-primitives.scm")
+                (include "c/primitives/chezscheme.scm")
                 (export chezscheme-foreign-procedure
                         c-bytevector-null))
     (chibi (import (scheme base)
@@ -33,8 +33,8 @@
                    (scheme file)
                    (scheme process-context)
                    (scheme inexact))
-           (include-shared "c/chibi-primitives")
-           (include "c/chibi-primitives.scm")
+           (include-shared "c/primitives/chibi")
+           (include "c/primitives/chibi.scm")
            (begin
              (define-record-type <c-bytevector>
                (internal-make-c-bytevector pointer)
@@ -65,28 +65,15 @@
                  (internal-make-c-bytevector pointer)
                  c-bytevector?
                  (pointer c-bytevector-pointer)))
-             (include "c/chicken-primitives.scm"))
+             (include "c/primitives/chicken.scm"))
     ;; TODO
     ;(cyclone (import (foreign c cyclone-primitives)))
     ;; TODO
-    ;(gambit (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact)) (include "c/gambit-primitives.scm"))
+    ;(gambit (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact)) (include "c/primitives/gambit-primitives.scm"))
     ;; TODO
-    ;(gauche (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact)) (rename (gauche ffi) (size-of-type gauche:size-of-type) (align-of-type gauche:align-of-type)) (include "c/gauche-primitives.scm"))
-    (guile (import (scheme base)
-                   (scheme write)
-                   (scheme char)
-                   (scheme file)
-                   (scheme process-context)
-                   (scheme inexact)
-                   (prefix (system foreign) guile-)
-                   (prefix (system foreign-library) guile-)
-                   (prefix (rnrs bytevectors) guile-))
-           (begin
-               (define-record-type <c-bytevector>
-                 (internal-make-c-bytevector pointer)
-                 c-bytevector?
-                 (pointer c-bytevector-pointer)))
-           (include "c/guile-primitives.scm"))
+    ;(gauche (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact)) (rename (gauche ffi) (size-of-type gauche:size-of-type) (align-of-type gauche:align-of-type)) (include "c/primitives/gauche.scm"))
+    ;; TODO
+    ;(guile (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact) (prefix (system foreign) guile-) (prefix (system foreign-library) guile-) (prefix (rnrs bytevectors) guile-)) (begin (define-record-type <c-bytevector> (internal-make-c-bytevector pointer) c-bytevector?  (pointer c-bytevector-pointer))) (include "c/primitives/guile.scm"))
     (ikarus (import (scheme base)
                     (scheme write)
                     (scheme char)
@@ -99,7 +86,7 @@
                  (internal-make-c-bytevector pointer)
                  c-bytevector?
                  (pointer c-bytevector-pointer)))
-            (include "c/ikarus-primitives.scm"))
+            (include "c/primitives/ikarus.scm"))
     (ironscheme (import (scheme base)
                         (scheme write)
                         (scheme char)
@@ -114,7 +101,7 @@
                     (internal-make-c-bytevector pointer)
                     c-bytevector?
                     (pointer c-bytevector-pointer)))
-                (include "c/ironscheme-primitives.scm"))
+                (include "c/primitives/ironscheme.scm"))
     (kawa (import (scheme base)
                   (scheme write)
                   (scheme char)
@@ -127,7 +114,7 @@
               (internal-make-c-bytevector pointer)
               c-bytevector?
               (pointer c-bytevector-pointer)))
-          (include "c/kawa-primitives.scm"))
+          (include "c/primitives/kawa.scm"))
     ;; TODO
     ;(mit-scheme (import (foreign c mit-scheme-primitives)))
     ;; TODO
@@ -144,7 +131,7 @@
               (internal-make-c-bytevector pointer)
               c-bytevector?
               (pointer c-bytevector-pointer)))
-          (include "c/mosh-primitives.scm"))
+          (include "c/primitives/mosh.scm"))
     (racket (import (scheme base)
                     (scheme write)
                     (scheme char)
@@ -160,7 +147,7 @@
                 (internal-make-c-bytevector pointer)
                 c-bytevector?
                 (pointer c-bytevector-pointer)))
-            (include "c/racket-primitives.scm"))
+            (include "c/primitives/racket.scm"))
     (sagittarius (import (scheme base)
                          (scheme write)
                          (scheme char)
@@ -173,7 +160,7 @@
                      (internal-make-c-bytevector pointer)
                      c-bytevector?
                      (pointer c-bytevector-pointer)))
-                 (include "c/sagittarius-primitives.scm"))
+                 (include "c/primitives/sagittarius.scm"))
     (stklos (import (scheme base)
                     (scheme write)
                     (scheme char)
@@ -198,7 +185,7 @@
                 (internal-make-c-bytevector pointer)
                 c-bytevector?
                 (pointer c-bytevector-pointer)))
-            (include "c/stklos-primitives.scm")
+            (include "c/primitives/stklos.scm")
             (export make-external-function
                     free-bytes
                     file-exists?
@@ -222,7 +209,7 @@
                 (internal-make-c-bytevector pointer)
                 c-bytevector?
                 (pointer c-bytevector-pointer)))
-             (include "c/ypsilon-primitives.scm")
+             (include "c/primitives/ypsilon.scm")
              (export ypsilon-c-function
                      ypsilon-bytevector-c-int8-set!
                      ypsilon-bytevector-c-uint8-ref)))
@@ -276,9 +263,9 @@
     argument->native-value ;; TODO remove from exports
     )
   (include "c/types.scm")
-  (include "c-bytevector.scm")
-  (include "c-argument-to-native-value.scm")
-  (include "c-call-with-address-of.scm")
+  (include "c/c-bytevector.scm")
+  (include "c/argument-to-native-value.scm")
+  (include "c/call-with-address-of.scm")
   (cond-expand
     (chicken
       (begin
@@ -288,7 +275,7 @@
              (begin
                (define scheme-name #t)
                (shared-object-load headers)))))))
-    (else (include "c-define-c-library.scm")))
+    (else (include "c/define-c-library.scm")))
 
   (cond-expand
     (chicken
@@ -313,5 +300,5 @@
           (kawa-invoke-static java.lang.foreign.MemorySegment 'ofAddress address))
         (define (c-memset-pointer->address pointer value offset)
           (kawa-invoke pointer 'address))))
-    (else (include "c-libc.scm"))))
+    (else (include "c/libc.scm"))))
 

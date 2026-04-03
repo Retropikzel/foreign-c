@@ -1,2 +1,6 @@
-FROM alpine
-RUN apk add make docker
+FROM debian:trixie
+RUN apt-get update && apt-get install -y make gcc git ca-certificates libffi-dev docker.io
+RUN git clone https://codeberg.org/retropikzel/test-r7rs.git --depth=1
+RUN cd test-r7rs && ./configure && make && make install
+COPY --from=schemers/chibi:head /usr/local /usr/local
+RUN ldconfig

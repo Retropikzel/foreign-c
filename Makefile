@@ -1,19 +1,15 @@
 VERSION=0.14.0
 SCHEME=chibi
 DOCKER_TAG=latest
-IMAGE=${SCHEME}:${DOCKER_TAG}
 RNRS=r7rs
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
 TEST=main
+LINUX=debian
 
-SNOW=snow-chibi --impls=${SCHEME} install --always-yes
 SFX=scm
-LIB_PATHS=
 ifeq "${RNRS}" "r6rs"
-SNOW=snow-chibi --impls=${SCHEME} install --always-yes --install-source-dir=. --install-library-dir=.
 SFX=sps
-LIB_PATHS=-I .akku/lib
 endif
 
 all: build
@@ -32,8 +28,8 @@ build:
 install:
 	snow-chibi --impls=${SCHEME} install --always-yes foreign.c
 
-test: libtest.so libtest.o libtest.a build
-	# tmpdir
+testfiles: libtest.so libtest.o libtest.a build
+	rm -rf .tmp
 	mkdir -p .tmp
 	cp -r libtest.so libtest.o libtest.a tests/c-include/libtest.h foreign .tmp/
 	mkdir -p logs/${RNRS}
@@ -43,17 +39,23 @@ test: libtest.so libtest.o libtest.a build
 	# R7RS testfiles
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > .tmp/test.scm
 	cat tests/${TEST}.scm >> .tmp/test.scm
-	# Tests
-	cd .tmp && ${SNOW} srfi.64
-	cd .tmp && ${SNOW} ../${PKG}
-	cd .tmp && akku install akku-r7rs 2> /dev/null
-	rm -rf .tmp/test
-	cd .tmp && COMPILE_R7RS=${SCHEME} CSC_OPTIONS="-L -ltest -L. -I." compile-r7rs ${LIB_PATHS} test.${SFX}
-	cd .tmp && LD_LIBRARY_PATH=. ./test
+	cp ${PKG} .tmp/
 
-test-docker:
-	docker build --build-arg SCHEME=${SCHEME} --build-arg IMAGE=${IMAGE} -f Dockerfile.test --tag=${SCHEME}-testing .
-	docker run -v "${PWD}/logs:/workdir/logs" -w /workdir ${SCHEME}-testing sh -c "make SCHEME=${SCHEME} RNRS=${RNRS} TEST=${TEST} test"
+test: testfiles
+	cd .tmp && CSC_OPTIONS="-L -ltest -L. -I." COMPILE_R7RS=${SCHEME} compile-r7rs -o test-program -I . test.${SFX}
+	cd .tmp && LD_LIBRARY_PATH=. ./test-program
+
+test-docker: testfiles
+	# Tests
+	cd .tmp && \
+		LINUX=${LINUX} \
+		DOCKER_TAG=${DOCKER_TAG} \
+		APT_PACKAGES="make gcc libffi-dev" \
+		SNOW_PACKAGES=srfi.64 \
+		COMPILE_R7RS=${SCHEME} \
+		CSC_OPTIONS="-L -ltest -L. -I." \
+		LD_LIBRARY_PATH=. \
+		test-r7rs ${LIB_PATHS} -o test-program test.${SFX} ${PKG}
 
 ## C libraries for testing
 
@@ -68,3 +70,5 @@ libtest.a: libtest.o tests/c-src/libtest.c
 
 clean:
 	git clean -X -f
+	rm -rf snow
+	rm -rf logs
