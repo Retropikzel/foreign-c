@@ -1,6 +1,5 @@
 VERSION=0.14.0
 SCHEME=chibi
-DOCKER_TAG=latest
 RNRS=r7rs
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
@@ -55,7 +54,6 @@ test-docker: testfiles
 	# Tests
 	cd .tmp && \
 		LINUX=${LINUX} \
-		DOCKER_TAG=${DOCKER_TAG} \
 		APT_PACKAGES="make gcc libffi-dev" \
 		SNOW_PACKAGES=srfi.64 \
 		COMPILE_R7RS=${SCHEME} \
