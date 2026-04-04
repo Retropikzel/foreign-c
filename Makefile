@@ -8,8 +8,12 @@ TEST=main
 LINUX=debian
 
 SFX=scm
+LIBDIRS=-I .
+SNOW_IMPLS=${SCHEME}
 ifeq "${RNRS}" "r6rs"
 SFX=sps
+LIBDIRS=-I .akku/lib
+SNOW_IMPLS=generic
 endif
 
 all: build
@@ -40,9 +44,11 @@ testfiles: libtest.so libtest.o libtest.a build
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > .tmp/test.scm
 	cat tests/${TEST}.scm >> .tmp/test.scm
 	cp ${PKG} .tmp/
+	cd .tmp && snow-chibi install --install-source-dir=. --install-library-dir=. --impls=${SNOW_IMPLS} ${PKG}
+	cd .tmp && if [ "${RNRS}" = "r6rs" ]; then akku install akku-r7rs chez-srfi; fi
 
 test: testfiles
-	cd .tmp && CSC_OPTIONS="-L -ltest -L. -I." COMPILE_R7RS=${SCHEME} compile-r7rs -o test-program -I . test.${SFX}
+	cd .tmp && CSC_OPTIONS="-L -ltest -L. -I." COMPILE_R7RS=${SCHEME} compile-r7rs -o test-program ${LIBDIRS} test.${SFX}
 	cd .tmp && LD_LIBRARY_PATH=. ./test-program
 
 test-docker: testfiles
