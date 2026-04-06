@@ -43,10 +43,10 @@ testfiles: libtest.so libtest.o libtest.a build
 	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > .tmp/test.scm
 	cat tests/${TEST}.scm >> .tmp/test.scm
 	cp ${PKG} .tmp/
-	cd .tmp && snow-chibi install --install-source-dir=. --install-library-dir=. --impls=${SNOW_IMPLS} ${PKG}
-	cd .tmp && if [ "${RNRS}" = "r6rs" ]; then akku install akku-r7rs chez-srfi; fi
 
 test: testfiles
+	cd .tmp && snow-chibi install --install-source-dir=. --install-library-dir=. --impls=${SNOW_IMPLS} ${PKG}
+	cd .tmp && if [ "${RNRS}" = "r6rs" ]; then akku install akku-r7rs chez-srfi; fi
 	cd .tmp && CSC_OPTIONS="-L -ltest -L. -I." COMPILE_R7RS=${SCHEME} compile-r7rs -o test-program ${LIBDIRS} test.${SFX}
 	cd .tmp && LD_LIBRARY_PATH=. ./test-program
 
@@ -54,7 +54,8 @@ test-docker: testfiles
 	# Tests
 	cd .tmp && \
 		LINUX=${LINUX} \
-		APT_PACKAGES="make gcc libffi-dev" \
+		APT_PACKAGES="make libffi-dev" \
+		APK_PACKAGES="make libffi-dev" \
 		SNOW_PACKAGES=srfi.64 \
 		COMPILE_R7RS=${SCHEME} \
 		CSC_OPTIONS="-L -ltest -L. -I." \
