@@ -15,9 +15,9 @@ LIBDIRS=-I .akku/lib
 SNOW_IMPLS=generic
 endif
 
-all: build
+all: package
 
-build:
+package:
 	echo "<pre>$$(cat README.md)</pre>" > README.html
 	snow-chibi package \
 		--always-yes \
@@ -31,7 +31,7 @@ build:
 install:
 	snow-chibi --impls=${SCHEME} install --always-yes foreign.c
 
-testfiles: libtest.so libtest.o libtest.a build
+testfiles: libtest.so libtest.o libtest.a package
 	rm -rf .tmp
 	mkdir -p .tmp
 	cp -r libtest.so libtest.o libtest.a tests/c-include/libtest.h foreign .tmp/
