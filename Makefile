@@ -1,10 +1,14 @@
-VERSION=0.14.1
+VERSION=0.14.2
 SCHEME=chibi
 RNRS=r7rs
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
 TEST=main
-LINUX=debian
+DOCKER_TAG=head
+
+ifeq "${SCHEME}" "chicken"
+DOCKER_TAG=5
+endif
 
 SFX=scm
 LIBDIRS=-I .
@@ -53,14 +57,15 @@ test: testfiles
 test-docker: testfiles
 	# Tests
 	cd .tmp && \
-		LINUX=${LINUX} \
-		APT_PACKAGES="make libffi-dev" \
-		APK_PACKAGES="make libffi-dev" \
-		SNOW_PACKAGES=srfi.64 \
+		TEST_R7RS_DEBUG=1 \
+		DOCKER_TAG=${DOCKER_TAG} \
+		APT_PACKAGES="make gcc libffi-dev" \
+		SNOW_PACKAGES="srfi.64 ${PKG}"\
 		COMPILE_R7RS=${SCHEME} \
 		CSC_OPTIONS="-L -ltest -L. -I." \
 		LD_LIBRARY_PATH=. \
-		test-r7rs ${LIB_PATHS} -o test-program test.${SFX} ${PKG}
+		PASS_ENV_VARS="CSC_OPTIONS LD_LIBRARY_PATH" \
+		test-r7rs ${LIB_PATHS} -o test-program test.${SFX}
 
 ## C libraries for testing
 
