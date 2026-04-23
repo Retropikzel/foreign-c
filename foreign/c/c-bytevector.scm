@@ -341,7 +341,7 @@
     (let ((cbv (cond ((null? byte) (c-malloc size))
                      ((= (car byte) 0) (c-calloc 1 size))
                      (else (bytevector->c-bytevector (make-bytevector size (car byte)))))))
-      #;(when (= (c-memset-pointer->address (c-bytevector-pointer cbv) 0 0) 0)
+      (when (= (c-memset-pointer->address (c-bytevector-pointer cbv) 0 0) 0)
         (c-perror (c-bytevector-pointer (string->c-bytevector "make-c-bytevector error")))
         (error "make-c-bytevector error: malloc returned null" size))
       cbv)))
