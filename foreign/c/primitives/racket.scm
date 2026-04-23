@@ -34,20 +34,27 @@
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
-       (lambda args
-         (let ((internal (racket-get-ffi-obj c-name
-                                      shared-object
-                                      (racket-_cprocedure
-                                        (if (null? argument-types)
-                                          (list)
-                                          (racket-mlist->list
-                                            (map (lambda (type)
-                                                   (type->native-type scheme-name type #t))
-                                                 argument-types)))
-                                        (type->native-type scheme-name return-type #f)))))
-           (if (equal? return-type 'pointer)
-             (internal-make-c-bytevector (apply internal (map argument->native-value args)))
-             (apply internal (map argument->native-value args)))))))))
+       (let ((internal-cached #f))
+         (lambda args
+           (let
+             ((internal
+                (or internal-cached
+                    (let ((internal
+                            (racket-get-ffi-obj c-name
+                                                shared-object
+                                                (racket-_cprocedure
+                                                  (if (null? argument-types)
+                                                    (list)
+                                                    (racket-mlist->list
+                                                      (map (lambda (type)
+                                                             (type->native-type scheme-name type #t))
+                                                           argument-types)))
+                                                  (type->native-type scheme-name return-type #f)))))
+                      (set! internal-cached internal)
+                      internal))))
+             (if (equal? return-type 'pointer)
+               (internal-make-c-bytevector (apply internal (map argument->native-value args)))
+               (apply internal (map argument->native-value args))))))))))
 
 
 (define shared-object-load

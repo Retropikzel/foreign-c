@@ -29,8 +29,7 @@
             (error "define-c-procedure: Invalid argument type" scheme-name type)
             (error "define-c-procedure: Invalid return type" scheme-name type)))))
 
-(define (shared-object-load path options)
-  (sagittarius-open-shared-library path))
+(define (shared-object-load path options) (sagittarius-open-shared-library path))
 
 (define-syntax define-c-procedure
   (syntax-rules ()

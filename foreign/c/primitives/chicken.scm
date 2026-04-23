@@ -1,4 +1,4 @@
-(chicken-define-for-syntax type->native-type
+(define-for-syntax type->native-type
   (lambda (scheme-name type argument?)
     (cond ((equal? type 'i8) 'byte)
           ((equal? type 'u8) 'unsigned-byte)
@@ -45,7 +45,7 @@
                                          argument-types)))
         `(define ,scheme-name
            (lambda args
-             (let ((,scheme-name (chicken-foreign-safe-lambda ,native-return-type ,c-name ,@ native-argument-types)))
+             (let ((,scheme-name (foreign-safe-lambda ,native-return-type ,c-name ,@ native-argument-types)))
                (if (equal? (quote ,native-return-type) 'c-pointer)
                  (internal-make-c-bytevector (apply ,scheme-name (map argument->native-value args)))
                  (apply ,scheme-name (map argument->native-value args))))))))))
@@ -57,29 +57,29 @@
         `(begin
            ,@ (map
                 (lambda (header)
-                  `(chicken-foreign-declare ,(string-append "#include <" header ">")))
+                  `(foreign-declare ,(string-append "#include <" header ">")))
                 headers))))))
 
 (define c-u8-ref
   (lambda (pointer k)
-    (chicken-pointer-u8-ref (chicken-pointer+ pointer k))))
+    (pointer-u8-ref (pointer+ pointer k))))
 
 (define c-u8-set!
   (lambda (pointer k byte)
-    (chicken-pointer-u8-set! (chicken-pointer+ pointer k) byte)))
+    (pointer-u8-set! (pointer+ pointer k) byte)))
 
 (define c-pointer-ref
   (lambda (pointer k)
-    (chicken-address->pointer (chicken-pointer-u64-ref (chicken-pointer+ pointer k)))))
+    (address->pointer (pointer-u64-ref (pointer+ pointer k)))))
 
 (define c-pointer-set!
   (lambda (pointer k value-pointer)
-    (chicken-pointer-u64-set! (chicken-pointer+ pointer k)
-                      (chicken-pointer->address value-pointer))))
+    (pointer-u64-set! (pointer+ pointer k)
+                      (pointer->address value-pointer))))
 
-(define (c-null) (chicken-address->pointer 0))
+(define (c-null) (address->pointer 0))
 
 (define c-null?
   (lambda (pointer)
     (or (not pointer)
-        (= (chicken-pointer->address pointer) 0))))
+        (= (pointer->address pointer) 0))))

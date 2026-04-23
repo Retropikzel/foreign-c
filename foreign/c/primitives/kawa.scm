@@ -6,10 +6,11 @@
 (define type->native-type
   (lambda (scheme-name type argument?)
     (cond
-      ((equal? type 'i8) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 1))
-      ((equal? type 'u8) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 1))
-      ((equal? type 'i16) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 2))
-      ((equal? type 'u16) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 2))
+      ;; Use bytealignment of 4 for any of these as Java does not support smaller
+      ((equal? type 'i8) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
+      ((equal? type 'u8) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
+      ((equal? type 'i16) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
+      ((equal? type 'u16) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
       ((equal? type 'i32) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
       ((equal? type 'u32) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
       ((equal? type 'i64) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 8))
@@ -40,28 +41,38 @@
   (syntax-rules ()
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
-       (lambda args
-         (let ((result (kawa-invoke (kawa-invoke (cdr (assoc 'linker shared-object))
-                                       'downcallHandle
-                                       (kawa-invoke (kawa-invoke (cdr (assoc 'lookup shared-object))
-                                                       'find
-                                                       (symbol->string c-name))
-                                               'orElseThrow)
-                                       (if (equal? return-type 'void)
-                                         (apply (class-methods java.lang.foreign.FunctionDescriptor 'ofVoid)
-                                                (map (lambda (type)
-                                                       (type->native-type 'scheme-name type #t))
-                                                     argument-types))
-                                         (apply (class-methods java.lang.foreign.FunctionDescriptor 'of)
-                                                (type->native-type 'scheme-name return-type #f)
-                                                (map (lambda (type)
-                                                       (type->native-type 'scheme-name type #t))
-                                                     argument-types))))
-                               'invokeWithArguments
-                               (map argument->native-value args argument-types))))
-           (if (c-pointer-type? return-type)
-             (internal-make-c-bytevector result)
-             result)))))))
+       (let*
+         ((native-return-type
+            (type->native-type 'scheme-name return-type #f))
+          (native-argument-types
+            (map (lambda (type)
+                   (type->native-type 'scheme-name type #t))
+                 argument-types))
+          (native-procedure
+            (kawa-invoke (cdr (assoc 'lookup shared-object))
+                         'find
+                         (symbol->string c-name)))
+          (linker (cdr (assoc 'linker shared-object)))
+          (procedure-handle
+            (kawa-invoke
+              linker
+              'downcallHandle
+              (kawa-invoke native-procedure 'orElseThrow)
+              (if (equal? return-type 'void)
+                (apply (class-methods java.lang.foreign.FunctionDescriptor 'ofVoid)
+                       native-argument-types)
+                (apply (class-methods java.lang.foreign.FunctionDescriptor 'of)
+                       native-return-type
+                       native-argument-types)))))
+         (lambda args
+           (let
+             ((result
+                (kawa-invoke procedure-handle
+                             'invokeWithArguments
+                             (map argument->native-value args argument-types))))
+             (if (c-pointer-type? return-type)
+               (internal-make-c-bytevector result)
+               result))))))))
 
 (define shared-object-load
   (lambda (path options)
