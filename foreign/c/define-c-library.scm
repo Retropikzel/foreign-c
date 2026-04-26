@@ -151,7 +151,6 @@
                               (file-exists? library-path))
                      (set! shared-object
                        (cond-expand
-                         (gauche library-path-without-suffixes)
                          (racket library-path-without-suffixes)
                          (guile library-path)
                          (else library-path))))))
