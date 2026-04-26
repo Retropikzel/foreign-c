@@ -1,5 +1,5 @@
 (define type->native-type
-  (lambda (type)
+  (lambda (scheme-name type argument?)
     (cond ((equal? type 'i8) guile-int8)
           ((equal? type 'u8) guile-uint8)
           ((equal? type 'i16) guile-int16)
@@ -35,10 +35,12 @@
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
        (lambda args
-         (let ((internal (guile-pointer->procedure (type->native-type return-type)
+         (let ((internal (guile-pointer->procedure (type->native-type scheme-name return-type #f)
                                                    (guile-foreign-library-pointer shared-object
                                                                                   (symbol->string c-name))
-                                                   (map type->native-type argument-types))))
+                                                   (map (lambda (type)
+                                                          (type->native-type scheme-name type #t))
+                                                        argument-types))))
            (if (equal? return-type 'pointer)
              (internal-make-c-bytevector (apply internal (map argument->native-value args)))
              (apply internal (map argument->native-value args)))))))))

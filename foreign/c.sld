@@ -99,10 +99,9 @@
               (define-record-type <c-bytevector>
                 (internal-make-c-bytevector pointer)
                 c-bytevector?
-                (pointer c-bytevector-pointer)))
-            )
-    ;; TODO
-    ;(guile (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact) (prefix (system foreign) guile-) (prefix (system foreign-library) guile-) (prefix (rnrs bytevectors) guile-)) (begin (define-record-type <c-bytevector> (internal-make-c-bytevector pointer) c-bytevector?  (pointer c-bytevector-pointer))) (include "c/primitives/guile.scm"))
+                (pointer c-bytevector-pointer))))
+    ;(guile (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact) (prefix (system foreign) guile-) (prefix (system foreign-library) guile-) (prefix (rnrs bytevectors) guile-)) (begin (define-record-type <c-bytevector> (internal-make-c-bytevector pointer) c-bytevector?  (pointer c-bytevector-pointer)))
+           (include "c/primitives/guile.scm"))
     (ikarus (import (scheme base)
                     (scheme write)
                     (scheme char)

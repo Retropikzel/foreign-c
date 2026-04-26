@@ -87,12 +87,6 @@
              (native-argument-types (map (lambda (type)
                                            (type->native-type scheme-name type #t))
                                          argument-types)))
-        (display "HERE: native-return-type ")
-        (write native-return-type)
-        (newline)
-        (display "HERE: native-return-type? ")
-        (write (equal? native-return-type 'void*))
-        (newline)
         `(gauche-with-ffi
            (gauche-dynamic-load ,shared-object gauche-:init-function #f)
            '()
@@ -119,9 +113,9 @@
 (define (c-pointer-ref pointer index)
   (gauche-native-aref pointer index void*))
 
-(define (c-null) (c-memset-address->pointer 0 0 0))
+(define (c-null) (gauche-null-pointer-handle))
 (define (c-null? pointer)
-  (= (c-memset-address->pointer 0 0 0)
+  (= (c-memset-pointer->address (c-null) 0 0)
      (c-memset-pointer->address pointer 0 0)))
 
 
