@@ -1,5 +1,5 @@
 (define type->libffi-type-number
-  (lambda (scheme-name type argument?)
+  (lambda (type scheme-name argument?)
     (cond ((equal? type 'i8) 1)
           ((equal? type 'u8) 2)
           ((equal? type 'i16) 3)
@@ -20,29 +20,31 @@
           ((equal? type 'double) 18)
           ((equal? type 'void)
            (if argument?
-             (error "define-c-procedure: Argument type can not be void" scheme-name type)
+             (error "define-c-procedure: Argument type can not be void" type)
              '19))
           ((equal? type 'pointer) 20)
           ((equal? type 'array) 20)
           ((equal? type 'struct) 20)
           ((equal? type 'pointer-address) 21)
-          (else (error "define-c-procedure: Invalid argument type" scheme-name type)))))
+          (else (error "define-c-procedure: Invalid argument type" type)))))
 
-(define (make-c-function shared-object scheme-name c-name return-type argument-types)
-  (let ((c-function (dlsym shared-object c-name)))
-    (lambda arguments
-      (let* ((return-pointer
-               (internal-ffi-call (length argument-types)
-                                  (type->libffi-type-number scheme-name return-type #f)
-                                  (map
-                                    (lambda (type)
-                                      (type->libffi-type-number scheme-name type #t))
-                                    argument-types)
-                                  c-function
-                                  (c-type-size return-type)
-                                  (map argument->native-value arguments))))
-        (when (not (symbol=? return-type 'void))
-          (c-bytevector-ref (internal-make-c-bytevector return-pointer) return-type 0))))))
+(define make-c-function
+  (lambda (shared-object c-name return-type argument-types)
+    (let ((c-function #t #;(dlsym shared-object c-name)))
+      (lambda arguments
+        #t
+        #;(let* ((return-pointer
+                 (internal-ffi-call (length argument-types)
+                                    (type->libffi-type-number scheme-name return-type #f)
+                                    (map
+                                      (lambda (type)
+                                        (type->libffi-type-number scheme-name type #t))
+                                         argument-types)
+                                    c-function
+                                    (c-type-size return-type)
+                                    (map argument->native-value arguments))))
+          (when (not (symbol=? return-type 'void))
+            (c-bytevector-ref (internal-make-c-bytevector return-pointer) return-type 0)))))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()
@@ -50,21 +52,24 @@
      (define-c-procedure scheme-name shared-object c-name return-type '()))
     ((_ scheme-name shared-object c-name return-type argument-types)
      (define scheme-name
-       (make-c-function shared-object
-                        scheme-name
+       #t
+       #;(make-c-function shared-object
                         (symbol->string c-name)
                         return-type
                         argument-types)))))
 
 (define shared-object-load
   (lambda (path options)
-    (let ((shared-object (dlopen path RTLD-NOW)))
-      shared-object)))
+    path
+    #;(let ((shared-object (dlopen path RTLD-NOW)))
+      shared-object)
+    ))
 
-(define (c-null) (internal-c-null))
+(define (c-null) #t #;(internal-c-null))
 
 (define (c-null? pointer)
-  (or (equal? pointer #f) ;; #f counts as null pointer
+  #f
+  #;(or (equal? pointer #f) ;; #f counts as null pointer
       (and (c-bytevector? pointer)
            (internal-c-null? pointer))))
 

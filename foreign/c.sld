@@ -196,6 +196,19 @@
                     internal-c-struct-type-member
                     calculate-struct-members
                     get-environment-variable))
+
+    (tr7 (import (scheme base)
+                     (scheme write)
+                     (scheme char)
+                     (scheme file)
+                     (scheme process-context)
+                     (scheme inexact))
+            (begin
+              (define-record-type <c-bytevector>
+                (internal-make-c-bytevector pointer)
+                c-bytevector?
+                (pointer c-bytevector-pointer)))
+             (include "c/primitives/tr7.scm"))
     (ypsilon (import (scheme base)
                      (scheme write)
                      (scheme char)
