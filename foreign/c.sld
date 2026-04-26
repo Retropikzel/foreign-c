@@ -8,6 +8,7 @@
   ;; c-pointer-ref
   ;; c-pointer-set!
   ;; c-null
+  ;; c-null?
   (cond-expand
     ;(capyscheme (import (foreign c capyscheme-primitives)))
     (chezscheme (import (scheme base)
@@ -71,9 +72,36 @@
     ;; TODO
     ;(gambit (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact)) (include "c/primitives/gambit-primitives.scm"))
     ;; TODO
-    ;(gauche (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact)) (rename (gauche ffi) (size-of-type gauche:size-of-type) (align-of-type gauche:align-of-type)) (include "c/primitives/gauche.scm"))
-    ;; TODO
-    ;(guile (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact) (prefix (system foreign) guile-) (prefix (system foreign-library) guile-) (prefix (rnrs bytevectors) guile-)) (begin (define-record-type <c-bytevector> (internal-make-c-bytevector pointer) c-bytevector?  (pointer c-bytevector-pointer))) (include "c/primitives/guile.scm"))
+    (gauche (import (scheme base)
+                    (scheme write)
+                    (scheme char)
+                    (scheme file)
+                    (scheme process-context)
+                    (scheme inexact)
+                    (scheme eval)
+                    (only (gauche keyword) :info-alist)
+                    (prefix (gauche base) gauche-)
+                    (prefix (gauche ffi) gauche-)
+                    (prefix (gauche uvector) gauche-)
+                    (prefix (gauche btype) gauche-)
+                    (prefix (gauche ffi native) gauche-)
+                    (gauche ffi ffiaux)
+                    )
+            (include "c/primitives/gauche.scm")
+            (export gauche-:init-function
+                    :info-alist
+                    gauche-with-ffi
+                    gauche-dynamic-load
+                    gauche-define-c-function
+                    ;type->native-type
+                    aggregate-type?)
+            (begin
+              (define-record-type <c-bytevector>
+                (internal-make-c-bytevector pointer)
+                c-bytevector?
+                (pointer c-bytevector-pointer))))
+    ;(guile (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact) (prefix (system foreign) guile-) (prefix (system foreign-library) guile-) (prefix (rnrs bytevectors) guile-)) (begin (define-record-type <c-bytevector> (internal-make-c-bytevector pointer) c-bytevector?  (pointer c-bytevector-pointer)))
+           (include "c/primitives/guile.scm"))
     (ikarus (import (scheme base)
                     (scheme write)
                     (scheme char)
