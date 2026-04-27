@@ -114,8 +114,6 @@
   (gauche-native-aref pointer index void*))
 
 (define (c-null) (gauche-null-pointer-handle))
-(define (c-null? pointer)
-  (= (c-memset-pointer->address (c-null) 0 0)
-     (c-memset-pointer->address pointer 0 0)))
+(define (c-null? pointer) (gauche-null-pointer-handle? pointer))
 
 
