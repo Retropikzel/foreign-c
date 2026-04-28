@@ -68,7 +68,7 @@
                  (pointer c-bytevector-pointer)))
              (include "c/primitives/chicken.scm"))
     ;; TODO
-    ;(cyclone (import (foreign c cyclone-primitives)))
+    ;(cyclone (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact)) (include "c/primitives/cyclone.scm"))
     ;; TODO
     ;(gambit (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact)) (include "c/primitives/gambit-primitives.scm"))
     ;; TODO

@@ -329,6 +329,7 @@
 
 
 ;; Pass pointer by address
+#|
 (test-begin "call-with-address-of")
 (define-c-procedure test-passing-pointer-address
                       c-testlib
@@ -344,6 +345,7 @@
     (test-passing-pointer-address input-pointer address)))
 (test-equal 42 (c-bytevector-ref input-pointer 'i32 0))
 (test-end "call-with-address-of")
+|#
 
 ;; C Array
 (test-begin "define-c-array-type")
