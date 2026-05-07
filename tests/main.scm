@@ -263,6 +263,11 @@
 
 (define pointer-cbv (make-c-bytevector (c-type-size 'pointer)))
 (test-assert (c-bytevector? pointer-cbv))
+(display "HERE: ")
+(write pointer-cbv)
+(newline)
+(write (c-bytevector-null? pointer-cbv))
+(newline)
 (c-bytevector-set! pointer-cbv 'pointer 0 (c-bytevector-null))
 (test-end "c-bytevector-set!")
 

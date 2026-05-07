@@ -1,50 +1,8 @@
-#;(define (type->native-type scheme-name type argument?)
-  (cond ((equal? type 'i8) 'int8_t)
-        ((equal? type 'u8) 'uint8_t)
-        ((equal? type 'i16) 'int16_t)
-        ((equal? type 'u16) 'uint16_t)
-        ((equal? type 'i32) 'int32_t)
-        ((equal? type 'u32) 'uint32_t)
-        ((equal? type 'i64) 'int64_t)
-        ((equal? type 'u64) 'uint64_t)
-        ((equal? type 'char) 'char)
-        ((equal? type 'uchar) 'char)
-        ((equal? type 'short) 'short)
-        ((equal? type 'ushort) 'u_short)
-        ((equal? type 'int) 'int)
-        ((equal? type 'uint) 'u_int)
-        ((equal? type 'long) 'long)
-        ((equal? type 'ulong) 'u_long)
-        ((equal? type 'float) 'float)
-        ((equal? type 'double) 'double)
-        ((equal? type 'pointer) 'void*)
-        ((equal? type 'array) 'void*)
-        ((equal? type 'struct) 'void*)
-        ((equal? type 'void)
-         (if argument?
-           (error "define-c-procedure: Argument type can not be void" scheme-name type)
-           'void))
-        (else
-          (if argument?
-            (error "define-c-procedure: Invalid argument type" scheme-name type)
-            (error "define-c-procedure: Invalid return type" scheme-name type)))))
-
-(define (shared-object-load path options)
-  path
-  #;(if (null? options)
-    (gauche-dynamic-load "./f" gauche-:init-function #f)
-    (gauche-dynamic-load "./f" gauche-:init-function #f) ;; FIXME
-    ;(gauche-open-shared-library path)
-    ;(gauche-open-shared-library path (cadr (assoc 'additional-versions options)))
-    ))
-
+(define (shared-object-load path options) path)
 
 (define-syntax define-c-procedure
   (gauche-er-macro-transformer
     (lambda (expr rename compare)
-      ;(display "HERE: expr")
-      ;(write expr)
-      ;(newline)
       (let* ((type->native-type
                (lambda (scheme-name type argument?)
                  (cond ((equal? type 'i8) 'int8_t)
@@ -99,24 +57,36 @@
         ))))
 
 
-(define uint8_t* (gauche-make-c-pointer-type (gauche-native-type 'uint8_t)))
+(define type-uint8_t* (gauche-make-c-pointer-type (gauche-native-type 'uint8_t)))
 (define (c-u8-set! pointer offset value)
-  (set! (gauche-native-aref pointer offset uint8_t*) value))
+  (set! (gauche-native-aref pointer offset type-uint8_t*) value))
 
 (define (c-u8-ref pointer offset)
-  (gauche-native-aref pointer offset uint8_t*))
+  (gauche-native-aref pointer offset type-uint8_t*))
 
-;(define void* (gauche-make-c-pointer-type (gauche-native-type 'void*)))
+(define type-void* (gauche-make-c-pointer-type (gauche-native-type 'void*)))
 (define (c-pointer-set! pointer offset value)
-  (display "HERE: address ")
-  (write (c-memset-pointer->address value 0 0))
-  (newline)
-  (c-bytevector-uint-set! (internal-make-c-bytevector pointer) offset (c-memset-pointer->address value 0 0) (c-type-size 'u64)))
+  (set! (gauche-native* (gauche-cast-handle type-void* pointer offset) type-void*) value))
 
 (define (c-pointer-ref pointer offset)
-  (c-memset-address->pointer (c-bytevector-uint-ref (internal-make-c-bytevector pointer) offset (c-type-size 'u64)) 0 0))
+  (gauche-native* (gauche-cast-handle type-void* pointer offset)))
 
-(define (c-null) (gauche-null-pointer-handle))
+#;(define (c-pointer-set! pointer offset value)
+  (c-bytevector-uint-set! (internal-make-c-bytevector pointer)
+                          offset
+                          (c-memset-pointer->address value 0 0)
+                          (c-type-size 'pointer)))
+
+#;(define (c-pointer-ref pointer offset)
+  (c-memset-address->pointer
+    (c-bytevector-uint-ref (internal-make-c-bytevector pointer)
+                           offset
+                           (c-type-size 'pointer))
+    0
+    0))
+
+
+(define (c-null) (gauche-null-pointer-handle type-void*))
 (define (c-null? pointer) (gauche-null-pointer-handle? pointer))
 
 

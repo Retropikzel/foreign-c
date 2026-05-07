@@ -83,7 +83,7 @@
                     (prefix (gauche base) gauche-)
                     (prefix (gauche ffi) gauche-)
                     (prefix (gauche uvector) gauche-)
-                    (prefix (gauche btype) gauche-)
+                    (prefix (gauche native-type) gauche-)
                     (prefix (gauche ffi native) gauche-)
                     (gauche ffi ffiaux)
                     )
