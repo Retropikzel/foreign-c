@@ -2,7 +2,11 @@
   (syntax-rules ()
     ((_ scheme-name headers object-name options)
      (define scheme-name
-       (let* ((os (cond-expand (windows 'windows) (guile 'unix) (else 'unix)))
+       (let* ((os (cond-expand (windows 'windows)
+                               (guile 'unix)
+                               (darwin 'macos)
+                               (maxosx 'macos)
+                               (else 'unix)))
               (arch (cond-expand (i386 'i386) (guile 'x86_64) (else 'x86_64)))
               (so-name (if object-name
                          object-name
@@ -117,7 +121,10 @@
               (paths (append auto-load-paths additional-paths))
               (versions (append additional-versions auto-load-versions))
               (platform-lib-prefix (if (symbol=? os 'windows) "" "lib"))
-              (platform-file-extension (if (symbol=? os 'windows) ".dll" ".so"))
+              (platform-file-extension
+                (cond ((symbol=? os 'windows) ".dll")
+                      ((symbol=? os 'macos) ".dylib")
+                      (else ".so")))
               (shared-object #f)
               (searched-paths (list)))
          (for-each
