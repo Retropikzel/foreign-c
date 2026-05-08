@@ -70,6 +70,10 @@ See REFERENCE.md
     - R6RS
     - R7RS
 
+### Dependencies
+
+- Chibi
+    - libffi
 
 
 ## Installation

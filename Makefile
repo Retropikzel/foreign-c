@@ -1,4 +1,4 @@
-VERSION=0.14.4
+VERSION=0.14.5
 SCHEME=chibi
 RNRS=r7rs
 PKG=foreign-c-${VERSION}.tgz
