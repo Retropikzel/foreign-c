@@ -1,14 +1,10 @@
-VERSION=0.15.0
+VERSION=0.15.1
 SCHEME=chibi
 RNRS=r7rs
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
 TEST=main
-DOCKER_TAG=head
-
-ifeq "${SCHEME}" "chicken"
-DOCKER_TAG=5
-endif
+DOCKER_TAG=latest
 
 SFX=scm
 LIBDIRS=-I .

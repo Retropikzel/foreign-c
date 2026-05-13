@@ -1,4 +1,4 @@
-(define-record-type <c-struct-type>
+(define-record-type c-struct-type
   (internal-make-c-struct-type name size members)
   c-struct-type?
   (name c-struct-type-name)
@@ -45,7 +45,7 @@
                                     (calculate-struct-members members #t)
                                     (calculate-struct-members members))))))
 
-(define-record-type <c-array-type>
+(define-record-type c-array-type
   (internal-make-c-array-type name type)
   c-array-type?
   (name c-array-type-name)
