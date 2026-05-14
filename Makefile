@@ -4,7 +4,7 @@ RNRS=r7rs
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
 TEST=main
-DOCKER_TAG=latest
+DOCKER_TAG=head
 
 SFX=scm
 LIBDIRS=-I .
