@@ -537,16 +537,6 @@
   (let* ((size (c-strlen (c-bytevector-pointer cbv)))
          (bv (c-bytevector->bytevector cbv size)))
     (cond-expand
-      ;; Temporary fix for Chicken 6 bug
-      (chicken-6
-        (letrec*
-          ((looper (lambda (index result)
-                     (if (>= index size)
-                       (list->string (reverse result))
-                       (looper (+ index 1)
-                               (cons (integer->char (bytevector-u8-ref bv index))
-                                     result))))))
-          (looper 0 '())))
       (else (utf8->string bv)))))
 
 (define (string->c-bytevector str)
