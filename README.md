@@ -10,8 +10,7 @@ See REFERENCE.md
     - R6RS
 - Chibi > 0.11
     - R7RS
-    - At the time only 0.11 is out so build from git
-- Chicken >= 5.4.0 < 6
+- Chicken >= 6.0.0
     - R7RS
 - Guile >= 3
     - R6RS

@@ -534,15 +534,27 @@
 (define (c-bytevector->string cbv)
   (when (not (c-bytevector? cbv))
     (error "c-bytevector->string: cbv argument must be c-bytevector" cbv))
-  (let ((size (c-strlen (c-bytevector-pointer cbv))))
-    (utf8->string (c-bytevector->bytevector cbv size))))
+  (let* ((size (c-strlen (c-bytevector-pointer cbv)))
+         (bv (c-bytevector->bytevector cbv size)))
+    (cond-expand
+      ;; Temporary fix for Chicken 6 bug
+      (chicken-6
+        (letrec*
+          ((looper (lambda (index result)
+                     (if (>= index size)
+                       (list->string (reverse result))
+                       (looper (+ index 1)
+                               (cons (integer->char (bytevector-u8-ref bv index))
+                                     result))))))
+          (looper 0 '())))
+      (else (utf8->string )))))
 
 (define (string->c-bytevector str)
   (when (not (string? str))
     (error "string->c-bytevector: str argument must be string" str))
   (bytevector->c-bytevector
     (string->utf8
-      (string-append str (string (integer->char 0))))))
+      (string-append str (string #\null)))))
 
 (define (c-bytevector->integer cbv . offset)
   (when (not (c-bytevector? cbv))

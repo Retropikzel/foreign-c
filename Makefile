@@ -1,4 +1,4 @@
-VERSION=0.15.1
+VERSION=0.16.0
 SCHEME=chibi
 RNRS=r7rs
 PKG=foreign-c-${VERSION}.tgz
@@ -29,7 +29,7 @@ package:
 	foreign/c.sld
 
 install:
-	snow-chibi --impls=${SCHEME} install --always-yes ${PKG}
+	snow-chibi --impls=${SCHEME} install ${PKG}
 
 uninstall:
 	snow-chibi --impls=${SCHEME} remove foreign.c
@@ -48,9 +48,7 @@ testfiles: libtest.so libtest.o libtest.a package
 	cp ${PKG} .tmp/
 
 test: testfiles
-	if [ "${RNRS}" = "r6rs" ]; then cd .tmp && snow-chibi install --install-source-dir=. --install-library-dir=. --impls=${SNOW_IMPLS} ${PKG}; fi
-	cd .tmp && if [ "${RNRS}" = "r6rs" ]; then akku install akku-r7rs chez-srfi; fi
-	cd .tmp && CSC_OPTIONS="-L -ltest -L. -I." COMPILE_R7RS=${SCHEME} compile-r7rs -I /usr/local/share/tr7/tr7libs -o test-program ${LIBDIRS} test.${SFX}
+	cd .tmp && CSC_OPTIONS="-L -ltest -L. -I." COMPILE_R7RS=${SCHEME} compile-r7rs -o test-program ${LIBDIRS} test.${SFX}
 	cd .tmp && LD_LIBRARY_PATH=. ./test-program
 
 test-docker: testfiles
