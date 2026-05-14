@@ -547,7 +547,7 @@
                                (cons (integer->char (bytevector-u8-ref bv index))
                                      result))))))
           (looper 0 '())))
-      (else (utf8->string )))))
+      (else (utf8->string bv)))))
 
 (define (string->c-bytevector str)
   (when (not (string? str))
