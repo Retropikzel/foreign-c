@@ -20,16 +20,24 @@
         ((equal? type 'pointer) 'void*)
         ((equal? type 'array) 'void*)
         ((equal? type 'struct) 'void*)
+        ((equal? type 'callback) 'callback)
         ((equal? type 'void)
          (if argument?
-           (error "define-c-procedure: Argument type can not be void" scheme-name type)
+           (error "define-c-procedure/define-c-callback: Argument type can not be void"
+                  scheme-name
+                  type)
            'void))
         (else
           (if argument?
-            (error "define-c-procedure: Invalid argument type" scheme-name type)
-            (error "define-c-procedure: Invalid return type" scheme-name type)))))
+            (error "define-c-procedure/define-c-callback: Invalid argument type"
+                   scheme-name
+                   type)
+            (error "define-c-procedure/define-c-callback: Invalid return type"
+                   scheme-name
+                   type)))))
 
-(define (shared-object-load path options) (sagittarius-open-shared-library path))
+(define (shared-object-load path options)
+  (sagittarius-open-shared-library path))
 
 (define-syntax define-c-procedure
   (syntax-rules ()
@@ -38,14 +46,16 @@
        (lambda args
          (let
            ((internal
-              (sagittarius-make-c-function shared-object
-                                           (type->native-type scheme-name return-type #f)
-                                           c-name
-                                           (map (lambda (type)
-                                                  (type->native-type scheme-name type #t))
-                                                argument-types))))
+              (sagittarius-make-c-function
+                shared-object
+                (type->native-type scheme-name return-type #f)
+                c-name
+                (map (lambda (type)
+                       (type->native-type scheme-name type #t))
+                     argument-types))))
            (if (c-pointer-type? return-type)
-             (internal-make-c-bytevector (apply internal (map argument->native-value args)))
+             (internal-make-c-bytevector
+               (apply internal (map argument->native-value args)))
              (apply internal (map argument->native-value args)))))))))
 
 (define c-u8-set! sagittarius-pointer-set-c-uint8_t!)
@@ -55,5 +65,16 @@
 
 (define c-null sagittarius-empty-pointer)
 (define c-null? sagittarius-null-pointer?)
+
+(define-syntax define-c-callback
+  (syntax-rules ()
+    ((_ scheme-name return-type argument-types procedure)
+     (define scheme-name
+       (sagittarius-make-c-callback
+         (type->native-type 'scheme-name return-type #f)
+         (map (lambda (type)
+                (type->native-type 'scheme-name type #t))
+              argument-types)
+         procedure)))))
 
 

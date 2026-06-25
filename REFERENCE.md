@@ -6,6 +6,7 @@ Table of content
 - c-bytevectors
 - C libraries
 - C procedures
+- Callbacks
 - Strings
 - Pass pointer by address
 - C Arrays
@@ -59,6 +60,7 @@ is after the foreign c name.
     - void\*
 - 'struct
     - void\*
+- 'callback
 - 'void
     - void
     - Can not be argument type, only return type
@@ -88,75 +90,8 @@ Adds given types together and returns the sum.
 
 Subtracts given types from eachother and returns the result.
 
-## C Libraries
 
-(**define-c-library** scheme-name headers object-name options)
-
-Takes a scheme-name to bind the library to, list of C headers as
-strings, shared-object name or #f and options. If shared-object name
-is given as #f then platforms C library is used.
-
-The C header strings should not contain "<" or ">", they are added
-automatically.
-
-The name of the shared object should not contain suffix like .so or .dll.
-Nor should it contain any prefix like "lib".
-
-Options:
-
-- additional-versions
-    - Search for additional versions of shared object, given shared object "c"
-    and additional versions "6" "7" on linux the files "libc", "libc.6",
-    "libc.7" are searched for.
-    - Can be either numbers or strings
-- additional-paths
-    - Give additional paths to search shared objects from
-
-Examples:
-
-    (define-c-library libc (list "stdio.h") #f '())
-
-    (define-c-library libcurl
-                      (list "curl/curl.h")
-                      "curl"
-                      '((additional-versions ("" "0" "6"))
-                        (additional-paths ("."))))
-
-#### Notes
-
-- Do not cond-expand inside the arguments, that might lead to problems on some
-implementations.
-- Do not store options in variables, that might lead to problems on some
-implementations.
-- Pass the headers using quote
-    - As '(...) and not (list ...)
-- Pass the options using quote
-    - As '(...) and not (list ...)
-
-
-### C Procedures
-
-(**define-c-procedure** scheme-name shared-object c-name return-type argument-types)
-
-Takes a scheme-name to bind the C procedure to, shared-object where the function
-is looked from, c-name of the function as symbol, return-type and argument-types.
-
-Defines a new foreign function to be used from Scheme code.
-
-
-Example:
-
-    (define-c-library libc '("stdlib.h") #f '())
-    (define-c-procedure c-puts libc 'puts 'int '(pointer))
-    (c-puts "Message brought to you by foreign-c!")
-
-
-#### Notes
-
-- Pass the argument-types using quote
-    - As '(...) and not (list ...)
-
-### c-bytevectors
+## c-bytevectors
 
 (**make-c-bytevector** size)</br>
 (**make-c-bytevector** size fill)
@@ -230,8 +165,87 @@ added to the the returned integer. Offset must be an integer.
 
 Returns the bytevector in the integer address.
 
+## C Libraries
 
-### Strings
+(**define-c-library** scheme-name headers object-name options)
+
+Takes a scheme-name to bind the library to, list of C headers as
+strings, shared-object name or #f and options. If shared-object name
+is given as #f then platforms C library is used.
+
+The C header strings should not contain "<" or ">", they are added
+automatically.
+
+The name of the shared object should not contain suffix like .so or .dll.
+Nor should it contain any prefix like "lib".
+
+Options:
+
+- additional-versions
+    - Search for additional versions of shared object, given shared object "c"
+    and additional versions "6" "7" on linux the files "libc", "libc.6",
+    "libc.7" are searched for.
+    - Can be either numbers or strings
+- additional-paths
+    - Give additional paths to search shared objects from
+
+Examples:
+
+    (define-c-library libc (list "stdio.h") #f '())
+
+    (define-c-library libcurl
+                      (list "curl/curl.h")
+                      "curl"
+                      '((additional-versions ("" "0" "6"))
+                        (additional-paths ("."))))
+
+#### Notes
+
+- Do not cond-expand inside the arguments, that might lead to problems on some
+implementations.
+- Do not store options in variables, that might lead to problems on some
+implementations.
+- Pass the headers using quote
+    - As '(...) and not (list ...)
+- Pass the options using quote
+    - As '(...) and not (list ...)
+
+
+## C Procedures
+
+(**define-c-procedure** scheme-name shared-object c-name return-type argument-types)
+
+Takes a scheme-name to bind the C procedure to, shared-object where the function
+is looked from, c-name of the function as symbol, return-type and argument-types.
+
+Defines a new foreign function to be used from Scheme code.
+
+
+Example:
+
+    (define-c-library libc '("stdlib.h") #f '())
+    (define-c-procedure c-puts libc 'puts 'int '(pointer))
+    (c-puts "Message brought to you by foreign-c!")
+
+
+#### Notes
+
+- Pass the argument-types using quote
+    - As '(...) and not (list ...)
+
+
+## Callbacks
+
+(**define-c-callback** scheme-name return-type argument-types procedure)
+
+Takes scheme-name to bind the Scheme procedure to, return-type, argument-types and procedure as in place lambda.
+
+Defines a new Sceme function to be used as callback to C code.
+
+For example see tests/callback.scm
+
+
+## Strings
 
 (**string->c-bytevector** str)
 
@@ -249,7 +263,7 @@ returned.
 
 Null byte (\0) you can use in strings.
 
-### Pass pointer by address
+## Pass pointer by address
 
 (**call-with-address-of** cbv thunk)
 
@@ -321,7 +335,7 @@ on some implementations.
 - Pass the members using quote
     - As '(...) and not (list ...)
 
-### Environment variables
+## Environment variables
 
 Setting environment variables like this on Windows works for this library:
 
@@ -329,7 +343,7 @@ Setting environment variables like this on Windows works for this library:
 
 
 
-#### FOREIGN\_C_\_LOAD\_PATH
+### FOREIGN\_C_\_LOAD\_PATH
 
 To add more paths to where foreign c looks for libraries set
 FOREIGN\_C\_LOAD\_PATH to paths separated by ; on windows, and : on other

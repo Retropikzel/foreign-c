@@ -32,16 +32,12 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
     }
 
-    parameters {
-        string(name: 'R6RS_SCHEMES', defaultValue: 'chezscheme ikarus ironscheme racket sagittarius ypsilon', description: '')
-        string(name: 'R7RS_SCHEMES', defaultValue: 'chibi chicken kawa mosh racket sagittarius stklos ypsilon', description: '')
-    }
-
     stages {
-        stage('Test R6RS Debian') {
+        stage('Main R6RS Debian') {
             steps {
                 script {
-                    params.R6RS_SCHEMES.split().each { SCHEME ->
+                    def schemes = readFile 'tests/test_main_r6rs.txt'
+                    schemes.split().each { SCHEME ->
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                 sh "make RNRS=r6rs SCHEME=${SCHEME} test-docker"
@@ -51,22 +47,24 @@ pipeline {
                 }
             }
         }
-        stage('Test R6RS Alpine') {
+        stage('Callback R6RS Debian') {
             steps {
                 script {
-                    params.R6RS_SCHEMES.split().each { SCHEME ->
+                    def schemes = readFile 'tests/test_callback_r6rs.txt'
+                    schemes.split().each { SCHEME ->
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "make LINUX=alpine RNRS=r6rs SCHEME=${SCHEME} test-docker"
+                                sh "make RNRS=r6rs SCHEME=${SCHEME} TEST=callback test-docker"
                             }
                         }
                     }
                 }
             }
         }
-        stage('Test R7RS Debian') {
+        stage('Main R7RS Debian') {
             steps {
                 script {
+                    def schemes = readFile 'tests/test_main_r7rs.txt'
                     params.R7RS_SCHEMES.split().each { SCHEME ->
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -77,13 +75,70 @@ pipeline {
                 }
             }
         }
-        stage('Test R7RS Alpine') {
+        stage('Callback R7RS Debian') {
             steps {
                 script {
+                    def schemes = readFile 'tests/test_callback_r7rs.txt'
                     params.R7RS_SCHEMES.split().each { SCHEME ->
                         stage("${SCHEME}") {
                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                sh "make RNRS=r7rs SCHEME=${SCHEME} TEST=callback test-docker"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage('Main R6RS Alpine') {
+            steps {
+                script {
+                    def schemes = readFile 'tests/test_main_r6rs.txt'
+                    schemes.split().each { SCHEME ->
+                        stage("${SCHEME}") {
+                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                sh "make LINUX=alpine RNRS=r6rs SCHEME=${SCHEME} test-docker"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage('Callback R6RS Alpine') {
+            steps {
+                script {
+                    def schemes = readFile 'tests/test_main_r6rs.txt'
+                    schemes.split().each { SCHEME ->
+                        stage("${SCHEME}") {
+                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                sh "make LINUX=alpine RNRS=r6rs SCHEME=${SCHEME} TEST=callback test-docker"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage('Main R7RS Alpine') {
+            steps {
+                script {
+                    def schemes = readFile 'tests/test_main_r7rs.txt'
+                    schemes.split().each { SCHEME ->
+                        stage("${SCHEME}") {
+                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                 sh "make LINUX=alpine RNRS=r7rs SCHEME=${SCHEME} test-docker"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage('Callback R7RS Alpine') {
+            steps {
+                script {
+                    def schemes = readFile 'tests/test_main_r7rs.txt'
+                    schemes.split().each { SCHEME ->
+                        stage("${SCHEME}") {
+                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                sh "make LINUX=alpine RNRS=r7rs SCHEME=${SCHEME} TEST=callback test-docker"
                             }
                         }
                     }

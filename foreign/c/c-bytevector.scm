@@ -1,3 +1,4 @@
+(define pointer->c-bytevector internal-make-c-bytevector)
 (define endianness (cond-expand (big-endian 'big) (else 'little)))
 
 ;; Code from (r6rs bytevectors) library begin. It is heavily modified

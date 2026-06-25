@@ -1,4 +1,5 @@
-VERSION=0.18.1
+.SILENT:
+VERSION=0.19.0
 SCHEME=chibi
 RNRS=r7rs
 PKG=foreign-c-${VERSION}.tgz
@@ -39,11 +40,9 @@ testfiles: libtest.so libtest.o libtest.a package
 	mkdir -p .tmp
 	cp -r libtest.so libtest.o libtest.a tests/c-include/libtest.h foreign .tmp/
 	mkdir -p logs/${RNRS}
-	# R6RS files
-	printf "#!r6rs\n(import (rnrs) (srfi :64) (foreign c))\n" > .tmp/test.sps
+	cat tests/r6rs-header.sps >> .tmp/test.sps
 	cat tests/${TEST}.scm >> .tmp/test.sps
-	# R7RS testfiles
-	echo "(import (scheme base) (scheme write) (scheme read) (scheme char) (scheme file) (scheme process-context) (srfi 64) (foreign c))" > .tmp/test.scm
+	cat tests/r7rs-header.scm >> .tmp/test.scm
 	cat tests/${TEST}.scm >> .tmp/test.scm
 	cp ${PKG} .tmp/
 
@@ -51,7 +50,7 @@ test: testfiles
 	cd .tmp && CSC_OPTIONS="-L -ltest -L. -I." COMPILE_R7RS=${SCHEME} compile-r7rs -o test-program ${LIBDIRS} test.${SFX}
 	cd .tmp && LD_LIBRARY_PATH=. ./test-program
 
-test-docker: testfiles
+test-docker: package testfiles
 	# Tests
 	cd .tmp && \
 		TEST_R7RS_DEBUG=1 \

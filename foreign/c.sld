@@ -306,6 +306,10 @@
     ;; Struct
     ;define-c-struct
 
+    ;; Callbacks
+    define-c-callback
+    pointer->c-bytevector
+
     argument->native-value ;; TODO remove from exports
     )
   (include "c/types.scm")
