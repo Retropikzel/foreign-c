@@ -161,5 +161,5 @@
         ((c-struct-type? type) (c-struct-type-size type))
         (else (error "c-type-align: Unknown type" type))))
 
-(define c-type-aling+ (lambda types (apply + (map c-type-align types))))
+(define c-type-align+ (lambda types (apply + (map c-type-align types))))
 (define c-type-align- (lambda types (apply - (map c-type-align types))))
