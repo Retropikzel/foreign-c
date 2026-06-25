@@ -68,9 +68,25 @@ is after the foreign c name.
 Returns the size of given type. If type is array then returns size of the
 arrays type.
 
+(**c-type-size+** type ...)
+
+Adds given types together and returns the sum.
+
+(**c-type-size-** type ...)
+
+Subtracts given types from eachother and returns the result.
+
 (**c-type-align** type)
 
 Returns the align of given type.
+
+(**c-type-align+** type ...)
+
+Adds given types together and returns the sum.
+
+(**c-type-align-** type ...)
+
+Subtracts given types from eachother and returns the result.
 
 ## C Libraries
 

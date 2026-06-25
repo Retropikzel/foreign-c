@@ -265,7 +265,11 @@
     c-struct-type?
 
     c-type-size
+    c-type-size+
+    c-type-size-
     c-type-align
+    c-type-align+
+    c-type-align-
 
     define-c-array-type
     define-c-struct-type
@@ -294,6 +298,7 @@
     ;; Strings
     string->c-bytevector
     c-bytevector->string
+    null-byte
 
     ;; Pass pointer by address
     call-with-address-of
@@ -302,7 +307,6 @@
     ;define-c-struct
 
     argument->native-value ;; TODO remove from exports
-    null-byte
     )
   (include "c/types.scm")
   (include "c/c-bytevector.scm")
