@@ -6,6 +6,8 @@ See REFERENCE.md
 
 ## Supported implementations
 
+R6RS is supported trough akku and akku-r7rs.
+
 - Chez => 10.0.0
     - R6RS
 - Chibi > 0.11
@@ -20,19 +22,17 @@ See REFERENCE.md
     - R6RS
 - Ironscheme
     - R6RS
-- Kawa >= 3.11 and Java >= 22
+- Kawa >= 3.11 and Java >= 24
     - R7RS
     - Needs arguments to enable FFI
         - -J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED
         - -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED
         - -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED
         - -J--enable-native-access=ALL-UNNAMED
-        - -J--enable-preview
     - All needed arguments on one line for copy pasting
-        - -J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED -J--enable-native-access=ALL-UNNAMED -J--enable-preview
+        - -J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED -J--enable-native-access=ALL-UNNAMED
     - So that snow-chibi installed library is found
-        - -Dkawa.import.path=/usr/local/share/kawa
-        - -Dkawa.import.path=/usr/local/share/kawa/lib
+        - -Dkawa.import.path=/usr/local/share/kawa/lib/*.sld
 - Racket >= 8.16 [cs]
     - R6RS
         - Unable to run tests as Rackets SRFI-64 implementation does not work
@@ -40,9 +40,8 @@ See REFERENCE.md
 - Sagittarius >= 0.9.13
     - R6RS
     - R7RS
-- STklos > 2.10
+- STklos >= 26.0
     - R7RS
-    - At the time only 2.10 is out so build from git
 - Ypsilon >= 2.08
     - R6RS
     - R7RS
@@ -57,7 +56,6 @@ See REFERENCE.md
     - R7RS
 - Gauche
     - R7RS
-    - Waiting for Gauche to support dynamic FFI
 - Gerbil
     - R7RS
 - Mit-Scheme
@@ -69,7 +67,7 @@ See REFERENCE.md
     - R6RS
     - R7RS
 
-### Dependencies
+### Native dependencies
 
 - Chibi
     - libffi
@@ -87,7 +85,7 @@ In your project directory run:
 
 ### R6RS - Manual
 
-    Dowloand the latest release or clone from git and copy directory named
+    Download the latest release or clone from git and copy directory named
     "foreign" into your project, then run:
 
         akku install
@@ -99,15 +97,7 @@ In your project directory run:
 
 snow-chibi --impls=IMPLEMENTATION install "(foreign c)"
 
-You can test that library is found by your implementation like this:
-
-    cp tests/hello.scm /tmp/hello.scm
-    cd /tmp
-    IMPLEMENTATION hello.scm
-
-
-
-### R7RS Manual
+### R7RS installing manually
 
 Manual system wide installation requires snow-chibi.
 
@@ -127,9 +117,10 @@ Example for how to install for Gauche:
 
 ### Adding support for new implementation
 
-See from any foreign/c/SCHEME-primitives.sld what needs to be exported. Make the
-library files foreign/c/YOURSCHEME-primitives.sld
-foreign/c/YOURSCHEME-primitives.scm. Import it in cond expand in foreign/c.sld.
+See from any foreign/c/SCHEME-primitives.sld what needs to be exported.
+Make the library files foreign/c/YOURSCHEME-primitives.sld
+foreign/c/YOURSCHEME-primitives.scm. Import it in cond expand in
+foreign/c.sld.
 
 Run tests with:
 

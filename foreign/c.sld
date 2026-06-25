@@ -302,6 +302,7 @@
     ;define-c-struct
 
     argument->native-value ;; TODO remove from exports
+    null-byte
     )
   (include "c/types.scm")
   (include "c/c-bytevector.scm")

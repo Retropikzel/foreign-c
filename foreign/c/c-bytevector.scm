@@ -340,9 +340,11 @@
       (error "make-c-bytevector: size must be integer" size))
     (let ((cbv (cond ((null? byte) (c-malloc size))
                      ((= (car byte) 0) (c-calloc 1 size))
-                     (else (bytevector->c-bytevector (make-bytevector size (car byte)))))))
+                     (else (bytevector->c-bytevector
+                             (make-bytevector size (car byte)))))))
       (when (= (c-memset-pointer->address (c-bytevector-pointer cbv) 0 0) 0)
-        (c-perror (c-bytevector-pointer (string->c-bytevector "make-c-bytevector error")))
+        (c-perror (c-bytevector-pointer
+                    (string->c-bytevector "make-c-bytevector error")))
         (error "make-c-bytevector error: malloc returned null" size))
       cbv)))
 
@@ -551,8 +553,10 @@
     (error "c-bytevector->integer cbv argument must be c-bytevector" cbv))
   (let ((internal-offset (if (null? offset) 0 (car offset))))
     (when (not (integer? internal-offset))
-      (error "c-bytevector->integer offset argument must be integer" (car offset)))
-    (+ (c-memset-pointer->address (c-bytevector-pointer cbv) 0 0) internal-offset)))
+      (error "c-bytevector->integer offset argument must be integer"
+             (car offset)))
+    (+ (c-memset-pointer->address (c-bytevector-pointer cbv) 0 0)
+       internal-offset)))
 
 (define (integer->c-bytevector address)
   (when (not (integer? address))
@@ -569,4 +573,7 @@
          (cons (car memb) (c-bytevector-ref cbv type (car memb))))
        (c-struct-type-members type)))
     (else
-      (error "c-bytevector->list: dont know how to make list of type yet" type))))
+      (error "c-bytevector->list: dont know how to make list of type yet"
+             type))))
+
+(define null-byte (bytevector-u8-ref (string->utf8 (string #\null)) 0))

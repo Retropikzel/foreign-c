@@ -229,6 +229,10 @@ Returns a newly allocated string whose character sequence is
 encoded by the given c-bytevector. If c-bytevector is null empty string is
 returned.
 
+**null-byte**
+
+Null byte (\0) you can use in strings.
+
 ### Pass pointer by address
 
 (**call-with-address-of** cbv thunk)
