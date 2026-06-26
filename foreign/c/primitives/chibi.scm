@@ -68,3 +68,8 @@
       (and (c-bytevector? pointer)
            (internal-c-null? pointer))))
 
+(define-syntax define-c-callback
+  (syntax-rules ()
+    ((_ scheme-name return-type argument-types procedure)
+     (define scheme-name
+       (error "define-c-callback not yet supported on Chibi")))))

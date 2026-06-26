@@ -23,12 +23,18 @@
           ((equal? type 'struct) racket-_pointer)
           ((equal? type 'void)
            (if argument?
-             (error "define-c-procedure: Argument type can not be void" scheme-name type)
+             (error "define-c-procedure: Argument type can not be void"
+                    scheme-name
+                    type)
              racket-_void))
           (else
             (if argument?
-              (error "define-c-procedure: Invalid argument type" scheme-name type)
-              (error "define-c-procedure: Invalid return type" scheme-name type))))))
+              (error "define-c-procedure: Invalid argument type"
+                     scheme-name
+                     type)
+              (error "define-c-procedure: Invalid return type"
+                     scheme-name
+                     type))))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()
@@ -40,20 +46,24 @@
              ((internal
                 (or internal-cached
                     (let ((internal
-                            (racket-get-ffi-obj c-name
-                                                shared-object
-                                                (racket-_cprocedure
-                                                  (if (null? argument-types)
-                                                    (list)
-                                                    (racket-mlist->list
-                                                      (map (lambda (type)
-                                                             (type->native-type scheme-name type #t))
-                                                           argument-types)))
-                                                  (type->native-type scheme-name return-type #f)))))
+                            (racket-get-ffi-obj
+                              c-name
+                              shared-object
+                              (racket-_cprocedure
+                                (if (null? argument-types)
+                                  (list)
+                                  (racket-mlist->list
+                                    (map (lambda (type)
+                                           (type->native-type
+                                             scheme-name type #t))
+                                         argument-types)))
+                                (type->native-type
+                                  scheme-name return-type #f)))))
                       (set! internal-cached internal)
                       internal))))
              (if (equal? return-type 'pointer)
-               (internal-make-c-bytevector (apply internal (map argument->native-value args)))
+               (internal-make-c-bytevector
+                 (apply internal (map argument->native-value args)))
                (apply internal (map argument->native-value args))))))))))
 
 
@@ -87,3 +97,8 @@
 (define (c-null) #f)
 (define (c-null? pointer) (equal? pointer #f))
 
+(define-syntax define-c-callback
+  (syntax-rules ()
+    ((_ scheme-name return-type argument-types procedure)
+     (define scheme-name
+       (error "define-c-callback not yet supported on Racket")))))

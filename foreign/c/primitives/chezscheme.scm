@@ -72,19 +72,29 @@
                                     (parse (car l) (add-car access))
                                     (parse (cdr l) (add-cdr access))))
                                  (else
-                                   (chezscheme-syntax-error #'args
-                                                 (chezscheme-format "invalid ~s parameter syntax" (chezscheme-datum k))))))))
-                    (chezscheme-with-syntax ((proc (chezscheme-datum->syntax-object #'k
-                                                              (let ((g (chezscheme-gensym)))
-                                                                `(lambda (,g)
-                                                                   (let ,(parse (chezscheme-datum args) `(cdr ,g))
-                                                                     ,@(chezscheme-datum forms)))))))
-                                 #'(define-syntax name
-                                     (lambda (x)
-                                       (chezscheme-syntax-case x ()
-                                                    ((k1 . r)
-                                                     (chezscheme-datum->syntax-object #'k1
-                                                                           (proc (chezscheme-syntax-object->datum x)))))))))])))
+                                   (chezscheme-syntax-error
+                                     #'args
+                                     (chezscheme-format
+                                       "invalid ~s parameter syntax"
+                                       (chezscheme-datum k))))))))
+                    (chezscheme-with-syntax
+                      ((proc
+                         (chezscheme-datum->syntax-object
+                           #'k
+                           (let ((g (chezscheme-gensym)))
+                             `(lambda (,g)
+                                (let ,(parse (chezscheme-datum args) `(cdr ,g))
+                                  ,@(chezscheme-datum forms)))))))
+                      #'(define-syntax name
+                          (lambda (x)
+                            (chezscheme-syntax-case
+                              x ()
+                              ((k1 . r)
+                               (chezscheme-datum->syntax-object
+                                 #'k1
+                                 (proc
+                                   (chezscheme-syntax-object->datum
+                                     x)))))))))])))
 
 (define-macro!
   define-c-procedure
@@ -114,8 +124,11 @@
                        ((equal? type 'array) 'void*)
                        ((equal? type 'struct) 'void*)
                        ((equal? type 'void)
-                          (error "define-c-procedure: Argument type can not be void" type))
-                       (else (error "define-c-procedure: Invalid argument type" type))))
+                          (error
+                            "define-c-procedure: Argument type can not be void"
+                            type))
+                       (else (error "define-c-procedure: Invalid argument type"
+                                    type))))
                (if (null? argument-types)
                  '()
                  (cadr argument-types))))
@@ -143,7 +156,8 @@
                 ((equal? return-type ''array) 'void*)
                 ((equal? return-type ''struct) 'void*)
                 ((equal? return-type ''void) 'void)
-                (else (error "define-c-procedure: Invalid return type" return-type)))))
+                (else (error "define-c-procedure: Invalid return type"
+                             return-type)))))
     (if (null? argument-types)
       `(define ,scheme-name
          (lambda args
@@ -152,7 +166,9 @@
                                               ()
                                               ,native-return-type)))
              (if (c-pointer-type? ,return-type)
-               (internal-make-c-bytevector (apply internal (map argument->native-value args)))
+               (internal-make-c-bytevector
+                 (apply internal
+                        (map argument->native-value args)))
                (apply internal (map argument->native-value args))))))
       `(define ,scheme-name
          (lambda args
@@ -161,5 +177,12 @@
                                               ,native-argument-types
                                               ,native-return-type)))
              (if (c-pointer-type? ,return-type)
-               (internal-make-c-bytevector (apply internal (map argument->native-value args)))
+               (internal-make-c-bytevector
+                 (apply internal (map argument->native-value args)))
                (apply internal (map argument->native-value args)))))))))
+
+(define-syntax define-c-callback
+  (syntax-rules ()
+    ((_ scheme-name return-type argument-types procedure)
+     (define scheme-name
+       (error "define-c-callback not yet supported on Chezscheme")))))

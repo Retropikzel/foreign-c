@@ -14,10 +14,6 @@ R6RS is supported trough akku and akku-r7rs.
     - R7RS
 - Chicken >= 6.0.0
     - R7RS
-- Guile >= 3
-    - R6RS
-    - R7RS
-        - Has include bug, might not work on all situations
 - Ikarus >= 0.0.4-rc1+
     - R6RS
 - Ironscheme
@@ -44,6 +40,7 @@ R6RS is supported trough akku and akku-r7rs.
     - R7RS
 - Ypsilon >= 2.08
     - R6RS
+        - Problems with akku-r7rs
     - R7RS
 
 
@@ -57,6 +54,9 @@ R6RS is supported trough akku and akku-r7rs.
 - Gauche
     - R7RS
 - Gerbil
+    - R7RS
+- Guile
+    - R6RS
     - R7RS
 - Mit-Scheme
     - R7RS

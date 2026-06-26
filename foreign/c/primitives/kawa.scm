@@ -1,40 +1,110 @@
 (define arena (kawa-invoke-static java.lang.foreign.Arena 'global))
-(define method-handle-lookup (kawa-invoke-static java.lang.invoke.MethodHandles 'lookup))
-(define native-linker (kawa-invoke-static java.lang.foreign.Linker 'nativeLinker))
+(define method-handle-lookup
+  (kawa-invoke-static java.lang.invoke.MethodHandles 'lookup))
+(define native-linker
+  (kawa-invoke-static java.lang.foreign.Linker 'nativeLinker))
 (define INTEGER-MAX-VALUE (static-field java.lang.Integer 'MAX_VALUE))
 
 (define type->native-type
   (lambda (scheme-name type argument?)
     (cond
-      ((equal? type 'i8) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
-      ((equal? type 'u8) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
-      ((equal? type 'i16) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
-      ((equal? type 'u16) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
-      ((equal? type 'i32) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
-      ((equal? type 'u32) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
-      ((equal? type 'i64) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
-      ((equal? type 'u64) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
-      ((equal? type 'char) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_CHAR) 'withByteAlignment 1))
-      ((equal? type 'uchar) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_CHAR) 'withByteAlignment 1))
-      ((equal? type 'short) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_SHORT) 'withByteAlignment 2))
-      ((equal? type 'ushort) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_SHORT) 'withByteAlignment 2))
-      ((equal? type 'int) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
-      ((equal? type 'uint) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_INT) 'withByteAlignment 4))
-      ((equal? type 'long) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_LONG) 'withByteAlignment 8))
-      ((equal? type 'ulong) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_LONG) 'withByteAlignment 8))
-      ((equal? type 'float) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_FLOAT) 'withByteAlignment 4))
-      ((equal? type 'double) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_DOUBLE) 'withByteAlignment 8))
-      ((equal? type 'pointer) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
-      ((equal? type 'array) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
-      ((equal? type 'struct) (kawa-invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 8))
+      ((equal? type 'i8)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'JAVA_INT)
+         'withByteAlignment 4))
+      ((equal? type 'u8)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'JAVA_INT)
+         'withByteAlignment 4))
+      ((equal? type 'i16)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'JAVA_INT)
+         'withByteAlignment 4))
+      ((equal? type 'u16)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'JAVA_INT)
+         'withByteAlignment 4))
+      ((equal? type 'i32)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'JAVA_INT)
+         'withByteAlignment 4))
+      ((equal? type 'u32)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'JAVA_INT)
+         'withByteAlignment 4))
+      ((equal? type 'i64)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'JAVA_INT)
+         'withByteAlignment 4))
+      ((equal? type 'u64)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'JAVA_INT)
+         'withByteAlignment 4))
+      ((equal? type 'char)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'JAVA_CHAR)
+         'withByteAlignment 1))
+      ((equal? type 'uchar)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'JAVA_CHAR)
+         'withByteAlignment 1))
+      ((equal? type 'short)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'JAVA_SHORT)
+         'withByteAlignment 2))
+      ((equal? type 'ushort)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'JAVA_SHORT)
+         'withByteAlignment 2))
+      ((equal? type 'int)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'JAVA_INT)
+         'withByteAlignment 4))
+      ((equal? type 'uint)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'JAVA_INT)
+         'withByteAlignment 4))
+      ((equal? type 'long)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'JAVA_LONG)
+         'withByteAlignment 8))
+      ((equal? type 'ulong)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'JAVA_LONG)
+         'withByteAlignment 8))
+      ((equal? type 'float)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'JAVA_FLOAT)
+         'withByteAlignment 4))
+      ((equal? type 'double)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'JAVA_DOUBLE)
+         'withByteAlignment 8))
+      ((equal? type 'pointer)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'ADDRESS)
+         'withByteAlignment 8))
+      ((equal? type 'array)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'ADDRESS)
+         'withByteAlignment 8))
+      ((equal? type 'struct)
+       (kawa-invoke
+         (static-field java.lang.foreign.ValueLayout 'ADDRESS)
+         'withByteAlignment 8))
       ((equal? type 'void)
        (if argument?
-         (error "define-c-procedure: Argument type can not be void" scheme-name type)
-         (kawa-invoke (static-field java.lang.foreign.ValueLayout 'ADDRESS) 'withByteAlignment 1)))
+         (error "define-c-procedure: Argument type can not be void"
+                scheme-name type)
+         (kawa-invoke
+           (static-field java.lang.foreign.ValueLayout 'ADDRESS)
+           'withByteAlignment 1)))
       (else
         (if argument?
-          (error "define-c-procedure: Invalid argument type" scheme-name type)
-          (error "define-c-procedure: Invalid return type" scheme-name type))))))
+          (error "define-c-procedure: Invalid argument type"
+                 scheme-name type)
+          (error "define-c-procedure: Invalid return type"
+                 scheme-name type))))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()
@@ -58,17 +128,20 @@
               'downcallHandle
               (kawa-invoke native-procedure 'orElseThrow)
               (if (equal? return-type 'void)
-                (apply (class-methods java.lang.foreign.FunctionDescriptor 'ofVoid)
-                       native-argument-types)
-                (apply (class-methods java.lang.foreign.FunctionDescriptor 'of)
-                       native-return-type
-                       native-argument-types)))))
+                (apply
+                  (class-methods java.lang.foreign.FunctionDescriptor 'ofVoid)
+                  native-argument-types)
+                (apply
+                  (class-methods java.lang.foreign.FunctionDescriptor 'of)
+                  native-return-type
+                  native-argument-types)))))
          (lambda args
            (let
              ((result
-                (kawa-invoke procedure-handle
-                             'invokeWithArguments
-                             (map argument->native-value args argument-types))))
+                (kawa-invoke
+                  procedure-handle
+                  'invokeWithArguments
+                  (map argument->native-value args argument-types))))
              (if (c-pointer-type? return-type)
                (internal-make-c-bytevector result)
                result))))))))
@@ -77,10 +150,13 @@
   (lambda (path options)
     (let* ((library-file (make java.io.File path))
            (file-name (kawa-invoke library-file 'getName))
-           (library-parent-folder (make java.io.File (kawa-invoke library-file 'getParent)))
-           (absolute-path (string-append (kawa-invoke library-parent-folder 'getCanonicalPath)
-                                         "/"
-                                         file-name))
+           (library-parent-folder
+             (make java.io.File (kawa-invoke library-file 'getParent)))
+           (absolute-path
+             (string-append
+               (kawa-invoke library-parent-folder 'getCanonicalPath)
+               "/"
+               file-name))
            (linker (kawa-invoke-static java.lang.foreign.Linker 'nativeLinker))
            (lookup (kawa-invoke-static java.lang.foreign.SymbolLookup
                                   'libraryLookup
@@ -136,4 +212,11 @@
   (kawa-invoke-static java.lang.foreign.MemorySegment 'ofAddress 0))
 
 (define (c-null? pointer)
-  (equal? (kawa-invoke-static java.lang.foreign.MemorySegment 'ofAddress 0) pointer))
+  (equal? (kawa-invoke-static java.lang.foreign.MemorySegment 'ofAddress 0)
+          pointer))
+
+(define-syntax define-c-callback
+  (syntax-rules ()
+    ((_ scheme-name return-type argument-types procedure)
+     (define scheme-name
+       (error "define-c-callback not yet supported on Kawa")))))

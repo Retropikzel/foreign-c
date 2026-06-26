@@ -1,5 +1,9 @@
 (ypsilon-define-macro
-  (define-c-procedure scheme-name shared-object c-name return-type argument-types)
+  (define-c-procedure scheme-name
+                      shared-object
+                      c-name
+                      return-type
+                      argument-types)
   (begin
     (let* ((type->native-type
              (lambda (type argument?)
@@ -26,12 +30,21 @@
                      ((equal? type 'struct) 'void*)
                      ((equal? type 'void)
                       (if argument?
-                        (error "define-c-procedure: Argument type can not be void" scheme-name type)
+                        (error
+                          "define-c-procedure: Argument type can not be void"
+                          scheme-name
+                          type)
                         'void))
                      (else
                        (if argument?
-                         (error "define-c-procedure: Invalid argument type" scheme-name type)
-                         (error "define-c-procedure: Invalid return type" scheme-name type))))))
+                         (error
+                           "define-c-procedure: Invalid argument type"
+                           scheme-name
+                           type)
+                         (error
+                           "define-c-procedure: Invalid return type"
+                           scheme-name
+                           type))))))
            (native-argument-types (if (null? argument-types)
                                     (list)
                                     (map (lambda (type)
@@ -40,11 +53,13 @@
       `(define ,scheme-name
          (lambda args
            (let ((internal
-                   (ypsilon-c-function ,(type->native-type (cadr return-type) #f)
-                                       ,(cadr c-name)
-                                       ,native-argument-types)))
+                   (ypsilon-c-function
+                     ,(type->native-type (cadr return-type) #f)
+                     ,(cadr c-name)
+                     ,native-argument-types)))
              (if (equal? ,return-type 'pointer)
-               (internal-make-c-bytevector (apply internal (map argument->native-value args)))
+               (internal-make-c-bytevector
+                 (apply internal (map argument->native-value args)))
                (apply internal (map argument->native-value args)))))))))
 
 (define shared-object-load
@@ -70,14 +85,16 @@
 (define c-pointer-set!
   (lambda (c-bytevector k pointer)
     (ypsilon-bytevector-c-void*-set!
-      (ypsilon-make-bytevector-mapping (+ c-bytevector k) (c-type-size 'pointer))
+      (ypsilon-make-bytevector-mapping
+        (+ c-bytevector k) (c-type-size 'pointer))
       0
       pointer)))
 
 (define c-pointer-ref
   (lambda (c-bytevector k)
     (ypsilon-bytevector-c-void*-ref
-      (ypsilon-make-bytevector-mapping (+ c-bytevector k) (c-type-size 'pointer))
+      (ypsilon-make-bytevector-mapping
+        (+ c-bytevector k) (c-type-size 'pointer))
       0)))
 
 (define (c-null) (c-memset-address->pointer 0 0 0))
@@ -86,3 +103,9 @@
            (= pointer 0))
       (and (c-bytevector? pointer)
            (=  (c-memset-pointer->address pointer 0 0) 0))))
+
+(define-syntax define-c-callback
+  (syntax-rules ()
+    ((_ scheme-name return-type argument-types procedure)
+     (define scheme-name
+       (error "define-c-callback not yet supported on Ypsilon")))))

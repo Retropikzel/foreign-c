@@ -27,13 +27,15 @@
         ((equal? type 'struct) 'intptr)
         ((equal? type 'void)
          (if argument?
-           (error "define-c-procedure: Argument type can not be void" scheme-name type)
+           (error "define-c-procedure: Argument type can not be void"
+                  scheme-name type)
            'void))
         (else
           (if argument?
-            (error "define-c-procedure: Invalid argument type" scheme-name type)
-            (error "define-c-procedure: Invalid return type" scheme-name type)))
-        ))
+            (error "define-c-procedure: Invalid argument type"
+                   scheme-name type)
+            (error "define-c-procedure: Invalid return type"
+                   scheme-name type)))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()
@@ -41,16 +43,20 @@
      (define scheme-name
        (lambda args
          (let ((internal
-                 ((make-ffi-callout (type->native-type scheme-name return-type #f)
-                                    (map (lambda (type)
-                                           (type->native-type scheme-name type #t))
-                                         argument-types))
+                 ((make-ffi-callout
+                    (type->native-type scheme-name return-type #f)
+                    (map (lambda (type)
+                           (type->native-type scheme-name type #t))
+                         argument-types))
                   (cond-expand
                     (windows (dlsym shared-object (symbol->string c-name)))
-                    (else (apply (pinvoke-call libc dlsym intptr (intptr string))
-                                 (list shared-object (symbol->string c-name))))))))
+                    (else
+                      (apply
+                        (pinvoke-call libc dlsym intptr (intptr string))
+                        (list shared-object (symbol->string c-name))))))))
            (if (equal? return-type 'pointer)
-             (internal-make-c-bytevector (apply internal (map argument->native-value args)))
+             (internal-make-c-bytevector
+               (apply internal (map argument->native-value args)))
              (apply internal (map argument->native-value args)))))))))
 
 (define shared-object-load
@@ -78,7 +84,9 @@
   (lambda (c-bytevector k)
     (clr-static-call Convert
                      (ToInt32 Byte)
-                     (clr-static-call Marshal (ReadByte IntPtr Int32) c-bytevector k))))
+                     (clr-static-call Marshal
+                                      (ReadByte IntPtr Int32)
+                                      c-bytevector k))))
 
 (define c-pointer-set!
   (lambda (c-bytevector k pointer)
@@ -92,3 +100,9 @@
 (define (c-null? pointer)
   (and (pointer? pointer)
        (null-pointer? pointer)))
+
+(define-syntax define-c-callback
+  (syntax-rules ()
+    ((_ scheme-name return-type argument-types procedure)
+     (define scheme-name
+       (error "define-c-callback not yet supported on Ironscheme")))))

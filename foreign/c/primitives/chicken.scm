@@ -23,12 +23,15 @@
           ((equal? type 'struct) 'c-pointer)
           ((equal? type 'void)
            (if argument?
-             (error "define-c-procedure: Argument type can not be void" scheme-name type)
+             (error "define-c-procedure: Argument type can not be void"
+                    scheme-name type)
              'void))
           (else
             (if argument?
-            (error "define-c-procedure: Invalid argument type" scheme-name type)
-            (error "define-c-procedure: Invalid return type" scheme-name type))))))
+            (error "define-c-procedure: Invalid argument type"
+                   scheme-name type)
+            (error "define-c-procedure: Invalid return type"
+                   scheme-name type))))))
 
 (define-syntax define-c-procedure
   (er-macro-transformer
@@ -36,19 +39,26 @@
       (let* ((scheme-name (list-ref expr 1))
              (c-name (symbol->string (cadr (list-ref expr 3))))
              (return-type (cadr (list-ref expr 4)))
-             (native-return-type (type->native-type 'scheme-name return-type #f))
+             (native-return-type (type->native-type
+                                   'scheme-name return-type #f))
              (argument-types (if (null? (list-ref expr 5))
                                (list)
                                (cadr (list-ref expr 5))))
-             (native-argument-types (map (lambda (type)
-                                           (type->native-type 'scheme-name type #t))
-                                         argument-types)))
+             (native-argument-types
+               (map (lambda (type)
+                      (type->native-type 'scheme-name type #t))
+                    argument-types)))
         `(define ,scheme-name
            (lambda args
-             (let ((,scheme-name (foreign-safe-lambda ,native-return-type ,c-name ,@ native-argument-types)))
+             (let ((,scheme-name
+                     (foreign-safe-lambda ,native-return-type
+                                          ,c-name
+                                          ,@ native-argument-types)))
                (if (equal? (quote ,native-return-type) 'c-pointer)
-                 (internal-make-c-bytevector (apply ,scheme-name (map argument->native-value args)))
-                 (apply ,scheme-name (map argument->native-value args))))))))))
+                 (internal-make-c-bytevector
+                   (apply ,scheme-name (map argument->native-value args)))
+                 (apply ,scheme-name
+                        (map argument->native-value args))))))))))
 
 (define-syntax shared-object-load
   (er-macro-transformer
@@ -83,3 +93,9 @@
   (lambda (pointer)
     (or (not pointer)
         (= (pointer->address pointer) 0))))
+
+(define-syntax define-c-callback
+  (syntax-rules ()
+    ((_ scheme-name return-type argument-types procedure)
+     (define scheme-name
+       (error "define-c-callback not yet supported on Chicken")))))

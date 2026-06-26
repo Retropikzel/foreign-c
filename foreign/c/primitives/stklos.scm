@@ -28,13 +28,21 @@
                           ((equal? type 'struct) :pointer)
                           ((equal? type 'void)
                            (if argument?
-                             (error "define-c-procedure: Argument type can not be void" scheme-name type)
+                             (error
+                               "define-c-procedure: Argument type can not be void"
+                               scheme-name
+                               type)
                              :void))
                           (else
                             (if argument?
-                              (error "define-c-procedure: Invalid argument type" scheme-name type)
-                              (error "define-c-procedure: Invalid return type" scheme-name type)))
-                          )))
+                              (error
+                                "define-c-procedure: Invalid argument type"
+                                scheme-name
+                                type)
+                              (error
+                                "define-c-procedure: Invalid return type"
+                                scheme-name
+                                type))))))
                 (internal
                   (make-external-function (symbol->string c-name)
                                           (map (lambda (type)
@@ -43,7 +51,8 @@
                                           (type->native-type return-type #f)
                                           shared-object)))
            (if (equal? return-type 'pointer)
-             (internal-make-c-bytevector (apply internal (map argument->native-value args)))
+             (internal-make-c-bytevector
+               (apply internal (map argument->native-value args)))
              (apply internal (map argument->native-value args)))))))))
 
 (define (shared-object-load path options) path)
@@ -71,3 +80,9 @@
 
 (define (c-null) (stklos-address->pointer 0 0 0))
 (define (c-null? pointer) (or (void? pointer) (cpointer-null? pointer)))
+
+(define-syntax define-c-callback
+  (syntax-rules ()
+    ((_ scheme-name return-type argument-types procedure)
+     (define scheme-name
+       (error "define-c-callback not yet supported on STklos")))))

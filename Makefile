@@ -30,7 +30,7 @@ package:
 	foreign/c.sld
 
 install:
-	snow-chibi --impls=${SCHEME} install ${PKG}
+	snow-chibi --impls=${SCHEME} install --always-yes ${PKG}
 
 uninstall:
 	snow-chibi --impls=${SCHEME} remove foreign.c
@@ -38,7 +38,8 @@ uninstall:
 testfiles: libtest.so libtest.o libtest.a package
 	rm -rf .tmp
 	mkdir -p .tmp
-	cp -r libtest.so libtest.o libtest.a tests/c-include/libtest.h foreign .tmp/
+	cp -r libtest.so libtest.o libtest.a tests/c-include/libtest.h foreign \
+		.tmp/
 	mkdir -p logs/${RNRS}
 	cat tests/r6rs-header.sps >> .tmp/test.sps
 	cat tests/${TEST}.scm >> .tmp/test.sps
@@ -47,16 +48,19 @@ testfiles: libtest.so libtest.o libtest.a package
 	cp ${PKG} .tmp/
 
 test: testfiles
-	cd .tmp && CSC_OPTIONS="-L -ltest -L. -I." COMPILE_R7RS=${SCHEME} compile-r7rs -o test-program ${LIBDIRS} test.${SFX}
+	cd .tmp && \
+		CSC_OPTIONS="-L -ltest -L. -I." \
+		COMPILE_R7RS=${SCHEME} \
+		compile-r7rs -o test-program ${LIBDIRS} test.${SFX}
 	cd .tmp && LD_LIBRARY_PATH=. ./test-program
 
 test-docker: package testfiles
-	# Tests
 	cd .tmp && \
 		TEST_R7RS_DEBUG=1 \
 		DOCKER_TAG=${DOCKER_TAG} \
 		APT_PACKAGES="make gcc libffi-dev" \
 		SNOW_PACKAGES="srfi.64 ${PKG}"\
+		AKKU_PACKAGES="akku-r7rs" \
 		COMPILE_R7RS=${SCHEME} \
 		CSC_OPTIONS="-L -ltest -L. -I." \
 		LD_LIBRARY_PATH=. \
