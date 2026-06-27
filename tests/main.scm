@@ -36,6 +36,8 @@
 (test-end "c-type-size")
 
 
+
+
 (test-begin "c-type-align")
 (test-equal "c-type-align i8" (c-type-align 'i8) 1)
 (test-equal "c-type-align u8" (c-type-align 'u8) 1)
@@ -71,6 +73,8 @@
 (test-end "c-type-align")
 
 
+
+
 ;; Libraries and procedures
 (test-begin "define-c-library")
 (define-c-library libc '("stdlib.h" "stdio.h" "string.h" "stdio.h") #f ())
@@ -101,6 +105,9 @@
 (define takes-no-args-returns-int-result (c-takes-no-args-returns-int))
 (test-equal takes-no-args-returns-int-result 0)
 (test-end "define-c-library")
+
+
+
 
 (test-begin "define-c-procedure")
 (define-c-procedure c-atoi libc 'atoi 'int '(pointer))
@@ -146,6 +153,8 @@
 (test-end "define-c-procedure")
 
 
+
+
 ;; c-bytevectors
 (test-begin "make-c-bytevector")
 (define bytes (make-c-bytevector 100))
@@ -154,10 +163,14 @@
 (test-end "make-c-bytevector")
 
 
+
+
 (test-begin "c-bytevector")
 (define is-pointer (make-c-bytevector 100))
 (test-assert (c-bytevector? is-pointer))
 (test-end "c-bytevector")
+
+
 
 
 (test-begin "c-bytevector?")
@@ -170,10 +183,14 @@
 (test-end "c-bytevector?")
 
 
+
+
 (test-begin "c-bytevector-free")
 (define to-be-freed-pointer (make-c-bytevector 64))
 (c-bytevector-free to-be-freed-pointer)
 (test-end "c-bytevector-free")
+
+
 
 
 (test-begin "c-bytevector-null")
@@ -190,6 +207,8 @@
 (test-end "c-bytevector-null")
 
 
+
+
 (test-begin "c-bytevector-null?")
 (test-assert (c-bytevector-null? null-cbv))
 (test-assert (not (c-bytevector-null? "")))
@@ -197,6 +216,8 @@
 (test-assert (not (c-bytevector-null? 1)))
 (test-assert (not (c-bytevector-null? 0)))
 (test-end "c-bytevector-null?")
+
+
 
 
 (test-begin "c-bytevector-set!")
@@ -278,6 +299,8 @@
 (test-end "c-bytevector-set!")
 
 
+
+
 (test-begin "c-bytevector-ref")
 (test-equal "i8" 1 (c-bytevector-ref i8-cbv 'i8 0))
 (test-equal "u8" 2 (c-bytevector-ref u8-cbv 'u8 0))
@@ -302,11 +325,15 @@
 (test-end "c-bytevector-ref")
 
 
+
+
 (test-begin "bytevector->c-bytevector")
 (define bt1 (make-bytevector 64 0))
 (define cbt1 (bytevector->c-bytevector bt1))
 (test-assert (c-bytevector? cbt1))
 (test-end "bytevector->c-bytevector")
+
+
 
 
 (test-begin "c-bytevector->bytevector")
@@ -316,6 +343,8 @@
 (test-end "c-bytevector->bytevector")
 
 
+
+
 (test-begin "c-bytevector->integer")
 (define cbv-cbc-int (c-bytevector->integer (make-c-bytevector 128)))
 (test-assert (number? cbv-cbc-int))
@@ -323,8 +352,13 @@
 (test-end "c-bytevector->integer")
 
 
+
+
 (test-begin "integer->c-bytevector")
 (test-end "integer->c-bytevector")
+
+
+
 
 ;; Strings
 (test-begin "string->c-bytevector")
@@ -333,11 +367,15 @@
 (test-end "string->c-bytevector")
 
 
+
+
 (test-begin "c-bytevector->string")
 (define scheme-string (c-bytevector->string c-string))
 (test-assert (string? scheme-string))
 (test-assert (string=? scheme-string "foobar"))
 (test-end "c-bytevector->string")
+
+
 
 
 ;; Pass pointer by address
@@ -359,6 +397,8 @@
 (test-end "call-with-address-of")
 |#
 
+
+
 ;; C Array
 (test-begin "define-c-array-type")
 (define-c-array-type i8-array 'i8)
@@ -369,6 +409,8 @@
 (write (c-bytevector-ref ar1 i8-array 5))
 (newline)
 (test-end"define-c-array-type")
+
+
 
 
 ;; C Struct
@@ -391,6 +433,11 @@
             '((r . 1) (g . 2) (b . 3) (a . 4)))
 (test-end "define-c-struct-type")
 
+
+
 (test-end "foreign-c")
+
+
+
 
 (exit 0)
