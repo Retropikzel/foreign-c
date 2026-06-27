@@ -9,15 +9,15 @@
   ;; c-pointer-set!
   ;; c-null
   ;; c-null?
+  (import (scheme base)
+          (scheme write)
+          (scheme char)
+          (scheme file)
+          (scheme process-context)
+          (scheme inexact)
+          (scheme cxr))
   (cond-expand
-    (capy (import (scheme base)
-                  (scheme write)
-                  (scheme char)
-                  (scheme file)
-                  (scheme process-context)
-                  (scheme inexact)
-                  (scheme cxr)
-                  (prefix (core foreign) capy-)
+    (capy (import (prefix (core foreign) capy-)
                   (prefix (core foreign-library) capy-))
                 (begin
                   (define-record-type <c-bytevector>
@@ -25,14 +25,7 @@
                     c-bytevector?
                     (pointer c-bytevector-pointer)))
                 (include "c/primitives/capyscheme.scm"))
-    (chezscheme (import (scheme base)
-                        (scheme write)
-                        (scheme char)
-                        (scheme file)
-                        (scheme process-context)
-                        (scheme inexact)
-                        (scheme cxr)
-                        (prefix (chezscheme) chezscheme-)
+    (chezscheme (import (prefix (chezscheme) chezscheme-)
                         (only (chezscheme) syntax))
                 (begin
                   (define-record-type <c-bytevector>
@@ -42,26 +35,14 @@
                 (include "c/primitives/chezscheme.scm")
                 (export chezscheme-foreign-procedure
                         c-bytevector-null))
-    (chibi (import (scheme base)
-                   (scheme write)
-                   (scheme char)
-                   (scheme file)
-                   (scheme process-context)
-                   (scheme inexact))
-           (include-shared "c/primitives/chibi")
+    (chibi (include-shared "c/primitives/chibi")
            (include "c/primitives/chibi.scm")
            (begin
              (define-record-type <c-bytevector>
                (internal-make-c-bytevector pointer)
                c-bytevector?
                (pointer c-bytevector-pointer))))
-    (chicken (import (scheme base)
-                     (scheme write)
-                     (scheme char)
-                     (scheme file)
-                     (scheme process-context)
-                     (scheme inexact)
-                     (chicken base)
+    (chicken (import (chicken base)
                      (chicken foreign)
                      (chicken locative)
                      (chicken syntax)
@@ -86,14 +67,7 @@
     ;; TODO
     ;(gambit (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact)) (include "c/primitives/gambit-primitives.scm"))
     ;; TODO
-    (gauche (import (scheme base)
-                    (scheme write)
-                    (scheme char)
-                    (scheme file)
-                    (scheme process-context)
-                    (scheme inexact)
-                    (scheme eval)
-                    (only (gauche keyword) :info-alist)
+    (gauche (import (only (gauche keyword) :info-alist)
                     (prefix (gauche base) gauche-)
                     (prefix (gauche ffi) gauche-)
                     (prefix (gauche uvector) gauche-)
@@ -114,26 +88,14 @@
                 c-bytevector?
                 (pointer c-bytevector-pointer))))
     ;(guile (import (scheme base) (scheme write) (scheme char) (scheme file) (scheme process-context) (scheme inexact) (prefix (system foreign) guile-) (prefix (system foreign-library) guile-) (prefix (rnrs bytevectors) guile-)) (begin (define-record-type <c-bytevector> (internal-make-c-bytevector pointer) c-bytevector?  (pointer c-bytevector-pointer))) (include "c/primitives/guile.scm"))
-    (ikarus (import (scheme base)
-                    (scheme write)
-                    (scheme char)
-                    (scheme file)
-                    (scheme process-context)
-                    (scheme inexact)
-                    (prefix (ikarus foreign) ikarus-))
+    (ikarus (import (prefix (ikarus foreign) ikarus-))
             (begin
               (define-record-type <c-bytevector>
                 (internal-make-c-bytevector pointer)
                 c-bytevector?
                 (pointer c-bytevector-pointer)))
             (include "c/primitives/ikarus.scm"))
-    (ironscheme (import (scheme base)
-                        (scheme write)
-                        (scheme char)
-                        (scheme file)
-                        (scheme process-context)
-                        (scheme inexact)
-                        (ironscheme clr)
+    (ironscheme (import (ironscheme clr)
                         (ironscheme clr internal)
                         (ironscheme ffi))
                 (begin
@@ -142,13 +104,7 @@
                     c-bytevector?
                     (pointer c-bytevector-pointer)))
                 (include "c/primitives/ironscheme.scm"))
-    (kawa (import (scheme base)
-                  (scheme write)
-                  (scheme char)
-                  (scheme file)
-                  (scheme process-context)
-                  (scheme inexact)
-                  (prefix (kawa reflect) kawa-))
+    (kawa (import (prefix (kawa reflect) kawa-))
           (begin
             (define-record-type <c-bytevector>
               (internal-make-c-bytevector pointer)
@@ -159,26 +115,14 @@
     ;(mit-scheme (import (foreign c mit-scheme-primitives)))
     ;; TODO
     ;(larceny (import (foreign c larceny-primitives)))
-    (mosh (import (scheme base)
-                  (scheme write)
-                  (scheme char)
-                  (scheme file)
-                  (scheme process-context)
-                  (scheme inexact)
-                  (prefix (mosh ffi) mosh-))
+    (mosh (import (prefix (mosh ffi) mosh-))
           (begin
             (define-record-type <c-bytevector>
               (internal-make-c-bytevector pointer)
               c-bytevector?
               (pointer c-bytevector-pointer)))
           (include "c/primitives/mosh.scm"))
-    (racket (import (scheme base)
-                    (scheme write)
-                    (scheme char)
-                    (scheme file)
-                    (scheme process-context)
-                    (scheme inexact)
-                    (prefix (ffi winapi) racket-)
+    (racket (import (prefix (ffi winapi) racket-)
                     (prefix (compatibility mlist) racket-)
                     (prefix (ffi unsafe) racket-)
                     (prefix (ffi vector) racket-))
@@ -188,26 +132,14 @@
                 c-bytevector?
                 (pointer c-bytevector-pointer)))
             (include "c/primitives/racket.scm"))
-    (sagittarius (import (scheme base)
-                         (scheme write)
-                         (scheme char)
-                         (scheme file)
-                         (scheme process-context)
-                         (scheme inexact)
-                         (prefix (sagittarius ffi) sagittarius-))
+    (sagittarius (import (prefix (sagittarius ffi) sagittarius-))
                  (begin
                    (define-record-type <c-bytevector>
                      (internal-make-c-bytevector pointer)
                      c-bytevector?
                      (pointer c-bytevector-pointer)))
                  (include "c/primitives/sagittarius.scm"))
-    (stklos (import (scheme base)
-                    (scheme write)
-                    (scheme char)
-                    (scheme file)
-                    (scheme process-context)
-                    (scheme inexact)
-                    (only (stklos)
+    (stklos (import (only (stklos)
                           %make-callback
                           make-external-function
                           allocate-bytes
@@ -237,25 +169,13 @@
                     calculate-struct-members
                     get-environment-variable))
 
-    (tr7 (import (scheme base)
-                 (scheme write)
-                 (scheme char)
-                 (scheme file)
-                 (scheme process-context)
-                 (scheme inexact))
-         (begin
+    (tr7 (begin
            (define-record-type <c-bytevector>
              (internal-make-c-bytevector pointer)
              c-bytevector?
              (pointer c-bytevector-pointer)))
          (include "c/primitives/tr7.scm"))
-    (ypsilon (import (scheme base)
-                     (scheme write)
-                     (scheme char)
-                     (scheme file)
-                     (scheme process-context)
-                     (scheme inexact)
-                     (prefix (ypsilon c-ffi) ypsilon-)
+    (ypsilon (import (prefix (ypsilon c-ffi) ypsilon-)
                      (prefix (ypsilon c-types) ypsilon-)
                      (prefix (core) ypsilon-))
              (begin

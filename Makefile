@@ -8,7 +8,7 @@ TEST=main
 DOCKER_TAG=head
 
 SFX=scm
-LIBDIRS=-I .
+LIBDIRS=
 SNOW_IMPLS=${SCHEME}
 ifeq "${RNRS}" "r6rs"
 SFX=sps
@@ -51,7 +51,7 @@ test: testfiles
 	cd .tmp && \
 		CSC_OPTIONS="-L -ltest -L. -I." \
 		COMPILE_R7RS=${SCHEME} \
-		compile-r7rs -o test-program ${LIBDIRS} test.${SFX}
+		compile-r7rs -o test-program ${LIBDIRS} --debug-log test.${SFX}
 	cd .tmp && LD_LIBRARY_PATH=. ./test-program
 
 test-docker: package testfiles

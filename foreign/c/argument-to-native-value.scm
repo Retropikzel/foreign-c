@@ -40,6 +40,16 @@
             ((equal? type 'double)
              (java.lang.Double value))
             (else value))))
+(capy
+    (define (argument->native-value value)
+      (display "HERE: value ")
+      (write value)
+      (newline)
+      (display "HERE: c-bytevector?")
+      (write (c-bytevector? value))
+      (if (c-bytevector? value)
+        (c-bytevector-pointer value)
+        value)))
   (else
     (define (argument->native-value value)
       (if (c-bytevector? value)
