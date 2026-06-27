@@ -28,36 +28,49 @@
                        ((equal? type 'struct) 'void*)
                        ((equal? type 'void)
                         (if argument?
-                          (error "define-c-procedure: Argument type can not be void" scheme-name type)
+                          (error
+                            "define-c-procedure: Argument type can not be void"
+                            scheme-name
+                            type)
                           'void))
                        (else
                          (if argument?
-                           (error "define-c-procedure: Invalid argument type" scheme-name type)
-                           (error "define-c-procedure: Invalid return type" scheme-name type))))))
+                           (error
+                             "define-c-procedure: Invalid argument type"
+                             scheme-name
+                             type)
+                           (error
+                             "define-c-procedure: Invalid return type"
+                             scheme-name type))))))
              (scheme-name (list-ref expr 1))
              (shared-object (list-ref expr 2))
              (c-name (cadr (list-ref expr 3)))
              (return-type (cadr (list-ref expr 4)))
-             (native-return-type (type->native-type scheme-name return-type #f))
+             (native-return-type
+               (type->native-type scheme-name return-type #f))
              (argument-types (if (null? (list-ref expr 5))
                                (list)
                                (cadr (list-ref expr 5))))
-             (native-argument-types (map (lambda (type)
-                                           (type->native-type scheme-name type #t))
-                                         argument-types)))
+             (native-argument-types
+               (map (lambda (type)
+                      (type->native-type scheme-name type #t))
+                    argument-types)))
         `(gauche-with-ffi
            (gauche-dynamic-load ,shared-object gauche-:init-function #f)
            '()
-           (define-c-function ,c-name ',native-argument-types ',native-return-type)
+           (define-c-function
+             ,c-name ',native-argument-types ',native-return-type)
            (define ,scheme-name
              (lambda args
                (if (equal? (quote ,native-return-type) 'void*)
-                 (internal-make-c-bytevector (apply ,c-name (map argument->native-value args)))
+                 (internal-make-c-bytevector
+                   (apply ,c-name (map argument->native-value args)))
                  (apply ,c-name (map argument->native-value args))))))
         ))))
 
 
-(define type-uint8_t* (gauche-make-c-pointer-type (gauche-native-type 'uint8_t)))
+(define type-uint8_t*
+  (gauche-make-c-pointer-type (gauche-native-type 'uint8_t)))
 (define (c-u8-set! pointer offset value)
   (set! (gauche-native-aref pointer offset type-uint8_t*) value))
 
@@ -66,7 +79,8 @@
 
 (define type-void* (gauche-make-c-pointer-type (gauche-native-type 'void*)))
 (define (c-pointer-set! pointer offset value)
-  (set! (gauche-native* (gauche-cast-handle type-void* pointer offset) type-void*) value))
+  (set! (gauche-native*
+          (gauche-cast-handle type-void* pointer offset) type-void*) value))
 
 (define (c-pointer-ref pointer offset)
   (gauche-native* (gauche-cast-handle type-void* pointer offset)))
@@ -89,4 +103,9 @@
 (define (c-null) (gauche-null-pointer-handle type-void*))
 (define (c-null? pointer) (gauche-null-pointer-handle? pointer))
 
+(define-syntax define-c-callback
+  (syntax-rules ()
+    ((_ scheme-name return-type argument-types procedure)
+     (define scheme-name
+       (error "define-c-callback not yet supported on Gauche")))))
 

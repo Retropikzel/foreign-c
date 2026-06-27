@@ -1,6 +1,5 @@
 (test-begin "foreign-c")
 
-
 ;; Types
 (test-begin "c-type-size")
 (test-equal "c-type-size i8" (c-type-size 'i8) 1)
@@ -89,12 +88,17 @@
 (c-takes-no-args)
 
 (define intpointer (make-c-bytevector (c-type-size 'int)))
-(define-c-procedure c-passing-int-pointer c-testlib 'test_passing_int_pointer 'int '(pointer))
+(test-end "define-c-library")
+(define-c-procedure c-passing-int-pointer
+                    c-testlib
+                    'test_passing_int_pointer 'int '(pointer))
 (c-passing-int-pointer intpointer)
 (write (c-bytevector-ref intpointer 'int))
 (newline)
 
-(define-c-procedure c-takes-no-args-returns-int c-testlib 'takes_no_args_returns_int 'int '())
+(define-c-procedure c-takes-no-args-returns-int
+                    c-testlib
+                    'takes_no_args_returns_int 'int '())
 (define takes-no-args-returns-int-result (c-takes-no-args-returns-int))
 (test-equal takes-no-args-returns-int-result 0)
 (test-end "define-c-library")
@@ -104,21 +108,27 @@
 (test-equal "1" (c-atoi (string->c-bytevector "100")) 100)
 
 (define-c-procedure c-puts libc 'puts 'int '(pointer))
-(define chars-written (c-puts (string->c-bytevector "puts: Hello from testing, I am C function puts")))
+(define chars-written
+  (c-puts
+    (string->c-bytevector "puts: Hello from testing, I am C function puts")))
 (test-equal "2" chars-written 47)
 
 (define-c-procedure c-strcat libc 'strcat 'pointer '(pointer pointer))
 (define c-string1 (string->c-bytevector "test123"))
-(test-assert "3" (string=? (c-bytevector->string (c-strcat (string->c-bytevector "con2")
-                                                           (string->c-bytevector "cat2")))
-                           "con2cat2"))
+(test-assert "3"
+             (string=?
+               (c-bytevector->string
+                 (c-strcat (string->c-bytevector "con2")
+                           (string->c-bytevector "cat2")))
+               "con2cat2"))
 
 (when (file-exists? "testfile.test") (delete-file "testfile.test"))
 (define-c-procedure c-fopen libc 'fopen 'pointer '(pointer pointer))
 (define output-file (c-fopen (string->c-bytevector "testfile.test")
                              (string->c-bytevector "w")))
 (define-c-procedure c-fprintf libc 'fprintf 'int '(pointer pointer int))
-(define characters-written (c-fprintf output-file (string->c-bytevector "Hello world %i") 1))
+(define characters-written
+  (c-fprintf output-file (string->c-bytevector "Hello world %i") 1))
 (test-equal "4" characters-written 13)
 (define-c-procedure c-fclose libc 'fclose 'int '(pointer))
 (define closed-status (c-fclose output-file))
@@ -172,8 +182,10 @@
 (test-assert (c-bytevector? null-cbv))
 (define-c-procedure c-tempnam libc 'tempnam 'pointer '(pointer pointer))
 (let* ((c-tempnam-prefix (string->c-bytevector "npcmd"))
-       (r1 (c-bytevector->string (c-tempnam (c-bytevector-null) c-tempnam-prefix)))
-       (r2 (c-bytevector->string (c-tempnam (c-bytevector-null) c-tempnam-prefix))))
+       (r1 (c-bytevector->string
+             (c-tempnam (c-bytevector-null) c-tempnam-prefix)))
+       (r2 (c-bytevector->string
+             (c-tempnam (c-bytevector-null) c-tempnam-prefix))))
   (test-assert (string? r1))
   (test-assert (string? r2)))
 (test-end "c-bytevector-null")
@@ -286,7 +298,8 @@
 (test-equal "ulong" 14 (c-bytevector-ref ulong-cbv 'ulong 0))
 (test-equal "float" 15.5 (c-bytevector-ref float-cbv 'float 0))
 (test-equal "double" 16.5 (c-bytevector-ref double-cbv 'double 0))
-(test-assert "pointer" (c-bytevector-null? (c-bytevector-ref pointer-cbv 'pointer 0)))
+(test-assert "pointer"
+             (c-bytevector-null? (c-bytevector-ref pointer-cbv 'pointer 0)))
 (test-end "c-bytevector-ref")
 
 
@@ -375,9 +388,10 @@
 (test-equal 3 (c-bytevector-ref green color 'b))
 (test-equal 4 (c-bytevector-ref green color 'a))
 
-(test-equal (c-bytevector->list green color) '((r . 1) (g . 2) (b . 3) (a . 4)))
+(test-equal (c-bytevector->list green color)
+            '((r . 1) (g . 2) (b . 3) (a . 4)))
 (test-end "define-c-struct-type")
-
 
 (test-end "foreign-c")
 
+(exit 0)

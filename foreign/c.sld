@@ -10,7 +10,21 @@
   ;; c-null
   ;; c-null?
   (cond-expand
-    ;(capyscheme (import (foreign c capyscheme-primitives)))
+    (capy (import (scheme base)
+                  (scheme write)
+                  (scheme char)
+                  (scheme file)
+                  (scheme process-context)
+                  (scheme inexact)
+                  (scheme cxr)
+                  (prefix (core foreign) capy-)
+                  (prefix (core foreign-library) capy-))
+                (begin
+                  (define-record-type <c-bytevector>
+                    (internal-make-c-bytevector pointer)
+                    c-bytevector?
+                    (pointer c-bytevector-pointer)))
+                (include "c/primitives/capyscheme.scm"))
     (chezscheme (import (scheme base)
                         (scheme write)
                         (scheme char)
@@ -85,8 +99,7 @@
                     (prefix (gauche uvector) gauche-)
                     (prefix (gauche native-type) gauche-)
                     (prefix (gauche ffi native) gauche-)
-                    (gauche ffi ffiaux)
-                    )
+                    (gauche ffi ffiaux))
             (include "c/primitives/gauche.scm")
             (export gauche-:init-function
                     :info-alist
@@ -108,11 +121,11 @@
                     (scheme process-context)
                     (scheme inexact)
                     (prefix (ikarus foreign) ikarus-))
-           (begin
-               (define-record-type <c-bytevector>
-                 (internal-make-c-bytevector pointer)
-                 c-bytevector?
-                 (pointer c-bytevector-pointer)))
+            (begin
+              (define-record-type <c-bytevector>
+                (internal-make-c-bytevector pointer)
+                c-bytevector?
+                (pointer c-bytevector-pointer)))
             (include "c/primitives/ikarus.scm"))
     (ironscheme (import (scheme base)
                         (scheme write)
@@ -225,17 +238,17 @@
                     get-environment-variable))
 
     (tr7 (import (scheme base)
-                     (scheme write)
-                     (scheme char)
-                     (scheme file)
-                     (scheme process-context)
-                     (scheme inexact))
-            (begin
-              (define-record-type <c-bytevector>
-                (internal-make-c-bytevector pointer)
-                c-bytevector?
-                (pointer c-bytevector-pointer)))
-             (include "c/primitives/tr7.scm"))
+                 (scheme write)
+                 (scheme char)
+                 (scheme file)
+                 (scheme process-context)
+                 (scheme inexact))
+         (begin
+           (define-record-type <c-bytevector>
+             (internal-make-c-bytevector pointer)
+             c-bytevector?
+             (pointer c-bytevector-pointer)))
+         (include "c/primitives/tr7.scm"))
     (ypsilon (import (scheme base)
                      (scheme write)
                      (scheme char)
@@ -245,11 +258,11 @@
                      (prefix (ypsilon c-ffi) ypsilon-)
                      (prefix (ypsilon c-types) ypsilon-)
                      (prefix (core) ypsilon-))
-            (begin
-              (define-record-type <c-bytevector>
-                (internal-make-c-bytevector pointer)
-                c-bytevector?
-                (pointer c-bytevector-pointer)))
+             (begin
+               (define-record-type <c-bytevector>
+                 (internal-make-c-bytevector pointer)
+                 c-bytevector?
+                 (pointer c-bytevector-pointer)))
              (include "c/primitives/ypsilon.scm")
              (export ypsilon-c-function
                      ypsilon-bytevector-c-int8-set!
@@ -328,6 +341,19 @@
     (else (include "c/define-c-library.scm")))
 
   (cond-expand
+    (capy
+      (begin
+        (define-c-library libc '("stdlib.h" "stdio.h" "string.h") #f '())
+        (define-c-procedure c-malloc libc 'malloc 'pointer '(int))
+        (define-c-procedure c-free libc 'free 'void '(pointer))
+        (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
+        (define-c-procedure c-calloc libc 'calloc 'pointer '(int int))
+        (define-c-procedure c-perror libc 'perror 'void '(pointer))
+        (define-c-procedure
+          c-memset-address->pointer libc 'memset 'pointer '(u64 int int))
+        (define (c-memset-pointer->address pointer value offset)
+          (capy-pointer-address pointer)))
+      )
     (chicken
       (begin
         (define-c-library libc '("stdlib.h" "stdio.h" "string.h") #f '())
@@ -336,8 +362,10 @@
         (define-c-procedure c-strlen libc 'strlen 'int '(pointer))
         (define-c-procedure c-calloc libc 'calloc 'pointer '(int int))
         (define-c-procedure c-perror libc 'perror 'void '(pointer))
-        (define (c-memset-address->pointer address value offset) (address->pointer address))
-        (define (c-memset-pointer->address pointer value offset) (pointer->address pointer))))
+        (define (c-memset-address->pointer address value offset)
+          (address->pointer address))
+        (define (c-memset-pointer->address pointer value offset)
+          (pointer->address pointer))))
     (kawa
       (begin
         (define-c-library libc '("stdlib.h" "stdio.h" "string.h") #f '())
@@ -347,7 +375,9 @@
         (define-c-procedure c-calloc libc 'calloc 'pointer '(int int))
         (define-c-procedure c-perror libc 'perror 'void '(pointer))
         (define (c-memset-address->pointer address value offset)
-          (kawa-invoke-static java.lang.foreign.MemorySegment 'ofAddress address))
+          (kawa-invoke-static java.lang.foreign.MemorySegment
+                              'ofAddress
+                              address))
         (define (c-memset-pointer->address pointer value offset)
           (kawa-invoke pointer 'address))))
     (else (include "c/libc.scm"))))
