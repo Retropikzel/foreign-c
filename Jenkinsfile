@@ -35,107 +35,36 @@ pipeline {
     environment {
         R6RS_SCHEMES="capyscheme chezscheme ikarus ironscheme mosh racket sagittarius ypsilon"
         R7RS_SCHEMES="chibi chicken kawa mosh racket sagittarius stklos ypsilon"
+        TESTS="main callback call-with-address-of"
     }
 
     stages {
-        stage('Main R6RS Debian') {
-            steps {
-                script {
-                    env.R6RS_SCHEMES.split().each { SCHEME ->
-                        stage("${SCHEME}") {
-                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "make RNRS=r6rs SCHEME=${SCHEME} test-docker"
+        parallel {
+            stage('R6RS Debian') {
+                steps {
+                    script {
+                        env.R6RS_SCHEMES.split().each { SCHEME ->
+                            env.TESTS.split().each { TEST ->
+                                stage("${SCHEME} ${TEST}") {
+                                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                        sh "make RNRS=r6rs SCHEME=${SCHEME} TEST=${TEST} test-docker"
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
-        }
-        stage('Callback R6RS Debian') {
-            steps {
-                script {
-                    env.R6RS_SCHEMES.split().each { SCHEME ->
-                        stage("${SCHEME}") {
-                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "make RNRS=r6rs SCHEME=${SCHEME} TEST=callback test-docker"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        stage('Main R7RS Debian') {
-            steps {
-                script {
-                    env.R7RS_SCHEMES.split().each { SCHEME ->
-                        stage("${SCHEME}") {
-                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "make RNRS=r7rs SCHEME=${SCHEME} test-docker"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        stage('Callback R7RS Debian') {
-            steps {
-                script {
-                    env.R7RS_SCHEMES.split().each { SCHEME ->
-                        stage("${SCHEME}") {
-                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "make RNRS=r7rs SCHEME=${SCHEME} TEST=callback test-docker"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        stage('Main R6RS Alpine') {
-            steps {
-                script {
-                    env.R6RS_SCHEMES.split().each { SCHEME ->
-                        stage("${SCHEME}") {
-                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "make LINUX=alpine RNRS=r6rs SCHEME=${SCHEME} test-docker"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        stage('Callback R6RS Alpine') {
-            steps {
-                script {
-                    env.R6RS_SCHEMES.split().each { SCHEME ->
-                        stage("${SCHEME}") {
-                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "make LINUX=alpine RNRS=r6rs SCHEME=${SCHEME} TEST=callback test-docker"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        stage('Main R7RS Alpine') {
-            steps {
-                script {
-                    env.R7RS_SCHEMES.split().each { SCHEME ->
-                        stage("${SCHEME}") {
-                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "make LINUX=alpine RNRS=r7rs SCHEME=${SCHEME} test-docker"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        stage('Callback R7RS Alpine') {
-            steps {
-                script {
-                    env.R7RS_SCHEMES.split().each { SCHEME ->
-                        stage("${SCHEME}") {
-                            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                sh "make LINUX=alpine RNRS=r7rs SCHEME=${SCHEME} TEST=callback test-docker"
+            stage('R7RS Debian') {
+                steps {
+                    script {
+                        env.R7RS_SCHEMES.split().each { SCHEME ->
+                            env.TESTS.split().each { TEST ->
+                                stage("${SCHEME} ${TEST}") {
+                                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                        sh "make RNRS=r7rs SCHEME=${SCHEME} TEST=${TEST} test-docker"
+                                    }
+                                }
                             }
                         }
                     }
