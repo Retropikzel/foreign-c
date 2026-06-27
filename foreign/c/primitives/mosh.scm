@@ -23,12 +23,18 @@
           ((equal? type 'struct) 'void*)
           ((equal? type 'void)
            (if argument?
-             (error "define-c-procedure: Argument type can not be void" scheme-name type)
+             (error "define-c-procedure: Argument type can not be void"
+                    scheme-name
+                    type)
              'void))
           (else
             (if argument?
-              (error "define-c-procedure: Invalid argument type" scheme-name type)
-              (error "define-c-procedure: Invalid return type" scheme-name type))))))
+              (error "define-c-procedure: Invalid argument type"
+                     scheme-name
+                     type)
+              (error "define-c-procedure: Invalid return type"
+                     scheme-name
+                     type))))))
 
 (define shared-object-load
   (lambda (path options)
@@ -49,15 +55,23 @@
      (define scheme-name
        (lambda args
          (let ((internal
-                 (mosh-make-c-function shared-object
-                                       (type->native-type scheme-name return-type #f)
-                                       c-name
-                                       (map (lambda (type)
-                                              (type->native-type scheme-name type #t))
-                                            argument-types))))
+                 (mosh-make-c-function
+                   shared-object
+                   (type->native-type scheme-name return-type #f)
+                   c-name
+                   (map (lambda (type)
+                          (type->native-type scheme-name type #t))
+                        argument-types))))
            (if (equal? return-type 'pointer)
-             (internal-make-c-bytevector (apply internal (map argument->native-value args)))
+             (internal-make-c-bytevector
+               (apply internal (map argument->native-value args)))
              (apply internal (map argument->native-value args)))))))))
 
 (define (c-null) (mosh-integer->pointer 0))
 (define c-null? mosh-pointer-null?)
+
+(define-syntax define-c-callback
+  (syntax-rules ()
+    ((_ scheme-name return-type argument-types procedure)
+     (define scheme-name
+       (error "define-c-callback not yet supported on Mosh")))))

@@ -33,7 +33,7 @@ pipeline {
     }
 
     environment {
-        R6RS_SCHEMES="capyscheme chezscheme ikarus ironscheme racket sagittarius ypsilon"
+        R6RS_SCHEMES="capyscheme chezscheme ikarus ironscheme mosh racket sagittarius ypsilon"
         R7RS_SCHEMES="chibi chicken kawa mosh racket sagittarius stklos ypsilon"
     }
 
