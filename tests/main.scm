@@ -88,7 +88,6 @@
 (c-takes-no-args)
 
 (define intpointer (make-c-bytevector (c-type-size 'int)))
-(test-end "define-c-library")
 (define-c-procedure c-passing-int-pointer
                     c-testlib
                     'test_passing_int_pointer 'int '(pointer))
