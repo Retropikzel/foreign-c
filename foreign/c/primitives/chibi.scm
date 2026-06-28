@@ -20,29 +20,35 @@
           ((equal? type 'double) 18)
           ((equal? type 'void)
            (if argument?
-             (error "define-c-procedure: Argument type can not be void" scheme-name type)
+             (error "define-c-procedure: Argument type can not be void"
+                    scheme-name
+                    type)
              '19))
           ((equal? type 'pointer) 20)
           ((equal? type 'array) 20)
           ((equal? type 'struct) 20)
           ((equal? type 'pointer-address) 21)
-          (else (error "define-c-procedure: Invalid argument type" scheme-name type)))))
+          (else (error "define-c-procedure: Invalid argument type"
+                       scheme-name
+                       type)))))
 
 (define (make-c-function shared-object scheme-name c-name return-type argument-types)
   (let ((c-function (dlsym shared-object c-name)))
     (lambda arguments
       (let* ((return-pointer
-               (internal-ffi-call (length argument-types)
-                                  (type->libffi-type-number scheme-name return-type #f)
-                                  (map
-                                    (lambda (type)
-                                      (type->libffi-type-number scheme-name type #t))
-                                    argument-types)
-                                  c-function
-                                  (c-type-size return-type)
-                                  (map argument->native-value arguments))))
+               (internal-ffi-call
+                 (length argument-types)
+                 (type->libffi-type-number scheme-name return-type #f)
+                 (map
+                   (lambda (type)
+                     (type->libffi-type-number scheme-name type #t))
+                   argument-types)
+                 c-function
+                 (c-type-size return-type)
+                 (map argument->native-value arguments))))
         (when (not (symbol=? return-type 'void))
-          (c-bytevector-ref (internal-make-c-bytevector return-pointer) return-type 0))))))
+          (c-bytevector-ref
+            (internal-make-c-bytevector return-pointer) return-type 0))))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()

@@ -132,6 +132,7 @@
         (else (error "c-type-size: Unknown type" type))))
 
 (define c-type-size+ (lambda types (apply + (map c-type-size types))))
+(define (c-type-size* type n) (* (c-type-size type) n))
 (define c-type-size- (lambda types (apply - (map c-type-size types))))
 
 (define (c-type-align type)
@@ -162,4 +163,5 @@
         (else (error "c-type-align: Unknown type" type))))
 
 (define c-type-align+ (lambda types (apply + (map c-type-align types))))
+(define (c-type-align* type n) (* (c-type-align type) n))
 (define c-type-align- (lambda types (apply - (map c-type-align types))))

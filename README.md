@@ -117,10 +117,35 @@ Example for how to install for Gauche:
 
 ### Adding support for new implementation
 
-See from any foreign/c/SCHEME-primitives.sld what needs to be exported.
-Make the library files foreign/c/YOURSCHEME-primitives.sld
-foreign/c/YOURSCHEME-primitives.scm. Import it in cond expand in
-foreign/c.sld.
+- Make the library files foreign/c/YOURSCHEME-primitives.scm
+- Include it in cond expand in foreign/c.sld
+
+#### Implementation specific code
+
+SCHEME-primitives.scm **must** implement:
+
+- shared-object-load
+- define-c-procedure
+- c-u8-ref
+- c-u8-set!
+- c-pointer-ref
+- c-pointer-set!
+- c-null
+- c-null?
+
+YOURSCHEME-primitives.scm **optionally** can implement:
+
+- define-c-callback
+
+If there is no support for callbacks then this stub must be there:
+
+
+    (define-syntax define-c-callback
+      (syntax-rules ()
+        ((_ scheme-name return-type argument-types procedure)
+         (define scheme-name
+           (error "define-c-callback not yet supported on YOURSCHEME")))))
+
 
 Run tests with:
 

@@ -26,6 +26,7 @@
                        ((equal? type 'pointer) 'void*)
                        ((equal? type 'array) 'void*)
                        ((equal? type 'struct) 'void*)
+                       ((equal? type 'callback) 'void*)
                        ((equal? type 'void)
                         (if argument?
                           (error
@@ -65,8 +66,7 @@
                (if (equal? (quote ,native-return-type) 'void*)
                  (internal-make-c-bytevector
                    (apply ,c-name (map argument->native-value args)))
-                 (apply ,c-name (map argument->native-value args))))))
-        ))))
+                 (apply ,c-name (map argument->native-value args))))))))))
 
 
 (define type-uint8_t*
@@ -79,8 +79,13 @@
 
 (define type-void* (gauche-make-c-pointer-type (gauche-native-type 'void*)))
 (define (c-pointer-set! pointer offset value)
-  (set! (gauche-native*
-          (gauche-cast-handle type-void* pointer offset) type-void*) value))
+  (display "HERE: ")
+  (write pointer)
+  (newline)
+  (set! (gauche-setter (gauche-native* pointer ;(gauche-cast-handle type-void* pointer offset)
+                        type-void*
+                        ))
+    value))
 
 (define (c-pointer-ref pointer offset)
   (gauche-native* (gauche-cast-handle type-void* pointer offset)))
@@ -108,4 +113,3 @@
     ((_ scheme-name return-type argument-types procedure)
      (define scheme-name
        (error "define-c-callback not yet supported on Gauche")))))
-

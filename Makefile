@@ -1,5 +1,5 @@
 .SILENT:
-VERSION=0.19.0
+VERSION=0.20.0
 SCHEME=chibi
 RNRS=r7rs
 PKG=foreign-c-${VERSION}.tgz
@@ -10,10 +10,12 @@ DOCKER_TAG=head
 SFX=scm
 LIBDIRS=
 SNOW_IMPLS=${SCHEME}
+AKKU_PACKAGES=
 ifeq "${RNRS}" "r6rs"
 SFX=sps
 LIBDIRS=-I .akku/lib
 SNOW_IMPLS=generic
+AKKU_PACKAGES="akku-r7rs chez-srfi"
 endif
 
 all: package
@@ -51,7 +53,7 @@ test: testfiles
 	cd .tmp && \
 		CSC_OPTIONS="-L -ltest -L. -I." \
 		COMPILE_R7RS=${SCHEME} \
-		compile-r7rs -o test-program ${LIBDIRS} --debug-log test.${SFX}
+		compile-r7rs -o test-program ${LIBDIRS} test.${SFX}
 	cd .tmp && LD_LIBRARY_PATH=. ./test-program
 
 test-docker: package testfiles
@@ -60,7 +62,7 @@ test-docker: package testfiles
 		DOCKER_TAG=${DOCKER_TAG} \
 		APT_PACKAGES="make gcc libffi-dev" \
 		SNOW_PACKAGES="srfi.64 ${PKG}"\
-		AKKU_PACKAGES="akku-r7rs" \
+		AKKU_PACKAGES=${AKKU_PACKAGES} \
 		COMPILE_R7RS=${SCHEME} \
 		CSC_OPTIONS="-L -ltest -L. -I." \
 		LD_LIBRARY_PATH=. \

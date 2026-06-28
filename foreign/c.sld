@@ -1,14 +1,5 @@
 (define-library
   (foreign c)
-  ;; SCHEME-primitives.scm must implement:
-  ;; shared-object-load
-  ;; define-c-procedure
-  ;; c-u8-ref
-  ;; c-u8-set!
-  ;; c-pointer-ref
-  ;; c-pointer-set!
-  ;; c-null
-  ;; c-null?
   (import (scheme base)
           (scheme write)
           (scheme char)
@@ -122,64 +113,65 @@
              (export ypsilon-c-function
                      ypsilon-bytevector-c-int8-set!
                      ypsilon-bytevector-c-uint8-ref)))
-  (export
-    c-integer-type?
-    c-char-type?
-    c-float-type?
-    c-double-type?
-    c-signed-type?
-    c-pointer-type?
-    c-array-type?
-    c-struct-type?
+  (export c-integer-type?
+          c-char-type?
+          c-float-type?
+          c-double-type?
+          c-signed-type?
+          c-pointer-type?
+          c-array-type?
+          c-struct-type?
 
-    c-type-size
-    c-type-size+
-    c-type-size-
-    c-type-align
-    c-type-align+
-    c-type-align-
+          c-type-size
+          c-type-size+
+          c-type-size*
+          c-type-size-
+          c-type-align
+          c-type-align+
+          c-type-align*
+          c-type-align-
 
-    define-c-array-type
-    define-c-struct-type
+          define-c-array-type
+          define-c-struct-type
 
-    ;; Libraries and procedures
-    define-c-library
-    define-c-procedure
+          ;; Libraries and procedures
+          define-c-library
+          define-c-procedure
 
-    ;; c-bytevectors
-    make-c-bytevector
-    internal-make-c-bytevector
-    c-bytevector
-    c-bytevector?
-    c-bytevector-pointer
-    c-bytevector-free
-    c-bytevector-null
-    c-bytevector-null?
-    c-bytevector-set!
-    c-bytevector-ref
-    bytevector->c-bytevector
-    c-bytevector->bytevector
-    c-bytevector->integer
-    integer->c-bytevector
-    c-bytevector->list
+          ;; c-bytevectors
+          make-c-bytevector
+          internal-make-c-bytevector
+          c-bytevector
+          c-bytevector?
+          c-bytevector-pointer
+          c-bytevector-free
+          c-bytevector-null
+          c-bytevector-null?
+          c-bytevector-set!
+          c-bytevector-ref
+          bytevector->c-bytevector
+          c-bytevector->bytevector
+          c-bytevector->integer
+          integer->c-bytevector
+          c-bytevector->list
 
-    ;; Strings
-    string->c-bytevector
-    c-bytevector->string
-    null-byte
+          ;; Strings
+          string->c-bytevector
+          c-bytevector->string
+          null-byte
 
-    ;; Pass pointer by address
-    call-with-address-of
+          ;; Pass pointer by address
+          call-with-address-of
 
-    ;; Struct
-    ;define-c-struct
+          ;; Struct
+          ;define-c-struct
 
-    ;; Callbacks
-    define-c-callback
-    pointer->c-bytevector
+          ;; Callbacks
+          define-c-callback
+          pointer->c-bytevector
 
-    argument->native-value ;; TODO remove from exports
-    )
+          argument->native-value ;; TODO remove from exports
+          )
   (include "c/types.scm")
   (include "c/c-bytevector.scm")
   (include "c/argument-to-native-value.scm")

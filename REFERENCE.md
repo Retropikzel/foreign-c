@@ -74,6 +74,10 @@ arrays type.
 
 Adds given types together and returns the sum.
 
+(**c-type-size\*** type n)
+
+Multiples given type n times.
+
 (**c-type-size-** type ...)
 
 Subtracts given types from eachother and returns the result.
