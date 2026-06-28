@@ -29,11 +29,15 @@
   (cond ((symbol=? endianness 'little)
          (do ((i 0 (+ i 1)) (val val (bytevector-div val 256)))
            ((>= i size) (unspecified))
-           (c-u8-set! (c-bytevector-pointer cbv) (+ index i) (bytevector-mod val 256))))
+           (c-u8-set! (c-bytevector-pointer cbv)
+                      (+ index i)
+                      (bytevector-mod val 256))))
         ((symbol=? endianness 'big)
          (do ((i (- size 1) (- i 1)) (val val (bytevector-div val 256)))
            ((< i 0) (unspecified))
-           (c-u8-set! (c-bytevector-pointer cbv) (+ index i) (bytevector-mod val 256))))
+           (c-u8-set! (c-bytevector-pointer cbv)
+                      (+ index i)
+                      (bytevector-mod val 256))))
         (else (error "Unknown endianness" endianness))))
 
 
@@ -63,16 +67,21 @@
 (define (c-bytevector-sint-ref cbv index size)
   (when (not (c-bytevector? cbv))
     (error "c-bytevector-sint-ref: cbv must be c-bytevector" cbv))
-  (let* ((high-byte (c-u8-ref (c-bytevector-pointer cbv) (if (eq? endianness 'big) index (+ index size -1))))
+  (let* ((high-byte (c-u8-ref (c-bytevector-pointer cbv)
+                              (if (eq? endianness 'big)
+                                index
+                                (+ index size -1))))
          (uresult (c-bytevector-uint-ref cbv index size)))
     (if (> high-byte 127) (- uresult (expt 256 size)) uresult)))
 
 (define bytevector-single-maxexponent 255)
-(define bytevector-single-bias (bytevector-div bytevector-single-maxexponent 2))
+(define bytevector-single-bias (bytevector-div bytevector-single-maxexponent
+                                               2))
 (define bytevector-single-hidden-bit (expt 2 23))
 
 (define bytevector-double-maxexponent 2047)
-(define bytevector-double-bias (bytevector-div bytevector-double-maxexponent 2))
+(define bytevector-double-bias (bytevector-div bytevector-double-maxexponent
+                                               2))
 (define bytevector-double-hidden-bit (expt 2 52))    ; must be exact integer
 
 (define (bytevector-normalized-ieee-parts p q)
@@ -137,26 +146,48 @@
   (let ((pointer (c-bytevector-pointer cbv)))
     (call-with-values
       (lambda ()
-        (bytevector-ieee-parts x bytevector-single-bias bytevector-single-hidden-bit))
+        (bytevector-ieee-parts x
+                               bytevector-single-bias
+                               bytevector-single-hidden-bit))
       (lambda (sign biased-exponent frac)
         (define (store! sign biased-exponent frac)
           (cond
             ((eq? 'big endianness)
-             (c-u8-set! pointer (+ k 0) (+ (* 128 sign) (bytevector-div biased-exponent 2)))
-             (c-u8-set! pointer (+ k 1) (+ (* 128 (bytevector-mod biased-exponent 2)) (bytevector-div frac (* 256 256))))
-             (c-u8-set! pointer (+ k 2) (bytevector-div (bytevector-mod frac (* 256 256)) 256))
-             (c-u8-set! pointer (+ k 3) (bytevector-mod frac 256)))
+             (c-u8-set! pointer
+                        (+ k 0)
+                        (+ (* 128 sign) (bytevector-div biased-exponent 2)))
+             (c-u8-set! pointer
+                        (+ k 1)
+                        (+ (* 128 (bytevector-mod biased-exponent 2))
+                           (bytevector-div frac (* 256 256))))
+             (c-u8-set! pointer
+                        (+ k 2)
+                        (bytevector-div (bytevector-mod frac (* 256 256)) 256))
+             (c-u8-set! pointer
+                        (+ k 3)
+                        (bytevector-mod frac 256)))
             (else
-              (c-u8-set! pointer (+ k 3) (+ (* 128 sign) (bytevector-div biased-exponent 2)))
-              (c-u8-set! pointer (+ k 2) (+ (* 128 (bytevector-mod biased-exponent 2)) (bytevector-div frac (* 256 256))))
-              (c-u8-set! pointer (+ k 1) (bytevector-div (bytevector-mod frac (* 256 256)) 256))
+              (c-u8-set! pointer
+                         (+ k 3)
+                         (+ (* 128 sign)
+                            (bytevector-div biased-exponent 2)))
+              (c-u8-set! pointer
+                         (+ k 2)
+                         (+ (* 128 (bytevector-mod biased-exponent 2))
+                            (bytevector-div frac (* 256 256))))
+              (c-u8-set! pointer
+                         (+ k 1)
+                         (bytevector-div (bytevector-mod frac (* 256 256))
+                                         256))
               (c-u8-set! pointer (+ k 0) (bytevector-mod frac 256))))
           (unspecified))
         (cond ((= biased-exponent bytevector-single-maxexponent)
                (store! sign biased-exponent frac))
               ((< frac bytevector-single-hidden-bit)
                (store! sign 0 frac))
-              (else (store! sign biased-exponent (- frac bytevector-single-hidden-bit))))))))
+              (else (store! sign
+                            biased-exponent
+                            (- frac bytevector-single-hidden-bit))))))))
 
 (define (make-ieee-single sign biased-exponent bits)
   (cond ((= biased-exponent bytevector-single-maxexponent)
@@ -176,7 +207,8 @@
                 (x (inexact bits))
                 (two^23 8388608.0)
                 (x (/ x two^23))
-                (x (* x (expt 2.0 (- biased-exponent bytevector-single-bias)))))
+                (x (* x (expt 2.0
+                              (- biased-exponent bytevector-single-bias)))))
            (if (= 0 sign) x (- x))))))
 
 (define (c-bytevector-ieee-single-ref cbv k)
@@ -215,17 +247,35 @@
   (let ((pointer (c-bytevector-pointer cbv)))
     (call-with-values
       (lambda ()
-        (bytevector-ieee-parts x bytevector-double-bias bytevector-double-hidden-bit))
+        (bytevector-ieee-parts x
+                               bytevector-double-bias
+                               bytevector-double-hidden-bit))
       (lambda (sign biased-exponent frac)
 
         (define (store! sign biased-exponent frac)
-          (c-u8-set! pointer (+ k 7) (+ (* 128 sign) (bytevector-div biased-exponent 16)))
-          (c-u8-set! pointer (+ k 6) (+ (* 16 (bytevector-mod biased-exponent 16)) (bytevector-div frac two^48)))
-          (c-u8-set! pointer (+ k 5) (bytevector-div (bytevector-mod frac two^48) two^40))
-          (c-u8-set! pointer (+ k 4) (bytevector-div (bytevector-mod frac two^40) two^32))
-          (c-u8-set! pointer (+ k 3) (bytevector-div (bytevector-mod frac two^32) two^24))
-          (c-u8-set! pointer (+ k 2) (bytevector-div (bytevector-mod frac two^24) two^16))
-          (c-u8-set! pointer (+ k 1) (bytevector-div (bytevector-mod frac two^16) 256))
+          (c-u8-set! pointer
+                     (+ k 7)
+                     (+ (* 128 sign)
+                        (bytevector-div biased-exponent 16)))
+          (c-u8-set! pointer
+                     (+ k 6)
+                     (+ (* 16 (bytevector-mod biased-exponent 16))
+                        (bytevector-div frac two^48)))
+          (c-u8-set! pointer
+                     (+ k 5)
+                     (bytevector-div (bytevector-mod frac two^48) two^40))
+          (c-u8-set! pointer
+                     (+ k 4)
+                     (bytevector-div (bytevector-mod frac two^40) two^32))
+          (c-u8-set! pointer
+                     (+ k 3)
+                     (bytevector-div (bytevector-mod frac two^32) two^24))
+          (c-u8-set! pointer
+                     (+ k 2)
+                     (bytevector-div (bytevector-mod frac two^24) two^16))
+          (c-u8-set! pointer
+                     (+ k 1)
+                     (bytevector-div (bytevector-mod frac two^16) 256))
           (c-u8-set! pointer (+ k 0) (bytevector-mod frac 256))
           (if (not (eq? endianness 'little))
             (begin (swap! (+ k 0) (+ k 7))
@@ -375,14 +425,18 @@
      (error "c-bytevector-set!: cbv argument must be c-bytevector" cbv))
 
     ((and (not (c-struct-type? type)) (not (exact-integer? offset/member)))
-     (error "c-bytevector-set!: offset/member argument must be exact integer" offset/member))
+     (error "c-bytevector-set!: offset/member argument must be exact integer"
+            offset/member))
 
     ((and (c-struct-type? type) (not (symbol? offset/member)))
-     (error "c-bytevector-set!: offset/member argument must be symbol" offset/member))
+     (error "c-bytevector-set!: offset/member argument must be symbol"
+            offset/member))
 
     ((and (c-integer-type? type) (c-signed-type? type))
      (when (not (exact-integer? value))
-       (error "c-bytevector-set!: for c-integer-type value must be exact integer" value))
+       (error
+         "c-bytevector-set!: for c-integer-type value must be exact integer"
+         value))
      (c-bytevector-uint-set! cbv
                              offset/member
                              value
@@ -390,9 +444,16 @@
 
     ((and (c-integer-type? type) (not (c-signed-type? type)))
      (when (not (exact-integer? value))
-       (error "c-bytevector-set!: for c-integer-type value must be exact integer" value))
+       (error
+         "c-bytevector-set!: for c-integer-type value must be exact integer"
+         value))
      (when (not (or (positive? value) (zero? value)))
-       (error "c-bytevector-set!: for unsigned c-integer-type value must be positive exact integer or 0" value))
+       (error
+         (string-append
+           "c-bytevector-set!:"
+           " for unsigned c-integer-type value must"
+           " be positive exact integer or 0"
+         value))
      (c-bytevector-sint-set! cbv
                              offset/member value
                              (c-type-size type)))
@@ -407,10 +468,17 @@
 
     ((and (c-char-type? type) (not (c-signed-type? type)))
      (when (not (char? value))
-       (error "c-bytevector-set!: for unsigned c-char-type value must be char" value))
+       (error
+         "c-bytevector-set!: for unsigned c-char-type value must be char"
+         value))
      (when (not (or (positive? (char->integer value))
                     (zero? (char->integer value))))
-       (error "c-bytevector-set!: for unsigned c-char-type value must be positive exact integer or 0" value))
+       (error
+         (string-append
+           "c-bytevector-set!:"
+           " for unsigned c-char-type value must"
+           " be positive exact integer or 0"
+           value))
      (c-bytevector-sint-set! cbv
                              offset/member
                              (char->integer value)
@@ -430,7 +498,8 @@
     ((c-array-type? type)
      (c-bytevector-set! cbv
                         (c-array-type-type type)
-                        (* (c-type-size (c-array-type-type type)) offset/member)
+                        (* (c-type-size (c-array-type-type type))
+                           offset/member)
                         value))
 
     ((c-struct-type? type)
@@ -449,12 +518,16 @@
     ((and (not (c-struct-type? type))
           (and (not (null? offset/member))
                (not (exact-integer? (car offset/member)))))
-     (error "c-bytevector-ref: offset/member argument must be exact integer" (car offset/member)))
+     (error
+       "c-bytevector-ref: offset/member argument must be exact integer"
+       (car offset/member)))
 
     ((and (c-struct-type? type)
           (or (null? offset/member)
               (not (symbol? (car offset/member)))))
-     (error "c-bytevector-set!: offset/member argument must be given and be symbol" (car offset/member)))
+     (error
+       "c-bytevector-set!: offset/member argument must be given and be symbol"
+       (car offset/member)))
 
     ((and (c-integer-type? type)
           (c-signed-type? type))
@@ -481,11 +554,15 @@
 
     ((c-float-type? type)
      (c-bytevector-ieee-single-ref cbv
-                                   (if (null? offset/member) 0 (car offset/member))))
+                                   (if (null? offset/member)
+                                     0
+                                     (car offset/member))))
 
     ((c-double-type? type)
      (c-bytevector-ieee-double-ref cbv
-                                   (if (null? offset/member) 0 (car offset/member))))
+                                   (if (null? offset/member)
+                                     0
+                                     (car offset/member))))
 
     ((c-array-type? type)
      (c-bytevector-ref cbv
