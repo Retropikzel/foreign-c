@@ -5,6 +5,8 @@
   (size c-struct-type-size)
   (members c-struct-type-members))
 
+(define c-struct-type-list '())
+
 (define (calculate-struct-members members . return-just-size)
   (letrec* ((size 0)
             (largest-member-size 0)
@@ -40,10 +42,13 @@
 (define-syntax define-c-struct-type
   (syntax-rules ()
     ((_ name members)
-     (define name
-       (internal-make-c-struct-type 'name
-                                    (calculate-struct-members members #t)
-                                    (calculate-struct-members members))))))
+     (begin
+       (define name
+         (internal-make-c-struct-type 'name
+                                      (calculate-struct-members members #t)
+                                      (calculate-struct-members members)))
+       (set! c-struct-type-list
+         (append c-struct-type-list (list (cons 'name name))))))))
 
 (define-record-type <c-array-type>
   (internal-make-c-array-type name type)
@@ -129,6 +134,8 @@
         ((equal? type 'pointer) 8)
         ((c-array-type? type) (internal-array-type-size type))
         ((c-struct-type? type) (c-struct-type-size type))
+        ((assoc type c-struct-type-list)
+         (c-type-size (cdr (assoc type c-struct-type-list))))
         (else (error "c-type-size: Unknown type" type))))
 
 (define c-type-size+ (lambda types (apply + (map c-type-size types))))
@@ -160,6 +167,8 @@
         ((equal? type 'pointer) 8)
         ((c-array-type? type) (internal-array-type-size type))
         ((c-struct-type? type) (c-struct-type-size type))
+        ((assoc type c-struct-type-list)
+         (c-type-size (cdr (assoc type c-struct-type-list))))
         (else (error "c-type-align: Unknown type" type))))
 
 (define c-type-align+ (lambda types (apply + (map c-type-align types))))
