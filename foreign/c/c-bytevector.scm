@@ -471,11 +471,8 @@
      (when (not (or (positive? (char->integer value))
                     (zero? (char->integer value))))
        (error
-         (string-append
-           "c-bytevector-set!:"
-           " for unsigned c-char-type value must"
-           " be positive exact integer or 0"
-           value)))
+         "c-bytevector-set!: for unsigned c-char-type value must be positive exact integer or 0"
+           value))
      (c-bytevector-sint-set! cbv
                              offset/member
                              (char->integer value)
