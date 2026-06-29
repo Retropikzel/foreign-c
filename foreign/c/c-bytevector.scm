@@ -449,10 +449,7 @@
          value))
      (when (not (or (positive? value) (zero? value)))
        (error
-         (string-append
-           "c-bytevector-set!:"
-           " for unsigned c-integer-type value must"
-           " be positive exact integer or 0"
+           "c-bytevector-set!: for unsigned c-integer-type value must be positive exact integer or 0"
          value)))
      (c-bytevector-sint-set! cbv
                              offset/member value
