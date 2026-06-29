@@ -453,7 +453,7 @@
            "c-bytevector-set!:"
            " for unsigned c-integer-type value must"
            " be positive exact integer or 0"
-         value))
+         value)))
      (c-bytevector-sint-set! cbv
                              offset/member value
                              (c-type-size type)))
@@ -478,7 +478,7 @@
            "c-bytevector-set!:"
            " for unsigned c-char-type value must"
            " be positive exact integer or 0"
-           value))
+           value)))
      (c-bytevector-sint-set! cbv
                              offset/member
                              (char->integer value)
