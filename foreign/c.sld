@@ -131,9 +131,6 @@
           c-type-align*
           c-type-align-
 
-          define-c-array-type
-          define-c-struct-type
-
           ;; Libraries and procedures
           define-c-library
           define-c-procedure
@@ -163,8 +160,11 @@
           ;; Pass pointer by address
           call-with-address-of
 
-          ;; Struct
-          ;define-c-struct
+          ;; Arrays
+          define-c-array-type
+
+          ;; Structs
+          define-c-struct-type
 
           ;; Callbacks
           define-c-callback
@@ -172,6 +172,8 @@
 
           argument->native-value ;; TODO remove from exports
           )
+  (include "c/c-struct.scm")
+  (include "c/c-array.scm")
   (include "c/types.scm")
   (include "c/c-bytevector.scm")
   (include "c/argument-to-native-value.scm")

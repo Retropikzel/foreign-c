@@ -1,7 +1,7 @@
 (package
   (name (foreign c))
 ;  (owner "retropikzel")
-  (version "0.17.0")
+  (version "0.20.1")
   (license "LGPL-3.0-or-later")
   (description "Portable C foreign function interface for R7RS Scheme")
   (keywords scheme r7rs ffi c foreign-interface)

@@ -96,7 +96,7 @@
                     c-testlib
                     'test_passing_int_pointer 'int '(pointer))
 (c-passing-int-pointer intpointer)
-(write (c-bytevector-ref intpointer 'int))
+(write (c-bytevector-ref intpointer 'int 0))
 (newline)
 
 (define-c-procedure c-takes-no-args-returns-int

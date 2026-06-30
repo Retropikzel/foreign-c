@@ -74,7 +74,7 @@ arrays type.
 
 Adds given types together and returns the sum.
 
-(**c-type-size\*** type n)
+(c-type-size\* type n)
 
 Multiples given type n times.
 
@@ -140,13 +140,23 @@ implementations #f is null pointer, this behaviour should not be used or counted
 (**c-bytevector-set!** cbv type offset/member value)
 
 Set value of given type on offset on bytevector bv. Offset is counted as bytes,
-no matter the given type except when type is array or struct. If type is array,
-then offset is 
+for regular types. When type is c-array-type or c-struct-type.
+
+If type is C array, then offset is multiplied by the size of arrays type.
 
 
-(**c-bytevector-ref!** cbv type offset/member)
+(**c-bytevector-ref** cbv type offset/member)
 
 Get value of given type from offset of bytevector bv. Offset is counted as bytes,
+for regular types. When type is c-array-type or c-struct-type.
+
+If type is C array, then offset is multiplied by the size of arrays type.
+
+If type is C struct, and symbol is passed in offset/member it is taken as
+member name and value is returned of members type.
+
+If type is C struct, and number is passed in offset/member it is taken as
+offset and pointer is returned pointing to the offset.
 
 
 (**bytevector->c-bytevector** bv)
@@ -331,6 +341,24 @@ Example:
     (display (c-bytevector-ref green color 'g))
     > 2
 
+Example of using struct definition inside a struct definition:
+
+    (define-c-struct-type timespec-struct '((tv_sec long) (tv_nsec long)))
+    (define-c-struct-type stat-struct
+                          `((st_dev int)
+                            (st_ino uint)
+                            (st_mode uint)
+                            (st_nlink int)
+                            (st_uid uint)
+                            (st_gid uint)
+                            (st_rdev int)
+                            (st_size int)
+                            (st_blksize int)
+                            (st_blocks int)
+                            (st_atim ,timespec-struct)
+                            (st_mtim ,timespec-struct)
+                            (st_ctim ,timespec-struct)))
+
 #### Notes
 - Do not cond-expand inside the arguments, that might lead to problems on some
 implementations.
@@ -338,6 +366,13 @@ implementations.
 on some implementations.
 - Pass the members using quote
     - As '(...) and not (list ...)
+
+(**c-struct->alist** cbv type)
+
+cbv must be c-bytevector holding the C struct data. type must be C struct type
+previously defined by define-c-struct-type. Returns an association list
+containing as cars the member names and values as cdrs.
+
 
 ## Environment variables
 

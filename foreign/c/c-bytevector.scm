@@ -504,76 +504,91 @@
 
     (else (error "c-bytevector-set!: type must be any C type" type))))
 
-(define (c-bytevector-ref cbv type . offset/member)
+(define (c-bytevector-ref cbv type offset/member)
   (cond
     ((not (c-bytevector? cbv))
      (error "c-bytevector-ref: cbv argument must be c-bytevector" cbv))
 
-    ((and (not (c-struct-type? type))
-          (and (not (null? offset/member))
-               (not (exact-integer? (car offset/member)))))
-     (error
-       "c-bytevector-ref: offset/member argument must be exact integer"
-       (car offset/member)))
-
-    ((and (c-struct-type? type)
-          (or (null? offset/member)
-              (not (symbol? (car offset/member)))))
-     (error
-       "c-bytevector-set!: offset/member argument must be given and be symbol"
-       (car offset/member)))
-
     ((and (c-integer-type? type)
           (c-signed-type? type))
-     (c-bytevector-sint-ref cbv
-                            (if (null? offset/member) 0 (car offset/member))
-                            (c-type-size type)))
+     (when (not (number? offset/member))
+       (error
+         "c-bytevector-ref: offset/member argument must be exact-integer with this type"
+         offset/member
+         type))
+     (c-bytevector-sint-ref cbv offset/member (c-type-size type)))
 
     ((and (c-integer-type? type) (not (c-signed-type? type)))
-     (c-bytevector-uint-ref cbv
-                            (if (null? offset/member) 0 (car offset/member))
-                            (c-type-size type)))
+     (when (not (number? offset/member))
+       (error
+         "c-bytevector-ref: offset/member argument must be exact-integer with this type"
+         offset/member
+         type))
+     (c-bytevector-uint-ref cbv offset/member (c-type-size type)))
 
     ((and (c-char-type? type) (c-signed-type? type))
+     (when (not (number? offset/member))
+       (error
+         "c-bytevector-ref: offset/member argument must be exact-integer with this type"
+         offset/member
+         type))
      (integer->char
-       (c-bytevector-sint-ref cbv
-                              (if (null? offset/member) 0 (car offset/member))
-                              (c-type-size type))))
+       (c-bytevector-sint-ref cbv offset/member (c-type-size type))))
 
     ((and (c-char-type? type) (not (c-signed-type? type)))
+     (when (not (number? offset/member))
+       (error
+         "c-bytevector-ref: offset/member argument must be exact-integer with this type"
+         offset/member
+         type))
      (integer->char
-       (c-bytevector-uint-ref cbv
-                              (if (null? offset/member) 0 (car offset/member))
-                              (c-type-size type))))
+       (c-bytevector-uint-ref cbv offset/member (c-type-size type))))
 
     ((c-float-type? type)
-     (c-bytevector-ieee-single-ref cbv
-                                   (if (null? offset/member)
-                                     0
-                                     (car offset/member))))
+     (when (not (number? offset/member))
+       (error
+         "c-bytevector-ref: offset/member argument must be exact-integer with this type"
+         offset/member
+         type))
+     (c-bytevector-ieee-single-ref cbv offset/member))
 
     ((c-double-type? type)
-     (c-bytevector-ieee-double-ref cbv
-                                   (if (null? offset/member)
-                                     0
-                                     (car offset/member))))
+     (when (not (number? offset/member))
+       (error
+         "c-bytevector-ref: offset/member argument must be exact-integer with this type"
+         offset/member
+         type))
+     (c-bytevector-ieee-double-ref cbv offset/member))
 
     ((c-array-type? type)
+     (when (not (number? offset/member))
+       (error
+         "c-bytevector-ref: offset/member argument must be exact-integer with this type"
+         offset/member
+         type))
      (c-bytevector-ref cbv
                        (c-array-type-type type)
-                       (* (c-type-size (c-array-type-type type))
-                          (if (null? offset/member) 0 (car offset/member)))))
+                       (* (c-type-size (c-array-type-type type)) offset/member)))
 
     ((c-pointer-type? type)
+     (when (not (number? offset/member))
+       (error
+         "c-bytevector-ref: offset/member argument must be exact-integer with this type"
+         offset/member
+         type))
      (internal-make-c-bytevector
-       (c-pointer-ref (c-bytevector-pointer cbv)
-                      (if (null? offset/member) 0 (car offset/member)))))
+       (c-pointer-ref (c-bytevector-pointer cbv) offset/member)))
 
     ((c-struct-type? type)
-     (let* ((memb (internal-c-struct-type-member type (car offset/member)))
-            (type (list-ref memb 1))
-            (offset (list-ref memb 2)))
-       (c-bytevector-ref cbv type offset)))
+     (display "HERE: ")
+     (write offset/member)
+     (newline)
+     (if (number? offset/member)
+       (c-bytevector-ref cbv 'pointer offset/member)
+       (let* ((memb (internal-c-struct-type-member type offset/member))
+              (type (list-ref memb 1))
+              (offset (list-ref memb 2)))
+         (c-bytevector-ref cbv type offset))))
 
     (else (error "c-bytevector-ref: type must be any C type" type))))
 
