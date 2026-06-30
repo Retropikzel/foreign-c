@@ -580,9 +580,6 @@
        (c-pointer-ref (c-bytevector-pointer cbv) offset/member)))
 
     ((c-struct-type? type)
-     (display "HERE: ")
-     (write offset/member)
-     (newline)
      (if (number? offset/member)
        (c-bytevector-ref cbv 'pointer offset/member)
        (let* ((memb (internal-c-struct-type-member type offset/member))
