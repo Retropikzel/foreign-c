@@ -2,29 +2,6 @@
   (lambda (path options)
     (chezscheme-load-shared-object path)))
 
-(define c-u8-set!
-  (lambda (c-bytevector k byte)
-    (chezscheme-foreign-set! 'unsigned-8 c-bytevector k byte)))
-
-(define c-u8-ref
-  (lambda (c-bytevector k)
-    (chezscheme-foreign-ref 'unsigned-8 c-bytevector k)))
-
-(define c-pointer-set!
-  (lambda (c-bytevector k pointer)
-    (chezscheme-foreign-set! 'void* c-bytevector k pointer)))
-
-(define c-pointer-ref
-  (lambda (c-bytevector k)
-    (chezscheme-foreign-ref 'void* c-bytevector k)))
-
-(define (c-null) (c-memset-address->pointer 0 0 0))
-(define (c-null? pointer)
-  (or (and (number? pointer)
-           (= pointer 0))
-      (and (chezscheme-ftype-pointer? pointer)
-           (chezscheme-ftype-pointer-null? pointer))))
-
 (define-syntax define-macro!
   (lambda (x)
     (chezscheme-syntax-case x ()
@@ -180,6 +157,29 @@
                (internal-make-c-bytevector
                  (apply internal (map argument->native-value args)))
                (apply internal (map argument->native-value args)))))))))
+
+(define c-u8-set!
+  (lambda (c-bytevector k byte)
+    (chezscheme-foreign-set! 'unsigned-8 c-bytevector k byte)))
+
+(define c-u8-ref
+  (lambda (c-bytevector k)
+    (chezscheme-foreign-ref 'unsigned-8 c-bytevector k)))
+
+(define c-pointer-set!
+  (lambda (c-bytevector k pointer)
+    (chezscheme-foreign-set! 'void* c-bytevector k pointer)))
+
+(define c-pointer-ref
+  (lambda (c-bytevector k)
+    (chezscheme-foreign-ref 'void* c-bytevector k)))
+
+(define (c-null) (c-memset-address->pointer 0 0 0))
+(define (c-null? pointer)
+  (or (and (number? pointer)
+           (= pointer 0))
+      (and (chezscheme-ftype-pointer? pointer)
+           (chezscheme-ftype-pointer-null? pointer))))
 
 (define-syntax define-c-callback
   (syntax-rules ()
