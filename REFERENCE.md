@@ -119,10 +119,10 @@ Returns a newly allocated c-bytevector containing its arguments.
 Returns #t if obj is c-bytevector, otherwise returns #f.
 
 
-(**c-free** cbv)
+(**c-bytevector-free** cbv ...)
 
-Frees c-bytevector from memory. Behaviour using the bytevector after it's freed
-is unspecified.
+Frees given c-bytevectors from memory. Behaviour using the bytevector after
+it's freed is unspecified.
 
 
 (**c-bytevector-null**)

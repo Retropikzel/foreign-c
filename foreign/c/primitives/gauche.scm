@@ -69,22 +69,21 @@
                  (apply ,c-name (map argument->native-value args))))))))))
 
 
-(define type-uint8_t*
-  (gauche-make-c-pointer-type (gauche-native-type 'uint8_t)))
+(define type-uint8_t* (gauche-native-type 'uint8_t*))
 (define (c-u8-set! pointer offset value)
   (set! (gauche-native-aref pointer offset type-uint8_t*) value))
 
 (define (c-u8-ref pointer offset)
   (gauche-native-aref pointer offset type-uint8_t*))
 
-(define type-void* (gauche-make-c-pointer-type (gauche-native-type 'void*)))
+(define type-void** (gauche-native-type 'void**))
 (define (c-pointer-set! pointer offset value)
-  (set! (gauche-native* (gauche-cast-handle type-void* pointer offset)) value))
+  (set! (gauche-native-aref (gauche-cast-handle type-void** pointer offset) 0) value))
 
 (define (c-pointer-ref pointer offset)
-  (gauche-native* (gauche-cast-handle type-void* pointer offset)))
+  (gauche-native-aref (gauche-cast-handle type-void** pointer offset) 0))
 
-(define (c-null) (gauche-null-pointer-handle type-void*))
+(define (c-null) (gauche-null-pointer-handle (gauche-native-type 'void*)))
 (define (c-null? pointer) (gauche-null-pointer-handle? pointer))
 
 (define-syntax define-c-callback

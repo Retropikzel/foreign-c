@@ -399,10 +399,14 @@
         (error "make-c-bytevector error: malloc returned null" size))
       cbv)))
 
-(define (c-bytevector-free cbv)
-  (when (not (c-bytevector? cbv))
-    (error "c-bytevector-free: cbv must be c-bytevector" cbv))
-  (c-free (c-bytevector-pointer cbv)))
+(define c-bytevector-free
+  (lambda cbvs
+    (for-each
+      (lambda (cbv-item)
+        (when (not (c-bytevector? cbv-item))
+          (error "c-bytevector-free: cbv must be c-bytevector" cbv))
+        (c-free (c-bytevector-pointer cbv-item)))
+      cbvs)))
 
 (define (c-bytevector-null)
   (let ((null-cbv (c-null)))
