@@ -341,24 +341,6 @@ Example:
     (display (c-bytevector-ref green color 'g))
     > 2
 
-Example of using struct definition inside a struct definition:
-
-    (define-c-struct-type timespec-struct '((tv_sec long) (tv_nsec long)))
-    (define-c-struct-type stat-struct
-                          `((st_dev int)
-                            (st_ino uint)
-                            (st_mode uint)
-                            (st_nlink int)
-                            (st_uid uint)
-                            (st_gid uint)
-                            (st_rdev int)
-                            (st_size int)
-                            (st_blksize int)
-                            (st_blocks int)
-                            (st_atim ,timespec-struct)
-                            (st_mtim ,timespec-struct)
-                            (st_ctim ,timespec-struct)))
-
 #### Notes
 - Do not cond-expand inside the arguments, that might lead to problems on some
 implementations.

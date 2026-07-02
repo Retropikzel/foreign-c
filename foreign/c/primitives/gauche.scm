@@ -72,38 +72,24 @@
 (define type-uint8_t*
   (gauche-make-c-pointer-type (gauche-native-type 'uint8_t)))
 (define (c-u8-set! pointer offset value)
-  (set! (gauche-native-aref pointer offset type-uint8_t*) value))
+  (set! (gauche-native-aref pointer offset type-uint8_t*) value)
+  )
 
 (define (c-u8-ref pointer offset)
   (gauche-native-aref pointer offset type-uint8_t*))
 
-(define type-void* (gauche-make-c-pointer-type (gauche-native-type 'void*)))
+(define type-void* (gauche-make-c-pointer-type (gauche-native-type 'void)))
 (define (c-pointer-set! pointer offset value)
-  (display "HERE: ")
-  (write pointer)
-  (newline)
-  (set! (gauche-setter (gauche-native* pointer ;(gauche-cast-handle type-void* pointer offset)
-                        type-void*
-                        ))
-    value))
+  (set! (gauche-native* (gauche-cast-handle type-void* pointer offset)) value))
 
 (define (c-pointer-ref pointer offset)
   (gauche-native* (gauche-cast-handle type-void* pointer offset)))
 
-#;(define (c-pointer-set! pointer offset value)
+(define (c-pointer-set! pointer offset value)
   (c-bytevector-uint-set! (internal-make-c-bytevector pointer)
                           offset
                           (c-memset-pointer->address value 0 0)
                           (c-type-size 'pointer)))
-
-#;(define (c-pointer-ref pointer offset)
-  (c-memset-address->pointer
-    (c-bytevector-uint-ref (internal-make-c-bytevector pointer)
-                           offset
-                           (c-type-size 'pointer))
-    0
-    0))
-
 
 (define (c-null) (gauche-null-pointer-handle type-void*))
 (define (c-null? pointer) (gauche-null-pointer-handle? pointer))

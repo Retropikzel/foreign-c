@@ -580,12 +580,15 @@
        (c-pointer-ref (c-bytevector-pointer cbv) offset/member)))
 
     ((c-struct-type? type)
-     (if (number? offset/member)
-       (c-bytevector-ref cbv 'pointer offset/member)
-       (let* ((memb (internal-c-struct-type-member type offset/member))
-              (type (list-ref memb 1))
-              (offset (list-ref memb 2)))
-         (c-bytevector-ref cbv type offset))))
+     (when (not (symbol? offset/member))
+       (error
+         "c-bytevector-ref: offset/member argument must be symbol with this type"
+         offset/member
+         type))
+     (let* ((memb (internal-c-struct-type-member type offset/member))
+            (type (list-ref memb 1))
+            (offset (list-ref memb 2)))
+       (c-bytevector-ref cbv type offset)))
 
     (else (error "c-bytevector-ref: type must be any C type" type))))
 
