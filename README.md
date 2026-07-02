@@ -14,6 +14,8 @@ R6RS is supported trough akku and akku-r7rs.
     - R7RS
 - Chicken >= 6.0.0
     - R7RS
+- Gauche >= Build latest Gauche from git for now
+    - R7RS
 - Ikarus >= 0.0.4-rc1+
     - R6RS
 - Ironscheme
@@ -50,8 +52,6 @@ R6RS is supported trough akku and akku-r7rs.
 - Cyclone
     - R7RS
 - Gambit
-    - R7RS
-- Gauche
     - R7RS
 - Gerbil
     - R7RS

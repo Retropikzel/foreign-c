@@ -24,9 +24,6 @@
                        ((equal? type 'float) 'float)
                        ((equal? type 'double) 'double)
                        ((equal? type 'pointer) 'void*)
-                       ((equal? type 'array) 'void*)
-                       ((equal? type 'struct) 'void*)
-                       ((equal? type 'callback) 'void*)
                        ((equal? type 'void)
                         (if argument?
                           (error
@@ -63,7 +60,7 @@
              ,c-name ',native-argument-types ',native-return-type)
            (define ,scheme-name
              (lambda args
-               (if (equal? (quote ,native-return-type) 'void*)
+               (if (equal? ',native-return-type 'void*)
                  (internal-make-c-bytevector
                    (apply ,c-name (map argument->native-value args)))
                  (apply ,c-name (map argument->native-value args))))))))))
@@ -76,14 +73,15 @@
 (define (c-u8-ref pointer offset)
   (gauche-native-aref pointer offset type-uint8_t*))
 
-(define type-void** (gauche-native-type 'void**))
+(define type-void** (gauche-native-type 'char**))
 (define (c-pointer-set! pointer offset value)
   (set! (gauche-native-aref (gauche-cast-handle type-void** pointer offset) 0) value))
 
 (define (c-pointer-ref pointer offset)
   (gauche-native-aref (gauche-cast-handle type-void** pointer offset) 0))
 
-(define (c-null) (gauche-null-pointer-handle (gauche-native-type 'void*)))
+(define type-void* (gauche-native-type 'void*))
+(define (c-null) (gauche-null-pointer-handle type-void*))
 (define (c-null? pointer) (gauche-null-pointer-handle? pointer))
 
 (define-syntax define-c-callback

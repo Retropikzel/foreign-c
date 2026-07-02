@@ -1,5 +1,5 @@
 .SILENT:
-VERSION=0.20.1
+VERSION=0.21.0
 SCHEME=chibi
 RNRS=r7rs
 PKG=foreign-c-${VERSION}.tgz
