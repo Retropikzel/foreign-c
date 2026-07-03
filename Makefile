@@ -44,7 +44,7 @@ testfiles: libtest.so libtest.o libtest.a package
 	rm -rf ${tmpdir}
 	mkdir -p ${tmpdir}
 	cp -r libtest.so libtest.o libtest.a tests/c-include/libtest.h foreign \
-		${tmpdir}
+		${tmpdir}/
 	mkdir -p logs/${RNRS}
 	cat tests/r6rs-header.sps >> ${tmpdir}/test.sps
 	cat tests/${TEST}.scm >> ${tmpdir}/test.sps
