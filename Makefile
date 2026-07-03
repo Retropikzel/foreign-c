@@ -62,6 +62,7 @@ test: testfiles
 
 test-docker: ${PKG} testfiles
 	cd ${tmpdir} && \
+		TEST_R7RS_DEBUG=1 \
 		DOCKER_TAG=${DOCKER_TAG} \
 		APT_PACKAGES="make gcc libffi-dev" \
 		SNOW_PACKAGES="srfi.64 ${PKG}"\
