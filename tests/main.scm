@@ -16,23 +16,11 @@
 (test-equal "c-type-size ushort" (c-type-size 'ushort) 2)
 (test-equal "c-type-size int" (c-type-size 'int) 4)
 (test-equal "c-type-size uint" (c-type-size 'uint) 4)
-#;(cond-expand
-  (i386
-    (test-equal (c-type-size 'long) 4))
-  (else
-    (test-equal (c-type-size 'long) 8)))
-#;(cond-expand
-  (i386
-    (test-equal (c-type-size 'ulong) 4))
-  (else
-    (test-equal (c-type-size 'ulong) 8)))
+(test-equal "c-type-size long" (c-type-size 'long) 8)
+(test-equal "c-type-size ulong" (c-type-size 'ulong) 8)
 (test-equal "c-type-size float" (c-type-size 'float) 4)
 (test-equal "c-type-size double" (c-type-size 'double) 8)
-#;(cond-expand
-  (i386
-    (test-equal (c-type-size 'pointer) 4))
-  (else
-    (test-equal (c-type-size 'pointer) 8)))
+(test-equal "c-type-size pointer" (c-type-size 'pointer) 8)
 (test-end "c-type-size")
 
 
@@ -53,23 +41,11 @@
 (test-equal "c-type-align ushort" (c-type-align 'ushort) 2)
 (test-equal "c-type-align int" (c-type-align 'int) 4)
 (test-equal "c-type-align uint" (c-type-align 'uint) 4)
-#;(cond-expand
-  (i386
-    (test-equal (c-type-align 'long) 4))
-  (else
-    (test-equal (c-type-align 'long) 8)))
-#;(cond-expand
-  (i386
-    (test-equal (c-type-align 'ulong) 4))
-  (else
-    (test-equal (c-type-align 'ulong) 8)))
+(test-equal "c-type-align long" (c-type-align 'long) 8)
+(test-equal "c-type-aling ulong" (c-type-align 'ulong) 8)
 (test-equal "c-type-align float" (c-type-align 'float) 4)
 (test-equal "c-type-align double" (c-type-align 'double) 8)
-#;(cond-expand
-  (i386
-    (test-equal (c-type-align 'pointer) 4))
-  (else
-    (test-equal (c-type-align 'pointer) 8)))
+(test-equal "c-type-aling pointer" (c-type-align 'pointer) 8)
 (test-end "c-type-align")
 
 
@@ -296,6 +272,7 @@
 (define pointer-cbv (make-c-bytevector (c-type-size 'pointer)))
 (test-assert (c-bytevector? pointer-cbv))
 (c-bytevector-set! pointer-cbv 'pointer 0 (c-bytevector-null))
+
 (test-end "c-bytevector-set!")
 
 
