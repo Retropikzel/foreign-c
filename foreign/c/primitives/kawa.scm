@@ -5,6 +5,26 @@
   (kawa-invoke-static java.lang.foreign.Linker 'nativeLinker))
 (define INTEGER-MAX-VALUE (static-field java.lang.Integer 'MAX_VALUE))
 
+(define shared-object-load
+  (lambda (path options)
+    (let* ((library-file (make java.io.File path))
+           (file-name (kawa-invoke library-file 'getName))
+           (library-parent-folder
+             (make java.io.File (kawa-invoke library-file 'getParent)))
+           (absolute-path
+             (string-append
+               (kawa-invoke library-parent-folder 'getCanonicalPath)
+               "/"
+               file-name))
+           (linker (kawa-invoke-static java.lang.foreign.Linker 'nativeLinker))
+           (lookup (kawa-invoke-static java.lang.foreign.SymbolLookup
+                                  'libraryLookup
+                                  absolute-path
+                                  arena)))
+      (list (cons 'linker linker)
+            (cons 'lookup lookup)))))
+
+
 (define type->native-type
   (lambda (scheme-name type argument?)
     (cond
@@ -145,25 +165,6 @@
              (if (c-pointer-type? return-type)
                (internal-make-c-bytevector result)
                result))))))))
-
-(define shared-object-load
-  (lambda (path options)
-    (let* ((library-file (make java.io.File path))
-           (file-name (kawa-invoke library-file 'getName))
-           (library-parent-folder
-             (make java.io.File (kawa-invoke library-file 'getParent)))
-           (absolute-path
-             (string-append
-               (kawa-invoke library-parent-folder 'getCanonicalPath)
-               "/"
-               file-name))
-           (linker (kawa-invoke-static java.lang.foreign.Linker 'nativeLinker))
-           (lookup (kawa-invoke-static java.lang.foreign.SymbolLookup
-                                  'libraryLookup
-                                  absolute-path
-                                  arena)))
-      (list (cons 'linker linker)
-            (cons 'lookup lookup)))))
 
 (define u8-value-layout
   (kawa-invoke (static-field java.lang.foreign.ValueLayout 'JAVA_BYTE)

@@ -6,6 +6,7 @@ PKG=foreign-c-${VERSION}.tgz
 CC=gcc
 TEST=main
 DOCKER_TAG=head
+tmpdir=.tmp/${SCHEME}-${RNRS}
 
 SFX=scm
 LIBDIRS=
@@ -40,28 +41,27 @@ uninstall:
 	snow-chibi --impls=${SCHEME} remove foreign.c
 
 testfiles: libtest.so libtest.o libtest.a package
-	rm -rf .tmp
-	mkdir -p .tmp
+	rm -rf ${tmpdir}
+	mkdir -p ${tmpdir}
 	cp -r libtest.so libtest.o libtest.a tests/c-include/libtest.h foreign \
-		.tmp/
+		${tmpdir}
 	mkdir -p logs/${RNRS}
-	cat tests/r6rs-header.sps >> .tmp/test.sps
-	cat tests/${TEST}.scm >> .tmp/test.sps
-	cat tests/r7rs-header.scm >> .tmp/test.scm
-	cat tests/${TEST}.scm >> .tmp/test.scm
-	cp ${PKG} .tmp/
+	cat tests/r6rs-header.sps >> ${tmpdir}/test.sps
+	cat tests/${TEST}.scm >> ${tmpdir}/test.sps
+	cat tests/r7rs-header.scm >> ${tmpdir}/test.scm
+	cat tests/${TEST}.scm >> ${tmpdir}/test.scm
+	cp ${PKG} ${tmpdir}/
 
 test: testfiles
-	cd .tmp && \
+	cd ${tmpdir} && \
 		CSC_OPTIONS="-L -ltest -L. -I." \
 		COMPILE_R7RS=${SCHEME} \
 		COMPILE_R7RS_DEBUG=1 \
 		compile-r7rs -o test-program ${LIBDIRS} test.${SFX}
-	cd .tmp && LD_LIBRARY_PATH=. ./test-program
+	cd ${tmpdir} && LD_LIBRARY_PATH=. ./test-program
 
 test-docker: ${PKG} testfiles
-	cd .tmp && \
-		TEST_R7RS_DEBUG=1 \
+	cd ${tmpdir} && \
 		DOCKER_TAG=${DOCKER_TAG} \
 		APT_PACKAGES="make gcc libffi-dev" \
 		SNOW_PACKAGES="srfi.64 ${PKG}"\

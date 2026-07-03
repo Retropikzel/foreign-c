@@ -73,30 +73,26 @@
 (define (c-u8-ref pointer offset)
   (gauche-native-aref pointer offset type-uint8_t*))
 
-(define type-void** (gauche-native-type 'char**))
 (define (c-pointer-set! pointer offset value)
-  (set! (gauche-native*
-          (gauche-cast-handle (gauche-native-type 'void**)
-                              (gauche-native-pointer+
-                                (gauche-cast-handle
-                                  (gauche-native-type 'char*) pointer)
-                                offset)))
-    value)
-  ;(set! (gauche-native-aref (gauche-cast-handle type-void** pointer offset) 0) value)
-)
+  (set!
+    (gauche-native*
+      (gauche-cast-handle
+        (gauche-native-type 'void**)
+        (gauche-native-pointer+
+          (gauche-cast-handle (gauche-native-type 'char*) pointer)
+          offset)
+        ))
+    value))
 
 (define (c-pointer-ref pointer offset)
   (gauche-native*
-    (gauche-cast-handle (gauche-native-type 'void**)
-                        (gauche-native-pointer+
-                          (gauche-cast-handle
-                            (gauche-native-type 'char*) pointer)
-                          offset)))
-  ;(gauche-native-aref (gauche-cast-handle type-void** pointer offset) 0)
-  )
+    (gauche-cast-handle
+      (gauche-native-type 'void**)
+      (gauche-native-pointer+
+        (gauche-cast-handle (gauche-native-type 'char*) pointer)
+        offset))))
 
-(define type-void* (gauche-native-type 'void*))
-(define (c-null) (gauche-null-pointer-handle type-void*))
+(define (c-null) (gauche-null-pointer-handle))
 (define (c-null? pointer) (gauche-null-pointer-handle? pointer))
 
 (define-syntax define-c-callback
