@@ -30,6 +30,7 @@ pipeline {
         R6RS_SCHEMES="capyscheme chezscheme ikarus ironscheme mosh racket sagittarius ypsilon"
         R7RS_SCHEMES="chibi chicken gauche kawa mosh racket sagittarius stklos ypsilon"
         TESTS="main call-with-address-of callback"
+        PWD="${WORKSPACE}"
     }
 
     stages {
