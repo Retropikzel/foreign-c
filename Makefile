@@ -31,6 +31,8 @@ package:
 		--description="Portable foreign function interface for R7RS Schemes" \
 	foreign/c.sld
 
+${PKG}: package
+
 install:
 	snow-chibi --impls=${SCHEME} install --always-yes ${PKG}
 
@@ -53,10 +55,11 @@ test: testfiles
 	cd .tmp && \
 		CSC_OPTIONS="-L -ltest -L. -I." \
 		COMPILE_R7RS=${SCHEME} \
+		COMPILE_R7RS_DEBUG=1 \
 		compile-r7rs -o test-program ${LIBDIRS} test.${SFX}
 	cd .tmp && LD_LIBRARY_PATH=. ./test-program
 
-test-docker: package testfiles
+test-docker: ${PKG} testfiles
 	cd .tmp && \
 		TEST_R7RS_DEBUG=1 \
 		DOCKER_TAG=${DOCKER_TAG} \
