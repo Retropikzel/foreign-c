@@ -404,7 +404,7 @@
     (for-each
       (lambda (cbv-item)
         (when (not (c-bytevector? cbv-item))
-          (error "c-bytevector-free: cbv must be c-bytevector" cbv))
+          (error "c-bytevector-free: cbv must be c-bytevector" cbv-item))
         (c-free (c-bytevector-pointer cbv-item)))
       cbvs)))
 

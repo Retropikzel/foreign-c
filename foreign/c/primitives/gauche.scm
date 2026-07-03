@@ -75,10 +75,25 @@
 
 (define type-void** (gauche-native-type 'char**))
 (define (c-pointer-set! pointer offset value)
-  (set! (gauche-native-aref (gauche-cast-handle type-void** pointer offset) 0) value))
+  (set! (gauche-native*
+          (gauche-cast-handle (gauche-native-type 'void**)
+                              (gauche-native-pointer+
+                                (gauche-cast-handle
+                                  (gauche-native-type 'char*) pointer)
+                                offset)))
+    value)
+  ;(set! (gauche-native-aref (gauche-cast-handle type-void** pointer offset) 0) value)
+)
 
 (define (c-pointer-ref pointer offset)
-  (gauche-native-aref (gauche-cast-handle type-void** pointer offset) 0))
+  (gauche-native*
+    (gauche-cast-handle (gauche-native-type 'void**)
+                        (gauche-native-pointer+
+                          (gauche-cast-handle
+                            (gauche-native-type 'char*) pointer)
+                          offset)))
+  ;(gauche-native-aref (gauche-cast-handle type-void** pointer offset) 0)
+  )
 
 (define type-void* (gauche-native-type 'void*))
 (define (c-null) (gauche-null-pointer-handle type-void*))
