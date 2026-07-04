@@ -5,7 +5,7 @@ RNRS=r7rs
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
 TEST=main
-DOCKER_TAG=head
+DOCKER_TAG=latest
 tmpdir=.tmp/${SCHEME}-${RNRS}
 
 SFX=scm
@@ -19,8 +19,17 @@ SNOW_IMPLS=generic
 AKKU_PACKAGES="akku-r7rs chez-srfi"
 endif
 
-ifeq "${SCHEME}" "sagittarius"
-DOCKER_TAG=latest
+ifeq "${SCHEME}" "capyscheme"
+DOCKER_TAG=head
+endif
+ifeq "${SCHEME}" "chibi"
+DOCKER_TAG=head
+endif
+ifeq "${SCHEME}" "chicken"
+DOCKER_TAG=head
+endif
+ifeq "${SCHEME}" "gauche"
+DOCKER_TAG=head
 endif
 
 all: package
