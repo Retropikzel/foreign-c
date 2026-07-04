@@ -1,5 +1,5 @@
 .SILENT:
-VERSION=0.21.1
+VERSION=0.21.2
 SCHEME=chibi
 RNRS=r7rs
 PKG=foreign-c-${VERSION}.tgz
@@ -17,6 +17,10 @@ SFX=sps
 LIBDIRS=-I .akku/lib
 SNOW_IMPLS=generic
 AKKU_PACKAGES="akku-r7rs chez-srfi"
+endif
+
+ifeq "${SCHEME}" "sagittarius"
+DOCKER_TAG=latest
 endif
 
 all: package

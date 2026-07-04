@@ -41,6 +41,9 @@
                              "define-c-procedure: Invalid return type"
                              scheme-name type))))))
              (scheme-name (list-ref expr 1))
+             (gauche-name (string->symbol
+                            (string-append "__gauche-"
+                                           (symbol->string scheme-name))))
              (shared-object (list-ref expr 2))
              (c-name (cadr (list-ref expr 3)))
              (return-type (cadr (list-ref expr 4)))
@@ -53,17 +56,19 @@
                (map (lambda (type)
                       (type->native-type scheme-name type #t))
                     argument-types)))
-        `(gauche-with-ffi
-           (gauche-dynamic-load ,shared-object gauche-:init-function #f)
-           '()
-           (define-c-function
-             ,c-name ',native-argument-types ',native-return-type)
+        `(begin
+           (gauche-with-ffi
+             (gauche-dynamic-load ,shared-object gauche-:init-function #f)
+             '()
+             (define-c-function
+               ,c-name ',native-argument-types ',native-return-type))
+           (define ,gauche-name ,c-name)
            (define ,scheme-name
              (lambda args
                (if (equal? ',native-return-type 'void*)
                  (internal-make-c-bytevector
-                   (apply ,c-name (map argument->native-value args)))
-                 (apply ,c-name (map argument->native-value args))))))))))
+                   (apply ,gauche-name (map argument->native-value args)))
+                 (apply ,gauche-name (map argument->native-value args))))))))))
 
 
 (define type-uint8_t* (gauche-native-type 'uint8_t*))
@@ -77,18 +82,18 @@
   (set!
     (gauche-native*
       (gauche-cast-handle
-        (gauche-native-type 'void**)
+        'void**
         (gauche-native-pointer+
-          (gauche-cast-handle (gauche-native-type 'char*) pointer)
+          (gauche-cast-handle 'char* pointer)
           offset)))
     value))
 
 (define (c-pointer-ref pointer offset)
   (gauche-native*
     (gauche-cast-handle
-      (gauche-native-type 'void**)
+      'void**
       (gauche-native-pointer+
-        (gauche-cast-handle (gauche-native-type 'char*) pointer)
+        (gauche-cast-handle 'char* pointer)
         offset))))
 
 (define (c-null) (gauche-null-pointer-handle (gauche-native-type 'void*)))
