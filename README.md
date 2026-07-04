@@ -29,6 +29,9 @@ R6RS is supported trough akku and akku-r7rs.
         - -J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED -J--enable-native-access=ALL-UNNAMED
     - So that snow-chibi installed library is found
         - -Dkawa.import.path=/usr/local/share/kawa/lib/*.sld
+- Mosh
+    - R6RS
+    - R7RS
 - Racket >= 8.16 [cs]
     - R6RS
         - Unable to run tests as Rackets SRFI-64 implementation does not work
@@ -62,9 +65,6 @@ R6RS is supported trough akku and akku-r7rs.
     - R6RS
     - R7RS
 - Mit-Scheme
-    - R7RS
-- Mosh
-    - R6RS
     - R7RS
 - Larceny
     - R6RS
