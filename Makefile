@@ -40,7 +40,7 @@ install:
 uninstall:
 	snow-chibi --impls=${SCHEME} remove foreign.c
 
-testfiles: libtest.so libtest.o libtest.a package
+testfiles: libtest.so libtest.o libtest.a ${PKG}
 	rm -rf ${tmpdir}
 	mkdir -p ${tmpdir}
 	cp -r libtest.so libtest.o libtest.a tests/c-include/libtest.h foreign \
@@ -60,7 +60,7 @@ test: testfiles
 		compile-r7rs -o test-program ${LIBDIRS} test.${SFX}
 	cd ${tmpdir} && LD_LIBRARY_PATH=. ./test-program
 
-test-docker: ${PKG} testfiles
+test-docker: testfiles
 	cd ${tmpdir} && \
 		TEST_R7RS_DEBUG=1 \
 		DOCKER_TAG=${DOCKER_TAG} \

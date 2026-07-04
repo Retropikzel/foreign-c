@@ -47,6 +47,7 @@
       (newline)
       (display "HERE: c-bytevector?")
       (write (c-bytevector? value))
+      (newline)
       (if (c-bytevector? value)
         (c-bytevector-pointer value)
         value)))
