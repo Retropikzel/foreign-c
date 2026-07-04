@@ -80,8 +80,7 @@
         (gauche-native-type 'void**)
         (gauche-native-pointer+
           (gauche-cast-handle (gauche-native-type 'char*) pointer)
-          offset)
-        ))
+          offset)))
     value))
 
 (define (c-pointer-ref pointer offset)
@@ -92,7 +91,7 @@
         (gauche-cast-handle (gauche-native-type 'char*) pointer)
         offset))))
 
-(define (c-null) (gauche-null-pointer-handle))
+(define (c-null) (gauche-null-pointer-handle (gauche-native-type 'void*)))
 (define (c-null? pointer) (gauche-null-pointer-handle? pointer))
 
 (define-syntax define-c-callback
