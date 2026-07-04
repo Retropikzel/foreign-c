@@ -35,29 +35,33 @@ pipeline {
     }
 
     stages {
-        stage('R6RS Debian') {
-            steps {
-                script {
-                    env.R6RS_SCHEMES.split().each { SCHEME ->
-                        env.TESTS.split().each { TEST ->
-                            stage("${SCHEME} - ${TEST}") {
-                                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                    sh "make RNRS=r6rs SCHEME=${SCHEME} TEST=${TEST} test-docker"
+        stage('Parallel') {
+            parallel {
+                stage('R6RS Debian') {
+                    steps {
+                        script {
+                            env.R6RS_SCHEMES.split().each { SCHEME ->
+                                env.TESTS.split().each { TEST ->
+                                    stage("${SCHEME} - ${TEST}") {
+                                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                            sh "make RNRS=r6rs SCHEME=${SCHEME} TEST=${TEST} test-docker"
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
-        }
-        stage('R7RS Debian') {
-            steps {
-                script {
-                    env.R7RS_SCHEMES.split().each { SCHEME ->
-                        env.TESTS.split().each { TEST ->
-                            stage("${SCHEME} - ${TEST}") {
-                                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                    sh "make RNRS=r7rs SCHEME=${SCHEME} TEST=${TEST} test-docker"
+                stage('R7RS Debian') {
+                    steps {
+                        script {
+                            env.R7RS_SCHEMES.split().each { SCHEME ->
+                                env.TESTS.split().each { TEST ->
+                                    stage("${SCHEME} - ${TEST}") {
+                                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                            sh "make RNRS=r7rs SCHEME=${SCHEME} TEST=${TEST} test-docker"
+                                        }
+                                    }
                                 }
                             }
                         }
