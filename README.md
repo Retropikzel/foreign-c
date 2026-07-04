@@ -30,11 +30,8 @@ R6RS is supported trough akku and akku-r7rs.
     - So that snow-chibi installed library is found
         - -Dkawa.import.path=/usr/local/share/kawa/lib/*.sld
 - Mosh
-    - R6RS
     - R7RS
 - Racket >= 8.16 [cs]
-    - R6RS
-        - Unable to run tests as Rackets SRFI-64 implementation does not work
     - R7RS
 - Sagittarius >= 0.9.13
     - R6RS
@@ -42,8 +39,6 @@ R6RS is supported trough akku and akku-r7rs.
 - STklos >= 26.0
     - R7RS
 - Ypsilon >= 2.08
-    - R6RS
-        - Problems with akku-r7rs
     - R7RS
 
 
@@ -66,9 +61,17 @@ R6RS is supported trough akku and akku-r7rs.
     - R7RS
 - Mit-Scheme
     - R7RS
+- Mosh
+    - R6RS
+- Racket
+    - R6RS
+        - Unable to run tests as it cant find SRFI-64
 - Larceny
     - R6RS
     - R7RS
+- Ypsilon
+    - R6RS
+        - Problems with akku-r7rs
 
 ### Native dependencies
 
