@@ -45,10 +45,9 @@ testfiles: libtest.so libtest.o libtest.a ${PKG}
 	mkdir -p ${tmpdir}
 	cp -r libtest.so libtest.o libtest.a tests/c-include/libtest.h foreign \
 		${tmpdir}/
-	mkdir -p logs/${RNRS}
-	cat tests/r6rs-header.sps >> ${tmpdir}/test.sps
+	cat tests/r6rs-header.sps > ${tmpdir}/test.sps
 	cat tests/${TEST}.scm >> ${tmpdir}/test.sps
-	cat tests/r7rs-header.scm >> ${tmpdir}/test.scm
+	cat tests/r7rs-header.scm > ${tmpdir}/test.scm
 	cat tests/${TEST}.scm >> ${tmpdir}/test.scm
 	cp ${PKG} ${tmpdir}/
 
@@ -87,4 +86,3 @@ libtest.a: libtest.o tests/c-src/libtest.c
 clean:
 	git clean -X -f
 	rm -rf snow
-	rm -rf logs
