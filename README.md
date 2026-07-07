@@ -4,6 +4,11 @@
 
 See REFERENCE.md
 
+
+## Tests
+
+[Jenkins](https://jenkins.scheme.org/job/foreign_c/job/foreign-c/)
+
 ## Supported implementations
 
 R6RS is supported trough akku and akku-r7rs.
