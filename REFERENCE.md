@@ -1,6 +1,6 @@
 # (foreign c) reference
 
-Table of content
+Table of contents
 
 - Types
 - c-bytevectors
@@ -12,6 +12,8 @@ Table of content
 - C Arrays
 - C Structs
 - Environment variables
+
+
 
 ## Types
 
@@ -65,10 +67,12 @@ is after the foreign c name.
     - void
     - Can not be argument type, only return type
 
+
 (**c-type-size** type)
 
 Returns the size of given type. If type is array then returns size of the
 arrays type.
+
 
 (**c-type-size+** type ...)
 
@@ -78,17 +82,21 @@ Adds given types together and returns the sum.
 
 Multiples given type n times.
 
+
 (**c-type-size-** type ...)
 
 Subtracts given types from eachother and returns the result.
+
 
 (**c-type-align** type)
 
 Returns the align of given type.
 
+
 (**c-type-align+** type ...)
 
 Adds given types together and returns the sum.
+
 
 (**c-type-align-** type ...)
 
@@ -96,6 +104,7 @@ Subtracts given types from eachother and returns the result.
 
 
 ## c-bytevectors
+
 
 (**make-c-bytevector** size)</br>
 (**make-c-bytevector** size fill)
@@ -110,9 +119,11 @@ it specifies the initial value for the bytes of the c-bytevector.
 
 If allocation fails, error is signaled.
 
+
 (**c-bytevector** byte ...)</br>
 
 Returns a newly allocated c-bytevector containing its arguments.
+
 
 (**c-bytevector?** obj)
 
@@ -179,7 +190,10 @@ added to the the returned integer. Offset must be an integer.
 
 Returns the bytevector in the integer address.
 
+
+
 ## C Libraries
+
 
 (**define-c-library** scheme-name headers object-name options)
 
@@ -225,7 +239,9 @@ implementations.
     - As '(...) and not (list ...)
 
 
+
 ## C Procedures
+
 
 (**define-c-procedure** scheme-name shared-object c-name return-type argument-types)
 
@@ -250,6 +266,7 @@ Example:
 
 ## Callbacks
 
+
 (**define-c-callback** scheme-name return-type argument-types procedure)
 
 Takes scheme-name to bind the Scheme procedure to, return-type, argument-types and procedure as in place lambda.
@@ -260,6 +277,7 @@ For example see tests/callback.scm
 
 
 ## Strings
+
 
 (**string->c-bytevector** str)
 
@@ -273,11 +291,15 @@ Returns a newly allocated string whose character sequence is
 encoded by the given c-bytevector. If c-bytevector is null empty string is
 returned.
 
+
 **null-byte**
 
 Null byte (\0) you can use in strings.
 
+
+
 ## Pass pointer by address
+
 
 (**call-with-address-of** cbv thunk)
 
@@ -306,7 +328,11 @@ Calling from Scheme:
 The passed c-bytevector, in example named cbv, should only be used **after**
 call to call-with-addres-of ends.
 
+
+
 ## C Arrays
+
+
 (**define-c-array-type** name type)
 
 Creates a new C array type that can be used when accessing c-bytevectors.
@@ -321,7 +347,10 @@ Example:
     (write (c-bytevector-ref ar1 i8-array 5))
     > 25
 
+
+
 ## C Structs
+
 
 (**define-c-struct-type** name members)
 
@@ -348,6 +377,8 @@ implementations.
 on some implementations.
 - Pass the members using quote
     - As '(...) and not (list ...)
+
+
 
 (**c-struct->alist** cbv type)
 

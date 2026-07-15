@@ -1,13 +1,37 @@
 (foreign c) is a C foreign function interface (FFI) library for R6RS and R7RS Schemes
 
+
+
 ## Documentation
 
 See REFERENCE.md
 
 
+
 ## Tests
 
 [Jenkins](https://jenkins.scheme.org/job/foreign_c/job/foreign-c/)
+
+
+
+## Roadmap
+
+Things that are done should not change anymore. But note that (foreign c) is
+still pre 1.0.0 so it's not 100% sure.
+
+- Done
+    - Loading C libraries
+    - Calling C functions
+    - Basic pointer handling
+    - C pointer to string and back conversions
+    - Passing pointers by address
+- In Progress
+    - Handling array and struct pointers more ergonomically
+- Todo
+    - Callbacks
+    - Type definitions
+
+
 
 ## Supported implementations
 
@@ -78,10 +102,14 @@ R6RS is supported trough akku and akku-r7rs.
     - R6RS
         - Problems with akku-r7rs
 
+
+
 ### Native dependencies
 
 - Chibi
     - libffi
+
+
 
 
 ## Installation
@@ -124,6 +152,7 @@ Example for how to install for Gauche:
     cd foreign-c
     make SCHEME=gauche
     make SCHEME=gauche install
+
 
 
 ### Adding support for new implementation
