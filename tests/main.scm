@@ -53,7 +53,7 @@
 
 ;; Libraries and procedures
 (test-begin "define-c-library")
-(define-c-library libc '("stdlib.h" "stdio.h" "string.h" "stdio.h") #f ())
+(define-c-library libc '("stdlib.h" "string.h" "stdio.h") #f ())
 
 (test-assert "test-assert libc" (if libc #t #f))
 
