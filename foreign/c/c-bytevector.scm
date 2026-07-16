@@ -639,6 +639,15 @@
     (string->utf8
       (string-append str (string #\null)))))
 
+(define (with-string->c-bytevector str thunk)
+  (when (not (string? str))
+    (error "with-string->c-bytector: str must be string"))
+  (when (not (procedure? thunk))
+    (error "with-string->c-bytector: thunk must be procedure"))
+  (let ((cbv (string->c-bytevector str)))
+    (apply thunk (list cbv))
+    (c-bytevector-free cbv)))
+
 (define (c-bytevector->integer cbv . offset)
   (when (not (c-bytevector? cbv))
     (error "c-bytevector->integer cbv argument must be c-bytevector" cbv))

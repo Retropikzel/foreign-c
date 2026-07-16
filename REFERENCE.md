@@ -285,6 +285,12 @@ Returns a newly allocated (unless empty) c-bytevector that contains the
 UTF-8 encoding of the given string.
 
 
+(**with-string->c-bytevector** str thunk)
+
+Calls thunk with newly allocated c-bytevector that contains the UTF-8 encoding
+of the given string and frees it after thunk finishes.
+
+
 (**c-bytevector->string** cbv)
 
 Returns a newly allocated string whose character sequence is

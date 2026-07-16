@@ -154,6 +154,7 @@
 
           ;; Strings
           string->c-bytevector
+          with-string->c-bytevector
           c-bytevector->string
           null-byte
 

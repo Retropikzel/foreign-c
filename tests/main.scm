@@ -343,6 +343,13 @@
 (test-assert (c-bytevector? c-string))
 (test-end "string->c-bytevector")
 
+(test-begin "with-string->c-bytevector")
+(with-string->c-bytevector
+  "foobar"
+  (lambda (c-string)
+    (test-assert (c-bytevector? c-string))))
+(test-end "with-string->c-bytevector")
+
 
 
 
