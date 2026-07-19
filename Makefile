@@ -58,10 +58,8 @@ testfiles: libtest.so libtest.o libtest.a ${PKG}
 	mkdir -p ${tmpdir}
 	cp -r libtest.so libtest.o libtest.a tests/c-include/libtest.h foreign \
 		${tmpdir}/
-	cat tests/r6rs-header.sps > ${tmpdir}/test.sps
-	cat tests/${TEST}.scm >> ${tmpdir}/test.sps
-	cat tests/r7rs-header.scm > ${tmpdir}/test.scm
-	cat tests/${TEST}.scm >> ${tmpdir}/test.scm
+	cat tests/test-headers.${SFX} > ${tmpdir}/test.${SFX}
+	cat tests/${TEST}.scm >> ${tmpdir}/test.${SFX}
 	cp ${PKG} ${tmpdir}/
 
 test: testfiles
