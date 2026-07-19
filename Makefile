@@ -77,7 +77,7 @@ test-docker: testfiles
 		TEST_R7RS_DEBUG=1 \
 		DOCKER_TAG=${DOCKER_TAG} \
 		APT_PACKAGES="make gcc libffi-dev" \
-		SNOW_PACKAGES="srfi.64 ${PKG}"\
+		SNOW_PACKAGES="srfi.64 retropikzel.tap ${PKG}"\
 		AKKU_PACKAGES=${AKKU_PACKAGES} \
 		COMPILE_R7RS=${SCHEME} \
 		CSC_OPTIONS="-L -ltest -L. -I." \
