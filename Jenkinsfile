@@ -46,7 +46,6 @@ pipeline {
                                         stage("${TEST}") {
                                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                                 sh "make RNRS=r6rs SCHEME=${SCHEME} TEST=${TEST} test-docker"
-                                                junit ".tmp/*/*.xml"
                                             }
                                         }
                                     }
@@ -64,7 +63,6 @@ pipeline {
                                         stage("${TEST}") {
                                             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                                                 sh "make RNRS=r7rs SCHEME=${SCHEME} TEST=${TEST} test-docker"
-                                                junit ".tmp/*/*.xml"
                                             }
                                         }
                                     }
