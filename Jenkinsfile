@@ -74,4 +74,10 @@ pipeline {
             }
         }
     }
+
+    post {
+        always {
+            junit ".tmp/*/*.xml"
+        }
+    }
 }
