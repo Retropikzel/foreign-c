@@ -6,7 +6,7 @@
 
 (cond
   ;; In Jenkins
-  ((get-environment-variable "JENKINS_URL")
+  ((get-environment-variable "WORKSPACE")
    (let ((junit-file "junit-result.xml"))
      (test-runner-current (junit-runner))
      (when (file-exists? junit-file) (delete-file junit-file))
