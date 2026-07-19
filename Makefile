@@ -71,23 +71,19 @@ test: testfiles
 		COMPILE_R7RS_DEBUG=1 \
 		compile-r7rs -o test-program ${LIBDIRS} test.${SFX}
 	cd ${tmpdir} && LD_LIBRARY_PATH=. ./test-program
-	mkdir -p test-results/
-	cp ${tmpdir}/junit-result.xml test-results/${SCHEME}.xml
 
 test-docker: testfiles
 	cd ${tmpdir} && \
 		TEST_R7RS_DEBUG=1 \
 		DOCKER_TAG=${DOCKER_TAG} \
 		APT_PACKAGES="make gcc libffi-dev" \
-		SNOW_PACKAGES="srfi.64 retropikzel.junit ${PKG}"\
+		SNOW_PACKAGES="srfi.64 retropikzel.tap retropikzel.junit ${PKG}"\
 		AKKU_PACKAGES=${AKKU_PACKAGES} \
 		COMPILE_R7RS=${SCHEME} \
 		CSC_OPTIONS="-L -ltest -L. -I." \
 		LD_LIBRARY_PATH=. \
 		PASS_ENV_VARS="CSC_OPTIONS LD_LIBRARY_PATH" \
 		test-r7rs ${LIB_PATHS} -o test-program test.${SFX}
-	mkdir -p test-results/
-	cp ${tmpdir}/junit-result.xml test-results/${SCHEME}.xml
 
 ## C libraries for testing
 

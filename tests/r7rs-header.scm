@@ -5,11 +5,16 @@
         (scheme file)
         (scheme process-context)
         (foreign c)
+        (retropikzel tap)
         (retropikzel junit)
         (srfi 64))
 
-(test-runner-current (junit-runner))
+(cond
+  ;; In Jenkins
+  ((get-environment-variable "JENKINS_URL")
+   (let ((junit-file "junit-result.xml"))
+     (test-runner-current (junit-runner))
+     (when (file-exists? junit-file) (delete-file junit-file))
+     (set-junit-runner-output-port! (open-output-file junit-file))))
+  (else (test-runner-current (tap-runner))))
 
-(define junit-file "junit-result.xml")
-(when (file-exists? junit-file) (delete-file junit-file))
-(set-junit-runner-output-port! (open-output-file junit-file))
