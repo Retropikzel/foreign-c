@@ -322,8 +322,11 @@ Returns #t if obj is c-bytevector, otherwise returns #f.
 
 (**c-bytevector-free** cbv ...)
 
-Frees given c-bytevectors from memory. Behaviour using the bytevector after
-it's freed is unspecified.
+Frees given c-bytevectors from memory.
+
+- It is an error to free null c-bytevector
+- It is an error to use c-bytevector after free
+    - This can not be checked in the case where C code frees the pointer
 
 
 (**c-bytevector-null**)

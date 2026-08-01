@@ -1,5 +1,5 @@
 .SILENT:
-VERSION=0.22.0
+VERSION=0.23.0
 SCHEME=chibi
 RNRS=r7rs
 PKG=foreign-c-${VERSION}.tgz
@@ -66,13 +66,11 @@ test: testfiles
 	cd ${tmpdir} && \
 		CSC_OPTIONS="-L -ltest -L. -I." \
 		COMPILE_R7RS=${SCHEME} \
-		COMPILE_R7RS_DEBUG=1 \
 		compile-r7rs -o test-program ${LIBDIRS} test.${SFX}
 	cd ${tmpdir} && LD_LIBRARY_PATH=. ./test-program
 
 test-docker: testfiles
 	cd ${tmpdir} && \
-		TEST_R7RS_DEBUG=1 \
 		DOCKER_TAG=${DOCKER_TAG} \
 		APT_PACKAGES="make gcc libffi-dev" \
 		SNOW_PACKAGES="srfi.64 retropikzel.tap ${PKG}"\

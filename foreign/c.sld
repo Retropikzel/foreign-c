@@ -6,12 +6,16 @@
           (scheme file)
           (scheme process-context)
           (scheme inexact)
-          (scheme cxr))
+          (scheme cxr)
+          (retropikzel debug))
   (begin
+    (define (internal-make-c-bytevector pointer)
+      (make-c-bytevector-record pointer #f))
     (define-record-type <c-bytevector>
-      (internal-make-c-bytevector pointer)
+      (make-c-bytevector-record pointer freed?)
       c-bytevector?
-      (pointer c-bytevector-pointer)))
+      (pointer c-bytevector-pointer)
+      (freed? c-bytevector-freed? c-bytevector-freed-set!)))
   (cond-expand
     (capy (import (prefix (core foreign) capy-)
                   (prefix (core foreign-library) capy-))
