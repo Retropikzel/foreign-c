@@ -405,9 +405,6 @@
      (begin
        (for-each
          (lambda (item)
-           (display "HERE: item ")
-           (write item)
-           (newline)
            (when (not (c-bytevector? (cdr item)))
              (error "c-bytevector-free: cbv must be c-bytevector" (car item)))
            (when (c-bytevector-null? (cdr item))
