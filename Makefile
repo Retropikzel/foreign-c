@@ -1,6 +1,6 @@
 .DEFAULT: all
 .POSIX:
-VERSION=0.23.2
+VERSION=0.23.3
 SCHEME=chibi
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
