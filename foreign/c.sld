@@ -2,8 +2,48 @@
 ;;>\pre{
 ;;> (foreign c) is a C foreign function interface (FFI) library for R6RS and R7RS Schemes
 ;;>
-;;> \hyperlink[https://codeberg.org/foreign-c/foreign-c]{Repository}
+;;>\hyperlink[https://codeberg.org/foreign-c/foreign-c]{Repository}
 ;;>}
+
+;;>\section{Supported implementations}
+;;>\pre{
+;;> R6RS is supported trough \hyperlink[https://akkuscm.org/]{akku}.
+;;>
+;;> - Chez => 10.0.0
+;;>     - R6RS
+;;> - Chibi > 0.11
+;;>     - R7RS
+;;>     - Depends on libffi
+;;> - Chicken >= 6.0.0
+;;>     - R7RS
+;;> - Ikarus >= 0.0.4-rc1+
+;;>     - R6RS
+;;> - Ironscheme
+;;>     - R6RS
+;;> - Kawa >= 3.11 and Java >= 24
+;;>     - R7RS
+;;>     - Needs arguments to enable FFI
+;;>         - -J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED
+;;>         - -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED
+;;>         - -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED
+;;>         - -J--enable-native-access=ALL-UNNAMED
+;;>     - All needed arguments on one line for copy pasting
+;;>         - -J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED -J--enable-native-access=ALL-UNNAMED
+;;>     - So that snow-chibi installed library is found
+;;>         - -Dkawa.import.path=/usr/local/share/kawa/lib/*.sld
+;;> - Mosh
+;;>     - R7RS
+;;> - Racket >= 8.16 [cs]
+;;>     - R7RS
+;;> - Sagittarius >= 0.9.13
+;;>     - R6RS
+;;>     - R7RS
+;;> - STklos >= 26.0
+;;>     - R7RS
+;;> - Ypsilon >= 2.08
+;;>     - R7RS
+;;>}
+
 ;;>\section{Notes}
 ;;>\pre{
 ;;> - Do not cond-expand inside the arguments, that might lead to problems on some
@@ -64,6 +104,7 @@
 ;;>     (define-c-procedure c-puts libc 'puts 'int '(pointer))
 ;;>     (c-puts "Message brought to you by foreign-c!")
 ;;>}
+
 (define-library
   (foreign c)
   (import (scheme base)
@@ -75,7 +116,9 @@
           (scheme cxr))
   (begin
     ;;>\subsection{Internal}
+    ;;>\pre{
     ;;> Internal procedure, do not use.
+    ;;>}
     (define (foreign-c-internal-make-c-bytevector pointer)
       (make-c-bytevector-record pointer #f))
     (define-record-type <c-bytevector>
@@ -318,9 +361,9 @@
 ;;>
 ;;>     set "FOREIGN_C_LOAD_PATH=C:\Program Files (x86)/foo/bar"
 ;;>
-;;>
-;;>\subsection{FOREIGN_C__LOAD_PATH}
-;;>
+;;>}
+;;>\subsection{FOREIGN_C_LOAD_PATH}
+;;>\pre{
 ;;> To add more paths to where foreign c looks for libraries set
 ;;> FOREIGN_C_LOAD_PATH to paths separated by ; on windows, and : on other
 ;;> operating systems.

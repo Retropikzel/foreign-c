@@ -457,7 +457,7 @@
 
 ;;>\pre{
 ;;> Returns a null c-bytevector.
-;;>\
+;;>}
 (define (c-bytevector-null)
   (let ((null-cbv (c-null)))
     (if (c-bytevector? null-cbv)

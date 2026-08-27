@@ -6,15 +6,14 @@
   (size c-struct-type-size)
   (members c-struct-type-members))
 
+;;>\pre{
 ;;> Returns #t if given type is C array type, otherwise returns #f
 ;;> Example:
 ;;>
-;;>\pre{
 ;;> (define-c-struct-type color '((r u8) (g u8) (b u8)))
 ;;> (c-struct-type? color)
 ;;> > #t
 ;;>}
-;;>
 (define (c-struct-type? type) (internal-c-struct-type? type))
 
 (define (calculate-struct-members members . return-just-size)
