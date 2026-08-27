@@ -1,5 +1,15 @@
 (foreign c) is a C foreign function interface (FFI) library for R6RS and R7RS Schemes
 
+## Installation
+
+### R6RS
+
+    akku install "(foreign c)"
+
+### R7RS
+
+    snow-chibi --impls=$SCHEME foreign.c
+
 ## Roadmap
 
 Things that are done should not change anymore. But note that (foreign c) is
