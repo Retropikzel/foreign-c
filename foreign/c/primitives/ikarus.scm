@@ -45,7 +45,7 @@
                          argument-types))
                   (ikarus-dlsym shared-object (symbol->string c-name)))))
            (if (c-pointer-type? return-type)
-             (internal-make-c-bytevector
+             (foreign-c-internal-make-c-bytevector
                (apply internal (map argument->native-value args)))
              (apply internal (map argument->native-value args)))))))))
 

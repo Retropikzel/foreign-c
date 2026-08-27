@@ -54,7 +54,7 @@
                        (type->native-type scheme-name type #t))
                      argument-types))))
            (if (c-pointer-type? return-type)
-             (internal-make-c-bytevector
+             (foreign-c-internal-make-c-bytevector
                (apply internal (map argument->native-value args)))
              (apply internal (map argument->native-value args)))))))))
 

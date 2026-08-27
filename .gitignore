@@ -79,3 +79,6 @@ run-test*
 logs
 kons.lock
 test-results
+test-program
+tests/test.sps
+foreign-c-*

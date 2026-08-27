@@ -48,7 +48,7 @@
                  (map argument->native-value arguments))))
         (when (not (symbol=? return-type 'void))
           (c-bytevector-ref
-            (internal-make-c-bytevector return-pointer) return-type 0))))))
+            (foreign-c-internal-make-c-bytevector return-pointer) return-type 0))))))
 
 (define-syntax define-c-procedure
   (syntax-rules ()

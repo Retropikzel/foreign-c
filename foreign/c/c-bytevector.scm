@@ -1,4 +1,5 @@
-(define pointer->c-bytevector internal-make-c-bytevector)
+;;>\section{C pointers}
+
 (define endianness (cond-expand (big-endian 'big) (else 'little)))
 
 ;; Code from (r6rs bytevectors) library begin. It is heavily modified
@@ -419,7 +420,7 @@
   (let ((null-cbv (c-null)))
     (if (c-bytevector? null-cbv)
       null-cbv
-      (internal-make-c-bytevector (c-null)))))
+      (foreign-c-internal-make-c-bytevector (c-null)))))
 
 (define (c-bytevector-null? cbv)
   (and (c-bytevector? cbv)
@@ -587,7 +588,7 @@
          "c-bytevector-ref: offset/member argument must be exact-integer with this type"
          offset/member
          type))
-     (internal-make-c-bytevector
+     (foreign-c-internal-make-c-bytevector
        (c-pointer-ref (c-bytevector-pointer cbv) offset/member)))
 
     ((c-struct-type? type)

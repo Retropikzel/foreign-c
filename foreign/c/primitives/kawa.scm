@@ -163,7 +163,7 @@
                   'invokeWithArguments
                   (map argument->native-value args argument-types))))
              (if (c-pointer-type? return-type)
-               (internal-make-c-bytevector result)
+               (foreign-c-internal-make-c-bytevector result)
                result))))))))
 
 (define u8-value-layout

@@ -66,7 +66,7 @@
            (define ,scheme-name
              (lambda args
                (if (equal? ',native-return-type 'void*)
-                 (internal-make-c-bytevector
+                 (foreign-c-internal-make-c-bytevector
                    (apply ,gauche-name (map argument->native-value args)))
                  (apply ,gauche-name (map argument->native-value args))))))))))
 

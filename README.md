@@ -101,6 +101,7 @@ R6RS is supported trough akku and akku-r7rs.
 
 - Chibi
     - libffi
+        - apt-get install libffi8
 
 
 

@@ -1,85 +1,67 @@
-.SILENT:
+.DEFAULT: all
+.POSIX:
 VERSION=0.23.1
 SCHEME=chibi
-RNRS=r7rs
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
-TEST=main
 DOCKER_TAG=latest
-tmpdir=.tmp/${SCHEME}-${RNRS}
-
-SFX=scm
-LIBDIRS=
-SNOW_IMPLS=${SCHEME}
-AKKU_PACKAGES=
-ifeq "${RNRS}" "r6rs"
-SFX=sps
-LIBDIRS=-I .akku/lib
-SNOW_IMPLS=generic
-AKKU_PACKAGES="akku-r7rs chez-srfi"
-endif
-
-ifeq "${SCHEME}" "capyscheme"
-DOCKER_TAG=head
-endif
-ifeq "${SCHEME}" "chibi"
-DOCKER_TAG=head
-endif
-ifeq "${SCHEME}" "chicken"
-DOCKER_TAG=head
-endif
-ifeq "${SCHEME}" "gauche"
-DOCKER_TAG=head
-endif
 
 all: package
 
 package:
-	echo "<pre>$$(cat README.md)</pre>" > README.html
 	snow-chibi package \
 		--always-yes \
 		--version=${VERSION} \
 		--authors="Retropikzel" \
-		--doc=README.html \
+		--doc-from-scribble=1 \
 		--foreign-depends=ffi \
 		--description="Portable foreign function interface for R7RS Schemes" \
 	foreign/c.sld
 
-${PKG}: package
-
 install:
 	snow-chibi --impls=${SCHEME} install --always-yes ${PKG}
 
-uninstall:
-	snow-chibi --impls=${SCHEME} remove foreign.c
+test: libtest.so libtest.o libtest.a
+	rm -rf test-program
+	CSC_OPTIONS="-L -ltest -L. -I./tests/c-include" \
+	COMPILE_R7RS=${SCHEME} \
+		compile-r7rs -o test-program tests/test.scm
+	LD_LIBRARY_PATH=. ./test-program
 
-testfiles: libtest.so libtest.o libtest.a ${PKG}
-	rm -rf ${tmpdir}
-	mkdir -p ${tmpdir}
-	cp -r libtest.so libtest.o libtest.a tests/c-include/libtest.h foreign \
-		${tmpdir}/
-	cat tests/test-headers.${SFX} > ${tmpdir}/test.${SFX}
-	cat tests/${TEST}.scm >> ${tmpdir}/test.${SFX}
-	cp ${PKG} ${tmpdir}/
+test-r6rs: libtest.so libtest.o libtest.a
+	rm -rf test-program
+	echo "(import (rnrs) (foreign c) (srfi :0) (srfi :64))" > tests/test.sps
+	tail -n+12 tests/test.scm >> tests/test.sps
+	akku install akku-r7rs chez-srfi
+	CSC_OPTIONS="-L -ltest -L. -I./tests/c-include" \
+	COMPILE_R7RS=${SCHEME} \
+		compile-r7rs -o test-program -I .akku/lib tests/test.sps
+	LD_LIBRARY_PATH=. ./test-program
 
-test: testfiles
-	cd ${tmpdir} && \
-		CSC_OPTIONS="-L -ltest -L. -I." \
-		COMPILE_R7RS=${SCHEME} \
-		compile-r7rs -o test-program ${LIBDIRS} test.${SFX}
-	cd ${tmpdir} && LD_LIBRARY_PATH=. ./test-program
+test-docker:
+	rm -rf test-program
+	DOCKER_TAG=${DOCKER_TAG} \
+	APT_PACKAGES="make gcc libffi-dev" \
+	SNOW_PACKAGES="srfi.64 retropikzel.tap ${PKG}" \
+	COMPILE_R7RS=${SCHEME} \
+	CSC_OPTIONS="-L -ltest -L. -I./tests/c-include" \
+	LD_LIBRARY_PATH=. \
+	SCM_TAP_NO_EXIT_FAIL=1 \
+	PASS_ENV_VARS="CSC_OPTIONS LD_LIBRARY_PATH SCM_TAP_NO_EXIT_FAIL" \
+		test-r7rs -o test-program tests/test.scm
 
-test-docker: testfiles
-	cd ${tmpdir} && \
-		DOCKER_TAG=${DOCKER_TAG} \
-		APT_PACKAGES="make gcc libffi-dev" \
-		SNOW_PACKAGES="srfi.64 retropikzel.tap ${PKG}"\
-		AKKU_PACKAGES=${AKKU_PACKAGES} \
-		COMPILE_R7RS=${SCHEME} \
-		CSC_OPTIONS="-L -ltest -L. -I." \
-		LD_LIBRARY_PATH=. \
-		PASS_ENV_VARS="CSC_OPTIONS LD_LIBRARY_PATH" \
-		test-r7rs ${LIB_PATHS} -o test-program test.${SFX}
+test-docker-r6rs:
+	rm -rf test-program
+	DOCKER_TAG=${DOCKER_TAG} \
+	APT_PACKAGES="make gcc libffi-dev" \
+	SNOW_PACKAGES="${PKG}" \
+	AKKU_PACKAGES="akku-r7rs chez-srfi" \
+	COMPILE_R7RS=${SCHEME} \
+	CSC_OPTIONS="-L -ltest -L. -I./tests/c-include" \
+	LD_LIBRARY_PATH=. \
+	SCM_TAP_NO_EXIT_FAIL=1 \
+	PASS_ENV_VARS="CSC_OPTIONS LD_LIBRARY_PATH SCM_TAP_NO_EXIT_FAIL" \
+		test-r7rs -I .akku/lib -o test-program tests/test.sps
 
 ## C libraries for testing
 
@@ -94,4 +76,3 @@ libtest.a: libtest.o tests/c-src/libtest.c
 
 clean:
 	git clean -X -f
-	rm -rf snow

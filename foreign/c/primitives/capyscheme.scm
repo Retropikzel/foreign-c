@@ -50,7 +50,7 @@
            (write (c-pointer-type? return-type))
            (newline)
            (if (c-pointer-type? return-type)
-             (internal-make-c-bytevector
+             (foreign-c-internal-make-c-bytevector
                (apply internal (map argument->native-value args)))
              (apply internal (map argument->native-value args)))))))))
 
@@ -92,7 +92,7 @@
 
 
 (define (c-null)
-  (internal-make-c-bytevector
+  (foreign-c-internal-make-c-bytevector
     (capy-make-pointer (capy-pointer-address capy-%null-pointer))))
 
 (define (c-null? pointer)

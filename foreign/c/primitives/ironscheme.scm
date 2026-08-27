@@ -55,7 +55,7 @@
                         (pinvoke-call libc dlsym intptr (intptr string))
                         (list shared-object (symbol->string c-name))))))))
            (if (equal? return-type 'pointer)
-             (internal-make-c-bytevector
+             (foreign-c-internal-make-c-bytevector
                (apply internal (map argument->native-value args)))
              (apply internal (map argument->native-value args)))))))))
 

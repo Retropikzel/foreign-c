@@ -143,7 +143,7 @@
                                               ()
                                               ,native-return-type)))
              (if (c-pointer-type? ,return-type)
-               (internal-make-c-bytevector
+               (foreign-c-internal-make-c-bytevector
                  (apply internal
                         (map argument->native-value args)))
                (apply internal (map argument->native-value args))))))
@@ -154,7 +154,7 @@
                                               ,native-argument-types
                                               ,native-return-type)))
              (if (c-pointer-type? ,return-type)
-               (internal-make-c-bytevector
+               (foreign-c-internal-make-c-bytevector
                  (apply internal (map argument->native-value args)))
                (apply internal (map argument->native-value args)))))))))
 

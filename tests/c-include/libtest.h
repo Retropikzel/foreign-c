@@ -1,3 +1,6 @@
+#ifndef FOREIGN_C_LIBTESTHEADER
+#define FOREIGN_C_LIBTESTHEADER
+
 void print_string_pointer(char* p);
 void print_offsets();
 void check_offset(int member_index, int offset);
@@ -17,3 +20,5 @@ void takes_no_args();
 int takes_no_args_returns_int();
 int test_passing_pointer_address(int* p1, int** p2);
 int test_passing_int_pointer(int* p1);
+
+#endif
