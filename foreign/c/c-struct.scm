@@ -73,3 +73,19 @@
          (internal-make-c-struct-type 'name
                                       (calculate-struct-members members #t)
                                       (calculate-struct-members members))))))
+;;>\pre{
+;;> Creates an association list from given struct type and c-bytevector.
+;;>}
+(define (struct->list cbv type)
+  (cond
+    ((not (c-bytevector? cbv))
+     (error "c-struct->alist: cbv must be c-bytevector" cbv))
+    ((c-struct-type? type)
+     (map
+       (lambda (memb)
+         (cons (car memb) (c-bytevector-ref cbv type (car memb))))
+       (c-struct-type-members type)))
+    (else
+      (error "c-bytevector->list: dont know how to make list of type yet"
+             type))))
+

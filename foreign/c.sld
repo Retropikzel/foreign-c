@@ -4,10 +4,19 @@
 ;;>
 ;;> \hyperlink[https://codeberg.org/foreign-c/foreign-c]{Repository}
 ;;>}
+;;>\section{Notes}
+;;>\pre{
+;;> - Do not cond-expand inside the arguments, that might lead to problems on some
+;;>   implementations.
+;;> - Do not store member names or types in variables, that might lead to problems
+;;>   on some implementations.
+;;> - Pass the members using quote
+;;>   - As '(...) and not (list ...)
+;;>}
 
 ;;>\section{C Libraries}
 
-;;>\procedure{(define-c-library scheme-name headers object-name options)}
+;;>\macro{(define-c-library scheme-name headers object-name options)}
 ;;>\pre{
 ;;> Takes a scheme-name to bind the library to, list of C headers as
 ;;> strings, shared-object name or #f and options. If shared-object name
@@ -42,7 +51,7 @@
 
 ;;>\section{C Functions}
 
-;;>\procedure{(define-c-procedure scheme-name shared-object c-name return-type argument-types)}
+;;>\macro{(define-c-procedure scheme-name shared-object c-name return-type argument-types)}
 ;;>\pre{
 ;;> Takes a scheme-name to bind the C procedure to, shared-object where the function
 ;;> is looked from, c-name of the function as symbol, return-type and argument-types.
@@ -65,11 +74,13 @@
           (scheme inexact)
           (scheme cxr))
   (begin
+    ;;>\subsection{Internal}
+    ;;> Internal procedure, do not use.
     (define (foreign-c-internal-make-c-bytevector pointer)
       (make-c-bytevector-record pointer #f))
     (define-record-type <c-bytevector>
       (make-c-bytevector-record pointer freed?)
-      c-bytevector?
+      foreign-c-internal-c-bytevector?
       (pointer c-bytevector-pointer)
       (freed? c-bytevector-freed? c-bytevector-freed-set!)))
   (cond-expand
@@ -210,9 +221,7 @@
     ;; c-bytevectors
     make-c-bytevector
     foreign-c-internal-make-c-bytevector
-    c-bytevector
     c-bytevector?
-    c-bytevector-pointer
     c-bytevector-free
     c-bytevector-null
     c-bytevector-null?
@@ -222,7 +231,6 @@
     c-bytevector->bytevector
     c-bytevector->integer
     integer->c-bytevector
-    c-bytevector->list
 
     ;; Strings
     string->c-bytevector
@@ -238,6 +246,7 @@
 
     ;; Structs
     define-c-struct-type
+    struct->list
 
     ;; Callbacks
     define-c-callback
@@ -302,4 +311,19 @@
         (define (c-memset-pointer->address pointer value offset)
           (kawa-invoke pointer 'address))))
     (else (include "c/libc.scm"))))
+
+;;>\section{Environment variables}
+;;>\pre{
+;;> Setting environment variables like this on Windows works for this library:
+;;>
+;;>     set "FOREIGN_C_LOAD_PATH=C:\Program Files (x86)/foo/bar"
+;;>
+;;>
+;;>\subsection{FOREIGN_C__LOAD_PATH}
+;;>
+;;> To add more paths to where foreign c looks for libraries set
+;;> FOREIGN_C_LOAD_PATH to paths separated by ; on windows, and : on other
+;;> operating systems.
+;;>}
+
 

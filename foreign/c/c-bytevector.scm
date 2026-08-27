@@ -386,6 +386,25 @@
       (else (error "Unknown endianness" endianness)))))
 ;; From (r6rs bytevectors) library end
 
+;;>\subsection{c-bytevectors}
+
+;;>\pre{
+;;> Returns a newly allocated c-bytevector of size bytes.
+;;>
+;;> If the fill argument is missing, the initial contents of the
+;;> returned c-bytevector are unspecified.
+;;>
+;;> If the fill argument is present, it's value must confine to C u8 values,
+;;> it specifies the initial value for the bytes of the c-bytevector.
+;;>
+;;> If allocation fails, error is signaled.
+;;>
+;;> Example:
+;;>
+;;> (make-c-bytevector 128)
+;;>
+;;> (make-c-bytevector 128 0)
+;;>}
 (define make-c-bytevector
   (lambda (size . byte)
     (when (not (integer? size))
@@ -400,6 +419,26 @@
         (error "make-c-bytevector error: malloc returned null" size))
       cbv)))
 
+;;>\pre{
+;;> Returns a newly allocated c-bytevector containing its arguments.
+;;>
+;;> Example:
+;;>
+;;> (c-bytevector 0 0 0 0)
+;;>}
+(define c-bytevector
+  (lambda bytes
+    (bytevector->c-bytevector
+      (apply (lambda (b) (make-bytevector 1 b)) bytes))))
+
+;;>\pre{
+;;> Returns #t if obj is c-bytevector, otherwise returns #f.
+;;>}
+(define (c-bytevector? obj) (foreign-c-internal-c-bytevector? obj))
+
+;;>\pre{
+;;> Frees given c-bytevectors from memory.
+;;>}
 (define-syntax c-bytevector-free
   (syntax-rules ()
     ((_ cbv ...)
@@ -416,21 +455,30 @@
            (c-bytevector-freed-set! (cdr item) #t))
          (list (cons 'cbv cbv) ...))))))
 
+;;>\pre{
+;;> Returns a null c-bytevector.
+;;>\
 (define (c-bytevector-null)
   (let ((null-cbv (c-null)))
     (if (c-bytevector? null-cbv)
       null-cbv
       (foreign-c-internal-make-c-bytevector (c-null)))))
 
+;;>\pre{
+;;> Returns #t if obj is a null c-bytevector, otherwise returns #f.
+;;>}
 (define (c-bytevector-null? cbv)
   (and (c-bytevector? cbv)
        (c-null? (c-bytevector-pointer cbv))))
 
-(define c-bytevector
-  (lambda bytes
-    (bytevector->c-bytevector
-      (apply (lambda (b) (make-bytevector 1 b)) bytes))))
-
+;;>\pre{
+;;> Set value of given type on offset on bytevector bv. Offset is counted as
+;;> bytes for regular types.
+;;>
+;;> When type is c-array-type offset is multiplied by the size of arrays type.
+;;>
+;;> When type is c-struct-type type instead of offset give member name.
+;;>}
 (define (c-bytevector-set! cbv type offset/member value)
   (cond
     ((not (c-bytevector? cbv))
@@ -516,6 +564,14 @@
 
     (else (error "c-bytevector-set!: type must be any C type" type))))
 
+;;>\pre{
+;;> Get value of given type on offset on bytevector bv. Offset is counted as
+;;> bytes for regular types.
+;;>
+;;> When type is c-array-type offset is multiplied by the size of arrays type.
+;;>
+;;> When type is c-struct-type type instead of offset give member name.
+;;>}
 (define (c-bytevector-ref cbv type offset/member)
   (cond
     ((not (c-bytevector? cbv))
@@ -604,6 +660,9 @@
 
     (else (error "c-bytevector-ref: type must be any C type" type))))
 
+;;>\pre{
+;;> Returns a newly allocated c-bytevector of the bytes of bytevector.
+;;>}
 (define (bytevector->c-bytevector bv)
   (when (not (bytevector? bv))
     (error "bytevector->c-bytevector: bv argument must be bytevector" bv))
@@ -619,6 +678,9 @@
     (looper 0)
     cbv))
 
+;;>\pre{
+;;> Returns a newly allocated bytevector of the bytes of c-bytevector.
+;;>}
 (define (c-bytevector->bytevector cbv size)
   (when (not (c-bytevector? cbv))
     (error "c-bytevector->bytevector: cbv argument must be c-bytevector" cbv))
@@ -632,6 +694,13 @@
                                     (looper (+ index 1))))))))
     (looper 0)))
 
+;;>\subsection{Strings}
+
+;;>\pre{
+;;> Returns a newly allocated string whose character sequence is
+;;> encoded by the given c-bytevector. If c-bytevector is null empty string is
+;;> returned.
+;;>}
 (define (c-bytevector->string cbv)
   (when (not (c-bytevector? cbv))
     (error "c-bytevector->string: cbv argument must be c-bytevector" cbv))
@@ -640,6 +709,10 @@
     (cond-expand
       (else (utf8->string bv)))))
 
+;;>\pre{
+;;> Returns a newly allocated (unless empty) c-bytevector that contains the
+;;> UTF-8 encoding of the given string.
+;;>}
 (define (string->c-bytevector str)
   (when (not (string? str))
     (error "string->c-bytevector: str argument must be string" str))
@@ -647,6 +720,10 @@
     (string->utf8
       (string-append str (string #\null)))))
 
+;;>\pre{
+;;> Calls thunk with newly allocated c-bytevector that contains the UTF-8 encoding
+;;> of the given string and frees it after thunk finishes.
+;;>}
 (define (with-string->c-bytevector str thunk)
   (when (not (string? str))
     (error "with-string->c-bytector: str must be string"))
@@ -656,6 +733,10 @@
     (apply thunk (list cbv))
     (c-bytevector-free cbv)))
 
+;;>\pre{
+;;> Returns the address of the bytevector as integer. If offset is given it is
+;;> added to the the returned integer. Offset must be an integer.
+;;>}
 (define (c-bytevector->integer cbv . offset)
   (when (not (c-bytevector? cbv))
     (error "c-bytevector->integer cbv argument must be c-bytevector" cbv))
@@ -666,22 +747,15 @@
     (+ (c-memset-pointer->address (c-bytevector-pointer cbv) 0 0)
        internal-offset)))
 
+;;>\pre{
+;;> Returns the bytevector in the integer address.
+;;>}
 (define (integer->c-bytevector address)
   (when (not (integer? address))
     (error "c-bytevector->string: address argument must be integer" address))
   (c-memset-address->pointer address 0 0))
 
-(define (c-bytevector->list cbv type)
-  (cond
-    ((not (c-bytevector? cbv))
-     (error "c-struct->alist: cbv must be c-bytevector" cbv))
-    ((c-struct-type? type)
-     (map
-       (lambda (memb)
-         (cons (car memb) (c-bytevector-ref cbv type (car memb))))
-       (c-struct-type-members type)))
-    (else
-      (error "c-bytevector->list: dont know how to make list of type yet"
-             type))))
-
+;;>\pre{
+;;> Null byte (\0) you can use in strings.
+;;>}
 (define null-byte (bytevector-u8-ref (string->utf8 (string #\null)) 0))

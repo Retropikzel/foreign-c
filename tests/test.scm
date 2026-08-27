@@ -506,9 +506,12 @@
 (test-equal 3 (c-bytevector-ref green color 'b))
 (test-equal 4 (c-bytevector-ref green color 'a))
 
-(test-equal (c-bytevector->list green color)
-            '((r . 1) (g . 2) (b . 3) (a . 4)))
 (test-end "define-c-struct-type")
+
+(test-begin "struct->list")
+(test-equal (struct->list green color)
+            '((r . 1) (g . 2) (b . 3) (a . 4)))
+(test-end "struct->list")
 
 
 (test-end "C Struct")
