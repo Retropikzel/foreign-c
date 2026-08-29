@@ -1,6 +1,6 @@
 .DEFAULT: all
 .POSIX:
-VERSION=0.23.3
+VERSION=0.23.4
 SCHEME=chibi
 PKG=foreign-c-${VERSION}.tgz
 CC=gcc
@@ -19,6 +19,10 @@ package:
 	foreign/c.sld
 
 git-index: package
+	tar -zxvf ${PKG} foreign-c-${VERSION}/foreign/c.html
+	mv foreign-c-${VERSION}/foreign/c.html foreign/c.html
+	rmdir foreign-c-${VERSION}/foreign
+	rmdir foreign-c-${VERSION}
 	snow-chibi git-index ${PKG}
 
 install:

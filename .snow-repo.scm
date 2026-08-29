@@ -1,7 +1,7 @@
 (repository
   (package
     (git
-      (hash "4f2477be0a5dc675a727503d95fd69b1445de95a")
+      (hash "42fab0ece4a374b6b384069b64dadc786408cb64")
       (url "https://codeberg.org/foreign-c/foreign-c.git"))
     (authors "Retropikzel")
     (version "0.23.3")
@@ -105,4 +105,4 @@
         (scheme cxr)))
     (manual "foreign/c.html")
     (description "Portable foreign function interface for R6RS and R7RS Schemes")
-    (updated "2026-08-29T13:01:22+00:00")))
+    (updated "2026-08-29T13:25:15+00:00")))

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="UTF-8"><style type="text/css">
+body {color: #000; background-color: #FFFFF8;}
+div#menu  {font-size: smaller; position: absolute; top: 50px; left: 0; width: 250px; height: 100%}
+div#menu a:link {text-decoration: none}
+div#main  {font-size: large; position: absolute; top: 0; left: 260px; max-width: 590px; height: 100%}
+div#notes {position: relative; top: 2em; left: 620px; width: 200px; height: 0px; font-size: smaller;}
+div#footer {padding-bottom: 50px}
+div#menu ol {list-style-position:inside; padding-left: 5px; margin-left: 5px}
+div#menu ol ol {list-style: lower-alpha; padding-left: 15px; margin-left: 15px}
+div#menu ol ol ol {list-style: decimal; padding-left: 5px; margin-left: 5px}
+h2 { color: #888888; border-top: 3px solid #4588ba; }
+h3 { color: #666666; border-top: 2px solid #4588ba; }
+h4 { color: #222288; border-top: 1px solid #4588ba; }
+.result { color: #000; background-color: #FFEADF; width: 100%; padding: 3px}
+.output { color: #000; background-color: beige; width: 100%; padding: 3px}
+.error { color: #000; background-color: #F0B0B0; width: 100%; padding: 3px}
+.command { color: #000; background-color: #FFEADF; width: 100%; padding: 5px}
+.keyword { color: #800080; background-color: inherit; }
+.type { color: #008000; background-color: inherit; }
+.function { color: #0000FF; background-color: inherit; }
+.variable { color: #B8860B; background-color: inherit; }
+.comment { color: #FF0000; background-color: inherit; }
+.string { color: #BC8F8F; background-color: inherit; }
+.attribute { color: #FF5000; background-color: inherit; }
+.preprocessor { color: #FF00FF; background-color: inherit; }
+.builtin { color: #FF00FF; background-color: inherit; }
+.character { color: #0055AA; background-color: inherit; }
+.syntaxerror { color: #FF0000; background-color: inherit; }
+.diff-deleted { color: #5F2121; background-color: inherit; }
+.diff-added { color: #215F21; background-color: inherit; }
+span.paren1 { color: #AAAAAA; background-color: inherit; }
+span.paren2 { color: #888888; background-color: inherit; }
+span.paren3 { color: #666666; background-color: inherit; }
+span.paren4 { color: #444444; background-color: inherit; }
+span.paren5 { color: #222222; background-color: inherit; }
+span.paren6 { color: #000000; background-color: inherit; }
+</style>
+</head><body><div id="menu"><ol><li><a href="#h2_About">About</a></li><li><a href="#h2_Supportedimplementations">Supported implementations</a></li><li><a href="#h2_Notes">Notes</a></li><li><a href="#h2_CLibraries">C Libraries</a><ol><li><a href="#h4_(define-c-libraryscheme-nameheadersobject-nameoptions)">define-c-library</a></li></ol></li><li><a href="#h2_CFunctions">C Functions</a><ol><li><a href="#h4_(define-c-procedurescheme-nameshared-objectc-namereturn-typeargument-types)">define-c-procedure</a></li><li><a href="#h3_Internal">Internal</a><ol><li><a href="#h4_foreign-c-internal-make-c-bytevector">foreign-c-internal-make-c-bytevector</a></li></ol></li></ol></li><li><a href="#h2_Environmentvariables">Environment variables</a><ol><li><a href="#h3_FOREIGN_C_LOAD_PATH">FOREIGN_C_LOAD_PATH</a></li></ol></li><li><a href="#h2_CCallbacks">C Callbacks</a><ol><li><a href="#h4_(define-c-callbackscheme-namereturn-typeargument-typesprocedure)">define-c-callback</a></li><li><a href="#h3_Callbackutilities">Callback utilities</a><ol><li><a href="#h4_pointer->c-bytevector">pointer->c-bytevector</a></li></ol></li></ol></li><li><a href="#h2_Callwithaddressof(C&amp;)">Call with address of (C &amp;)</a><ol><li><a href="#h4_call-with-address-of">call-with-address-of</a></li></ol></li><li><a href="#h2_Cpointers">C pointers</a><ol><li><a href="#h3_c-bytevectors">c-bytevectors</a><ol><li><a href="#h4_make-c-bytevector">make-c-bytevector</a></li><li><a href="#h4_c-bytevector?">c-bytevector?</a></li><li><a href="#h4_c-bytevector-free">c-bytevector-free</a></li><li><a href="#h4_c-bytevector-null">c-bytevector-null</a></li><li><a href="#h4_c-bytevector-null?">c-bytevector-null?</a></li><li><a href="#h4_c-bytevector-set!">c-bytevector-set!</a></li><li><a href="#h4_c-bytevector-ref">c-bytevector-ref</a></li><li><a href="#h4_bytevector->c-bytevector">bytevector->c-bytevector</a></li><li><a href="#h4_c-bytevector->bytevector">c-bytevector->bytevector</a></li></ol></li><li><a href="#h3_Strings">Strings</a><ol><li><a href="#h4_c-bytevector->string">c-bytevector->string</a></li><li><a href="#h4_string->c-bytevector">string->c-bytevector</a></li><li><a href="#h4_with-string->c-bytevector">with-string->c-bytevector</a></li><li><a href="#h4_c-bytevector->integer">c-bytevector->integer</a></li><li><a href="#h4_integer->c-bytevector">integer->c-bytevector</a></li><li><a href="#h4_null-byte">null-byte</a></li></ol></li></ol></li><li><a href="#h2_CTypes">C Types</a><ol><li><a href="#h4_c-integer-type?">c-integer-type?</a></li><li><a href="#h4_c-char-type?">c-char-type?</a></li><li><a href="#h4_c-float-type?">c-float-type?</a></li><li><a href="#h4_c-double-type?">c-double-type?</a></li><li><a href="#h4_c-signed-type?">c-signed-type?</a></li><li><a href="#h4_c-pointer-type?">c-pointer-type?</a></li><li><a href="#h3_Size">Size</a><ol><li><a href="#h4_c-type-size">c-type-size</a></li><li><a href="#h4_c-type-size+">c-type-size+</a></li><li><a href="#h4_c-type-size-">c-type-size-</a></li><li><a href="#h4_c-type-size/">c-type-size/</a></li><li><a href="#h4_c-type-size*">c-type-size*</a></li></ol></li><li><a href="#h3_Alignment">Alignment</a><ol><li><a href="#h4_c-type-align">c-type-align</a></li><li><a href="#h4_c-type-align+">c-type-align+</a></li><li><a href="#h4_c-type-align-">c-type-align-</a></li><li><a href="#h4_c-type-align*">c-type-align*</a></li><li><a href="#h4_c-type-align/">c-type-align/</a></li></ol></li><li><a href="#h3_Arrays">Arrays</a><ol><li><a href="#h4_c-array-type?">c-array-type?</a></li><li><a href="#h4_define-c-array-type">define-c-array-type</a></li></ol></li><li><a href="#h3_Structs">Structs</a><ol><li><a href="#h4_c-struct-type?">c-struct-type?</a></li><li><a href="#h4_define-c-struct-type">define-c-struct-type</a></li><li><a href="#h4_struct->list">struct->list</a></li></ol></li></ol></li></ol></div><div id="main"><div><a name="h1_(foreignc)"></a><h1>(foreign c)</h1></div><div><a name="h2_About"></a><h2>About</h2></div>
+<pre>(foreign c) is a C foreign function interface (FFI) library for R6RS and R7RS Schemes
+
+<a href="https://codeberg.org/foreign-c/foreign-c">Repository</a>
+</pre>
+<div><a name="h2_Supportedimplementations"></a><h2>Supported implementations</h2></div>
+<pre>R6RS is supported trough <a href="https://akkuscm.org/">akku</a>.
+
+- Chez => 10.0.0
+    - R6RS
+- Chibi > 0.11
+    - R7RS
+    - Depends on libffi
+- Chicken >= 6.0.0
+    - R7RS
+- Ikarus >= 0.0.4-rc1+
+    - R6RS
+- Ironscheme
+    - R6RS
+- Kawa >= 3.11 and Java >= 24
+    - R7RS
+    - Needs arguments to enable FFI
+        - -J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED
+        - -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED
+        - -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED
+        - -J--enable-native-access=ALL-UNNAMED
+    - All needed arguments on one line for copy pasting
+        - -J--add-exports=java.base/jdk.internal.foreign.abi=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign.layout=ALL-UNNAMED -J--add-exports=java.base/jdk.internal.foreign=ALL-UNNAMED -J--enable-native-access=ALL-UNNAMED
+    - So that snow-chibi installed library is found
+        - -Dkawa.import.path=/usr/local/share/kawa/lib/*.sld
+- Mosh
+    - R7RS
+- Racket >= 8.16 [cs]
+    - R7RS
+- Sagittarius >= 0.9.13
+    - R6RS
+    - R7RS
+- STklos >= 26.0
+    - R7RS
+- Ypsilon >= 2.08
+    - R7RS
+</pre>
+<div><a name="h2_Notes"></a><h2>Notes</h2></div>
+<pre>- Do not cond-expand inside the arguments, that might lead to problems on some
+  implementations.
+- Do not store member names or types in variables, that might lead to problems
+  on some implementations.
+- Pass the members using quote
+  - As '(...) and not (list ...)
+</pre>
+<div><a name="h2_CLibraries"></a><h2>C Libraries</h2></div>
+<div><a name="h4_(define-c-libraryscheme-nameheadersobject-nameoptions)"></a><h4><code>(define-c-library scheme-name headers object-name options)</code></h4></div>
+<pre>Takes a scheme-name to bind the library to, list of C headers as
+strings, shared-object name or #f and options. If shared-object name
+is given as #f then platforms C library is used.
+
+The C header strings should not contain "&lt;" or ">", they are added
+automatically. Pass them using ' and not (list ...).
+
+The name of the shared object should not contain suffix like .so or .dll.
+Nor should it contain any prefix like "lib".
+
+Options:
+
+- additional-versions
+    - Search for additional versions of shared object, given shared object "c"
+    and additional versions "6" "7" on linux the files "libc", "libc.6",
+    "libc.7" are searched for.
+    - Can be either numbers or strings
+- additional-paths
+    - Give additional paths to search shared objects from
+
+Example:
+
+    (define-c-library libc '("stdio.h") #f '())
+
+    (define-c-library libcurl
+                      '("curl/curl.h")
+                      "curl"
+                      '((additional-versions ("" "0" "6"))
+                        (additional-paths ("."))))
+</pre>
+<div><a name="h2_CFunctions"></a><h2>C Functions</h2></div>
+<div><a name="h4_(define-c-procedurescheme-nameshared-objectc-namereturn-typeargument-types)"></a><h4><code>(define-c-procedure scheme-name shared-object c-name return-type argument-types)</code></h4></div>
+<pre>Takes a scheme-name to bind the C procedure to, shared-object where the function
+is looked from, c-name of the function as symbol, return-type and argument-types.
+
+Defines a new foreign function to be used from Scheme code.
+
+Example:
+
+    (define-c-library libc '("stdlib.h") #f '())
+    (define-c-procedure c-puts libc 'puts 'int '(pointer))
+    (c-puts "Message brought to you by foreign-c!")
+</pre><div><a name="h3_Internal"></a><h3>Internal</h3></div><div><a name="h4_foreign-c-internal-make-c-bytevector"></a><h4><code>(foreign-c-internal-make-c-bytevector pointer)</code></h4></div>
+<pre>Internal procedure, do not use.
+</pre><div><a name="h2_Environmentvariables"></a><h2>Environment variables</h2></div>
+<pre>Setting environment variables like this on Windows works for this library:
+
+    set "FOREIGN_C_LOAD_PATH=C:Program Files (x86)/foo/bar"
+
+</pre>
+<div><a name="h3_FOREIGN_C_LOAD_PATH"></a><h3>FOREIGN_C_LOAD_PATH</h3></div>
+<pre>To add more paths to where foreign c looks for libraries set
+FOREIGN_C_LOAD_PATH to paths separated by ; on windows, and : on other
+operating systems.
+</pre><div><a name="h2_CCallbacks"></a><h2>C Callbacks</h2></div>
+<div><a name="h4_(define-c-callbackscheme-namereturn-typeargument-typesprocedure)"></a><h4><code>(define-c-callback scheme-name return-type argument-types procedure)</code></h4></div>
+<pre>Takes scheme-name to bind the Scheme procedure to, return-type,
+argument-types and procedure as in place lambda.
+
+Defines a new Sceme function to be used as callback to C code.
+</pre>
+<div><a name="h3_Callbackutilities"></a><h3>Callback utilities</h3></div><div><a name="h4_pointer->c-bytevector"></a><h4><code>pointer->c-bytevector</code></h4></div>
+<pre>This procedure can be used inside the callback to make c-bytevector out of
+C pointer.
+</pre><div><a name="h2_Callwithaddressof(C&amp;)"></a><h2>Call with address of (C &amp;)</h2></div><div><a name="h4_call-with-address-of"></a><h4><code>(call-with-address-of cbv thunk)</code></h4></div>
+<pre>Calls thunk with address c-bytevector of c-bytevector.
+
+Since the support for calling C functions taking pointer address arguments,
+ones prefixed with &amp; in C, varies, some additional ceremony is needed on
+the Scheme side.
+
+Example:
+
+Calling from C:
+
+    //void func(int** i);
+    func(&amp;i);
+
+Calling from Scheme:
+
+    (define cbv (make-bytevector (c-type-size 'int)))
+    (call-with-address-of
+     cbv
+     (lambda (address)
+      (func address)))
+    ; Use cbv here
+The passed c-bytevector, in example named cbv, should only be used **after**
+call to call-with-addres-of ends.
+</pre><div><a name="h2_Cpointers"></a><h2>C pointers</h2></div><div><a name="h3_c-bytevectors"></a><h3>c-bytevectors</h3></div><div><a name="h4_make-c-bytevector"></a><h4><code>(make-c-bytevector size . byte)</code></h4></div>
+<pre>Returns a newly allocated c-bytevector of size bytes.
+
+If the fill argument is missing, the initial contents of the
+returned c-bytevector are unspecified.
+
+If the fill argument is present, it's value must confine to C u8 values,
+it specifies the initial value for the bytes of the c-bytevector.
+
+If allocation fails, error is signaled.
+
+Example:
+
+(make-c-bytevector 128)
+
+(make-c-bytevector 128 0)
+</pre><pre>Returns a newly allocated c-bytevector containing its arguments.
+
+Example:
+
+(c-bytevector 0 0 0 0)
+</pre><div><a name="h4_c-bytevector?"></a><h4><code>(c-bytevector? obj)</code></h4></div><pre>Returns #t if obj is c-bytevector, otherwise returns #f.
+</pre><div><a name="h4_c-bytevector-free"></a><h4><code>(c-bytevector-free cbv ...)</code></h4></div><pre>Frees given c-bytevectors from memory.
+</pre><div><a name="h4_c-bytevector-null"></a><h4><code>(c-bytevector-null)</code></h4></div><pre>Returns a null c-bytevector.
+</pre><div><a name="h4_c-bytevector-null?"></a><h4><code>(c-bytevector-null? cbv)</code></h4></div><pre>Returns #t if obj is a null c-bytevector, otherwise returns #f.
+</pre><div><a name="h4_c-bytevector-set!"></a><h4><code>(c-bytevector-set! cbv type offset/member value)</code></h4></div><pre>Set value of given type on offset on bytevector bv. Offset is counted as
+bytes for regular types.
+
+When type is c-array-type offset is multiplied by the size of arrays type.
+
+When type is c-struct-type type instead of offset give member name.
+</pre><div><a name="h4_c-bytevector-ref"></a><h4><code>(c-bytevector-ref cbv type offset/member)</code></h4></div><pre>Get value of given type on offset on bytevector bv. Offset is counted as
+bytes for regular types.
+
+When type is c-array-type offset is multiplied by the size of arrays type.
+
+When type is c-struct-type type instead of offset give member name.
+</pre><div><a name="h4_bytevector->c-bytevector"></a><h4><code>(bytevector->c-bytevector bv)</code></h4></div><pre>Returns a newly allocated c-bytevector of the bytes of bytevector.
+</pre><div><a name="h4_c-bytevector->bytevector"></a><h4><code>(c-bytevector->bytevector cbv size)</code></h4></div><pre>Returns a newly allocated bytevector of the bytes of c-bytevector.
+</pre><div><a name="h3_Strings"></a><h3>Strings</h3></div><div><a name="h4_c-bytevector->string"></a><h4><code>(c-bytevector->string cbv)</code></h4></div>
+<pre>Returns a newly allocated string whose character sequence is
+encoded by the given c-bytevector. If c-bytevector is null empty string is
+returned.
+</pre><div><a name="h4_string->c-bytevector"></a><h4><code>(string->c-bytevector str)</code></h4></div><pre>Returns a newly allocated (unless empty) c-bytevector that contains the
+UTF-8 encoding of the given string.
+</pre><div><a name="h4_with-string->c-bytevector"></a><h4><code>(with-string->c-bytevector str thunk)</code></h4></div><pre>Calls thunk with newly allocated c-bytevector that contains the UTF-8 encoding
+of the given string and frees it after thunk finishes.
+</pre><div><a name="h4_c-bytevector->integer"></a><h4><code>(c-bytevector->integer cbv . offset)</code></h4></div><pre>Returns the address of the bytevector as integer. If offset is given it is
+added to the the returned integer. Offset must be an integer.
+</pre><div><a name="h4_integer->c-bytevector"></a><h4><code>(integer->c-bytevector address)</code></h4></div><pre>Returns the bytevector in the integer address.
+</pre><div><a name="h4_null-byte"></a><h4><code>null-byte</code></h4></div><pre>Null byte (0) you can use in strings.
+</pre><div><a name="h2_CTypes"></a><h2>C Types</h2></div><div><a name="h4_c-integer-type?"></a><h4><code>(c-integer-type? type)</code></h4></div>
+<pre>Returns #t if given type is C integer type, otherwise returns #f
+
+Example:
+
+(c-integer-type? 'i8)
+> #t
+</pre><div><a name="h4_c-char-type?"></a><h4><code>(c-char-type? type)</code></h4></div><pre>Returns #t if given type is C char type, otherwise returns #f
+
+Example:
+
+(c-char-type? 'char)
+> #t
+</pre><div><a name="h4_c-float-type?"></a><h4><code>(c-float-type? type)</code></h4></div><pre>Returns #t if given type is C float type, otherwise returns #f
+
+Example:
+
+(c-float-type? 'float)
+> #t
+</pre><div><a name="h4_c-double-type?"></a><h4><code>(c-double-type? type)</code></h4></div><pre>Returns #t if given type is C double type, otherwise returns #f
+
+Example:
+
+(c-double-type? 'double)
+> #t
+</pre><div><a name="h4_c-signed-type?"></a><h4><code>(c-signed-type? type)</code></h4></div><pre>Returns #t if given type is C signed type, otherwise returns #f
+
+Example:
+
+(c-signed-type? 'i8)
+> #t
+(c-signed-type? 'u8)
+> #f
+</pre><div><a name="h4_c-pointer-type?"></a><h4><code>(c-pointer-type? type)</code></h4></div><pre>Returns #t if given type is C pointer type, otherwise returns #f
+
+Example:
+
+(c-pointer-type? 'pointer)
+> #t
+</pre><div><a name="h3_Size"></a><h3>Size</h3></div><div><a name="h4_c-type-size"></a><h4><code>(c-type-size type)</code></h4></div>
+<pre>Returns the size of given type.
+
+Example:
+
+(c-type-size 'i8)
+> 1
+(define-c-array-type items 'i8)
+(c-type-size items)
+> 1
+(define-c-array-type color '((r u8) (g u8) (b u8)))
+(c-type-size color)
+> 3
+</pre><div><a name="h4_c-type-size+"></a><h4><code>(c-type-size+ . types)</code></h4></div><pre>Adds given types together and returns the result.
+
+Example:
+
+(c-type-size+ 'u8 'u8)
+> 2
+</pre><div><a name="h4_c-type-size-"></a><h4><code>(c-type-size- . types)</code></h4></div><pre>Subtracts given types and returns the result.
+
+Example:
+
+(c-type-size- 'int 'u8)
+> 3
+</pre><div><a name="h4_c-type-size/"></a><h4><code>(c-type-size/ type n)</code></h4></div><pre>Divides given type with n and retursn the result.
+
+Example:
+
+(c-type-size/ 'int 2)
+> 2
+</pre><div><a name="h4_c-type-size*"></a><h4><code>(c-type-size* type n)</code></h4></div><pre>Multiplies given type with n and returns the result.
+
+Example:
+
+(c-type-size* 'int 10)
+> 40
+</pre><div><a name="h3_Alignment"></a><h3>Alignment</h3></div><div><a name="h4_c-type-align"></a><h4><code>(c-type-align type)</code></h4></div>
+<pre>Returns the align of given type.
+
+Example:
+
+(c-type-align 'int)
+> 4
+</pre><div><a name="h4_c-type-align+"></a><h4><code>(c-type-align+ . types)</code></h4></div><pre>Adds given aligns together and returns the result.
+
+Example:
+
+(c-type-align+ 'u8 'u8)
+> 2
+</pre><div><a name="h4_c-type-align-"></a><h4><code>(c-type-align- . types)</code></h4></div><pre>Subtracts given aligns and returns the result.
+
+Example:
+
+(c-type-align- 'int 'u8)
+> 3
+</pre><div><a name="h4_c-type-align*"></a><h4><code>(c-type-align* type n)</code></h4></div><pre>Multiples given align with n and returns the result.
+
+Example:
+
+(c-type-align* 'int 100)
+> 400
+</pre><div><a name="h4_c-type-align/"></a><h4><code>(c-type-align/ type n)</code></h4></div><pre>Divides given align with n and retursn the result.
+
+Example:
+
+(c-type-align/ 'int 2)
+> 2
+</pre><div><a name="h3_Arrays"></a><h3>Arrays</h3></div><div><a name="h4_c-array-type?"></a><h4><code>(c-array-type? type)</code></h4></div>Returns #t if given type is C array type, otherwise returns #f
+Example:
+
+<pre>(define-c-array-type items 'i8)
+(c-integer-type? items)
+> #t
+</pre>
+<div><a name="h4_define-c-array-type"></a><h4><code>(define-c-array-type name type)</code></h4></div><pre>Creates a new C array type that can be used when accessing c-bytevectors.
+name is the name of the type and type is the type of items.
+
+Example:
+
+    (define-c-array-type i8-array 'i8)
+    (define ar1 (make-c-bytevector (* (c-type-size i8-array) 10)))
+    (c-bytevector-set! ar1 i8-array 5 25) ; Set the 5th item of array to 25
+    (write (c-bytevector-ref ar1 i8-array 5))
+    > 25
+</pre><div><a name="h3_Structs"></a><h3>Structs</h3></div><div><a name="h4_c-struct-type?"></a><h4><code>(c-struct-type? type)</code></h4></div><pre>Returns #t if given type is C array type, otherwise returns #f
+Example:
+
+(define-c-struct-type color '((r u8) (g u8) (b u8)))
+(c-struct-type? color)
+> #t
+</pre><div><a name="h4_define-c-struct-type"></a><h4><code>(define-c-struct-type name members)</code></h4></div><pre>Creates a new C struct type that can be used when accessing c-bytevectors.
+name is the name of the type and members is a list of member names and types.
+
+Example:
+
+    (define-c-struct-type color '((r i8) (g i8) (b i8) (a i8)))
+
+    (define green (make-c-bytevector (c-type-size color)))
+    (c-bytevector-set! green color 'r 1)
+    (c-bytevector-set! green color 'g 2)
+    (c-bytevector-set! green color 'b 3)
+    (c-bytevector-set! green color 'a 4)
+
+    (display (c-bytevector-ref green color 'g))
+    > 2
+</pre><div><a name="h4_struct->list"></a><h4><code>(struct->list cbv type)</code></h4></div><pre>Creates an association list from given struct type and c-bytevector.
+</pre><div id="footer"></div></div></body></html>
