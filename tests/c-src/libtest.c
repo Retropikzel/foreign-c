@@ -150,7 +150,7 @@ EXPORT struct test* init_struct(struct test* test) {
     test->d = 'd';
     test->e = NULL;
     test->f = 6.0;
-    char* foo = malloc(sizeof("FOOBAR"));
+    char* foo = malloc(sizeof("FOOBAR") + 1);
     snprintf(foo, sizeof("FOOBAR") + 1, "FOOBAR");
     test->g = foo;
     test->h = 8;
@@ -267,7 +267,7 @@ EXPORT struct test* test_new() {
     t->d = 'd';
     t->e = NULL;
     t->f = 6.0;
-    char* foo = malloc(sizeof("FOOBAR"));
+    char* foo = malloc(sizeof("FOOBAR") + 1);
     snprintf(foo, sizeof("FOOBAR") + 1, "FOOBAR");
     t->g = foo;
     t->h = 8;
