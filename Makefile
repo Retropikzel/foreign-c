@@ -15,8 +15,11 @@ package:
 		--authors="Retropikzel" \
 		--doc-from-scribble=1 \
 		--foreign-depends=ffi \
-		--description="Portable foreign function interface for R7RS Schemes" \
+		--description="Portable foreign function interface for R6RS and R7RS Schemes" \
 	foreign/c.sld
+
+git-index: package
+	snow-chibi git-index ${PKG}
 
 install:
 	snow-chibi --impls=${SCHEME} install --always-yes ${PKG}

@@ -82,3 +82,4 @@ test-results
 test-program
 tests/test.sps
 foreign-c-*
+!.snow-repo.scm
